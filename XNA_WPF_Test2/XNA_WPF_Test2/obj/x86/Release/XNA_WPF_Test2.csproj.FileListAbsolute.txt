@@ -1,0 +1,8 @@
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\MainWindow.baml
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\MainWindow.g.cs
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\App.g.cs
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\XNA_WPF_Test2_Content.g.cs
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\XNA_WPF_Test2_MarkupCompile.cache
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\XNA_WPF_Test2.g.resources
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\XNA_WPF_Test2.Properties.Resources.resources
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNA_WPF_Test2\obj\x86\Release\XNA_WPF_Test2.csproj.GenerateResource.Cache

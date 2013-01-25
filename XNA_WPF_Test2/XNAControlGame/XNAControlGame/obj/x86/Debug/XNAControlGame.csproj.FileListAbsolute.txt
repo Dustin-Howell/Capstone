@@ -1,0 +1,7 @@
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\bin\x86\Debug\XNAControlGame.dll
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\bin\x86\Debug\XNAControlGame.pdb
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\bin\x86\Debug\XNAControl.dll
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\obj\x86\Debug\XNAControlGame.dll
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\obj\x86\Debug\XNAControlGame.pdb
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\bin\x86\Debug\Content\square.xnb

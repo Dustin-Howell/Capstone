@@ -1,0 +1,30 @@
+﻿<Window x:Class="XNA_WPF_Test2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xna="clr-namespace:XNAControl;assembly=XNAControl"
+        Title="MainWindow" Height="350" Width="525">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Button Height="25" Width="50" Click="Button_Click">
+                Pause
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_1">
+                Pause()
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_2">
+                Speed+
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_3">
+                Speed-
+            </Button>
+                <Button Height="25" Width="50" />
+            <Button Height="25" Width="50" />
+        </StackPanel>
+        <xna:UserControl1 x:Name="xnaControl" Grid.Column="1"/>
+    </Grid>    
+</Window>

@@ -1,0 +1,36 @@
+Class Names:
+	public class UpperCamelCaseClass{
+	}
+
+Method Names:
+	public void CapitalFirstLetterCamalCase()
+
+Variable Names:
+	All class level variabls should have accessability modifiers (e.g. public, protected, private)
+
+	//public class level properties should be upper camel case
+	public int ClassLevelProperty { get; set; }
+	
+	//private class level variables should be preceded with an underscore and lower camel case
+	private int _classLevelVariable;
+	
+	//there should be no public class level variables (because they should be properties (i.e. Something {get;set;}))
+	
+	int localVariable;
+	
+Code Blocks:
+	-If statements, etc. always use braces
+	-Braces always go on the next line
+	
+	if (something)
+	{
+		blah(); //even if it's only one line of code
+	}
+	else
+	{
+		blahBlah();
+	}
+	
+	
+Comments:
+	/// summary comments required for methods
