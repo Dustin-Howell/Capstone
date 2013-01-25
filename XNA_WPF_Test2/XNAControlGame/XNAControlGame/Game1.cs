@@ -16,7 +16,10 @@ namespace XNAControlGame
     /// </summary>
     public class Game1 : XNAControl.XNAControlGame
     {
-        SpriteBatch spriteBatch;
+        public SpriteBatch spriteBatch;
+        List<BouncySquare> squares;
+
+        const int SquareCount = 1000;
 
         public bool Pause { get; set; }
         public void PauseWithMethodCall()
@@ -24,33 +27,22 @@ namespace XNAControlGame
             Pause = !Pause;
         }
 
-        Texture2D square;
-        Vector2 squarePosition;
-        Vector2 squareSize;
-        Rectangle squareRectangle
-        {
-            get
-            {
-                return new Rectangle((int)squarePosition.X, (int)squarePosition.Y, square.Height, square.Width);
-            }
-        }
-
-
-        public int SpeedX { get; set; }
-        public int SpeedY { get; set; }
-
         public void SpeedUp()
         {
-            SpeedX += (SpeedX >= 0)? 3: -3;
-            SpeedY += (SpeedY >= 0)? 3: -3;
+            foreach (BouncySquare square in squares)
+            {
+                square.SpeedUp();
+            }
         }
 
         public void SlowDown()
         {
-            SpeedX -= (SpeedX >= 0) ? 3 : -3;
-            SpeedY -= (SpeedY >= 0) ? 3 : -3;
+            foreach (BouncySquare square in squares)
+            {
+                square.SlowDown();
+            }
         }
-
+        
         public Game1(IntPtr handle) : base(handle, "Content")
         {
         }
@@ -63,11 +55,15 @@ namespace XNAControlGame
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            squarePosition = new Vector2(0, 0);
             Pause = false;
-            SpeedX = 1;
-            SpeedY = 1;
+
+            squares = new List<BouncySquare>();
+
+            for (int i = 0; i < SquareCount; i++)
+            {
+                squares.Add(new BouncySquare(this));
+                Components.Add(squares[i]);
+            }
 
             base.Initialize();
         }
@@ -80,17 +76,12 @@ namespace XNAControlGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            square = Content.Load<Texture2D>("square");
-            // TODO: use this.Content to load your game content here
-        }
-
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
+            Texture2D squareTexture = Content.Load<Texture2D>("square");
+            foreach (BouncySquare square in squares)
+            {
+                square.Texture = squareTexture;
+            }
+            
         }
 
         /// <summary>
@@ -104,23 +95,6 @@ namespace XNAControlGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            if (!Pause)
-            {
-                squarePosition.X += SpeedX;
-                squarePosition.Y += SpeedY;
-            }
-
-            if (squarePosition.X <= 0
-                || squarePosition.X >= GraphicsDevice.Viewport.Width - square.Width)
-            {
-                SpeedX *= -1;
-            }
-            if (squarePosition.Y <= 0
-                || squarePosition.Y >= GraphicsDevice.Viewport.Height - square.Height)
-            {
-                SpeedY *= -1;
-            }
-
             base.Update(gameTime);
         }
 
@@ -133,7 +107,7 @@ namespace XNAControlGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(square, squareRectangle, Color.White);
+            //spriteBatch.Draw(square, squareRectangle, Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
