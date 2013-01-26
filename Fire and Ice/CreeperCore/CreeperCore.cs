@@ -29,6 +29,11 @@ namespace CreeperCore
             _xnaGame.Board = this.Board;
         }
 
+        public void Run()
+        {
+
+        }
+
         public void StartGame()
         {
             PreviousGameState = GameState;

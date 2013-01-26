@@ -28,6 +28,7 @@ namespace FireAndIce
             InitializeComponent();
             _xnaGame = new XNAControlGame.Game1(xnaControl.Handle);
             _gameCore = new CreeperCore.CreeperCore(_xnaGame);
+            _gameCore.Run();
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
