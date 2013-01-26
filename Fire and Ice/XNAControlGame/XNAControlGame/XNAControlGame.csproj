@@ -113,6 +113,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameScreen.cs" />
+    <Compile Include="InGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game1.cs" />
   </ItemGroup>
@@ -121,6 +123,10 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Creeper\Creeper.csproj">
+      <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
+      <Name>Creeper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XNAControlGameContent\XNAControlGameContent.contentproj">
       <Name>XNAControlGameContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

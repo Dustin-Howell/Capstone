@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</ProjectGuid>
+    <ProjectGuid>{1F579A95-D709-4BE7-B5DE-438A59016AC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Creeper</RootNamespace>
-    <AssemblyName>Creeper</AssemblyName>
+    <RootNamespace>CreeperCore</RootNamespace>
+    <AssemblyName>CreeperCore</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -38,12 +40,23 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="XNAControl">
+      <HintPath>..\FireAndIce\Assemblies\XNAControl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreeperBoard.cs" />
-    <Compile Include="IPeg.cs" />
-    <Compile Include="ITile.cs" />
+    <Compile Include="CreeperCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Creeper\Creeper.csproj">
+      <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
+      <Name>Creeper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XNAControlGame\XNAControlGame\XNAControlGame.csproj">
+      <Project>{6B40F385-30BC-4BE7-9E8F-A5E82821C047}</Project>
+      <Name>XNAControlGame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

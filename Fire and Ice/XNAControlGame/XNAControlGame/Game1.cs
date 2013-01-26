@@ -8,15 +8,28 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Creeper;
 
 namespace XNAControlGame
 {
     /// <summary>
-    /// This is the main type for your game
+    /// This will essentially exist only to manage game states
     /// </summary>
     public class Game1 : XNAControl.XNAControlGame
     {
-        SpriteBatch spriteBatch;
+        protected SpriteBatch _spriteBatch;
+        public SpriteFont DefaultFont { get; private set; }
+        public CreeperBoard Board { get; set; }
+
+        public void StateChange(GameState previousState, GameState newState)
+        {
+            switch (newState)
+            {
+                case GameState.InGame:
+                    new InGameScreen(this, _spriteBatch).Activate();
+                    break;
+            }
+        }
 
         public Game1(IntPtr handle) : base(handle, "Content")
         {
@@ -39,7 +52,8 @@ namespace XNAControlGame
         /// </summary>
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            DefaultFont = Content.Load<SpriteFont>("defaultFont");
         }
 
         /// <summary>
@@ -58,7 +72,7 @@ namespace XNAControlGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Transparent);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
         }

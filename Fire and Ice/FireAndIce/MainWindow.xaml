@@ -8,8 +8,12 @@
             <ColumnDefinition Width="50" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
-        <Button Name="StartGame" Click="StartGame_Click">Start</Button>
+        <StackPanel>
+            <Button Name="StartGame" Click="StartGame_Click" Height="50">Start</Button>
+            <Button Height="50"></Button>
+            <Button Height="50"></Button>
+            <Button Height="50"></Button>
+        </StackPanel>
         
         <xna:UserControl1 x:Name="xnaControl" Grid.Column="1" />
     </Grid>

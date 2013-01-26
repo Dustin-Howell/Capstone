@@ -7,20 +7,20 @@ namespace Creeper
 {
     public interface IPeg
     {
-        Color Color { get; set; }
+        CreeperColor Color { get; set; }
         bool HasPeg { get; }
     }
 
     public class ProtoPeg : IPeg
     {
-        public Color Color { get; set; }
+        public CreeperColor Color { get; set; }
 
         public bool HasPeg
         {
-            get { return Color != Color.Empty; }
+            get { return Color != CreeperColor.Empty; }
         }
 
-        public ProtoPeg(Color color = Color.Empty)
+        public ProtoPeg(CreeperColor color = CreeperColor.Empty)
         {
             Color = color;
         }

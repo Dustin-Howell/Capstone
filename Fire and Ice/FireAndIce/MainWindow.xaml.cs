@@ -12,23 +12,27 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XNAControlGame;
+using Creeper;
+using CreeperCore;
 
 namespace FireAndIce
 {
     public partial class MainWindow : Window
     {
-        XNAControlGame.Game1 _game;
+        protected XNAControlGame.Game1 _xnaGame;
+        protected CreeperCore.CreeperCore _gameCore;
+        protected CreeperBoard _board;
 
         public MainWindow()
         {
             InitializeComponent();
-
-            _game = new XNAControlGame.Game1(xnaControl.Handle);
+            _xnaGame = new XNAControlGame.Game1(xnaControl.Handle);
+            _gameCore = new CreeperCore.CreeperCore(_xnaGame);
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
         {
-
+            _gameCore.StartGame();
         }
     }
 }

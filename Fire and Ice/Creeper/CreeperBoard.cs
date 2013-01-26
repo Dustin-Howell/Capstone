@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Creeper
 {
-    public enum Color { White, Black, Empty, Invalid }
+    public enum CreeperColor { White, Black, Empty, Invalid }
     public enum Status { ValidMove, InvalidMove, GameOver }
 
     public class CreeperBoard
@@ -20,8 +20,6 @@ namespace Creeper
         {
             Pegs = new List<List<IPeg>>();
             Tiles = new List<List<ITile>>();
-
-            PlayerTurn = Color.White;
 
             ResetCreeperBoard();
         }
@@ -46,72 +44,72 @@ namespace Creeper
                 for (int col = 0; col < PegRows; col++)
                 {
                     int slotNumber = (row * PegRows) + col;
-                    Color color;
+                    CreeperColor color;
 
                     switch (slotNumber)
                     {
                         case 0:
-                            color = Color.Invalid;
+                            color = CreeperColor.Invalid;
                             break;
                         case 1:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case 2:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case PegRows - 3:
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case PegRows - 2:
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case PegRows - 1:
-                            color = Color.Invalid;
+                            color = CreeperColor.Invalid;
                             break;
                         case PegRows:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case PegRows * 2 - 1:
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case PegRows * 2:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case PegRows * 3 - 1:
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case PegRows * (PegRows - 3):
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case (PegRows * (PegRows - 2)) - 1:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case (PegRows * (PegRows - 2)):
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case (PegRows * (PegRows - 1)) - 1:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case PegRows * (PegRows - 1):
-                            color = Color.Invalid;
+                            color = CreeperColor.Invalid;
                             break;
                         case (PegRows * (PegRows - 1)) + 1:
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case (PegRows * (PegRows - 1)) + 2:
-                            color = Color.Black;
+                            color = CreeperColor.Black;
                             break;
                         case (PegRows * PegRows) - 3:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case (PegRows * PegRows) - 2:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         case (PegRows * PegRows) - 1:
-                            color = Color.White;
+                            color = CreeperColor.White;
                             break;
                         default:
-                            color = Color.Empty;
+                            color = CreeperColor.Empty;
                             break;
                     }
                     IPeg peg = new ProtoPeg(color);
@@ -123,7 +121,7 @@ namespace Creeper
             {
                 for (int col = 0; col < TileRows; col++)
                 {
-                    Color color = Color.Empty;
+                    CreeperColor color = CreeperColor.Empty;
                     
                     int slotNumber = (row * PegRows) + col;
                     if (slotNumber == 0
@@ -131,7 +129,7 @@ namespace Creeper
                         || slotNumber == TileRows * (TileRows - 1)
                         || slotNumber == (TileRows * TileRows) - 1)
                     {
-                        color = Color.Invalid;
+                        color = CreeperColor.Invalid;
                     }
 
                     Tiles[row].Add(new ProtoTile(color));
@@ -139,7 +137,7 @@ namespace Creeper
             }
         }
 
-        public bool IsValidMove(int startRow, int startCol, int endRow, int endCol, Color playerTurn)
+        public bool IsValidMove(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
         {
             bool valid = true;
 
@@ -159,7 +157,7 @@ namespace Creeper
             }
 
             //Is the end space empty?
-            else if (Pegs[endRow][endCol].Color != Color.Empty)
+            else if (Pegs[endRow][endCol].Color != CreeperColor.Empty)
             {
                 valid = false;
             }
@@ -184,14 +182,14 @@ namespace Creeper
         }
 
         //TODO: flip/add proper tiles
-        public Status Move(int startRow, int startCol, int endRow, int endCol, Color playerTurn)
+        public Status Move(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
         {
             Status status = Status.InvalidMove;
 
             if (IsValidMove(startRow, startCol, endRow, endCol, playerTurn))
             {
                 status = Status.ValidMove;
-                Pegs[startRow][startCol].Color = Color.Empty;
+                Pegs[startRow][startCol].Color = CreeperColor.Empty;
                 Pegs[endRow][endCol].Color = playerTurn;
 
                 //flip/add proper tile somewhere around here
@@ -234,16 +232,16 @@ namespace Creeper
                 {
                     switch (peg.Color)
                     {
-                        case Color.Black:
+                        case CreeperColor.Black:
                             Console.Write("B");
                             break;
-                        case Color.Empty:
+                        case CreeperColor.Empty:
                             Console.Write("E");
                             break;
-                        case Color.Invalid:
+                        case CreeperColor.Invalid:
                             Console.Write("I");
                             break;
-                        case Color.White:
+                        case CreeperColor.White:
                             Console.Write("W");
                             break;
                     }

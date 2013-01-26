@@ -7,16 +7,16 @@ namespace Creeper
 {
     public interface ITile
     {
-        Color Color { get; set; }
+        CreeperColor Color { get; set; }
         bool HasTile { get; }
     }
 
     public class ProtoTile : ITile
     {
-        public Color Color { get; set; }
-        public bool HasTile { get { return Color != Color.Empty; } }
+        public CreeperColor Color { get; set; }
+        public bool HasTile { get { return Color != CreeperColor.Empty; } }
 
-        public ProtoTile(Color color = Color.Empty)
+        public ProtoTile(CreeperColor color = CreeperColor.Empty)
         {
             Color = color;
         }
