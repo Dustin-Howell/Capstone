@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoCreeper", "ProtoCreepe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreeperCore", "CreeperCore\CreeperCore.csproj", "{1F579A95-D709-4BE7-B5DE-438A59016AC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreeperAI", "CreeperAI\CreeperAI.csproj", "{33BA3E7F-7DA1-4A7D-8215-845273C681AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,16 @@ Global
 		{1F579A95-D709-4BE7-B5DE-438A59016AC4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1F579A95-D709-4BE7-B5DE-438A59016AC4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1F579A95-D709-4BE7-B5DE-438A59016AC4}.Release|x86.ActiveCfg = Release|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
