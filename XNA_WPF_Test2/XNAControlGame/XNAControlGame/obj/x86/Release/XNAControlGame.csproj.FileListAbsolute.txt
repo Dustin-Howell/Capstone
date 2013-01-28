@@ -1,0 +1,1 @@
+c:\users\dustin\documents\visual studio 2010\Projects\XNA_WPF_Test2\XNAControlGame\XNAControlGame\obj\x86\Release\Microsoft.Xna.Framework.RuntimeProfile.txt
