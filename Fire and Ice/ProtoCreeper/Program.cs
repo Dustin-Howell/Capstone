@@ -24,7 +24,7 @@ namespace ProtoCreeper
 
             board.PrintToConsole();
 
-            if (board.GameOver(0, CreeperColor.White))
+            if(board.GameOver(CreeperColor.White))
             {
                 Console.WriteLine("White wins!");
             }
@@ -38,7 +38,7 @@ namespace ProtoCreeper
             Point pointTo;
             board.PrintToConsole();
 
-            while (!board.GameOver(0, CreeperColor.White) && !board.GameOver(30, CreeperColor.Black))
+            while (!board.GameOver(CreeperColor.White) && !board.GameOver(CreeperColor.Black))
             {
                 Console.WriteLine("Make Move " + playerTurn.ToString());
                 Console.WriteLine("From: ");
@@ -64,14 +64,17 @@ namespace ProtoCreeper
                 {
                     playerTurn = CreeperColor.White;
                 }
+
+                board.PrintToConsole();
             }
+            Console.WriteLine("WE HAVE A WINNER!");
         }
 
         static void Main(string[] args)
         {
             CreeperBoard board = new CreeperBoard();
-            WhiteWin(board);
-            //PlayerGame(board);
+            //WhiteWin(board);
+            PlayerGame(board);
         }
     }
 }

@@ -10,10 +10,19 @@ namespace Creeper
         public CreeperColor Color { get; set; }
         public bool Marked { get;  set; }
         public bool HasTile { get { return Color != CreeperColor.Empty; } }
+        public int SlotNumber { get; private set; }
+        public Point Point { get { return CreeperUtility.NumberToPoint(SlotNumber, false); } }
+        public List<Tile> Neighbors { get; private set; }
 
-        public Tile(CreeperColor color = CreeperColor.Empty)
+        public void SetNeighbors(List<Tile> neighbors)
+        {
+            Neighbors = neighbors;
+        }
+
+        public Tile(CreeperColor color, int slotNumber)
         {
             Color = color;
+            SlotNumber = slotNumber;
         }
     }
 }

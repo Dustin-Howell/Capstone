@@ -136,8 +136,8 @@ namespace Creeper
             }
             else
             {
-                point.X = (int)number / CreeperBoard.TileRows;
-                point.Y = number % CreeperBoard.TileRows;
+                point.Y = (int)number / CreeperBoard.TileRows;
+                point.X = number % CreeperBoard.TileRows;
             }
 
             return point;

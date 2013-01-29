@@ -8,7 +8,10 @@ namespace CreeperAI
 {
     public class CreeperAI
     {
-        public Point GetMove(int[][] pegs, int[][] tiles, CreeperColor AIColor)
+        private const int _White = 0;
+        private const int _Black = 1;
+
+        public Point GetMove(int[][] pegs, int[][] tiles, int AIColor)
         {
 
 
