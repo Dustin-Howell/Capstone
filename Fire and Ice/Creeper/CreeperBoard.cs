@@ -234,35 +234,35 @@ namespace Creeper
 
             endPoint = CreeperUtility.NumberToPoint(end);
 
-            Tiles[point.x][point.y].Marked = true;
+            Tiles[point.X][point.Y].Marked = true;
 
-            if (CreeperUtility.PointToNumber(point.x, point.y, false) == end)
+            if (CreeperUtility.PointToNumber(point.X, point.Y, false) == end)
             {
                 return true;
             }
 
 
-            if ((point.y - 1 > 0) && Tiles[point.x][point.y - 1].Color == playerTurn)
+            if ((point.Y - 1 > 0) && Tiles[point.X][point.Y - 1].Color == playerTurn)
             {
-                GameOver(point.x, point.y - 1, playerTurn, endPoint.x, endPoint.y);
+                GameOver(point.X, point.Y - 1, playerTurn, endPoint.X, endPoint.Y);
             }
 
-            if ((point.x - 1 > 0) && Tiles[point.x - 1][point.y].Color == playerTurn)
+            if ((point.X - 1 > 0) && Tiles[point.X - 1][point.Y].Color == playerTurn)
             {
-                GameOver(point.x - 1, point.y, playerTurn, endPoint.x, endPoint.y);
+                GameOver(point.X - 1, point.Y, playerTurn, endPoint.X, endPoint.Y);
             }
 
-            if ((point.y + 1 < TileRows) && Tiles[point.x][point.y + 1].Color == playerTurn)
+            if ((point.Y + 1 < TileRows) && Tiles[point.X][point.Y + 1].Color == playerTurn)
             {
-                GameOver(point.x, point.y + 1, playerTurn, endPoint.x, endPoint.y);
+                GameOver(point.X, point.Y + 1, playerTurn, endPoint.X, endPoint.Y);
             }
 
-            if ((point.x + 1 < TileRows) && Tiles[point.x + 1][point.y].Color == playerTurn)
+            if ((point.X + 1 < TileRows) && Tiles[point.X + 1][point.Y].Color == playerTurn)
             {
-                GameOver(point.x + 1, point.y, playerTurn, endPoint.x, endPoint.y);
+                GameOver(point.X + 1, point.Y, playerTurn, endPoint.X, endPoint.Y);
             }
 
-            Tiles[point.x][point.y].Marked = false;
+            Tiles[point.X][point.Y].Marked = false;
             return false;
         }
 
@@ -278,12 +278,12 @@ namespace Creeper
             if ((Math.Abs(start - end)) == PegRows + 1)
             {
                 point = CreeperUtility.NumberToPoint(number);
-                Tiles[point.x][point.y].Color = playerTurn;
+                Tiles[point.X][point.Y].Color = playerTurn;
             }
             else if ((Math.Abs(start - end)) == PegRows - 1)
             {
                 point = CreeperUtility.NumberToPoint(number - 1);
-                Tiles[point.x][point.y].Color = playerTurn;
+                Tiles[point.X][point.Y].Color = playerTurn;
             }
         }
 

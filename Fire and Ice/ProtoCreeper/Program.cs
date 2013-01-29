@@ -30,7 +30,7 @@ namespace ProtoCreeper
 
                 pointTo = CreeperUtility.ConvertToBasic(input);
 
-                board.Move(pointFrom.x, pointFrom.y, pointTo.x, pointTo.y, playerTurn);
+                board.Move(pointFrom.X, pointFrom.Y, pointTo.X, pointTo.Y, playerTurn);
 
                 if (playerTurn == CreeperColor.White)
                 {
