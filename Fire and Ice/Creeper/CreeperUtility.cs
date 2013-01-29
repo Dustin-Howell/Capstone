@@ -5,10 +5,18 @@ using System.Text;
 
 namespace Creeper
 {
-    public struct Point
+    public class Point
     {
-        public int x;
-        public int y;
+        public Point() { }
+
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 
     public static class CreeperUtility
@@ -27,7 +35,7 @@ namespace Creeper
 
         static public Point ConvertToBasic(string notation)
         {
-            Point point;
+            Point point = new Point();
             int x;
             int y = 8;
             string z;
@@ -44,8 +52,8 @@ namespace Creeper
 
             //Where did this 5 come from?
             x = CreeperBoard.TileRows - 1 - x;
-            point.x = x;
-            point.y = y;
+            point.X = x;
+            point.Y = y;
             return point;
         }
 
@@ -95,14 +103,14 @@ namespace Creeper
             {
                 point = NumberToPoint(location);
 
-                if (pegBoard[point.x][point.y] == CreeperColor.Empty)
+                if (pegBoard[point.X][point.Y] == CreeperColor.Empty)
                 {
-                    if (pegBoard[point.x][point.y] != playerTurn)
+                    if (pegBoard[point.X][point.Y] != playerTurn)
                     {
                         num = location - x;
                         num = x - num;
                         point = NumberToPoint(num);
-                        if (point.x > 0 && point.x < size && point.y > 0 && point.y < size && pegBoard[point.x][point.y] == CreeperColor.Empty)
+                        if (point.X > 0 && point.X < size && point.Y > 0 && point.Y < size && pegBoard[point.X][point.Y] == CreeperColor.Empty)
                         {
                             possible.Add(num);
                         }
@@ -120,16 +128,16 @@ namespace Creeper
         }
         static public Point NumberToPoint(int number, bool isPeg = false)
         {
-            Point point;
+            Point point = new Point();
             if (isPeg)
             {
-                point.x = (int)number / CreeperBoard.PegRows;
-                point.y = number % CreeperBoard.PegRows;
+                point.X = (int)number / CreeperBoard.PegRows;
+                point.Y = number % CreeperBoard.PegRows;
             }
             else
             {
-                point.x = (int)number / CreeperBoard.TileRows;
-                point.y = number % CreeperBoard.TileRows;
+                point.X = (int)number / CreeperBoard.TileRows;
+                point.Y = number % CreeperBoard.TileRows;
             }
 
             return point;
