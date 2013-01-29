@@ -110,7 +110,7 @@ namespace Creeper
                             color = CreeperColor.White;
                             break;
                         case (_PegRows * _PegRows) - 1:
-                            color = CreeperColor.White;
+                            color = CreeperColor.Invalid;
                             break;
                         default:
                             color = CreeperColor.Empty;
@@ -127,11 +127,13 @@ namespace Creeper
                 {
                     CreeperColor color = CreeperColor.Empty;
 
-                    int slotNumber = (row * PegRows) + col;
-                    if (slotNumber == 0
-                        || slotNumber == TileRows - 1
-                        || slotNumber == TileRows * (TileRows - 1)
-                        || slotNumber == (TileRows * TileRows) - 1)
+                    int slotNumber = CreeperUtility.PointToNumber(row, col, false);
+                    if (
+                        (slotNumber == 0)
+                        || (slotNumber == TileRows - 1)
+                        || (slotNumber == TileRows * (TileRows - 1))
+                        || (slotNumber == (TileRows * TileRows) - 1)
+                        )
                     {
                         color = CreeperColor.Invalid;
                     }
@@ -177,7 +179,6 @@ namespace Creeper
             return valid;
         }
 
-        //TODO: Write this function
         protected bool GameOver(int x, int y, CreeperColor playerTurn, int endX, int endY)
         {
 
@@ -193,25 +194,26 @@ namespace Creeper
 
             Tiles[x][y].Marked = true;
 
-            if ((y - 1 > 0) && Tiles[x][y - 1].Color == playerTurn)
+            if ((y - 1 > 0) && (Tiles[x][y - 1].Color == playerTurn || Tiles[x][y - 1].Color == CreeperColor.Invalid))
             {
                 GameOver(x, y - 1, playerTurn, endX, endY);
             }
 
-            if ((x - 1 > 0) && Tiles[x - 1][y].Color == playerTurn)
+            if ((x - 1 > 0) && (Tiles[x - 1][y].Color == playerTurn || Tiles[x - 1][y].Color == CreeperColor.Invalid))
             {
                 GameOver(x - 1, y, playerTurn, endX, endY);
             }
 
-            if ((y + 1 < TileRows) && Tiles[x][y + 1].Color == playerTurn)
+            if ((y + 1 < TileRows) && (Tiles[x][y + 1].Color == playerTurn || Tiles[x][y + 1].Color == CreeperColor.Invalid))
             {
                 GameOver(x, y + 1, playerTurn, endX, endY);
             }
 
-            if ((x + 1 < TileRows) && Tiles[x + 1][y].Color == playerTurn)
+            if ((x + 1 < TileRows) && (Tiles[x + 1][y].Color == playerTurn || Tiles[x + 1][y].Color == CreeperColor.Invalid))
             {
                 GameOver(x + 1, y, playerTurn, endX, endY);
             }
+
             Tiles[x][y].Marked = false;
             return false;
         }
@@ -326,7 +328,6 @@ namespace Creeper
             return isCorner;
         }
 
-        //TODO: Make this print the tile spaces as well
         public void PrintToConsole()
         {
             foreach (List<IPeg> row in Pegs)
@@ -348,8 +349,34 @@ namespace Creeper
                             Console.Write("W");
                             break;
                     }
+                    Console.Write("-");
                 }
                 Console.Write("\n");
+
+                if (Pegs.IndexOf(row) < TileRows)
+                {
+                    Console.Write("|");
+                    for (int i = 0; i < TileRows; i++)
+                    {
+                        switch (Tiles[Pegs.IndexOf(row)][i].Color)
+                        {
+                            case CreeperColor.Black:
+                                Console.Write("X");
+                                break;
+                            case CreeperColor.Empty:
+                                Console.Write(" ");
+                                break;
+                            case CreeperColor.Invalid:
+                                Console.Write("*");
+                                break;
+                            case CreeperColor.White:
+                                Console.Write("O");
+                                break;
+                        }
+                        Console.Write("|");
+                    }
+                    Console.Write("\n");
+                }                
             }
         }
     }

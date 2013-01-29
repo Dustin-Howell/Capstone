@@ -8,29 +8,51 @@ namespace ProtoCreeper
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void WhiteWin(CreeperBoard board)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                board.Move(i, i + 1, i + 1, i + 2, CreeperColor.White);
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                board.Move(i, i + 2, i + 1, i + 3, CreeperColor.White);
+            }
+
+            board.Move(4, 6, 5, 5, CreeperColor.White);
+            board.Move(4, 5, 5, 4, CreeperColor.White);
+
+            if (board.GameOver(0, CreeperColor.White))
+            {
+                Console.WriteLine("White wins!");
+            }
+        }
+
+        public static void PlayerGame(CreeperBoard board)
         {
             CreeperColor playerTurn = CreeperColor.White;
-            CreeperBoard board = new CreeperBoard();
-            string input;
+            string moveInput;
             Point pointFrom;
             Point pointTo;
-            while (!board.GameOver(0,CreeperColor.White) && !board.GameOver(30,CreeperColor.Black))
-            {
-                board.PrintToConsole();
+            board.PrintToConsole();
 
+            while (!board.GameOver(0, CreeperColor.White) && !board.GameOver(30, CreeperColor.Black))
+            {
                 Console.WriteLine("Make Move " + playerTurn.ToString());
                 Console.WriteLine("From: ");
-                input = Console.ReadLine();
+                moveInput = Console.ReadLine().ToUpper();
 
-                pointFrom = CreeperUtility.ConvertToBasic(input);
+                pointFrom = CreeperUtility.ConvertToBasic(moveInput);
+                Console.WriteLine(String.Format("Point from: {0},{1}", pointFrom.X, pointFrom.Y));
 
                 Console.WriteLine("To: ");
-                input = Console.ReadLine();
+                moveInput = Console.ReadLine().ToUpper();
 
-                pointTo = CreeperUtility.ConvertToBasic(input);
+                pointTo = CreeperUtility.ConvertToBasic(moveInput);
+                Console.WriteLine(String.Format("Point to: {0},{1}", pointTo.X, pointTo.Y));
 
                 board.Move(pointFrom.X, pointFrom.Y, pointTo.X, pointTo.Y, playerTurn);
+
 
                 if (playerTurn == CreeperColor.White)
                 {
@@ -39,8 +61,15 @@ namespace ProtoCreeper
                 else
                 {
                     playerTurn = CreeperColor.White;
-                }                
+                }
             }
+        }
+
+        static void Main(string[] args)
+        {
+            CreeperBoard board = new CreeperBoard();
+            //WhiteWin(board);
+            PlayerGame(board);
         }
     }
 }

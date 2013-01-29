@@ -37,21 +37,21 @@ namespace Creeper
         {
             Point point = new Point();
             int x;
-            int y = 8;
-            string z;
+            //-1 is a bogus value to satiate the compiler
+            int y = -1;
+            string letter;
             x = (int)Char.GetNumericValue(notation[0]);
-            z = notation[1].ToString();
+            letter = notation[1].ToString();
 
             for (int i = 0; i < letters.Count; i++)
             {
-                if (letters[i] == z)
+                if (letters[i] == letter)
                 {
                     y = i;
                 }
             }
 
-            //Where did this 5 come from?
-            x = CreeperBoard.TileRows - 1 - x;
+            x = CreeperBoard.PegRows - 1 - x;
             point.X = x;
             point.Y = y;
             return point;
