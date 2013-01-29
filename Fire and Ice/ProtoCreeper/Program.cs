@@ -22,6 +22,8 @@ namespace ProtoCreeper
             board.Move(4, 6, 5, 5, CreeperColor.White);
             board.Move(4, 5, 5, 4, CreeperColor.White);
 
+            board.PrintToConsole();
+
             if (board.GameOver(0, CreeperColor.White))
             {
                 Console.WriteLine("White wins!");
@@ -68,8 +70,8 @@ namespace ProtoCreeper
         static void Main(string[] args)
         {
             CreeperBoard board = new CreeperBoard();
-            //WhiteWin(board);
-            PlayerGame(board);
+            WhiteWin(board);
+            //PlayerGame(board);
         }
     }
 }

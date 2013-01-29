@@ -349,7 +349,10 @@ namespace Creeper
                             Console.Write("W");
                             break;
                     }
-                    Console.Write("-");
+                    if (row.IndexOf(peg) < PegRows - 1)
+                    {
+                        Console.Write("-");
+                    }
                 }
                 Console.Write("\n");
 
