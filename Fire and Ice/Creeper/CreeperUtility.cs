@@ -34,7 +34,7 @@ namespace Creeper
             x = (int)Char.GetNumericValue(notation[0]);
             z = notation[1].ToString();
 
-            for (int i = 0; i < letters.Count(); i++)
+            for (int i = 0; i < letters.Count; i++)
             {
                 if (letters[i] == z)
                 {
@@ -42,7 +42,8 @@ namespace Creeper
                 }
             }
 
-            x = 5 - x;
+            //Where did this 5 come from?
+            x = CreeperBoard.TileRows - 1 - x;
             point.x = x;
             point.y = y;
             return point;

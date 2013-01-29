@@ -8,19 +8,22 @@ namespace Creeper
     public enum CreeperColor { White, Black, Empty, Invalid }
     public enum Status { ValidMove, InvalidMove, GameOver }
 
+
     public class CreeperBoard
     {
-        public const int TileRows = 6;
-        public const int PegRows = TileRows + 1;
-        private const int BLACKEND = TileRows - 1;
-        private const int WHITEEND = (TileRows * TileRows) - 1;
+        protected const int _TileRows = 6;
+        protected const int _PegRows = _TileRows + 1;
+        public static int TileRows { get { return _TileRows; } }
+        public static int PegRows { get { return _PegRows; } }
+        private static int BLACKEND { get { return TileRows - 1; } }
+        private static int WHITEEND { get { return (TileRows * TileRows) - 1; } }
         public List<List<IPeg>> Pegs;
-        public List<List<ITile>> Tiles;
+        public List<List<Tile>> Tiles;
 
         public CreeperBoard()
         {
             Pegs = new List<List<IPeg>>();
-            Tiles = new List<List<ITile>>();
+            Tiles = new List<List<Tile>>();
 
             ResetCreeperBoard();
         }
@@ -32,7 +35,7 @@ namespace Creeper
 
             for (int i = 0; i < TileRows; i++)
             {
-                Tiles.Add(new List<ITile>());
+                Tiles.Add(new List<Tile>());
             }
 
             for (int i = 0; i < PegRows; i++)
@@ -58,55 +61,55 @@ namespace Creeper
                         case 2:
                             color = CreeperColor.White;
                             break;
-                        case PegRows - 3:
+                        case _PegRows - 3:
                             color = CreeperColor.Black;
                             break;
-                        case PegRows - 2:
+                        case _PegRows - 2:
                             color = CreeperColor.Black;
                             break;
-                        case PegRows - 1:
+                        case _PegRows - 1:
                             color = CreeperColor.Invalid;
                             break;
-                        case PegRows:
+                        case _PegRows:
                             color = CreeperColor.White;
                             break;
-                        case PegRows * 2 - 1:
+                        case _PegRows * 2 - 1:
                             color = CreeperColor.Black;
                             break;
-                        case PegRows * 2:
+                        case _PegRows * 2:
                             color = CreeperColor.White;
                             break;
-                        case PegRows * 3 - 1:
+                        case _PegRows * 3 - 1:
                             color = CreeperColor.Black;
                             break;
-                        case PegRows * (PegRows - 3):
+                        case _PegRows * (_PegRows - 3):
                             color = CreeperColor.Black;
                             break;
-                        case (PegRows * (PegRows - 2)) - 1:
+                        case (_PegRows * (_PegRows - 2)) - 1:
                             color = CreeperColor.White;
                             break;
-                        case (PegRows * (PegRows - 2)):
+                        case (_PegRows * (_PegRows - 2)):
                             color = CreeperColor.Black;
                             break;
-                        case (PegRows * (PegRows - 1)) - 1:
+                        case (_PegRows * (_PegRows - 1)) - 1:
                             color = CreeperColor.White;
                             break;
-                        case PegRows * (PegRows - 1):
+                        case _PegRows * (_PegRows - 1):
                             color = CreeperColor.Invalid;
                             break;
-                        case (PegRows * (PegRows - 1)) + 1:
+                        case (_PegRows * (_PegRows - 1)) + 1:
                             color = CreeperColor.Black;
                             break;
-                        case (PegRows * (PegRows - 1)) + 2:
+                        case (_PegRows * (_PegRows - 1)) + 2:
                             color = CreeperColor.Black;
                             break;
-                        case (PegRows * PegRows) - 3:
+                        case (_PegRows * _PegRows) - 3:
                             color = CreeperColor.White;
                             break;
-                        case (PegRows * PegRows) - 2:
+                        case (_PegRows * _PegRows) - 2:
                             color = CreeperColor.White;
                             break;
-                        case (PegRows * PegRows) - 1:
+                        case (_PegRows * _PegRows) - 1:
                             color = CreeperColor.White;
                             break;
                         default:
@@ -133,7 +136,7 @@ namespace Creeper
                         color = CreeperColor.Invalid;
                     }
 
-                    Tiles[row].Add(new ProtoTile(color));
+                    Tiles[row].Add(new Tile(color));
                 }
             }
         }
@@ -175,92 +178,134 @@ namespace Creeper
         }
 
         //TODO: Write this function
-        protected bool GameOver()
+        protected bool GameOver(int x, int y, CreeperColor playerTurn, int endX, int endY)
         {
-            bool gameOver = false;
 
-            return gameOver;
+            if (x == endX && y == endY)
+            {
+                return true;
+            }
+
+            if (Tiles[x][y].Marked)
+            {
+                return false;
+            }
+
+            Tiles[x][y].Marked = true;
+
+            if ((y - 1 > 0) && Tiles[x][y - 1].Color == playerTurn)
+            {
+                GameOver(x, y - 1, playerTurn, endX, endY);
+            }
+
+            if ((x - 1 > 0) && Tiles[x - 1][y].Color == playerTurn)
+            {
+                GameOver(x - 1, y, playerTurn, endX, endY);
+            }
+
+            if ((y + 1 < TileRows) && Tiles[x][y + 1].Color == playerTurn)
+            {
+                GameOver(x, y + 1, playerTurn, endX, endY);
+            }
+
+            if ((x + 1 < TileRows) && Tiles[x + 1][y].Color == playerTurn)
+            {
+                GameOver(x + 1, y, playerTurn, endX, endY);
+            }
+            Tiles[x][y].Marked = false;
+            return false;
         }
 
-        private void NumberToPoint(ref int x, ref int y, int number, bool isPeg = false)
+        public bool GameOver(int location, CreeperColor playerTurn)
         {
-            if (isPeg)
+            Point point;
+            Point endPoint;
+            point = CreeperUtility.NumberToPoint(location);
+
+            int end;
+            if (playerTurn == CreeperColor.Black)
             {
-                x = (int)number / PegRows;
-                y = number % PegRows;
+                end = BLACKEND;
             }
             else
             {
-                x = (int)number / TileRows;
-                y = number % TileRows;
+                end = WHITEEND;
             }
+
+            endPoint = CreeperUtility.NumberToPoint(end);
+
+            Tiles[point.x][point.y].Marked = true;
+
+            if (CreeperUtility.PointToNumber(point.x, point.y, false) == end)
+            {
+                return true;
+            }
+
+
+            if ((point.y - 1 > 0) && Tiles[point.x][point.y - 1].Color == playerTurn)
+            {
+                GameOver(point.x, point.y - 1, playerTurn, endPoint.x, endPoint.y);
+            }
+
+            if ((point.x - 1 > 0) && Tiles[point.x - 1][point.y].Color == playerTurn)
+            {
+                GameOver(point.x - 1, point.y, playerTurn, endPoint.x, endPoint.y);
+            }
+
+            if ((point.y + 1 < TileRows) && Tiles[point.x][point.y + 1].Color == playerTurn)
+            {
+                GameOver(point.x, point.y + 1, playerTurn, endPoint.x, endPoint.y);
+            }
+
+            if ((point.x + 1 < TileRows) && Tiles[point.x + 1][point.y].Color == playerTurn)
+            {
+                GameOver(point.x + 1, point.y, playerTurn, endPoint.x, endPoint.y);
+            }
+
+            Tiles[point.x][point.y].Marked = false;
+            return false;
         }
 
-        private int PointToNumber(int x, int y, bool isPeg = true)
-        {
-            if (isPeg)
-                return (y + (x * PegRows));
-            else
-                return (y + (x * TileRows));
-        }
+
 
         private void Flip(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
         {
-            int start = PointToNumber(startRow, startCol);
-            int end = PointToNumber(endRow, endCol);
-            int turnX = 0;
-            int turnY = 0;
+            Point point;
+            int start = CreeperUtility.PointToNumber(startRow, startCol);
+            int end = CreeperUtility.PointToNumber(endRow, endCol);
             int number = Math.Abs(start - (start / PegRows));
+
             if ((Math.Abs(start - end)) == PegRows + 1)
             {
-                NumberToPoint(ref turnX,ref turnY, number);
-                Tiles[turnX][turnY].Color = playerTurn;
+                point = CreeperUtility.NumberToPoint(number);
+                Tiles[point.x][point.y].Color = playerTurn;
             }
             else if ((Math.Abs(start - end)) == PegRows - 1)
             {
-                NumberToPoint(ref turnX,ref turnY, number - 1);
-                Tiles[turnX][turnY].Color = playerTurn;
+                point = CreeperUtility.NumberToPoint(number - 1);
+                Tiles[point.x][point.y].Color = playerTurn;
             }
         }
-        //public bool Gameover(int location, CreeperColor playerTurn)
-        //{
-        //    int end;
-        //    if(playerTurn == CreeperColor.Black)
-        //         end = BLACKEND;
-        //    else
-        //         end = WHITEEND;
-        //    bool possible = false;
 
-        //    if (location == end)
-        //    {
-        //        return true;
-        //    }
-            
-        //    //Go through all 4 options to move
 
-        //    return possible;
-        //}
-        public Status Move(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
+
+        public bool Move(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
         {
-            Status status = Status.InvalidMove;
+            bool isValid = false;
 
             if (IsValidMove(startRow, startCol, endRow, endCol, playerTurn))
             {
-                status = Status.ValidMove;
+
+                isValid = true;
                 Pegs[startRow][startCol].Color = CreeperColor.Empty;
                 Pegs[endRow][endCol].Color = playerTurn;
 
-                //flip/add proper tile somewhere around here
-
-                bool gameOver = GameOver();
-
-                if (gameOver)
+                if (Math.Abs(startRow - endRow) + Math.Abs(startCol - endCol) == 2)
                 {
-                    status = Status.GameOver;
+                    Flip(startRow, startCol, endRow, endCol, playerTurn);
                 }
             }
-
-            return status;
+            return isValid;
         }
 
         //forgot that I wrote this function... didn't use it above. May refactor to use it
