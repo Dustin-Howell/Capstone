@@ -20,6 +20,7 @@ namespace XNAControlGame
         protected SpriteBatch _spriteBatch;
         public SpriteFont DefaultFont { get; private set; }
         public CreeperBoard Board { get; set; }
+        public Texture2D Square { get; set; }
 
         public void StateChange(GameState previousState, GameState newState)
         {
@@ -44,6 +45,8 @@ namespace XNAControlGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             DefaultFont = Content.Load<SpriteFont>("defaultFont");
+            Square = Content.Load<Texture2D>("square");
+            base.LoadContent();
         }
     }
 }

@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CreeperAI\CreeperAI.csproj">
+      <Project>{33BA3E7F-7DA1-4A7D-8215-845273C681AA}</Project>
+      <Name>CreeperAI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Creeper\Creeper.csproj">
       <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
       <Name>Creeper</Name>

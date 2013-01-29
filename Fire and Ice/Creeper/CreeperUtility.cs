@@ -5,18 +5,18 @@ using System.Text;
 
 namespace Creeper
 {
-    public class Point
+    public class Position
     {
-        public Point() { }
+        public Position() { }
 
-        public Point(int x, int y)
+        public Position(int col, int row)
         {
-            X = x;
-            Y = y;
+            Column = col;
+            Row = row;
         }
 
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int Column { get; set; }
+        public int Row { get; set; }
     }
 
     public static class CreeperUtility
@@ -33,9 +33,9 @@ namespace Creeper
         }
 
 
-        static public Point ConvertToBasic(string notation)
+        static public Position ConvertToBasic(string notation)
         {
-            Point point = new Point();
+            Position point = new Position();
             int x;
             //-1 is a bogus value to satiate the compiler
             int y = -1;
@@ -52,14 +52,14 @@ namespace Creeper
             }
 
             x = CreeperBoard.PegRows - 1 - x;
-            point.X = x;
-            point.Y = y;
+            point.Column = x;
+            point.Row = y;
             return point;
         }
 
         static public Array PossibleMove(int location, CreeperColor[][] pegBoard, CreeperColor playerTurn)
         {
-            Point point;
+            Position point;
             int size = 7;
             int num = location; ;
             List<int> possible = new List<int>();
@@ -103,14 +103,14 @@ namespace Creeper
             {
                 point = NumberToPoint(location);
 
-                if (pegBoard[point.X][point.Y] == CreeperColor.Empty)
+                if (pegBoard[point.Column][point.Row] == CreeperColor.Empty)
                 {
-                    if (pegBoard[point.X][point.Y] != playerTurn)
+                    if (pegBoard[point.Column][point.Row] != playerTurn)
                     {
                         num = location - x;
                         num = x - num;
                         point = NumberToPoint(num);
-                        if (point.X > 0 && point.X < size && point.Y > 0 && point.Y < size && pegBoard[point.X][point.Y] == CreeperColor.Empty)
+                        if (point.Column > 0 && point.Column < size && point.Row > 0 && point.Row < size && pegBoard[point.Column][point.Row] == CreeperColor.Empty)
                         {
                             possible.Add(num);
                         }
@@ -126,18 +126,19 @@ namespace Creeper
 
             return possible.ToArray();
         }
-        static public Point NumberToPoint(int number, bool isPeg = false)
+
+        static public Position NumberToPoint(int number, bool isPeg = false)
         {
-            Point point = new Point();
+            Position point = new Position();
             if (isPeg)
             {
-                point.X = (int)number / CreeperBoard.PegRows;
-                point.Y = number % CreeperBoard.PegRows;
+                point.Column = (int)number / CreeperBoard.PegRows;
+                point.Row = number % CreeperBoard.PegRows;
             }
             else
             {
-                point.Y = (int)number / CreeperBoard.TileRows;
-                point.X = number % CreeperBoard.TileRows;
+                point.Row = (int)number / CreeperBoard.TileRows;
+                point.Column = number % CreeperBoard.TileRows;
             }
 
             return point;
