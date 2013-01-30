@@ -9,7 +9,7 @@ namespace Creeper
     {
         public Position() { }
 
-        public Position(int col, int row)
+        public Position(int row, int col)
         {
             Column = col;
             Row = row;
@@ -17,6 +17,11 @@ namespace Creeper
 
         public int Column { get; set; }
         public int Row { get; set; }
+
+        public bool Equals(Position position)
+        {
+            return (Column == position.Column && Row == position.Row);
+        }
     }
 
     public static class CreeperUtility
@@ -35,7 +40,7 @@ namespace Creeper
 
         static public Position ConvertToBasic(string notation)
         {
-            Position point = new Position();
+            Position position = new Position();
             int x;
             //-1 is a bogus value to satiate the compiler
             int y = -1;
@@ -52,14 +57,14 @@ namespace Creeper
             }
 
             x = CreeperBoard.PegRows - 1 - x;
-            point.Column = x;
-            point.Row = y;
-            return point;
+            position.Column = x;
+            position.Row = y;
+            return position;
         }
 
         static public Array PossibleMove(int location, CreeperColor[][] pegBoard, CreeperColor playerTurn)
         {
-            Position point;
+            Position position;
             int size = 7;
             int num = location; ;
             List<int> possible = new List<int>();
@@ -101,16 +106,16 @@ namespace Creeper
             //now check for occupied moves have to fix errors in actual code
             foreach (int x in possible)
             {
-                point = NumberToPoint(location);
+                position = NumberToPoint(location);
 
-                if (pegBoard[point.Column][point.Row] == CreeperColor.Empty)
+                if (pegBoard[position.Column][position.Row] == CreeperColor.Empty)
                 {
-                    if (pegBoard[point.Column][point.Row] != playerTurn)
+                    if (pegBoard[position.Column][position.Row] != playerTurn)
                     {
                         num = location - x;
                         num = x - num;
-                        point = NumberToPoint(num);
-                        if (point.Column > 0 && point.Column < size && point.Row > 0 && point.Row < size && pegBoard[point.Column][point.Row] == CreeperColor.Empty)
+                        position = NumberToPoint(num);
+                        if (position.Column > 0 && position.Column < size && position.Row > 0 && position.Row < size && pegBoard[position.Column][position.Row] == CreeperColor.Empty)
                         {
                             possible.Add(num);
                         }
@@ -129,27 +134,34 @@ namespace Creeper
 
         static public Position NumberToPoint(int number, bool isPeg = false)
         {
-            Position point = new Position();
+            Position position = new Position();
             if (isPeg)
             {
-                point.Column = (int)number / CreeperBoard.PegRows;
-                point.Row = number % CreeperBoard.PegRows;
+                position.Row = (int)number / CreeperBoard.PegRows;
+                position.Column = number % CreeperBoard.PegRows;
             }
             else
             {
-                point.Row = (int)number / CreeperBoard.TileRows;
-                point.Column = number % CreeperBoard.TileRows;
+                position.Row = (int)number / CreeperBoard.TileRows;
+                position.Column = number % CreeperBoard.TileRows;
             }
 
-            return point;
+            return position;
         }
 
-        static public int PointToNumber(int x, int y, bool isPeg = true)
+        static public int PointToNumber(int col, int row, bool isPeg = true)
         {
+            int number;
             if (isPeg)
-                return (y + (x * CreeperBoard.PegRows));
+            {
+                number = (col + (row * CreeperBoard.PegRows));
+            }
             else
-                return (y + (x * CreeperBoard.TileRows));
+            {
+                number = (col + (row * CreeperBoard.TileRows));
+            }
+
+            return number;
         }
     }
 }

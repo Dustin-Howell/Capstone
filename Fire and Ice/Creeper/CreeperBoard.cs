@@ -21,13 +21,13 @@ namespace Creeper
         private static int _BlackEnd { get { return TileRows - 1; } }
         private static int _WhiteEnd { get { return (TileRows * TileRows) - 1; } }
 
-        public List<List<Peg>> Pegs;
-        public List<List<Tile>> Tiles;
+        public List<Peg> Pegs;
+        public List<Tile> Tiles;
 
         public CreeperBoard()
         {
-            Pegs = new List<List<Peg>>();
-            Tiles = new List<List<Tile>>();
+            Pegs = new List<Peg>();
+            Tiles = new List<Tile>();
 
             ResetCreeperBoard();
             AssignNeighbors();
@@ -35,52 +35,42 @@ namespace Creeper
 
         public List<Peg> WhereTeam(CreeperColor color)
         {
-            List<Peg> teamList = new List<Peg>();
-
-            foreach (List<Peg> pegRow in Pegs)
-            {
-                List<Peg> list = pegRow.Where(x => x.Color == color).ToList();
-                teamList.AddRange(list);
-            }
-
-            return teamList;
+            return Pegs.Where(x => x.Color == color).ToList();
         }
 
-        public bool IsValidPoint(Position point, bool tilePoint = true)
+        public bool IsValidPosition(Position position, bool TilePosition = true)
         {
-            int rows = (tilePoint)? TileRows : PegRows;
+            int rows = (TilePosition)? TileRows : PegRows;
 
-            return (point.Column >= 0 && point.Column < rows && point.Row >= 0 && point.Row < rows);
+            return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
         }
 
         protected void AssignNeighbors()
         {
-            foreach (List<Tile> tileRow in Tiles)
+            foreach (Tile tile in Tiles)
             {
-                foreach (Tile tile in tileRow)
+                List<Tile> neighbors = new List<Tile>();
+
+                int col = tile.Position.Column;
+                int row = tile.Position.Row;
+
+                List<Position> possibleNeighbors = new List<Position>();
+
+                possibleNeighbors.Add(new Position(row - 1, col));
+                possibleNeighbors.Add(new Position(row, col + 1));
+                possibleNeighbors.Add(new Position(row + 1, col));
+                possibleNeighbors.Add(new Position(row, col - 1));
+
+                foreach (Position position in possibleNeighbors)
                 {
-                    List<Tile> neighbors = new List<Tile>();
-
-                    int col = tile.Point.Column;
-                    int row = tile.Point.Row;
-
-                    List<Position> possibleNeighbors = new List<Position>();
-                    
-                    possibleNeighbors.Add(new Position(col, row - 1));
-                    possibleNeighbors.Add(new Position(col + 1, row));
-                    possibleNeighbors.Add(new Position(col, row + 1));
-                    possibleNeighbors.Add(new Position(col - 1, row));
-
-                    foreach (Position point in possibleNeighbors)
+                    if (IsValidPosition(position))
                     {
-                        if (IsValidPoint(point))
-                        {
-                            neighbors.Add(Tiles[point.Row][point.Column]);
-                        }
+                        neighbors.Add(Tiles.Where(x => x.Position.Equals(position)).First());
                     }
-
-                    tile.SetNeighbors(neighbors);
                 }
+
+
+                tile.SetNeighbors(neighbors);
             }
         }
 
@@ -88,16 +78,6 @@ namespace Creeper
         {
             Tiles.Clear();
             Pegs.Clear();
-
-            for (int i = 0; i < TileRows; i++)
-            {
-                Tiles.Add(new List<Tile>());
-            }
-
-            for (int i = 0; i < PegRows; i++)
-            {
-                Pegs.Add(new List<Peg>());
-            }
 
             for (int row = 0; row < PegRows; row++)
             {
@@ -173,7 +153,7 @@ namespace Creeper
                             break;
                     }
                     Peg peg = new Peg(color, slotNumber);
-                    Pegs[row].Add(peg);
+                    Pegs.Add(peg);
                 }
             }
 
@@ -194,42 +174,40 @@ namespace Creeper
                         color = CreeperColor.Invalid;
                     }
 
-                    Tiles[row].Add(new Tile(color, slotNumber));
+                    Tiles.Add(new Tile(color, slotNumber));
                 }
             }
 
 
         }
 
-        public bool IsValidMove(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
+        public bool IsValidMove(Move move)
         {
             bool valid = true;
 
             //is the move in bounds?
-            if (startCol < 0 || startCol >= PegRows
-                || endCol < 0 || endCol >= PegRows
-                || startRow < 0 || startRow >= PegRows
-                || endRow < 0 || endRow >= PegRows)
+            if (!IsValidPosition(move.StartPosition, false)
+                || !IsValidPosition(move.EndPosition, false))
             {
                 valid = false;
             }
 
             //Does the start space have the player's piece?
-            else if (Pegs[startRow][startCol].Color != playerTurn)
+            else if (Pegs.Where(x => x.Position.Equals(move.StartPosition)).First().Color != move.PlayerColor)
             {
                 valid = false;
             }
 
             //Is the end space empty?
-            else if (Pegs[endRow][endCol].Color != CreeperColor.Empty)
+            else if (Pegs.Where(x => x.Position.Equals(move.EndPosition)).First().Color != CreeperColor.Empty)
             {
                 valid = false;
             }
 
             //is the end space one away from the start space?
-            else if ((Math.Abs(startRow - endRow) > 1)
-                || (Math.Abs(startCol - endCol) > 1)
-                || (startCol == endCol && startRow == endRow))
+            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) > 1)
+                || (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) > 1)
+                || (move.StartPosition.Equals(move.EndPosition)))
             {
                 valid = false;
             }
@@ -244,7 +222,7 @@ namespace Creeper
             Position start = CreeperUtility.NumberToPoint((playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart);
             int end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
 
-            tiles.Push(Tiles[start.Row][start.Column]);
+            tiles.Push(Tiles.Where(x => x.Position.Equals(start)).First());
 
             while (!gameOver && tiles.Any())
             {
@@ -266,45 +244,61 @@ namespace Creeper
             return gameOver;
         }
 
-        private void Flip(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
+        private void Flip(Move move)
         {
-            Position point;
-            int start = CreeperUtility.PointToNumber(startRow, startCol);
-            int end = CreeperUtility.PointToNumber(endRow, endCol);
-            int number = Math.Abs(start - (start / PegRows));
+            int startRow = move.StartPosition.Row;
+            int startCol = move.StartPosition.Column;
+            int endRow = move.EndPosition.Row;
+            int endCol = move.EndPosition.Column;
+            CreeperColor playerTurn = move.PlayerColor;
 
-            if ((Math.Abs(start - end)) == PegRows + 1)
+            if (startRow > endRow)
             {
-                point = CreeperUtility.NumberToPoint(number);
-                Tiles[point.Row][point.Column].Color = playerTurn;
+                if (startCol > endCol)
+                {
+                    //same as destination
+                    Tiles.Where(x => x.Position.Equals(move.EndPosition)).First().Color = move.PlayerColor;
+                }
+                else
+                {
+                    //same row as destination
+                    //col - 1
+                    Tiles.Where(x => x.Position.Equals(new Position(move.EndPosition.Row, move.EndPosition.Column - 1))).First().Color = move.PlayerColor;
+                }
             }
-            else if ((Math.Abs(start - end)) == PegRows - 1)
+            else
             {
-                point = CreeperUtility.NumberToPoint(number - 1);
-                Tiles[point.Row][point.Column].Color = playerTurn;
+                if (startCol > endCol)
+                {
+                    //same col as destination
+                    //row - 1
+                    Tiles.Where(x => x.Position.Equals(new Position(move.EndPosition.Row - 1, move.EndPosition.Column))).First().Color = move.PlayerColor;
+                }
+                else
+                {
+                    //same as start
+                    Tiles.Where(x => x.Position.Equals(move.StartPosition)).First().Color = move.PlayerColor;
+                }
             }
         }
 
         public bool Move(Move move)
         {
-            return Move(move.StartPoint.Row, move.StartPoint.Column, move.EndPoint.Row, move.EndPoint.Column, move.PlayerColor);
-        }
-
-        public bool Move(int startRow, int startCol, int endRow, int endCol, CreeperColor playerTurn)
-        {
             bool isValid = false;
 
-            if (IsValidMove(startRow, startCol, endRow, endCol, playerTurn))
+            if (IsValidMove(move))
             {
                 isValid = true;
-                Pegs[startRow][startCol].Color = CreeperColor.Empty;
-                Pegs[endRow][endCol].Color = playerTurn;
 
-                if (Math.Abs(startRow - endRow) + Math.Abs(startCol - endCol) == 2)
+                Pegs.Where(x => x.Position.Equals(move.StartPosition)).First().Color = CreeperColor.Empty;
+                Pegs.Where(x => x.Position.Equals(move.EndPosition)).First().Color = move.PlayerColor;
+
+                if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) + Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2)
                 {
-                    Flip(startRow, startCol, endRow, endCol, playerTurn);
+                    Flip(move);
                 }
             }
+
             return isValid;
         }
 
@@ -328,9 +322,9 @@ namespace Creeper
 
         public void PrintToConsole()
         {
-            foreach (List<Peg> row in Pegs)
+            for (int row = 0; row < PegRows; row++)
             {
-                foreach (Peg peg in row)
+                foreach (Peg peg in Pegs.Where(x => x.Position.Row == row).OrderBy(x => x.Position.Column))
                 {
                     switch (peg.Color)
                     {
@@ -347,38 +341,41 @@ namespace Creeper
                             Console.Write("W");
                             break;
                     }
-                    if (row.IndexOf(peg) < PegRows - 1)
+
+                    if (peg.Position.Column < PegRows - 1)
                     {
                         Console.Write("-");
                     }
                 }
                 Console.Write("\n");
 
-                if (Pegs.IndexOf(row) < TileRows)
+                if (row < TileRows)
                 {
-                    Console.Write("|");
-                    for (int i = 0; i < TileRows; i++)
+                    foreach (Tile tile in Tiles.Where(x => x.Position.Row == row).OrderBy(x => x.Position.Column))
                     {
-                        switch (Tiles[Pegs.IndexOf(row)][i].Color)
+                        Console.Write("|");
+                        switch (tile.Color)
                         {
+                            case CreeperColor.White:
+                                Console.Write("O");
+                                break;
                             case CreeperColor.Black:
                                 Console.Write("X");
-                                break;
-                            case CreeperColor.Empty:
-                                Console.Write(" ");
                                 break;
                             case CreeperColor.Invalid:
                                 Console.Write("*");
                                 break;
-                            case CreeperColor.White:
-                                Console.Write("O");
+                            default:
+                                Console.Write(" ");
                                 break;
                         }
-                        Console.Write("|");
                     }
-                    Console.Write("\n");
-                }                
+                    Console.Write("|");
+                }
+                Console.Write("\n");
             }
+
+            //Console.Read();
         }
     }
 }

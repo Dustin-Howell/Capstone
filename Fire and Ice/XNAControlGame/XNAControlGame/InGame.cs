@@ -14,24 +14,11 @@ namespace XNAControlGame
         public InGameScreen(Game1 game, SpriteBatch spriteBatch) : base(game, spriteBatch) 
         {
             PegButtons = new List<Button>();
-
-            foreach (List<Peg> row in Game.Board.Pegs)
-            {
-                foreach (Peg peg in row)
-                {
-                }
-            }
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _spriteBatch.Begin();
-            foreach (List<Tile> row in Game.Board.Tiles)
-            {
-                foreach (Tile tile in row)
-                {
-                }
-            }
             _spriteBatch.End();
             base.Draw(gameTime);
         }
