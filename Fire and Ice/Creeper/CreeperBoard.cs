@@ -7,7 +7,7 @@ namespace Creeper
 {
     public enum CreeperColor { White, Black, Empty, Invalid }
     public enum Status { ValidMove, InvalidMove, GameOver }
-
+    public enum Piece { Peg, Tile }
 
     public class CreeperBoard
     {
