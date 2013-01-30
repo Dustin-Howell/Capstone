@@ -16,10 +16,10 @@ namespace Creeper
         public static int TileRows { get { return _TileRows; } }
         public static int PegRows { get { return _PegRows; } }
 
-        private static int _BlackStart { get { return TileRows * (TileRows - 1); } }
-        private static int _WhiteStart { get { return 0; } }
-        private static int _BlackEnd { get { return TileRows - 1; } }
-        private static int _WhiteEnd { get { return (TileRows * TileRows) - 1; } }
+        private static Position _BlackStart { get { return new Position(0, 5); } }
+        private static Position _WhiteStart { get { return new Position(0, 0); } }
+        private static Position _BlackEnd { get { return new Position(5, 0); } }
+        private static Position _WhiteEnd { get { return new Position(5, 5); } }
 
         public List<Peg> Pegs;
         public List<Tile> Tiles;
@@ -40,7 +40,7 @@ namespace Creeper
 
         public bool IsValidPosition(Position position, bool TilePosition = true)
         {
-            int rows = (TilePosition)? TileRows : PegRows;
+            int rows = (TilePosition) ? TileRows : PegRows;
 
             return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
         }
@@ -218,26 +218,33 @@ namespace Creeper
         public bool GameOver(CreeperColor playerTurn)
         {
             bool gameOver = false;
+            bool stackEmpty = false;
             Stack<Tile> tiles = new Stack<Tile>();
-            Position start = CreeperUtility.NumberToPoint((playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart);
-            int end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
+            Position start = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
+            Position end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
 
-            tiles.Push(Tiles.Where(x => x.Position.Equals(start)).First());
-
-            while (!gameOver && tiles.Any())
+            Tile currentTile = Tiles.Where(x => x.Position.Equals(start)).First();
+            while (!stackEmpty && !currentTile.Position.Equals(end))
             {
-                Tile currentTile = tiles.Pop();
-                currentTile.Marked = true;
                 foreach (Tile neighbor in currentTile.Neighbors)
                 {
-                    if (!neighbor.Marked && neighbor.Color == playerTurn)
+                    if (neighbor.Color == playerTurn && !tiles.Contains(neighbor))
                     {
                         tiles.Push(neighbor);
                     }
-                    else if (neighbor.Color == CreeperColor.Invalid && neighbor.SlotNumber == end)
+                    else if (neighbor.Position.Equals(end))
                     {
                         gameOver = true;
                     }
+                }
+
+                if (tiles.Any())
+                {
+                    currentTile = tiles.Pop();
+                }
+                else
+                {
+                    stackEmpty = true;
                 }
             }
 

@@ -16,10 +16,10 @@ namespace ProtoCreeper
             bool gameOver = false;
             CreeperColor turn = CreeperColor.White;
 
-            while (!gameOver)
+            while (!board.GameOver(turn))
             {
                 board.Move(creeperAI.GetMove(board, turn));
-                turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+                //turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
                 board.PrintToConsole();
             }
 
@@ -117,9 +117,9 @@ namespace ProtoCreeper
         {
             CreeperBoard board = new CreeperBoard();
             //board.PrintToConsole();
-            WhiteWin(board);
+            //WhiteWin(board);
             //PlayerGame(board);
-            //AIGame(board);
+            AIGame(board);
         }
     }
 }
