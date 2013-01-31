@@ -25,39 +25,7 @@ namespace Creeper
             return pieces.Where(x => x.Position == position).First();
         }
 
-        static public string ConvertToStandardNotation(int x, int y)
-        {
-            x = 5 - x;
-
-            string notation = x.ToString() + Letters[y];
-
-            return notation;
-        }
-
-
-        static public Position ConvertToBasic(string notation)
-        {
-            Position position = new Position();
-            int x;
-            //-1 is a bogus value to satiate the compiler
-            int y = -1;
-            string letter;
-            x = (int)Char.GetNumericValue(notation[0]);
-            letter = notation[1].ToString();
-
-            for (int i = 0; i < Letters.Count; i++)
-            {
-                if (Letters[i] == letter)
-                {
-                    y = i;
-                }
-            }
-
-            x = CreeperBoard.PegRows - 1 - x;
-            position.Column = x;
-            position.Row = y;
-            return position;
-        }
+    
 
         static public Array PossibleMove(Piece peg, CreeperColor[][] pegBoard)
         {

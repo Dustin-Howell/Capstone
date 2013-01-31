@@ -113,6 +113,52 @@ namespace ProtoCreeper
         //    Console.WriteLine(String.Format("{0} wins!", playerTurn.ToString()));
         //}
 
+        /*public static void PlayerGame(CreeperBoard board)
+        {
+            CreeperColor playerTurn = CreeperColor.White;
+            string moveInput;
+                Position positionFrom;
+                Position positionTo;
+                board.PrintToConsole();
+                bool gameOver = false;
+                Move move;
+                while (!gameOver)
+                {
+                    Console.WriteLine("Make Move " + playerTurn.ToString());
+                    Console.WriteLine("From: ");
+                    moveInput = Console.ReadLine().ToUpper();
+
+                    positionFrom = CreeperUtility.ConvertToBasic(moveInput);
+                    Console.WriteLine(String.Format("Point from: {0},{1}", positionFrom.Column, positionFrom.Row));
+
+                    Console.WriteLine("To: ");
+                    moveInput = Console.ReadLine().ToUpper();
+
+                    positionTo = CreeperUtility.ConvertToBasic(moveInput);
+                    Console.WriteLine(String.Format("Point to: {0},{1}", positionTo.Column, positionTo.Row));
+                    move = new Move(positionFrom, positionTo, playerTurn);
+                    board.Move(move);
+
+                    gameOver = board.GameOver(CreeperColor.White) || board.GameOver(CreeperColor.Black);
+
+                    if (!gameOver)
+                    {
+                        if (playerTurn == CreeperColor.White)
+                        {
+                            playerTurn = CreeperColor.Black;
+                        }
+                        else
+                        {
+                            playerTurn = CreeperColor.White;
+                        }
+                    }
+
+                    board.PrintToConsole();
+               }
+
+               Console.WriteLine(String.Format("{0} wins!", playerTurn.ToString()));
+        }*/
+
         static void Main(string[] args)
         {
             CreeperBoard board = new CreeperBoard();

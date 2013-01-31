@@ -217,9 +217,6 @@ namespace Creeper
             }
 
             return valid;
-            //CreeperUtility.PossibleMove(Pegs[move.StartPosition.Column][move.StartPosition.Row], Pegs.ToArray);
-            //Pegs[
-        
            }
 
         public bool GameOver(CreeperColor playerTurn)
