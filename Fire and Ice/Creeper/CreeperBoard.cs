@@ -38,9 +38,9 @@ namespace Creeper
             return Pegs.Where(x => x.Color == color).ToList();
         }
 
-        public bool IsValidPosition(Position position, bool TilePosition = true)
+        public bool IsValidPosition(Position position, Piece pieceType)
         {
-            int rows = (TilePosition) ? TileRows : PegRows;
+            int rows = (pieceType == Piece.Tile) ? TileRows : PegRows;
 
             return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
         }
@@ -63,7 +63,7 @@ namespace Creeper
 
                 foreach (Position position in possibleNeighbors)
                 {
-                    if (IsValidPosition(position))
+                    if (IsValidPosition(position, Piece.Tile))
                     {
                         neighbors.Add(Tiles.Where(x => x.Position.Equals(position)).First());
                     }
@@ -186,8 +186,8 @@ namespace Creeper
             bool valid = true;
 
             //is the move in bounds?
-            if (!IsValidPosition(move.StartPosition, false)
-                || !IsValidPosition(move.EndPosition, false))
+            if (!IsValidPosition(move.StartPosition, Piece.Peg)
+                || !IsValidPosition(move.EndPosition, Piece.Peg))
             {
                 valid = false;
             }
