@@ -22,19 +22,18 @@ namespace Creeper
         private static Position _BlackEnd { get { return new Position(5, 0); } }
         private static Position _WhiteEnd { get { return new Position(5, 5); } }
 
-        public List<Peg> Pegs;
-        public List<Tile> Tiles;
+        public List<Piece> Pegs;
+        public List<Piece> Tiles;
 
         public CreeperBoard()
         {
-            Pegs = new List<Peg>();
-            Tiles = new List<Tile>();
+            Pegs = new List<Piece>();
+            Tiles = new List<Piece>();
 
             ResetCreeperBoard();
-            AssignNeighbors();
         }
 
-        public List<Peg> WhereTeam(CreeperColor color)
+        public List<Piece> WhereTeam(CreeperColor color)
         {
             return Pegs.Where(x => x.Color == color).ToList();
         }
@@ -46,34 +45,35 @@ namespace Creeper
             return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
         }
 
-        protected void AssignNeighbors()
-        {
-            foreach (Tile tile in Tiles)
-            {
-                List<Tile> neighbors = new List<Tile>();
+        //TODO: delete this
+        //protected void AssignNeighbors()
+        //{
+        //    foreach (Tile tile in Tiles)
+        //    {
+        //        List<Piece> neighbors = new List<Piece>();
 
-                int col = tile.Position.Column;
-                int row = tile.Position.Row;
+        //        int col = tile.Position.Column;
+        //        int row = tile.Position.Row;
 
-                List<Position> possibleNeighbors = new List<Position>();
+        //        List<Position> possibleNeighbors = new List<Position>();
 
-                possibleNeighbors.Add(new Position(row - 1, col));
-                possibleNeighbors.Add(new Position(row, col + 1));
-                possibleNeighbors.Add(new Position(row + 1, col));
-                possibleNeighbors.Add(new Position(row, col - 1));
+        //        possibleNeighbors.Add(new Position(row - 1, col));
+        //        possibleNeighbors.Add(new Position(row, col + 1));
+        //        possibleNeighbors.Add(new Position(row + 1, col));
+        //        possibleNeighbors.Add(new Position(row, col - 1));
 
-                foreach (Position position in possibleNeighbors)
-                {
-                    if (IsValidPosition(position, PieceType.Tile))
-                    {
-                        neighbors.Add(Tiles.Where(x => x.Position.Equals(position)).First());
-                    }
-                }
+        //        foreach (Position position in possibleNeighbors)
+        //        {
+        //            if (IsValidPosition(position, PieceType.Tile))
+        //            {
+        //                neighbors.Add(Tiles.Where(x => x.Position.Equals(position)).First());
+        //            }
+        //        }
 
 
-                tile.SetNeighbors(neighbors);
-            }
-        }
+        //        tile.SetNeighbors(neighbors);
+        //    }
+        //}
 
         public void ResetCreeperBoard()
         {
@@ -154,7 +154,7 @@ namespace Creeper
                             color = CreeperColor.Empty;
                             break;
                     }
-                    Peg peg = new Peg(color, new Position(row, col));
+                    Piece peg = new Piece(color, new Position(row, col));
                     Pegs.Add(peg);
                 }
             }
@@ -178,7 +178,7 @@ namespace Creeper
                         color = CreeperColor.Invalid;
                     }
 
-                    Tiles.Add(new Tile(color, new Position(row,col)));
+                    Tiles.Add(new Piece(color, new Position(row,col)));
                 }
             }
 
@@ -226,14 +226,14 @@ namespace Creeper
         {
             bool gameOver = false;
             bool stackEmpty = false;
-            Stack<Tile> tiles = new Stack<Tile>();
+            Stack<Piece> tiles = new Stack<Piece>();
             Position start = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
             Position end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
 
-            Tile currentTile = Tiles.Where(x => x.Position.Equals(start)).First();
+            Piece currentTile = Tiles.Where(x => x.Position.Equals(start)).First();
             while (!stackEmpty && !currentTile.Position.Equals(end))
             {
-                foreach (Tile neighbor in currentTile.Neighbors)
+                foreach (Piece neighbor in currentTile.GetNeighbors(this))
                 {
                     if (neighbor.Color == playerTurn && !tiles.Contains(neighbor))
                     {
@@ -338,7 +338,7 @@ namespace Creeper
         {
             for (int row = 0; row < PegRows; row++)
             {
-                foreach (Peg peg in Pegs.Where(x => x.Position.Row == row).OrderBy(x => x.Position.Column))
+                foreach (Piece peg in Pegs.Where(x => x.Position.Row == row).OrderBy(x => x.Position.Column))
                 {
                     switch (peg.Color)
                     {
@@ -365,7 +365,7 @@ namespace Creeper
 
                 if (row < TileRows)
                 {
-                    foreach (Tile tile in Tiles.Where(x => x.Position.Row == row).OrderBy(x => x.Position.Column))
+                    foreach (Piece tile in Tiles.Where(x => x.Position.Row == row).OrderBy(x => x.Position.Column))
                     {
                         Console.Write("|");
                         switch (tile.Color)

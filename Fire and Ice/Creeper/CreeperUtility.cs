@@ -8,15 +8,16 @@ namespace Creeper
 
     public static class CreeperUtility
     {
-        static List<string> letters = new List<string>() { "A", "B", "C", "D", "E", "F", "G" };
+        public static List<string> Letters = new List<string>() { "A", "B", "C", "D", "E", "F", "G" };
 
-
-        private static IEnumerable<Tile> GetNeighbors(this Tile tile, CreeperBoard board)
+        public static IEnumerable<Piece> GetNeighbors(this Piece tile, CreeperBoard board)
         {
-            List<Tile> neighbors = new List<Tile>();
-            //yield return tile.Position.Adjacent(North);
+            List<Piece> neighbors = new List<Piece>();
+            //neighbors = board.Tiles.Where(x => 
+            //    (board.IsValidPosition(x.Position.Adjacent(CardinalDirection.North), PieceType.Tile)
+            //    ||)).ToList();
 
-            return new List<Tile>();
+            return new List<Piece>();
         }
 
         public static Piece At(this List<Piece> pieces, Position position)
@@ -28,7 +29,7 @@ namespace Creeper
         {
             x = 5 - x;
 
-            string notation = x.ToString() + letters[y];
+            string notation = x.ToString() + Letters[y];
 
             return notation;
         }
@@ -44,9 +45,9 @@ namespace Creeper
             x = (int)Char.GetNumericValue(notation[0]);
             letter = notation[1].ToString();
 
-            for (int i = 0; i < letters.Count; i++)
+            for (int i = 0; i < Letters.Count; i++)
             {
-                if (letters[i] == letter)
+                if (Letters[i] == letter)
                 {
                     y = i;
                 }
@@ -58,7 +59,7 @@ namespace Creeper
             return position;
         }
 
-        static public Array PossibleMove(Peg peg, CreeperColor[][] pegBoard)
+        static public Array PossibleMove(Piece peg, CreeperColor[][] pegBoard)
         {
             Position position;
             int size = 7;

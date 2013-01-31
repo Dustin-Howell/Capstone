@@ -9,9 +9,11 @@ namespace Creeper
     {
         public Position Position { get; private set; }
         public CreeperColor Color { get; set; }
+        public bool HasPiece { get { return Color == CreeperColor.Empty; } }
 
-        protected Piece(Position position)
+        public Piece(CreeperColor color, Position position)
         {
+            Color = color;
             Position = position;
         }
     }

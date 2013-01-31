@@ -15,8 +15,8 @@ namespace CreeperAI
 
         public Move GetMove(CreeperBoard board, CreeperColor AIColor)
         {
-            List<Peg> MyTeam = board.WhereTeam(AIColor);
-            Peg pegToMove = MyTeam.OrderBy((x) => Random.Next()).First();
+            List<Piece> MyTeam = board.WhereTeam(AIColor);
+            Piece pegToMove = MyTeam.OrderBy((x) => Random.Next()).First();
             
             Position endPosition = new Position(Random.Next() % CreeperBoard.PegRows, Random.Next() % CreeperBoard.PegRows);
             while (!board.IsValidMove(new Move(pegToMove.Position, endPosition, AIColor)))
