@@ -44,17 +44,18 @@ namespace Creeper
             return position;
         }
 
-        static public Array PossibleMove(int location, CreeperColor[][] pegBoard, CreeperColor playerTurn)
+        static public Array PossibleMove(Peg peg, CreeperColor[][] pegBoard)
         {
             Position position;
             int size = 7;
-            int num = location; ;
+            int num = 0;
+            int location = PositionToNumber(peg.Position); 
             List<int> possible = new List<int>();
             int modifier = -(size + 1);
 
             for (int i = 0; i < 8; i++)
             {
-                possible.Add(num + modifier);
+                possible.Add(location + modifier);
 
                 if (modifier == -(size - 1))
                 {
@@ -88,15 +89,15 @@ namespace Creeper
             //now check for occupied moves have to fix errors in actual code
             foreach (int x in possible)
             {
-                position = NumberToPoint(location);
+                position = NumberToPosition(location);
 
                 if (pegBoard[position.Column][position.Row] == CreeperColor.Empty)
                 {
-                    if (pegBoard[position.Column][position.Row] != playerTurn)
+                    if (pegBoard[position.Column][position.Row] != peg.Color)
                     {
                         num = location - x;
                         num = x - num;
-                        position = NumberToPoint(num);
+                        position = NumberToPosition(num);
                         if (position.Column > 0 && position.Column < size && position.Row > 0 && position.Row < size && pegBoard[position.Column][position.Row] == CreeperColor.Empty)
                         {
                             possible.Add(num);
@@ -114,7 +115,7 @@ namespace Creeper
             return possible.ToArray();
         }
 
-        static public Position NumberToPoint(int number, bool isPeg = false)
+        static public Position NumberToPosition(int number, bool isPeg = false)
         {
             Position position = new Position();
             if (isPeg)
@@ -131,16 +132,16 @@ namespace Creeper
             return position;
         }
 
-        static public int PointToNumber(int col, int row, bool isPeg = true)
+        static public int PositionToNumber(Position position, bool isPeg = true)
         {
             int number;
             if (isPeg)
             {
-                number = (col + (row * CreeperBoard.PegRows));
+                number = (position.Column + (position.Row * CreeperBoard.PegRows));
             }
             else
             {
-                number = (col + (row * CreeperBoard.TileRows));
+                number = (position.Column + (position.Row * CreeperBoard.TileRows));
             }
 
             return number;

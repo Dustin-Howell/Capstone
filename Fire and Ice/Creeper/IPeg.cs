@@ -10,7 +10,7 @@ namespace Creeper
     {
         public CreeperColor Color { get; set; }
         public int SlotNumber { get; private set; }
-        public Position Position { get { return CreeperUtility.NumberToPoint(SlotNumber, true); } }
+        public Position Position { get { return CreeperUtility.NumberToPosition(SlotNumber, true); } }
 
         public bool HasPeg
         {

@@ -11,7 +11,7 @@ namespace Creeper
         public bool Marked { get;  set; }
         public bool HasTile { get { return Color != CreeperColor.Empty; } }
         public int SlotNumber { get; private set; }
-        public Position Position { get { return CreeperUtility.NumberToPoint(SlotNumber, false); } }
+        public Position Position { get { return CreeperUtility.NumberToPosition(SlotNumber, false); } }
         public List<Tile> Neighbors { get; private set; }
 
         public void SetNeighbors(List<Tile> neighbors)

@@ -162,8 +162,10 @@ namespace Creeper
                 for (int col = 0; col < TileRows; col++)
                 {
                     CreeperColor color = CreeperColor.Empty;
-
-                    int slotNumber = CreeperUtility.PointToNumber(row, col, false);
+                    Position position = new Position();
+                    position.Column = col;
+                    position.Row = row;
+                    int slotNumber = CreeperUtility.PositionToNumber(position, false);
                     if (
                         (slotNumber == 0)
                         || (slotNumber == TileRows - 1)
@@ -213,7 +215,10 @@ namespace Creeper
             }
 
             return valid;
-        }
+            //CreeperUtility.PossibleMove(Pegs[move.StartPosition.Column][move.StartPosition.Row], Pegs.ToArray);
+            //Pegs[
+        
+           }
 
         public bool GameOver(CreeperColor playerTurn)
         {
