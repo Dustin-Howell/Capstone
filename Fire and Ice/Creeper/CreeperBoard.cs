@@ -187,36 +187,19 @@ namespace Creeper
 
         public bool IsValidMove(Move move)
         {
-            bool valid = true;
+            List<Move> validMoves = new List<Move>();
 
-            //is the move in bounds?
-            if (!IsValidPosition(move.StartPosition, PieceType.Peg)
-                || !IsValidPosition(move.EndPosition, PieceType.Peg))
+            validMoves = CreeperUtility.PossibleMove(Pegs.At(move.StartPosition), Pegs);
+
+            foreach (Move possible in validMoves)
             {
-                valid = false;
+                if (possible.EndPosition == move.EndPosition)
+                {
+                    return true;
+                }
             }
 
-            //Does the start space have the player's piece?
-            else if (Pegs.Where(x => x.Position.Equals(move.StartPosition)).First().Color != move.PlayerColor)
-            {
-                valid = false;
-            }
-
-            //Is the end space empty?
-            else if (Pegs.Where(x => x.Position.Equals(move.EndPosition)).First().Color != CreeperColor.Empty)
-            {
-                valid = false;
-            }
-
-            //is the end space one away from the start space?
-            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) > 1)
-                || (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) > 1)
-                || (move.StartPosition.Equals(move.EndPosition)))
-            {
-                valid = false;
-            }
-
-            return valid;
+            return false;
            }
 
         public bool GameOver(CreeperColor playerTurn)
@@ -308,6 +291,7 @@ namespace Creeper
                 {
                     Flip(move);
                 }
+                
             }
 
             return isValid;

@@ -27,18 +27,23 @@ namespace Creeper
 
     
 
-        static public Array PossibleMove(Piece peg, CreeperColor[][] pegBoard)
+        static public List<Move> PossibleMove(Piece peg, List<Piece> pegs)
         {
-            Position position;
-            int size = 7;
+            Position position = peg.Position;
+            int size = 7;//sqrt of pegs?
             int num = 0;
             int location = PositionToNumber(peg.Position); 
-            List<int> possible = new List<int>();
+            List<Move> possible = new List<Move>();
+            Move possibleMove = new Move();
             int modifier = -(size + 1);
+            possibleMove.StartPosition = position;
+            possibleMove.PlayerColor = peg.Color;
 
+            //gets all the spots around the current peg
             for (int i = 0; i < 8; i++)
             {
-                possible.Add(location + modifier);
+                possibleMove.EndPosition = NumberToPosition(location + modifier);
+                possible.Add(possibleMove);
 
                 if (modifier == -(size - 1))
                 {
@@ -57,34 +62,37 @@ namespace Creeper
                     modifier++;
                 }
             }
+
             //First Check if out of bounds
-            foreach (int x in possible)
+            foreach (Move move in possible)
             {
-                if ((x < 1) || x > (size * size) - 2)
+                if ((PositionToNumber(move.EndPosition) < 1) || PositionToNumber(move.EndPosition) > (size * size) - 2)
                 {
-                    possible.Remove(x);
+                    possible.Remove(move);
                 }
-                if (x == size - 1 || x == (size * (size - 1)))
+                if ((PositionToNumber(move.EndPosition) == size - 1 || PositionToNumber(move.EndPosition) == (size * (size - 1))))
                 {
-                    possible.Remove(x);
+                    possible.Remove(move);
                 }
             }
-            //now check for occupied moves have to fix errors in actual code
-            foreach (int x in possible)
-            {
-                position = NumberToPosition(location);
 
-                if (pegBoard[position.Column][position.Row] == CreeperColor.Empty)
+            //now check for occupied moves have to fix errors in actual code
+            foreach (Move x in possible)
+            {
+                
+
+                if (pegs.At(position).Color == CreeperColor.Empty)
                 {
-                    if (pegBoard[position.Column][position.Row] != peg.Color)
+                    if (pegs.At(position).Color != peg.Color)
                     {
-                        num = location - x;
-                        num = x - num;
+                        num = location - PositionToNumber(x.EndPosition);
+                        num = PositionToNumber(x.EndPosition) - num;
                         position = NumberToPosition(num);
-                        if (position.Column > 0 && position.Column < size && position.Row > 0 && position.Row < size && pegBoard[position.Column][position.Row] == CreeperColor.Empty)
+                        if (position.Column > 0 && position.Column < size && position.Row > 0 && position.Row < size && pegs.At(position).Color == CreeperColor.Empty)
                         {
-                            possible.Add(num);
+                            possible.Add(x);
                         }
+
                         possible.Remove(x);
 
                     }
@@ -95,7 +103,7 @@ namespace Creeper
                 }
             }
 
-            return possible.ToArray();
+            return possible;
         }
 
         static public Position NumberToPosition(int number, bool isPeg = false)

@@ -11,6 +11,10 @@ namespace Creeper
         public Position EndPosition { get; set; }
         public CreeperColor PlayerColor { get; set; }
 
+        public Move()
+        {
+        }
+
         public Move(Position startPosition, Position endPosition, CreeperColor playerColor)
         {
             StartPosition = startPosition;
