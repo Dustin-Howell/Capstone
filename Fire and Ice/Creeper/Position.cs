@@ -41,10 +41,30 @@ namespace Creeper
                 position.Row = this.Row + 1;
                 position.Column = this.Column;
             }
-            else
+            else if (direction == CardinalDirection.West)
             {
                 position.Row = this.Row - 1;
                 position.Column = this.Column;
+            }
+            else if (direction == CardinalDirection.Northwest)
+            {
+                position.Row = this.Row - 1;
+                position.Column = this.Column - 1;
+            }
+            else if (direction == CardinalDirection.Northeast)
+            {
+                position.Row = this.Row + 1;
+                position.Column = this.Column - 1;
+            }
+            else if (direction == CardinalDirection.Southeast)
+            {
+                position.Row = this.Row + 1;
+                position.Column = this.Column + 1;
+            }
+            else if (direction == CardinalDirection.Southwest)
+            {
+                position.Row = this.Row - 1;
+                position.Column = this.Column + 1;
             }
             return position;
         }
