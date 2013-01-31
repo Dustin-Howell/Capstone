@@ -6,21 +6,16 @@ using System.Text;
 namespace Creeper
 {
 
-    public class Peg
+    public class Peg : Piece
     {
-        public CreeperColor Color { get; set; }
-        public int SlotNumber { get; private set; }
-        public Position Position { get { return CreeperUtility.NumberToPosition(SlotNumber, true); } }
-
         public bool HasPeg
         {
             get { return Color != CreeperColor.Empty; }
         }
 
-        public Peg(CreeperColor color, int slotNumber)
+        public Peg(CreeperColor color, Position position) : base(position)
         {
             Color = color;
-            SlotNumber = slotNumber;
         }
     }
 

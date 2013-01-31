@@ -10,6 +10,20 @@ namespace Creeper
     {
         static List<string> letters = new List<string>() { "A", "B", "C", "D", "E", "F", "G" };
 
+
+        private static IEnumerable<Tile> GetNeighbors(this Tile tile, CreeperBoard board)
+        {
+            List<Tile> neighbors = new List<Tile>();
+            //yield return tile.Position.Adjacent(North);
+
+            return new List<Tile>();
+        }
+
+        public static Piece At(this List<Piece> pieces, Position position)
+        {
+            return pieces.Where(x => x.Position == position).First();
+        }
+
         static public string ConvertToStandardNotation(int x, int y)
         {
             x = 5 - x;

@@ -8,7 +8,7 @@ namespace Creeper
     public enum CreeperColor { White, Black, Empty, Invalid }
     public enum CardinalDirection { North, South, East, West, Northwest, Northeast, Southwest, Southeast }
     public enum Status { ValidMove, InvalidMove, GameOver }
-    public enum Piece { Peg, Tile }
+    public enum PieceType { Peg, Tile }
 
     public class CreeperBoard
     {
@@ -39,9 +39,9 @@ namespace Creeper
             return Pegs.Where(x => x.Color == color).ToList();
         }
 
-        public bool IsValidPosition(Position position, Piece pieceType)
+        public bool IsValidPosition(Position position, PieceType pieceType)
         {
-            int rows = (pieceType == Piece.Tile) ? TileRows : PegRows;
+            int rows = (pieceType == PieceType.Tile) ? TileRows : PegRows;
 
             return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
         }
@@ -64,7 +64,7 @@ namespace Creeper
 
                 foreach (Position position in possibleNeighbors)
                 {
-                    if (IsValidPosition(position, Piece.Tile))
+                    if (IsValidPosition(position, PieceType.Tile))
                     {
                         neighbors.Add(Tiles.Where(x => x.Position.Equals(position)).First());
                     }
@@ -84,6 +84,7 @@ namespace Creeper
             {
                 for (int col = 0; col < PegRows; col++)
                 {
+                    //TODO: remove slotnumber stuff
                     int slotNumber = (row * PegRows) + col;
                     CreeperColor color;
 
@@ -153,7 +154,7 @@ namespace Creeper
                             color = CreeperColor.Empty;
                             break;
                     }
-                    Peg peg = new Peg(color, slotNumber);
+                    Peg peg = new Peg(color, new Position(row, col));
                     Pegs.Add(peg);
                 }
             }
@@ -163,10 +164,9 @@ namespace Creeper
                 for (int col = 0; col < TileRows; col++)
                 {
                     CreeperColor color = CreeperColor.Empty;
-                    Position position = new Position();
-                    position.Column = col;
-                    position.Row = row;
-                    int slotNumber = CreeperUtility.PositionToNumber(position, false);
+
+                    //TODO: remove slotnumber stuff
+                    int slotNumber = CreeperUtility.PointToNumber(row, col, false);
                     if (
                         (slotNumber == 0)
                         || (slotNumber == TileRows - 1)
@@ -177,7 +177,7 @@ namespace Creeper
                         color = CreeperColor.Invalid;
                     }
 
-                    Tiles.Add(new Tile(color, slotNumber));
+                    Tiles.Add(new Tile(color, new Position(row,col)));
                 }
             }
 
@@ -189,8 +189,8 @@ namespace Creeper
             bool valid = true;
 
             //is the move in bounds?
-            if (!IsValidPosition(move.StartPosition, Piece.Peg)
-                || !IsValidPosition(move.EndPosition, Piece.Peg))
+            if (!IsValidPosition(move.StartPosition, PieceType.Peg)
+                || !IsValidPosition(move.EndPosition, PieceType.Peg))
             {
                 valid = false;
             }

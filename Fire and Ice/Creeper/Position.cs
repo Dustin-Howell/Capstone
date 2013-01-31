@@ -7,6 +7,9 @@ namespace Creeper
 {
     public class Position
     {
+        public int Column { get; set; }
+        public int Row { get; set; }
+
         public Position() { }
 
         public Position(int row, int col)
@@ -15,12 +18,18 @@ namespace Creeper
             Row = row;
         }
 
-        public int Column { get; set; }
-        public int Row { get; set; }
-
         public bool Equals(Position position)
         {
             return (Column == position.Column && Row == position.Row);
+        }
+
+        public static bool operator ==(Position p1, Position p2)
+        {
+            return p1.Equals(p2);
+        }
+        public static bool operator !=(Position p1, Position p2)
+        {
+            return !p1.Equals(p2);
         }
 
         public Position Adjacent(CardinalDirection direction)

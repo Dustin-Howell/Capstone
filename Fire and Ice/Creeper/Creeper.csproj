@@ -45,6 +45,7 @@
     <Compile Include="IPeg.cs" />
     <Compile Include="ITile.cs" />
     <Compile Include="Move.cs" />
+    <Compile Include="Piece.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

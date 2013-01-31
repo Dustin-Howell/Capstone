@@ -5,13 +5,9 @@ using System.Text;
 
 namespace Creeper
 {
-    public class Tile
+    public class Tile : Piece
     {
-        public CreeperColor Color { get; set; }
-        public bool Marked { get;  set; }
         public bool HasTile { get { return Color != CreeperColor.Empty; } }
-        public int SlotNumber { get; private set; }
-        public Position Position { get { return CreeperUtility.NumberToPosition(SlotNumber, false); } }
         public List<Tile> Neighbors { get; private set; }
 
         public void SetNeighbors(List<Tile> neighbors)
@@ -19,10 +15,9 @@ namespace Creeper
             Neighbors = neighbors;
         }
 
-        public Tile(CreeperColor color, int slotNumber)
+        public Tile(CreeperColor color, Position position) : base(position)
         {
             Color = color;
-            SlotNumber = slotNumber;
         }
     }
 }

@@ -26,5 +26,10 @@ namespace CreeperAI
 
             return new Move(pegToMove.Position, endPosition, AIColor);
         }
+
+        public int TilesToVictory()
+        {
+            return 0;
+        }
     }
 }
