@@ -6,6 +6,7 @@ using System.Text;
 namespace Creeper
 {
     public enum CreeperColor { White, Black, Empty, Invalid }
+    public enum CardinalDirection { North, South, East, West }
     public enum Status { ValidMove, InvalidMove, GameOver }
     public enum Piece { Peg, Tile }
 
