@@ -166,7 +166,8 @@ namespace Creeper
                     CreeperColor color = CreeperColor.Empty;
 
                     //TODO: remove slotnumber stuff
-                    int slotNumber = CreeperUtility.PointToNumber(row, col, false);
+
+                    int slotNumber = 0;//CreeperUtility.PositionToNumber(row, col, false);
                     if (
                         (slotNumber == 0)
                         || (slotNumber == TileRows - 1)
