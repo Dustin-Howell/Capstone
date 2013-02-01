@@ -22,8 +22,8 @@ namespace Creeper
         private static Position _BlackEnd { get { return new Position(5, 0); } }
         private static Position _WhiteEnd { get { return new Position(5, 5); } }
 
-        public List<Piece> Pegs;
-        public List<Piece> Tiles;
+        public List<Piece> Pegs { get; private set; }
+        public List<Piece> Tiles { get; private set; }
 
         public CreeperBoard()
         {
@@ -31,6 +31,12 @@ namespace Creeper
             Tiles = new List<Piece>();
 
             ResetCreeperBoard();
+        }
+
+        public CreeperBoard(CreeperBoard board)
+        {
+            Pegs = new List<Piece>(board.Pegs);
+            Tiles = new List<Piece>(board.Tiles);
         }
 
         public List<Piece> WhereTeam(CreeperColor color)

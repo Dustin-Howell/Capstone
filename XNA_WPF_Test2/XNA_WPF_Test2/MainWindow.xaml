@@ -4,8 +4,12 @@
         xmlns:xna="clr-namespace:XNAControl;assembly=XNAControl"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         <xna:UserControl1 x:Name="xnaControl" Visibility="Visible"/>
-        <StackPanel>
+        <StackPanel Grid.Column="1">
             <Button Height="25" Width="50" Click="Button_Click">
                 Pause
             </Button>

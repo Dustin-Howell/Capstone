@@ -28,7 +28,7 @@ namespace Creeper
             return position.Row >= 0 && position.Row <= 6 && position.Column >= 0 && position.Column <= 6;
         }
 
-        static public List<Move> PossibleMoves(Piece peg, List<Piece> pegs)
+        static public List<Move> PossibleMoves(this Piece peg, List<Piece> pegs)
         {
             List<Move> moves = new List<Move>();
             Array directions = Enum.GetValues(typeof(CardinalDirection));
