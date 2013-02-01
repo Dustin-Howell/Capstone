@@ -9,6 +9,15 @@ namespace ProtoCreeper
 {
     class Program
     {
+        public static void Testfunction(CreeperBoard board)
+        {
+            List<Move> bogus = new List<Move>();
+            if (board.IsValidMove(new Move(new Position(2, 1), new Position(3, 2), CreeperColor.White)))
+            {
+                Console.WriteLine( "Win!");
+            }
+        }
+
         public static void AIGame(CreeperBoard board)
         {
             CreeperAI.CreeperAI creeperAI = new CreeperAI.CreeperAI();
@@ -168,12 +177,8 @@ namespace ProtoCreeper
             //board.PrintToConsole();
             //WhiteWin(board);
             //PlayerGame(board);
-            while (true)
-            {
-                AIGame(board);
-                board.ResetCreeperBoard();
-            }
-            
+            //AIGame(board);
+            Testfunction(board);
         }
     }
 }

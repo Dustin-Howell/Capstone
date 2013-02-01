@@ -30,8 +30,16 @@ namespace Creeper
 
         static public List<Move> PossibleMoves(this Piece peg, List<Piece> pegs)
         {
-            List<Move> moves = new List<Move>();
-            Array directions = Enum.GetValues(typeof(CardinalDirection));
+            List<Move> deleteable = new List<Move>();
+            Position position = peg.Position;
+            int size = 7;//sqrt of pegs?
+            int num = 0;
+            int location = PositionToNumber(peg.Position); 
+            List<Move> possible = new List<Move>();
+            Move possibleMove = new Move();
+            int modifier = -(size + 1);
+            possibleMove.StartPosition = position;
+            possibleMove.PlayerColor = peg.Color;
 
             foreach (CardinalDirection direction in directions)
             {
@@ -41,17 +49,47 @@ namespace Creeper
                 }
             }
 
-            foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
+            //First Check if out of bounds
+            possible = possible.Where((x) => !(PositionToNumber(x.EndPosition) < 1) 
+                || (PositionToNumber(x.EndPosition) > (size * size) - 2)
+                || (PositionToNumber(x.EndPosition) == size - 1)
+                || PositionToNumber(x.EndPosition) == (size * (size - 1))).ToList();
+
+
+            //now check for occupied moves have to fix errors in actual code
+            foreach (Move move in possible)
             {
-                if (IsPegOnBoard(peg.Position.Adjacent(direction)) && IsPegOnBoard(peg.Position.Adjacent(direction).Adjacent(direction))
-                    && pegs.At(peg.Position.Adjacent(direction).Adjacent(direction)).Color == CreeperColor.Empty
-                    && pegs.At(peg.Position.Adjacent(direction)).Color == (peg.Color == CreeperColor.White ? CreeperColor.Black : CreeperColor.White))
+                
+
+                if (pegs.At(position).Color == CreeperColor.Empty)
                 {
-                    moves.Add(new Move(peg.Position, peg.Position.Adjacent(direction).Adjacent(direction), peg.Color));
+                    if (pegs.At(position).Color != peg.Color)
+                    {
+                        num = location - PositionToNumber(move.EndPosition);
+                        num = PositionToNumber(move.EndPosition) - num;
+                        position = NumberToPosition(num);
+                        if (position.Column > 0 && position.Column < size && position.Row > 0 && position.Row < size && pegs.At(position).Color == CreeperColor.Empty)
+                        {
+                            possible.Add(move);
+                        }
+                        deleteable.Add(move);
+                        //possible.Remove(move);
+
+                    }
+                    else
+                    {
+                        deleteable.Add(move);
+                        //possible.Remove(move);
+                    }
                 }
             }
 
-            return moves;
+            foreach (Move move in deleteable)
+            {
+                possible.Remove(move);
+            }
+
+            return possible;
         }
 
         static public Position NumberToPosition(int number, bool isPeg = false)
@@ -76,11 +114,11 @@ namespace Creeper
             int number;
             if (isPeg)
             {
-                number = (position.Column + (position.Row * CreeperBoard.PegRows));
+                number = (position.Row + (position.Column * CreeperBoard.PegRows));
             }
             else
             {
-                number = (position.Column + (position.Row * CreeperBoard.TileRows));
+                number = (position.Row + (position.Column * CreeperBoard.TileRows));
             }
 
             return number;
