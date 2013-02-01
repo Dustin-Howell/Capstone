@@ -187,91 +187,99 @@ namespace Creeper
 
         public bool IsValidMove(Move move)
         {
-            List<Move> validMoves = new List<Move>();
-
-            validMoves = CreeperUtility.PossibleMove(Pegs.At(move.StartPosition), Pegs);
-
-            foreach (Move possible in validMoves)
-            {
-                if (possible.EndPosition == move.EndPosition)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-           }
+            return CreeperUtility.PossibleMoves(Pegs.At(move.StartPosition), Pegs)
+                .Any(x => x.EndPosition == move.EndPosition);
+        }
 
         public bool GameOver(CreeperColor playerTurn)
         {
             bool gameOver = false;
             bool stackEmpty = false;
-            Stack<Piece> tiles = new Stack<Piece>();
+            Stack<Piece> stack = new Stack<Piece>();
+            HashSet<Piece> foundTiles = new HashSet<Piece>();
+            HashSet<Piece> endTiles = new HashSet<Piece>();
             Position start = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
             Position end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
 
-            Piece currentTile = Tiles.Where(x => x.Position.Equals(start)).First();
+            endTiles.UnionWith(Tiles.At(end).GetNeighbors(this).Where(x => x.Color == playerTurn));
+            if (!endTiles.Any())
+            {
+                return false;
+            }
+
+            Piece currentTile = Tiles.At(start);
+            IEnumerable<Piece> neighbors = currentTile.GetNeighbors(this).Where(x => x.Color == playerTurn);
             while (!stackEmpty && !currentTile.Position.Equals(end))
             {
-                foreach (Piece neighbor in currentTile.GetNeighbors(this))
+                foreach (Piece neighbor in neighbors)
                 {
-                    if (neighbor.Color == playerTurn && !tiles.Contains(neighbor))
+                    if (!foundTiles.Contains(neighbor))
                     {
-                        tiles.Push(neighbor);
+                        stack.Push(neighbor);
                     }
-                    else if (neighbor.Position.Equals(end))
+                    else if (foundTiles.Intersect(endTiles).Any()) //(neighbor.Position.Equals(end))
                     {
                         gameOver = true;
                     }
                 }
 
-                if (tiles.Any())
+                foundTiles.UnionWith(neighbors);
+
+                if (stack.Any())
                 {
-                    currentTile = tiles.Pop();
+                    currentTile = stack.Pop();
                 }
                 else
                 {
                     stackEmpty = true;
                 }
+
+                neighbors = currentTile.GetNeighbors(this).Where(x => x.Color == playerTurn);
             }
 
             return gameOver;
         }
 
+        private Piece GetFlippedTile(Move move)
+        {
+            CardinalDirection direction = move.EndPosition.Row < move.StartPosition.Row ? (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Northwest : CardinalDirection.Northeast)
+                : (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Southwest : CardinalDirection.Southeast);
+
+            switch (direction)
+            {
+                case CardinalDirection.Northwest:
+                    return Tiles.At(new Position(move.EndPosition.Row, move.EndPosition.Column));
+
+                case CardinalDirection.Northeast:
+                    return Tiles.At(new Position(move.EndPosition.Row, move.EndPosition.Column - 1));
+
+                case CardinalDirection.Southwest:
+                    return Tiles.At(new Position(move.EndPosition.Row - 1, move.EndPosition.Column));
+
+                case CardinalDirection.Southeast:
+                    return Tiles.At(new Position(move.StartPosition.Row, move.StartPosition.Column));
+
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
         private void Flip(Move move)
         {
-            int startRow = move.StartPosition.Row;
-            int startCol = move.StartPosition.Column;
-            int endRow = move.EndPosition.Row;
-            int endCol = move.EndPosition.Column;
-            CreeperColor playerTurn = move.PlayerColor;
-
-            if (startRow > endRow)
+            Piece tile = GetFlippedTile(move);
+            if (!IsCorner(tile))
             {
-                if (startCol > endCol)
-                {
-                    //same as destination
-                    Tiles.Where(x => x.Position.Equals(move.EndPosition)).First().Color = move.PlayerColor;
-                }
-                else
-                {
-                    //same row as destination
-                    //col - 1
-                    Tiles.Where(x => x.Position.Equals(new Position(move.EndPosition.Row, move.EndPosition.Column - 1))).First().Color = move.PlayerColor;
-                }
+                tile.Color = move.PlayerColor;
             }
-            else
+        }
+
+        private void Capture(Move move)
+        {
+            foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
             {
-                if (startCol > endCol)
+                if (move.EndPosition == move.StartPosition.Adjacent(direction).Adjacent(direction))
                 {
-                    //same col as destination
-                    //row - 1
-                    Tiles.Where(x => x.Position.Equals(new Position(move.EndPosition.Row - 1, move.EndPosition.Column))).First().Color = move.PlayerColor;
-                }
-                else
-                {
-                    //same as start
-                    Tiles.Where(x => x.Position.Equals(move.StartPosition)).First().Color = move.PlayerColor;
+                    Pegs.At(move.StartPosition.Adjacent(direction)).Color = CreeperColor.Empty;
                 }
             }
         }
@@ -291,22 +299,26 @@ namespace Creeper
                 {
                     Flip(move);
                 }
-                
+
+                if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+                {
+                    Capture(move);
+                }
             }
 
             return isValid;
         }
 
         //forgot that I wrote this function... didn't use it above. May refactor to use it
-        public bool IsCorner(int row, int col, bool TileSpace)
+        public bool IsCorner(Piece piece)
         {
             bool isCorner = false;
-            int rows = (TileSpace) ? TileRows : PegRows;
+            int rows = (Tiles.Contains(piece)) ? TileRows : PegRows;
 
-            if ((row == 0 && col == 0)
-                || (row == 0 && col == rows - 1)
-                || (row == rows - 1 && col == 0)
-                || (row == rows - 1 && col == rows - 1)
+            if ((piece.Position.Row == 0 && piece.Position.Column == 0)
+                || (piece.Position.Row == 0 && piece.Position.Column == rows - 1)
+                || (piece.Position.Row == rows - 1 && piece.Position.Column == 0)
+                || (piece.Position.Row == rows - 1 && piece.Position.Column == rows - 1)
                 )
             {
                 isCorner = true;

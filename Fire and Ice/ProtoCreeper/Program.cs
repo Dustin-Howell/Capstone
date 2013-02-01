@@ -16,14 +16,17 @@ namespace ProtoCreeper
             bool gameOver = false;
             CreeperColor turn = CreeperColor.White;
 
-            while (!board.GameOver(turn))
+            while (!board.GameOver(turn)
+                && board.Pegs.Any(x => x.Color == CreeperColor.White)
+                && board.Pegs.Any(x => x.Color == CreeperColor.Black))
             {
                 board.Move(creeperAI.GetMove(board, turn));
-                //turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+                turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
                 board.PrintToConsole();
             }
 
             Console.WriteLine(String.Format("{0} lost.", turn.ToString()));
+            Console.ReadLine();
         }
 
         public static void WhiteWin(CreeperBoard board)
@@ -66,6 +69,7 @@ namespace ProtoCreeper
             {
                 Console.WriteLine("White wins!");
             }
+            Console.ReadLine();
         }
 
         //public static void PlayerGame(CreeperBoard board)

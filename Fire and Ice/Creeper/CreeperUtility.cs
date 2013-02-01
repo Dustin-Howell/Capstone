@@ -12,12 +12,10 @@ namespace Creeper
 
         public static IEnumerable<Piece> GetNeighbors(this Piece tile, CreeperBoard board)
         {
-            List<Piece> neighbors = new List<Piece>();
-            //neighbors = board.Tiles.Where(x => 
-            //    (board.IsValidPosition(x.Position.Adjacent(CardinalDirection.North), PieceType.Tile)
-            //    ||)).ToList();
-
-            return new List<Piece>();
+            List<CardinalDirection> neighborlyDirections = new List<CardinalDirection> { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West };
+            return neighborlyDirections
+            .Where(x => board.Tiles.Any(y => y.Position == tile.Position.Adjacent(x)))
+            .Select(x => board.Tiles.At(tile.Position.Adjacent(x)));
         }
 
         public static Piece At(this List<Piece> pieces, Position position)
@@ -25,85 +23,35 @@ namespace Creeper
             return pieces.Where(x => x.Position == position).First();
         }
 
-    
-
-        static public List<Move> PossibleMove(Piece peg, List<Piece> pegs)
+        private static bool IsPegOnBoard(Position position)
         {
-            Position position = peg.Position;
-            int size = 7;//sqrt of pegs?
-            int num = 0;
-            int location = PositionToNumber(peg.Position); 
-            List<Move> possible = new List<Move>();
-            Move possibleMove = new Move();
-            int modifier = -(size + 1);
-            possibleMove.StartPosition = position;
-            possibleMove.PlayerColor = peg.Color;
+            return position.Row >= 0 && position.Row <= 6 && position.Column >= 0 && position.Column <= 6;
+        }
 
-            //gets all the spots around the current peg
-            for (int i = 0; i < 8; i++)
+        static public List<Move> PossibleMoves(Piece peg, List<Piece> pegs)
+        {
+            List<Move> moves = new List<Move>();
+            Array directions = Enum.GetValues(typeof(CardinalDirection));
+
+            foreach (CardinalDirection direction in directions)
             {
-                possibleMove.EndPosition = NumberToPosition(location + modifier);
-                possible.Add(possibleMove);
-
-                if (modifier == -(size - 1))
+                if (IsPegOnBoard(peg.Position.Adjacent(direction)) && pegs.At(peg.Position.Adjacent(direction)).Color == CreeperColor.Empty)
                 {
-                    modifier = -1;
-                }
-                else if (modifier == -1)
-                {
-                    modifier = 1;
-                }
-                else if (modifier == 1)
-                {
-                    modifier = size - 1;
-                }
-                else
-                {
-                    modifier++;
+                    moves.Add(new Move(peg.Position, peg.Position.Adjacent(direction), peg.Color));
                 }
             }
 
-            //First Check if out of bounds
-            foreach (Move move in possible)
+            foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
             {
-                if ((PositionToNumber(move.EndPosition) < 1) || PositionToNumber(move.EndPosition) > (size * size) - 2)
+                if (IsPegOnBoard(peg.Position.Adjacent(direction)) && IsPegOnBoard(peg.Position.Adjacent(direction).Adjacent(direction))
+                    && pegs.At(peg.Position.Adjacent(direction).Adjacent(direction)).Color == CreeperColor.Empty
+                    && pegs.At(peg.Position.Adjacent(direction)).Color == (peg.Color == CreeperColor.White ? CreeperColor.Black : CreeperColor.White))
                 {
-                    possible.Remove(move);
-                }
-                if ((PositionToNumber(move.EndPosition) == size - 1 || PositionToNumber(move.EndPosition) == (size * (size - 1))))
-                {
-                    possible.Remove(move);
+                    moves.Add(new Move(peg.Position, peg.Position.Adjacent(direction).Adjacent(direction), peg.Color));
                 }
             }
 
-            //now check for occupied moves have to fix errors in actual code
-            foreach (Move x in possible)
-            {
-                
-
-                if (pegs.At(position).Color == CreeperColor.Empty)
-                {
-                    if (pegs.At(position).Color != peg.Color)
-                    {
-                        num = location - PositionToNumber(x.EndPosition);
-                        num = PositionToNumber(x.EndPosition) - num;
-                        position = NumberToPosition(num);
-                        if (position.Column > 0 && position.Column < size && position.Row > 0 && position.Row < size && pegs.At(position).Color == CreeperColor.Empty)
-                        {
-                            possible.Add(x);
-                        }
-
-                        possible.Remove(x);
-
-                    }
-                    else
-                    {
-                        possible.Remove(x);
-                    }
-                }
-            }
-
-            return possible;
+            return moves;
         }
 
         static public Position NumberToPosition(int number, bool isPeg = false)

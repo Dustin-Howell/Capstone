@@ -17,14 +17,7 @@ namespace CreeperAI
         {
             List<Piece> MyTeam = board.WhereTeam(AIColor);
             Piece pegToMove = MyTeam.OrderBy((x) => Random.Next()).First();
-            
-            Position endPosition = new Position(Random.Next() % CreeperBoard.PegRows, Random.Next() % CreeperBoard.PegRows);
-            while (!board.IsValidMove(new Move(pegToMove.Position, endPosition, AIColor)))
-            {
-                endPosition = new Position(Random.Next() % CreeperBoard.PegRows, Random.Next() % CreeperBoard.PegRows);
-            }
-
-            return new Move(pegToMove.Position, endPosition, AIColor);
+            return CreeperUtility.PossibleMoves(pegToMove, board.Pegs).OrderBy((x) => Random.Next()).First();
         }
 
         public int TilesToVictory()
