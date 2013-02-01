@@ -54,7 +54,7 @@ namespace CreeperAI
             List<Move> possibleMoves = new List<Move>();
             foreach (Piece peg in myTeam)
             {
-                possibleMoves.AddRange(peg.PossibleMoves(board.Pegs));
+                possibleMoves.AddRange(peg.PossibleMoves(board));
             }
             int max = Int32.MinValue;
             Move bestMove = new Move();
@@ -87,7 +87,7 @@ namespace CreeperAI
             List<Move> possibleMoves = new List<Move>();
             foreach (Piece peg in myTeam)
             {
-                possibleMoves.AddRange(peg.PossibleMoves(board.Pegs));
+                possibleMoves.AddRange(peg.PossibleMoves(board));
             }
             foreach (Move move in possibleMoves)
             {

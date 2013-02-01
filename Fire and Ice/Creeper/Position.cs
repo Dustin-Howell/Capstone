@@ -32,7 +32,7 @@ namespace Creeper
             return !p1.Equals(p2);
         }
 
-        public Position Adjacent(CardinalDirection direction)
+        public Position AtDirection(CardinalDirection direction)
         {
             Position position = new Position();
             if (direction == CardinalDirection.North)

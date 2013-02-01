@@ -46,9 +46,14 @@ namespace ProtoCreeper
                 && board.Pegs.Any(x => x.Color == CreeperColor.White)
                 && board.Pegs.Any(x => x.Color == CreeperColor.Black))
             {
+                Console.WriteLine("before ai move");
+                board.PrintToConsole();
+                Console.ReadLine();
                 board.Move(creeperAI.GetMove(board, turn));
                 turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+                Console.WriteLine("after ai move");
                 board.PrintToConsole();
+                Console.ReadLine();
                 Console.ReadLine();
             }
 
@@ -194,8 +199,8 @@ namespace ProtoCreeper
             //board.PrintToConsole();
             //WhiteWin(board);
             //PlayerGame(board);
-            //AIGame(board);
-            Testfunction(board);
+            AIGame(board);
+            //Testfunction(board);
         }
     }
 }

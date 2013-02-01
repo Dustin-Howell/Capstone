@@ -170,7 +170,7 @@ namespace Creeper
 
         public bool IsValidMove(Move move)
         {
-            return CreeperUtility.PossibleMoves(Pegs.At(move.StartPosition), Pegs)
+            return CreeperUtility.PossibleMoves(Pegs.At(move.StartPosition), this)
                 .Any(x => x.EndPosition == move.EndPosition);
         }
 
@@ -260,9 +260,9 @@ namespace Creeper
         {
             foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
             {
-                if (move.EndPosition == move.StartPosition.Adjacent(direction).Adjacent(direction))
+                if (move.EndPosition == move.StartPosition.AtDirection(direction).AtDirection(direction))
                 {
-                    Pegs.At(move.StartPosition.Adjacent(direction)).Color = CreeperColor.Empty;
+                    Pegs.At(move.StartPosition.AtDirection(direction)).Color = CreeperColor.Empty;
                 }
             }
         }
@@ -281,10 +281,8 @@ namespace Creeper
                 if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
                 {
                     Flip(move);
-                    Console.WriteLine("Flip!");
                 }
-
-                if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+                else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
                 {
                     Capture(move);
                 }
