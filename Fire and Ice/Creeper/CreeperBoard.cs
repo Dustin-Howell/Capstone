@@ -61,7 +61,7 @@ namespace Creeper
                 for (int col = 0; col < PegRows; col++)
                 {
                     //TODO: remove slotnumber stuff
-                    int slotNumber = (row * PegRows) + col;
+                    /int slotNumber = (row * PegRows) + col;
                     CreeperColor color;
 
                     switch (slotNumber)
@@ -157,6 +157,15 @@ namespace Creeper
                     Tiles.Add(new Piece(color, new Position(row,col)));
                 }
             }
+        }
+
+        private IEnumerable<Piece> GenerateEmptyPieces(int size)
+        {
+            IEnumerable<int> range = Enumerable.Range(0, size);
+            return range.Join(range,
+                row => row,
+                column => column,
+                (row, column) => new Piece(CreeperColor.Empty, new Position(row, column)));
         }
 
         public bool IsValidMove(Move move)
