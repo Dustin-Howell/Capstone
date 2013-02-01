@@ -21,24 +21,38 @@ namespace XNAControlGame
         public SpriteFont DefaultFont { get; private set; }
         public CreeperBoard Board { get; set; }
         public Texture2D Square { get; set; }
+        private List<GameScreen> GameScreens { get; set; }
+        public GameScreen InGameScreen { get; set; }
 
         public void StateChange(GameState previousState, GameState newState)
         {
+            foreach (GameScreen screen in GameScreens)
+            {
+                screen.Deactivate();
+            }
+
             switch (newState)
             {
                 case GameState.InGame:
-                    new InGameScreen(this, _spriteBatch).Activate();
+                    InGameScreen.Activate();
                     break;
             }
         }
 
+        public void MakeMove(Move move)
+        {
+
+        }
+
         public Game1(IntPtr handle) : base(handle, "Content")
         {
+            GameScreens.Add(InGameScreen);
         }
 
         protected override void Initialize()
         {
             base.Initialize();
+            InGameScreen = new InGameScreen(this, _spriteBatch, Board);
         }
 
         protected override void LoadContent()

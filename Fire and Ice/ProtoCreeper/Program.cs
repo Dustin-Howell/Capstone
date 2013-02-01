@@ -26,7 +26,6 @@ namespace ProtoCreeper
             }
 
             Console.WriteLine(String.Format("{0} lost.", turn.ToString()));
-            Console.ReadLine();
         }
 
         public static void WhiteWin(CreeperBoard board)
@@ -69,7 +68,6 @@ namespace ProtoCreeper
             {
                 Console.WriteLine("White wins!");
             }
-            Console.ReadLine();
         }
 
         //public static void PlayerGame(CreeperBoard board)
@@ -169,7 +167,12 @@ namespace ProtoCreeper
             //board.PrintToConsole();
             //WhiteWin(board);
             //PlayerGame(board);
-            AIGame(board);
+            while (true)
+            {
+                AIGame(board);
+                board.ResetCreeperBoard();
+            }
+            
         }
     }
 }

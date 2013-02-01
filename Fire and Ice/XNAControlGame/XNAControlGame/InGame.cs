@@ -10,10 +10,10 @@ namespace XNAControlGame
 {
     public class InGameScreen : GameScreen
     {
-        protected List<Button> PegButtons { get; set; }
-        public InGameScreen(Game1 game, SpriteBatch spriteBatch) : base(game, spriteBatch) 
+        protected List<PieceButton> PegButtons { get; set; }
+        public InGameScreen(Game1 game, SpriteBatch spriteBatch, CreeperBoard board) : base(game, spriteBatch) 
         {
-            PegButtons = new List<Button>();
+            PegButtons = new List<PieceButton>();
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)

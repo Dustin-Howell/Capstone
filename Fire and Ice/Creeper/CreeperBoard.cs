@@ -45,36 +45,6 @@ namespace Creeper
             return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
         }
 
-        //TODO: delete this
-        //protected void AssignNeighbors()
-        //{
-        //    foreach (Tile tile in Tiles)
-        //    {
-        //        List<Piece> neighbors = new List<Piece>();
-
-        //        int col = tile.Position.Column;
-        //        int row = tile.Position.Row;
-
-        //        List<Position> possibleNeighbors = new List<Position>();
-
-        //        possibleNeighbors.Add(new Position(row - 1, col));
-        //        possibleNeighbors.Add(new Position(row, col + 1));
-        //        possibleNeighbors.Add(new Position(row + 1, col));
-        //        possibleNeighbors.Add(new Position(row, col - 1));
-
-        //        foreach (Position position in possibleNeighbors)
-        //        {
-        //            if (IsValidPosition(position, PieceType.Tile))
-        //            {
-        //                neighbors.Add(Tiles.Where(x => x.Position.Equals(position)).First());
-        //            }
-        //        }
-
-
-        //        tile.SetNeighbors(neighbors);
-        //    }
-        //}
-
         public void ResetCreeperBoard()
         {
             Tiles.Clear();
