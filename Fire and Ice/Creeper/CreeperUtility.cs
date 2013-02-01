@@ -47,9 +47,9 @@ namespace Creeper
             possibleMove.StartPosition = position;
             possibleMove.PlayerColor = peg.Color;
             
-            foreach (CardinalDirection direction in directions)
+            for (int i = 0; i < 8; i++)
             {
-                possibleMove.EndPosition = NumberToPosition(location + modifier,true);
+                possibleMove.EndPosition = NumberToPosition(location + modifier , true);
                 if (location % size != 0 || (location + modifier) % size != size - 1)
                 {
                     if (location % size != size - 1 || (location + modifier) % size != 0)
@@ -57,14 +57,25 @@ namespace Creeper
                         possible.Add(new Move(possibleMove));
                     }
                 }
-
-               
-
                 if (modifier == -(size - 1))
                 {
-                    moves.Add(new Move(peg.Position, peg.Position.Adjacent(direction), peg.Color));
+                    modifier = -1;
+                }
+                else if (modifier == -1)
+                {
+                    modifier = 1;
+                }
+                else if (modifier == 1)
+                {
+                    modifier = size - 1;
+                }
+                else
+                {
+                    modifier++;
                 }
             }
+
+            
 
             //First Check if out of bounds
             possible = possible.Where((x) => !(x.EndPosition.Row < 1

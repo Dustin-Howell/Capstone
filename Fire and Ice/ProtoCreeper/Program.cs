@@ -23,7 +23,7 @@ namespace ProtoCreeper
             }*/
 
             board.Move(new Move(new Position(4,0),new Position(3,0),CreeperColor.Black));
-            board.Move(new Move(new Position(2, 0), new Position(4, 0), CreeperColor.White));
+            //board.Move(new Move(new Position(2, 0), new Position(4, 0), CreeperColor.White));
             if (board.IsValidMove(new Move(new Position(2,0), new Position(4,0), CreeperColor.White)))
             {
                 Console.WriteLine("Jump Test works!");
