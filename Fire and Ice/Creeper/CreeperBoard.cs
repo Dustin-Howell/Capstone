@@ -143,7 +143,7 @@ namespace Creeper
 
                     //TODO: remove slotnumber stuff
 
-                    int slotNumber = 0;//CreeperUtility.PositionToNumber(row, col, false);
+                    int slotNumber = CreeperUtility.PositionToNumber(new Position(row, col), false);
                     if (
                         (slotNumber == 0)
                         || (slotNumber == TileRows - 1)
@@ -157,8 +157,6 @@ namespace Creeper
                     Tiles.Add(new Piece(color, new Position(row,col)));
                 }
             }
-
-
         }
 
         public bool IsValidMove(Move move)

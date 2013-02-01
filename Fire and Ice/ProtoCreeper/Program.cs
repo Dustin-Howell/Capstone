@@ -23,6 +23,7 @@ namespace ProtoCreeper
                 board.Move(creeperAI.GetMove(board, turn));
                 turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
                 board.PrintToConsole();
+                Console.ReadLine();
             }
 
             Console.WriteLine(String.Format("{0} lost.", turn.ToString()));

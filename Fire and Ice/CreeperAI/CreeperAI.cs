@@ -9,10 +9,12 @@ namespace CreeperAI
 {
     public class CreeperAI
     {
+        //Debug Variables
+        private int _recursiveCalls = 0;
+
         private Random _random = new Random();
         private CreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _recursiveCalls = 0;
 
         private const int _White = 0;
         private const int _Black = 1;
@@ -30,21 +32,22 @@ namespace CreeperAI
 
             //This business with the threading is a hack to increase the stack size
             //This is not an asynchronous implementaion:
-            Thread t = new Thread(delegate()
-                {
-                    bestMove = GetMiniMaxMove(board);
-                }, 100000000);
-            t.Start();
+            //Thread t = new Thread(delegate()
+            //    {
+            //        bestMove = GetMiniMaxMove(board);
+            //    }, 100000000);
+            //t.Start();
 
             //Join blocks the main thread until t returns
-            t.Join();
+            //t.Join();
 
             //This hits stack overflow
-            //bestMove = GetMiniMaxMove(_board);
+            bestMove = GetMiniMaxMove(_board);
 
             return bestMove;
         }
 
+        //This is where I functionalized the stuff we were doing to prepare to call minimax
         private Move GetMiniMaxMove(CreeperBoard board)
         {
             List<Piece> myTeam = board.WhereTeam(_turnColor);
@@ -70,10 +73,12 @@ namespace CreeperAI
             return bestMove;
         }
 
+        //This i renamed to ScoreMiniMaxMove because it made more sense to me this way
+        //And this is the actual recursive function
         private int ScoreMiniMaxMove(CreeperBoard board, int depth)
         {
-            Console.WriteLine("Calls: " + _recursiveCalls++);
-            if (board.GameOver(_turnColor) || depth <= 0)
+            //Console.WriteLine("Calls: " + _recursiveCalls++);
+            if (board.GameOver(_turnColor) || depth >= 0)
             {
                 return ScoreBoard(board);
             }
