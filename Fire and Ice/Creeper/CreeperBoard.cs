@@ -61,7 +61,7 @@ namespace Creeper
                 for (int col = 0; col < PegRows; col++)
                 {
                     //TODO: remove slotnumber stuff
-                    /int slotNumber = (row * PegRows) + col;
+                    int slotNumber = (row * PegRows) + col;
                     CreeperColor color;
 
                     switch (slotNumber)
