@@ -191,7 +191,7 @@ namespace Creeper
                     {
                         stack.Push(neighbor);
                     }
-                    else if (foundTiles.Intersect(endTiles).Any()) //(neighbor.Position.Equals(end))
+                    else if (foundTiles.Intersect(endTiles).Any())
                     {
                         gameOver = true;
                     }
