@@ -272,12 +272,14 @@ namespace Creeper
                 if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
                 {
                     Flip(move);
+                    Console.WriteLine("Flip!");
                 }
 
                 if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
                 {
                     Capture(move);
                 }
+                
             }
 
             return isValid;

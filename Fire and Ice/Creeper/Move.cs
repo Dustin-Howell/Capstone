@@ -21,5 +21,12 @@ namespace Creeper
             EndPosition = endPosition;
             PlayerColor = playerColor;
         }
+
+        public Move(Move move)
+        {
+            this.StartPosition = move.StartPosition;
+            this.EndPosition = move.EndPosition;
+            this.PlayerColor = move.PlayerColor;
+        }
     }
 }

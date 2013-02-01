@@ -11,11 +11,28 @@ namespace ProtoCreeper
     {
         public static void Testfunction(CreeperBoard board)
         {
-            List<Move> bogus = new List<Move>();
-            if (board.IsValidMove(new Move(new Position(2, 1), new Position(3, 2), CreeperColor.White)))
+
+            // test's a non jumping of flipping move
+           /* if (board.IsValidMove(new Move(new Position(1, 2), new Position(2, 3), CreeperColor.White)))
             {
-                Console.WriteLine( "Win!");
+                Console.WriteLine("SideMove Test passed!");
             }
+            else
+            {
+                Console.WriteLine("SideMove Test failed");
+            }*/
+
+            board.Move(new Move(new Position(4,0),new Position(3,0),CreeperColor.Black));
+            board.Move(new Move(new Position(2, 0), new Position(4, 0), CreeperColor.White));
+            if (board.IsValidMove(new Move(new Position(2,0), new Position(4,0), CreeperColor.White)))
+            {
+                Console.WriteLine("Jump Test works!");
+            }
+            else
+            {
+                Console.WriteLine("Jump Test Failed");
+            }
+             
         }
 
         public static void AIGame(CreeperBoard board)
