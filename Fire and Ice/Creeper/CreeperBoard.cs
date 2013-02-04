@@ -21,6 +21,10 @@ namespace Creeper
         private static Position _WhiteStart { get { return new Position(0, 0); } }
         private static Position _BlackEnd { get { return new Position(5, 0); } }
         private static Position _WhiteEnd { get { return new Position(5, 5); } }
+        private static Position _NorthBlackPegCorner { get { return new Position(0, 6); } }
+        private static Position _NorthWhitePegCorner { get { return new Position(0, 0); } }
+        private static Position _SouthBlackPegCorner { get { return new Position(6, 0); } }
+        private static Position _SouthWhitePegCorner { get { return new Position(6, 6); } }
 
         public List<Piece> Pegs { get; private set; }
         public List<Piece> Tiles { get; private set; }
@@ -56,105 +60,35 @@ namespace Creeper
             Tiles.Clear();
             Pegs.Clear();
 
-            for (int row = 0; row < PegRows; row++)
-            {
-                for (int col = 0; col < PegRows; col++)
-                {
-                    //TODO: remove slotnumber stuff
-                    int slotNumber = (row * PegRows) + col;
-                    CreeperColor color;
+            Tiles = GenerateEmptyPieces(_TileRows);
+            Pegs = GenerateEmptyPieces(_PegRows);
 
-                    switch (slotNumber)
-                    {
-                        case 0:
-                            color = CreeperColor.Invalid;
-                            break;
-                        case 1:
-                            color = CreeperColor.White;
-                            break;
-                        case 2:
-                            color = CreeperColor.White;
-                            break;
-                        case _PegRows - 3:
-                            color = CreeperColor.Black;
-                            break;
-                        case _PegRows - 2:
-                            color = CreeperColor.Black;
-                            break;
-                        case _PegRows - 1:
-                            color = CreeperColor.Invalid;
-                            break;
-                        case _PegRows:
-                            color = CreeperColor.White;
-                            break;
-                        case _PegRows * 2 - 1:
-                            color = CreeperColor.Black;
-                            break;
-                        case _PegRows * 2:
-                            color = CreeperColor.White;
-                            break;
-                        case _PegRows * 3 - 1:
-                            color = CreeperColor.Black;
-                            break;
-                        case _PegRows * (_PegRows - 3):
-                            color = CreeperColor.Black;
-                            break;
-                        case (_PegRows * (_PegRows - 2)) - 1:
-                            color = CreeperColor.White;
-                            break;
-                        case (_PegRows * (_PegRows - 2)):
-                            color = CreeperColor.Black;
-                            break;
-                        case (_PegRows * (_PegRows - 1)) - 1:
-                            color = CreeperColor.White;
-                            break;
-                        case _PegRows * (_PegRows - 1):
-                            color = CreeperColor.Invalid;
-                            break;
-                        case (_PegRows * (_PegRows - 1)) + 1:
-                            color = CreeperColor.Black;
-                            break;
-                        case (_PegRows * (_PegRows - 1)) + 2:
-                            color = CreeperColor.Black;
-                            break;
-                        case (_PegRows * _PegRows) - 3:
-                            color = CreeperColor.White;
-                            break;
-                        case (_PegRows * _PegRows) - 2:
-                            color = CreeperColor.White;
-                            break;
-                        case (_PegRows * _PegRows) - 1:
-                            color = CreeperColor.Invalid;
-                            break;
-                        default:
-                            color = CreeperColor.Empty;
-                            break;
-                    }
-                    Piece peg = new Piece(color, new Position(row, col));
-                    Pegs.Add(peg);
-                }
+            foreach (Piece tile in Tiles.Where(x => x.Position == _BlackStart
+                || x.Position == _WhiteStart
+                || x.Position == _BlackEnd
+                || x.Position == _WhiteEnd))
+            {
+                tile.Color = CreeperColor.Invalid;
             }
 
-            for (int row = 0; row < TileRows; row++)
+
+            CreeperColor color = CreeperColor.White;
+            foreach (Piece peg in Pegs.Where(x => x.Position == _NorthBlackPegCorner
+                || x.Position == _NorthWhitePegCorner
+                || x.Position == _SouthBlackPegCorner
+                || x.Position == _SouthWhitePegCorner))
             {
-                for (int col = 0; col < TileRows; col++)
+                peg.Color = CreeperColor.Invalid;
+
+                foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
                 {
-                    CreeperColor color = CreeperColor.Empty;
-
-                    //TODO: remove slotnumber stuff
-
-                    int slotNumber = CreeperUtility.PositionToNumber(new Position(row, col), false);
-                    if (
-                        (slotNumber == 0)
-                        || (slotNumber == TileRows - 1)
-                        || (slotNumber == TileRows * (TileRows - 1))
-                        || (slotNumber == (TileRows * TileRows) - 1)
-                        )
+                    if (IsValidPosition(peg.Position.AtDirection(direction), PieceType.Peg))
                     {
-                        color = CreeperColor.Invalid;
-                    }
+                        color = (peg.Position == _NorthBlackPegCorner || peg.Position == _SouthBlackPegCorner) ? CreeperColor.Black : CreeperColor.White;
 
-                    Tiles.Add(new Piece(color, new Position(row,col)));
+                        Pegs.At(peg.Position.AtDirection(direction)).Color = color;
+                        Pegs.At(peg.Position.AtDirection(direction).AtDirection(direction)).Color = color;
+                    }
                 }
             }
         }
