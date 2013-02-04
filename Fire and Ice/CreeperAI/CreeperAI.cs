@@ -10,6 +10,7 @@ namespace CreeperAI
     public class CreeperAI
     {
         //Debug Variables
+        private bool _DEBUG = false;
         private int _recursiveCalls = 0;
 
         private Random _random = new Random();
@@ -24,10 +25,6 @@ namespace CreeperAI
             //This must be a copy
             _board = new CreeperBoard(board);
             _turnColor = AIColor;
-
-            //List<Piece> MyTeam = board.WhereTeam(_turnColor);
-            //Piece pegToMove = MyTeam.OrderBy((x) => _random.Next()).First();
-            //return CreeperUtility.PossibleMoves(pegToMove, board.Pegs).OrderBy((x) => _random.Next()).First();
             Move bestMove = new Move();
 
             //This business with the threading is a hack to increase the stack size
@@ -41,7 +38,6 @@ namespace CreeperAI
             //Join blocks the main thread until t returns
             //t.Join();
 
-            //This hits stack overflow
             bestMove = GetMiniMaxMove(_board);
 
             return bestMove;
@@ -77,7 +73,12 @@ namespace CreeperAI
         //And this is the actual recursive function
         private int ScoreMiniMaxMove(CreeperBoard board, int depth)
         {
-            //Console.WriteLine("Calls: " + _recursiveCalls++);
+            if (_DEBUG)
+            {
+                Console.WriteLine("Calls: " + _recursiveCalls++);
+            }
+
+
             if (board.IsFinished(_turnColor) || depth >= 0)
             {
                 return ScoreBoard(board);
