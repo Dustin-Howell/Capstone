@@ -110,6 +110,12 @@ namespace Creeper
 
         public bool GameOver(CreeperColor playerTurn)
         {
+            List<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black);
+            if (!opponent.Any()  || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
+            {
+                return true;
+            }
+
             bool gameOver = false;
             bool stackEmpty = false;
             Stack<Piece> stack = new Stack<Piece>();
