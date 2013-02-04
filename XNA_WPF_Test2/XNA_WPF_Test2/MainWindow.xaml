@@ -8,8 +8,31 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <xna:UserControl1 x:Name="xnaControl" Visibility="Visible"/>
+        <Grid x:Name="xnaContainer">
+            <xna:UserControl1 x:Name="xnaControl" Visibility="Visible" Grid.Column="0"/>
+        </Grid>
+
         <StackPanel Grid.Column="1">
+            <Button Height="25" Width="50" Click="Button_Click">
+                Pause
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_1">
+                Pause()
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_2">
+                Speed+
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_3">
+                Speed-
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_4">
+                Hide
+            </Button>
+            <Button Height="25" Width="50" Click="Button_Click_5">
+                Show
+            </Button>
+        </StackPanel>
+        <StackPanel Grid.Column="0">
             <Button Height="25" Width="50" Click="Button_Click">
                 Pause
             </Button>

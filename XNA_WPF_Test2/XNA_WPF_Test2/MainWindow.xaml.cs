@@ -46,7 +46,16 @@ namespace XNA_WPF_Test2
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             _game.SlowDown();
+        }
 
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            xnaContainer.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            xnaContainer.Visibility = System.Windows.Visibility.Visible;
         }
     }
 }
