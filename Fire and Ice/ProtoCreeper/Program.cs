@@ -38,7 +38,7 @@ namespace ProtoCreeper
         public static void AIGame(CreeperBoard board)
         {
             CreeperAI.CreeperAI creeperAI = new CreeperAI.CreeperAI();
-            bool pauseAfterPrint = true;
+            bool pauseAfterPrint = false;
 
             bool gameOver = false;
             CreeperColor turn = CreeperColor.Black;

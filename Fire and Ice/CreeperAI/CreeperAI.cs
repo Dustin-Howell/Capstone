@@ -23,24 +23,15 @@ namespace CreeperAI
         private const double _TerritorialWeight = 1.0;
         private const double _MaterialWeight = 1000000.0;
 
+        private const int _MiniMaxDepth = 2;
+
         public Move GetMove(CreeperBoard board, CreeperColor AIColor)
         {
             //This must be a copy
             _board = new CreeperBoard(board);
             _turnColor = AIColor;
+
             Move bestMove = new Move();
-
-            //This business with the threading is a hack to increase the stack size
-            //This is not an asynchronous implementaion:
-            //Thread t = new Thread(delegate()
-            //    {
-            //        bestMove = GetMiniMaxMove(board);
-            //    }, 100000000);
-            //t.Start();
-
-            //Join blocks the main thread until t returns
-            //t.Join();
-
             bestMove = GetMiniMaxMove(_board);
 
             return bestMove;
@@ -58,10 +49,10 @@ namespace CreeperAI
             double max = Double.MinValue;
             Move bestMove = new Move();
             foreach (Move move in possibleMoves)
-            {
+            {                
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                double moveScore = ScoreMiniMaxMove(newBoard, 2);
+                double moveScore = ScoreMiniMaxMove(newBoard, _turnColor, _MiniMaxDepth);
                 if (moveScore > max)
                 {
                     max = moveScore;
@@ -74,31 +65,24 @@ namespace CreeperAI
 
         //This i renamed to ScoreMiniMaxMove because it made more sense to me this way
         //And this is the actual recursive function
-        private double ScoreMiniMaxMove(CreeperBoard board, int depth)
+        private double ScoreMiniMaxMove(CreeperBoard board, CreeperColor turnColor, int depth)
         {
             if (_DEBUG)
             {
                 Console.WriteLine("Calls: " + _recursiveCalls++);
             }
 
-
-            if (board.IsFinished(_turnColor) || depth >= 0)
+            if (board.IsFinished(turnColor) || depth <= 0)
             {
                 //This is where we call our specific score board implementation
-                return ScoreBoard(board, _turnColor);
+                return ScoreBoard(board, turnColor);
             }
 
-            List<Piece> myTeam = board.WhereTeam(_turnColor, PieceType.Peg);
+            List<Piece> currentTeam = board.WhereTeam(turnColor, PieceType.Peg);
             List<Move> possibleMoves = new List<Move>();
-            foreach (Piece peg in myTeam)
+            foreach (Piece peg in currentTeam)
             {
                 possibleMoves.AddRange(peg.PossibleMoves(board));
-            }
-            foreach (Move move in possibleMoves)
-            {
-                CreeperBoard newBoard = new CreeperBoard(board);
-                newBoard.Move(move);
-                ScoreMiniMaxMove(newBoard, 1);
             }
 
             double alpha = Double.MinValue;
@@ -106,8 +90,9 @@ namespace CreeperAI
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                alpha = Math.Max(alpha, -ScoreMiniMaxMove(newBoard, depth - 1));
+                alpha = Math.Max(alpha, -ScoreMiniMaxMove(newBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, depth - 1));
             }
+
             return alpha;
         }
         
@@ -160,5 +145,8 @@ namespace CreeperAI
         {
             return 0;
         }
+
+        //**************************Debug Functions******************************\\
+
     }
 }
