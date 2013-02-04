@@ -52,13 +52,13 @@ namespace CreeperAI
             {
                 possibleMoves.AddRange(peg.PossibleMoves(board));
             }
-            int max = Int32.MinValue;
+            double max = Double.MinValue;
             Move bestMove = new Move();
             foreach (Move move in possibleMoves)
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                int moveScore = ScoreMiniMaxMove(newBoard, 1);
+                double moveScore = ScoreMiniMaxMove(newBoard, 2);
                 if (moveScore > max)
                 {
                     max = moveScore;
@@ -71,7 +71,7 @@ namespace CreeperAI
 
         //This i renamed to ScoreMiniMaxMove because it made more sense to me this way
         //And this is the actual recursive function
-        private int ScoreMiniMaxMove(CreeperBoard board, int depth)
+        private double ScoreMiniMaxMove(CreeperBoard board, int depth)
         {
             if (_DEBUG)
             {
@@ -81,7 +81,7 @@ namespace CreeperAI
 
             if (board.IsFinished(_turnColor) || depth >= 0)
             {
-                return ScoreBoard(board);
+                return ScoreBoardTerritorial(board, _turnColor);
             }
 
             List<Piece> myTeam = board.WhereTeam(_turnColor);
@@ -97,7 +97,7 @@ namespace CreeperAI
                 ScoreMiniMaxMove(newBoard, 1);
             }
 
-            int alpha = Int32.MinValue;
+            double alpha = Double.MinValue;
             foreach (Move move in possibleMoves)
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
@@ -110,6 +110,11 @@ namespace CreeperAI
         private int ScoreBoard(CreeperBoard board)
         {
             return _random.Next() % 10;
+        }
+
+        private double ScoreBoardTerritorial(CreeperBoard board, CreeperColor turn)
+        {
+            return (double)board.Tiles.Where(x => x.Color == turn).Count() / board.Tiles.Where(x => x.Color != turn).Count();
         }
 
         public int TilesToVictory()
