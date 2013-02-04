@@ -44,9 +44,10 @@ namespace Creeper
             Tiles = board.Tiles.Select(x => new Piece(x.Color, x.Position)).ToList();
         }
 
-        public List<Piece> WhereTeam(CreeperColor color)
+        public List<Piece> WhereTeam(CreeperColor color, PieceType pieceType)
         {
-            return Pegs.Where(x => x.Color == color).ToList();
+            List<Piece> pieces = (pieceType == PieceType.Peg) ? Pegs : Tiles;
+            return pieces.Where(x => x.Color == color).ToList();
         }
 
         public bool IsValidPosition(Position position, PieceType pieceType)
@@ -116,7 +117,7 @@ namespace Creeper
 
         public CreeperGameState GetGameState(CreeperColor playerTurn)
         {
-            List<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black);
+            List<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);
             if (!opponent.Any()  || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
             {
                 return CreeperGameState.Draw;
@@ -311,8 +312,8 @@ namespace Creeper
                 Console.Write("\n");
             }
 
-            Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.White).Count));
-            Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Black).Count));
+            Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.White, PieceType.Peg).Count));
+            Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Black, PieceType.Peg).Count));
             Console.WriteLine();
             if (pause)
             {

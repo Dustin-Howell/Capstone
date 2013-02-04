@@ -20,6 +20,9 @@ namespace CreeperAI
         private const int _White = 0;
         private const int _Black = 1;
 
+        private const double _TerritorialWeight = 1.0;
+        private const double _MaterialWeight = 1000000.0;
+
         public Move GetMove(CreeperBoard board, CreeperColor AIColor)
         {
             //This must be a copy
@@ -46,7 +49,7 @@ namespace CreeperAI
         //This is where I functionalized the stuff we were doing to prepare to call minimax
         private Move GetMiniMaxMove(CreeperBoard board)
         {
-            List<Piece> myTeam = board.WhereTeam(_turnColor);
+            List<Piece> myTeam = board.WhereTeam(_turnColor, PieceType.Peg);
             List<Move> possibleMoves = new List<Move>();
             foreach (Piece peg in myTeam)
             {
@@ -81,10 +84,11 @@ namespace CreeperAI
 
             if (board.IsFinished(_turnColor) || depth >= 0)
             {
-                return ScoreBoardTerritorial(board, _turnColor);
+                //This is where we call our specific score board implementation
+                return ScoreBoard(board, _turnColor);
             }
 
-            List<Piece> myTeam = board.WhereTeam(_turnColor);
+            List<Piece> myTeam = board.WhereTeam(_turnColor, PieceType.Peg);
             List<Move> possibleMoves = new List<Move>();
             foreach (Piece peg in myTeam)
             {
@@ -106,15 +110,50 @@ namespace CreeperAI
             }
             return alpha;
         }
-
-        private int ScoreBoard(CreeperBoard board)
+        
+        private double ScoreBoard(CreeperBoard board, CreeperColor turn)
         {
-            return _random.Next() % 10;
+            double score = 0.0;
+
+            score += (ScoreBoardTerritorial(board, turn) * _TerritorialWeight);
+            score += (ScoreBoardMaterial(board, turn) * _MaterialWeight);
+
+            return score;
         }
 
         private double ScoreBoardTerritorial(CreeperBoard board, CreeperColor turn)
         {
-            return (double)board.Tiles.Where(x => x.Color == turn).Count() / board.Tiles.Where(x => x.Color != turn).Count();
+            CreeperColor opponentTurn = (turn == CreeperColor.White)? CreeperColor.Black : CreeperColor.White;
+            double myTeamCount = board.WhereTeam(turn, PieceType.Tile).Count;
+            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Tile).Count;
+
+            //TODO: maybe fix this
+            if (opponentTeamCount == 0)
+            {
+                opponentTeamCount = 1;
+            }
+
+            return myTeamCount / opponentTeamCount;
+        }
+
+        private double ScoreBoardMaterial(CreeperBoard board, CreeperColor turn)
+        {
+            CreeperColor opponentTurn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+            double myTeamCount = board.WhereTeam(turn, PieceType.Peg).Count;
+            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Peg).Count;
+
+            //TODO: maybe fix this
+            if (opponentTeamCount == 0)
+            {
+                opponentTeamCount = 1;
+            }
+
+            return myTeamCount / opponentTeamCount;
+        }
+
+        private double ScoreBoardRandom(CreeperBoard board)
+        {
+            return (((double)_random.Next()) % 100) / 100;
         }
 
         public int TilesToVictory()
