@@ -9,7 +9,7 @@ namespace ProtoCreeper
 {
     class Program
     {
-        public static void Testfunction(CreeperBoard board)
+        public static void JumpTest(CreeperBoard board)
         {
 
             // test's a non jumping of flipping move
@@ -40,24 +40,19 @@ namespace ProtoCreeper
             CreeperAI.CreeperAI creeperAI = new CreeperAI.CreeperAI();
 
             bool gameOver = false;
-            CreeperColor turn = CreeperColor.White;
+            CreeperColor turn = CreeperColor.Black;
 
             while (!board.GameOver(turn)
                 && board.Pegs.Any(x => x.Color == CreeperColor.White)
                 && board.Pegs.Any(x => x.Color == CreeperColor.Black))
             {
-                Console.WriteLine("before ai move");
-                board.PrintToConsole();
-                Console.ReadLine();
-                board.Move(creeperAI.GetMove(board, turn));
                 turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
-                Console.WriteLine("after ai move");
-                board.PrintToConsole();
-                Console.ReadLine();
-                Console.ReadLine();
+
+                board.Move(creeperAI.GetMove(board, turn));
+                board.PrintToConsole(true);
             }
 
-            Console.WriteLine(String.Format("{0} lost.", turn.ToString()));
+            Console.WriteLine(String.Format("{0} won.", turn.ToString()));
         }
 
         public static void WhiteWin(CreeperBoard board)

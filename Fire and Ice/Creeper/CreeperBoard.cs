@@ -244,7 +244,7 @@ namespace Creeper
             return isCorner;
         }
 
-        public void PrintToConsole()
+        public void PrintToConsole(bool pause = false)
         {
             for (int row = 0; row < PegRows; row++)
             {
@@ -256,7 +256,7 @@ namespace Creeper
                             Console.Write("B");
                             break;
                         case CreeperColor.Empty:
-                            Console.Write("E");
+                            Console.Write(" ");
                             break;
                         case CreeperColor.Invalid:
                             Console.Write("I");
@@ -299,7 +299,13 @@ namespace Creeper
                 Console.Write("\n");
             }
 
-            //Console.Read();
+            Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.White).Count));
+            Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Black).Count));
+            Console.WriteLine();
+            if (pause)
+            {
+                Console.ReadLine();
+            }
         }
     }
 }
