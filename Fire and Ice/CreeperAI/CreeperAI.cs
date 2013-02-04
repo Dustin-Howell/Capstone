@@ -78,7 +78,7 @@ namespace CreeperAI
         private int ScoreMiniMaxMove(CreeperBoard board, int depth)
         {
             //Console.WriteLine("Calls: " + _recursiveCalls++);
-            if (board.GameOver(_turnColor) || depth >= 0)
+            if (board.IsFinished(_turnColor) || depth >= 0)
             {
                 return ScoreBoard(board);
             }

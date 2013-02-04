@@ -42,7 +42,7 @@ namespace ProtoCreeper
             bool gameOver = false;
             CreeperColor turn = CreeperColor.Black;
 
-            while (!board.GameOver(turn)
+            while (!board.IsFinished(turn)
                 && board.Pegs.Any(x => x.Color == CreeperColor.White)
                 && board.Pegs.Any(x => x.Color == CreeperColor.Black))
             {
@@ -91,7 +91,7 @@ namespace ProtoCreeper
             board.PrintToConsole();
 
 
-            if(board.GameOver(CreeperColor.White))
+            if(board.GetGameState(CreeperColor.White) == CreeperGameState.Complete)
             {
                 Console.WriteLine("White wins!");
             }

@@ -9,6 +9,7 @@ namespace Creeper
     public enum CardinalDirection { North, South, East, West, Northwest, Northeast, Southwest, Southeast }
     public enum Status { ValidMove, InvalidMove, GameOver }
     public enum PieceType { Peg, Tile }
+    public enum CreeperGameState {Complete, Draw, Unfinished }
 
     public class CreeperBoard
     {
@@ -108,12 +109,17 @@ namespace Creeper
                 .Any(x => x.EndPosition == move.EndPosition);
         }
 
-        public bool GameOver(CreeperColor playerTurn)
+        public bool IsFinished(CreeperColor playerTurn)
+        {
+            return GetGameState(playerTurn) != CreeperGameState.Unfinished;
+        }
+
+        public CreeperGameState GetGameState(CreeperColor playerTurn)
         {
             List<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black);
             if (!opponent.Any()  || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
             {
-                return true;
+                return CreeperGameState.Draw;
             }
 
             bool gameOver = false;
@@ -127,7 +133,7 @@ namespace Creeper
             endTiles.UnionWith(Tiles.At(end).GetNeighbors(this).Where(x => x.Color == playerTurn));
             if (!endTiles.Any())
             {
-                return false;
+                return CreeperGameState.Unfinished;
             }
 
             Piece currentTile = Tiles.At(start);
@@ -160,7 +166,7 @@ namespace Creeper
                 neighbors = currentTile.GetNeighbors(this).Where(x => x.Color == playerTurn);
             }
 
-            return gameOver;
+            return gameOver ? CreeperGameState.Complete : CreeperGameState.Unfinished;
         }
 
         private Piece GetFlippedTile(Move move)
