@@ -39,8 +39,8 @@ namespace Creeper
 
         public CreeperBoard(CreeperBoard board)
         {
-            Pegs = new List<Piece>(board.Pegs);
-            Tiles = new List<Piece>(board.Tiles);
+            Pegs = board.Pegs.Select(x => new Piece(x.Color, x.Position)).ToList();
+            Tiles = board.Tiles.Select(x => new Piece(x.Color, x.Position)).ToList();
         }
 
         public List<Piece> WhereTeam(CreeperColor color)
