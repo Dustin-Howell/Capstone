@@ -159,13 +159,13 @@ namespace Creeper
             }
         }
 
-        private IEnumerable<Piece> GenerateEmptyPieces(int size)
+        private List<Piece> GenerateEmptyPieces(int size)
         {
             IEnumerable<int> range = Enumerable.Range(0, size);
             return range.Join(range,
                 row => 0,
                 column => 0,
-                (row, column) => new Piece(CreeperColor.Empty, new Position(row, column)));
+                (row, column) => new Piece(CreeperColor.Empty, new Position(row, column))).ToList();
         }
 
         public bool IsValidMove(Move move)
