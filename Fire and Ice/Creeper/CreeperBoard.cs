@@ -315,6 +315,9 @@ namespace Creeper
             Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.White, PieceType.Peg).Count));
             Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Black, PieceType.Peg).Count));
             Console.WriteLine();
+            Console.WriteLine(String.Format("White Tiles: {0}", WhereTeam(CreeperColor.White, PieceType.Tile).Count));
+            Console.WriteLine(String.Format("Black Tiles: {0}", WhereTeam(CreeperColor.Black, PieceType.Tile).Count));
+            Console.WriteLine();
             if (pause)
             {
                 Console.ReadLine();
