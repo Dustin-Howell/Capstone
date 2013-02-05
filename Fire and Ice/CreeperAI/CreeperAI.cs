@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Creeper;
 using System.Threading;
+using System.Diagnostics;
 
 namespace CreeperAI
 {
     public class CreeperAI
     {
         //Debug Variables
-        private bool _DEBUG = false;
+        private bool _DEBUG = true;
         private int _recursiveCalls = 0;
 
         private Random _random = new Random();
@@ -23,7 +24,7 @@ namespace CreeperAI
         private const double _TerritorialWeight = 1.0;
         private const double _MaterialWeight = 1000000.0;
 
-        private const int _MiniMaxDepth = 2;
+        private const int _MiniMaxDepth = 3;
 
         public Move GetMove(CreeperBoard board, CreeperColor AIColor)
         {
@@ -31,14 +32,23 @@ namespace CreeperAI
             _board = new CreeperBoard(board);
             _turnColor = AIColor;
 
+            Stopwatch stopwatch = new Stopwatch();
+            if (_DEBUG) stopwatch.Start();
+
             Move bestMove = new Move();
-            bestMove = GetMiniMaxMove(_board);
+            bestMove = GetAlphaBetaMiniMaxMove(_board);
+
+            if (_DEBUG)
+            {
+                stopwatch.Stop();
+                System.Console.WriteLine("Seconds elapsed: {0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
+            }
 
             return bestMove;
         }
 
         //This is where I functionalized the stuff we were doing to prepare to call minimax
-        private Move GetMiniMaxMove(CreeperBoard board)
+        private Move GetNaiveMiniMaxMove(CreeperBoard board)
         {
             List<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board)).ToList();
 
@@ -48,7 +58,35 @@ namespace CreeperAI
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                double moveScore = -ScoreMiniMaxMove(newBoard, (_turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, _MiniMaxDepth);
+                double moveScore = -ScoreNaiveMiniMaxMove(newBoard, (_turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, _MiniMaxDepth);
+                if (moveScore > max)
+                {
+                    max = moveScore;
+                    bestMove = move;
+                }
+            }
+
+            return bestMove;
+        }
+
+        private Move GetAlphaBetaMiniMaxMove(CreeperBoard board)
+        {
+            List<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board))
+                .OrderByDescending(x =>
+                {
+                    CreeperBoard newBoard = new CreeperBoard(board);
+                    newBoard.Move(x);
+                    return ScoreBoard(newBoard, _turnColor);
+                }).ToList();
+
+            double max = Double.MinValue;
+            Move bestMove = new Move();
+
+            foreach (Move move in possibleMoves)
+            {
+                CreeperBoard newBoard = new CreeperBoard(board);
+                newBoard.Move(move);
+                double moveScore = ScoreAlphaBetaMiniMaxMove(newBoard, (_turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, Double.NegativeInfinity, Double.PositiveInfinity, _MiniMaxDepth);
                 if (moveScore > max)
                 {
                     max = moveScore;
@@ -61,11 +99,11 @@ namespace CreeperAI
 
         //This i renamed to ScoreMiniMaxMove because it made more sense to me this way
         //And this is the actual recursive function
-        private double ScoreMiniMaxMove(CreeperBoard board, CreeperColor turnColor, int depth)
+        private double ScoreNaiveMiniMaxMove(CreeperBoard board, CreeperColor turnColor, int depth)
         {
             if (_DEBUG)
             {
-                Console.WriteLine("Calls: " + _recursiveCalls++);
+                //Console.WriteLine("Calls: " + _recursiveCalls++);
             }
 
             if (board.IsFinished(turnColor) || depth <= 0)
@@ -81,10 +119,77 @@ namespace CreeperAI
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                alpha = Math.Max(alpha, -ScoreMiniMaxMove(newBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, depth - 1));
+                alpha = Math.Max(alpha, -ScoreNaiveMiniMaxMove(newBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, depth - 1));
             }
 
             return alpha;
+        }
+
+        private double ScoreAlphaBetaMiniMaxMove(CreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
+        {
+            // if  depth = 0 or node is a terminal node
+            if (board.IsFinished(turnColor) || depth <= 0)
+            {
+                // return the heuristic value of node
+                return ScoreBoard(board, turnColor);
+            }
+
+            // children of current node
+            List<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board)).ToList();
+
+            // if  Player = MaximizedPlayer
+            if (turnColor == _turnColor)
+            {
+                // prioitize favorable boards
+                List<CreeperBoard> boards = possibleMoves.Select(x =>
+                {
+                    CreeperBoard newBoard = new CreeperBoard(board);
+                    newBoard.Move(x);
+                    return newBoard;
+                }).OrderByDescending(x => ScoreBoard(x, turnColor)).ToList();
+
+                // for each child of node
+                foreach (CreeperBoard currentBoard in boards)
+                {
+                    // α := max(α, alphabeta(child, depth-1, α, β, not(Player) ))
+                    alpha = Math.Max(alpha, ScoreAlphaBetaMiniMaxMove(currentBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, alpha, beta, depth - 1));
+
+                    // if β ≤ α
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+
+                // return α
+                return alpha;
+            }
+            else
+            {
+                // prioitize favorable boards
+                List<CreeperBoard> boards = possibleMoves.Select(x =>
+                {
+                    CreeperBoard newBoard = new CreeperBoard(board);
+                    newBoard.Move(x);
+                    return newBoard;
+                }).OrderBy(x => ScoreBoard(x, turnColor)).ToList();
+
+                // for each child of node
+                foreach (CreeperBoard currentBoard in boards)
+                {
+                    // β := min(β, alphabeta(child, depth-1, α, β, not(Player) ))
+                    beta = Math.Min(beta, ScoreAlphaBetaMiniMaxMove(currentBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, alpha, beta, depth - 1));
+
+                    // if β ≤ α
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+
+                // return β
+                return beta;
+            }
         }
         
         private double ScoreBoard(CreeperBoard board, CreeperColor turn)
