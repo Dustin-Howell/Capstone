@@ -40,19 +40,15 @@ namespace CreeperAI
         //This is where I functionalized the stuff we were doing to prepare to call minimax
         private Move GetMiniMaxMove(CreeperBoard board)
         {
-            List<Piece> myTeam = board.WhereTeam(_turnColor, PieceType.Peg);
-            List<Move> possibleMoves = new List<Move>();
-            foreach (Piece peg in myTeam)
-            {
-                possibleMoves.AddRange(peg.PossibleMoves(board));
-            }
+            List<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board)).ToList();
+
             double max = Double.MinValue;
             Move bestMove = new Move();
             foreach (Move move in possibleMoves)
-            {                
+            {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                double moveScore = ScoreMiniMaxMove(newBoard, _turnColor, _MiniMaxDepth);
+                double moveScore = -ScoreMiniMaxMove(newBoard, (_turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, _MiniMaxDepth);
                 if (moveScore > max)
                 {
                     max = moveScore;
@@ -78,12 +74,7 @@ namespace CreeperAI
                 return ScoreBoard(board, turnColor);
             }
 
-            List<Piece> currentTeam = board.WhereTeam(turnColor, PieceType.Peg);
-            List<Move> possibleMoves = new List<Move>();
-            foreach (Piece peg in currentTeam)
-            {
-                possibleMoves.AddRange(peg.PossibleMoves(board));
-            }
+            List<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board)).ToList();
 
             double alpha = Double.MinValue;
             foreach (Move move in possibleMoves)
