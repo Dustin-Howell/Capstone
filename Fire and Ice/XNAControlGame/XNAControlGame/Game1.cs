@@ -13,54 +13,131 @@ using Creeper;
 namespace XNAControlGame
 {
     /// <summary>
-    /// This will essentially exist only to manage game states
+    /// This is the main type for your game
     /// </summary>
-    public class Game1 : XNAControl.XNAControlGame
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
-        protected SpriteBatch _spriteBatch;
-        public SpriteFont DefaultFont { get; private set; }
-        public CreeperBoard Board { get; set; }
-        public Texture2D Square { get; set; }
-        private List<GameScreen> GameScreens { get; set; }
-        public GameScreen InGameScreen { get; set; }
+        GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
+        SpriteFont font;
+        double row = 0;
+        double column = 0;
+        MouseState previousMouseState = new MouseState();
+        MouseState mouseState = new MouseState();
+        Texture2D boardImage;
+        Position start = new Position(-1,-1);
+        Position end = new Position(-1,-1);
+        CreeperBoard board = new CreeperBoard();
 
-        public void StateChange(GameState previousState, GameState newState)
+        Move move;
+        public Game1()
         {
-            foreach (GameScreen screen in GameScreens)
-            {
-                screen.Deactivate();
-            }
-
-            switch (newState)
-            {
-                case GameState.InGame:
-                    InGameScreen.Activate();
-                    break;
-            }
+            graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
         }
-
-        public void MakeMove(Move move)
-        {
-
-        }
-
-        public Game1(IntPtr handle) : base(handle, "Content")
-        {
-            GameScreens.Add(InGameScreen);
-        }
-
+        
+        
         protected override void Initialize()
         {
+            // TODO: Add your initialization logic here
+            IsMouseVisible = true;
             base.Initialize();
-            InGameScreen = new InGameScreen(this, _spriteBatch, Board);
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            DefaultFont = Content.Load<SpriteFont>("defaultFont");
-            Square = Content.Load<Texture2D>("square");
-            base.LoadContent();
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            boardImage = this.Content.Load<Texture2D>("board");
+            font = Content.Load<SpriteFont>("defaultFont");
+        }
+
+        /// <summary>
+        /// UnloadContent will be called once per game and is the place to unload
+        /// all content.
+        /// </summary>
+        protected override void UnloadContent()
+        {
+            // TODO: Unload any non ContentManager content here
+        }
+
+        /// <summary>
+        /// Allows the game to run logic such as updating the world,
+        /// checking for collisions, gathering input, and playing audio.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime gameTime)
+        {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                this.Exit();
+
+            KeyboardState keystate = Keyboard.GetState();
+
+            if (keystate.IsKeyDown(Keys.Escape))
+            {
+                graphics.PreferredBackBufferWidth = 640;
+                graphics.PreferredBackBufferHeight = 360;
+                graphics.ToggleFullScreen();
+                graphics.ApplyChanges();
+            }
+
+            mouseState = Mouse.GetState();
+
+            if (mouseState.LeftButton == ButtonState.Pressed &&
+                previousMouseState.LeftButton == ButtonState.Released)
+            {
+                row = mouseState.X / (boardImage.Width / 7);
+                column = mouseState.Y / (boardImage.Height / 7);
+                row = Math.Round(row);
+                column = Math.Round(column);
+                
+                if (board.IsValidPosition(new Position((int)row,(int)column),PieceType.Peg))
+                {
+                    if (start.Row == -1)
+                    {
+                        start.Row = (int)row;
+                        start.Column = (int)column;
+                    }
+                    else if (end.Row == -1)
+                    {
+                        end.Row = (int)row;
+                        end.Column = (int)column;
+
+                    }
+                }
+            }
+
+            previousMouseState = mouseState;
+
+            if (start.Row != -1 && end.Row != -1)
+            {
+                //last paramiter needs to be changed for sake of change
+                move = new Move(start, end, CreeperColor.White); 
+                board.Move(move);
+                Console.WriteLine("Start: " + start.Row + "," + start.Column);
+                Console.WriteLine("End: " + end.Row + "," + end.Column);
+                start = new Position(-1, -1);
+                end = new Position(-1, -1);
+            }
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.DrawString(font, "Start: " + start.Row + "," + start.Column, new Vector2(400, 100), Color.Black);
+            spriteBatch.DrawString(font, "End: " + end.Row + "," + end.Column, new Vector2(400, 300), Color.Black);
+            spriteBatch.Draw(boardImage, new Rectangle(-10, 0, boardImage.Width, boardImage.Height), Color.White);
+            spriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

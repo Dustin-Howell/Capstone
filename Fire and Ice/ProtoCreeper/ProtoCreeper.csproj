@@ -34,6 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +56,10 @@
     <ProjectReference Include="..\Creeper\Creeper.csproj">
       <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
       <Name>Creeper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XNAControlGame\XNAControlGame\XNAControlGame.csproj">
+      <Project>{6B40F385-30BC-4BE7-9E8F-A5E82821C047}</Project>
+      <Name>XNAControlGame</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

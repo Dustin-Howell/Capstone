@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Creeper;
 using CreeperAI;
+using Microsoft.Xna.Framework.Media;
 
 namespace ProtoCreeper
 {
@@ -104,8 +105,12 @@ namespace ProtoCreeper
             CreeperBoard board = new CreeperBoard();
             //board.PrintToConsole();
             //WhiteWin(board);
-            AIGame(board);
+            //AIGame(board);
             //Testfunction(board);
+            using (XNAControlGame.Game1 game = new XNAControlGame.Game1())
+            {
+                game.Run();
+            }
         }
     }
 }
