@@ -106,8 +106,7 @@ namespace Creeper
 
         public bool IsValidMove(Move move)
         {
-            return CreeperUtility.PossibleMoves(Pegs.At(move.StartPosition), this)
-                .Any(x => x.EndPosition == move.EndPosition);
+            return Pegs.At(move.StartPosition).PossibleMoves(this).Any(x => x.EndPosition == move.EndPosition);
         }
 
         public bool IsFinished(CreeperColor playerTurn)
