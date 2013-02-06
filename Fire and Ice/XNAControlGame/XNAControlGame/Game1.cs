@@ -134,8 +134,8 @@ namespace XNAControlGame
                 column = mouseState.X / (boardImage.Height / CreeperBoard.PegRows - 1);
                 row = Math.Round(row);
                 column = Math.Round(column);
-                
-                if (board.IsValidPosition(new Position((int)row,(int)column),PieceType.Peg))
+
+                if (board.IsValidPosition(new Position((int)row, (int)column), PieceType.Peg))
                 {
                     if (start.Row == -1)
                     {
@@ -146,8 +146,12 @@ namespace XNAControlGame
                     {
                         end.Row = (int)row;
                         end.Column = (int)column;
-
                     }
+                }
+                else
+                {
+                    start = new Position(-1, -1);
+                    end = new Position(-1, -1);
                 }
             }
 

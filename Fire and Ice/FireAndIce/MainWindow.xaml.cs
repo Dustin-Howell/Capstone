@@ -26,7 +26,7 @@ namespace FireAndIce
         public MainWindow()
         {
             InitializeComponent();
-            _xnaGame = new XNAControlGame.Game1(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
+            _xnaGame = new XNAControlGame.Game1(xnaControl.Handle, 800, 600);//(int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
             _gameCore = new CreeperCore.CreeperCore(_xnaGame);
             _gameCore.Run();
         }

@@ -4,7 +4,7 @@
         xmlns:xna="clr-namespace:XNAControl;assembly=XNAControl"
         Title="MainWindow" WindowState="Maximized" WindowStyle="None">
     <Grid>
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="50" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -13,8 +13,8 @@
             <Button Height="50"></Button>
             <Button Height="50"></Button>
             <Button Height="50"></Button>
-        </StackPanel>
-        
-        <xna:UserControl1 x:Name="xnaControl" Grid.Column="1" />
+        </StackPanel>-->
+
+        <xna:UserControl1 x:Name="xnaControl" Grid.Column="1" Height="600" Width="800" />
     </Grid>
 </Window>
