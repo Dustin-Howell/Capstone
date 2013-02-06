@@ -32,7 +32,10 @@ namespace Creeper
         {
             List<Piece> pegs = new List<Piece>(board.Pegs);
             List<Move> possibleMoves = new List<Move>();
-
+            if (peg.Color == CreeperColor.Empty || peg.Color == CreeperColor.Invalid)
+            {
+                return new List<Move>();
+            }
             List<CardinalDirection> neighborlyDirections = new List<CardinalDirection>
                                                                 { 
                                                                     CardinalDirection.North,

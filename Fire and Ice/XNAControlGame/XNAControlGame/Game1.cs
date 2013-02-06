@@ -171,7 +171,7 @@ namespace XNAControlGame
             spriteBatch.Begin();
             spriteBatch.DrawString(font, "Start: " + start.Row + "," + start.Column, new Vector2(400, 100), Color.Black);
             spriteBatch.DrawString(font, "End: " + end.Row + "," + end.Column, new Vector2(400, 300), Color.Black);
-            spriteBatch.Draw(boardImage, new Rectangle(-10, 0, boardImage.Width, boardImage.Height), Color.White);
+            spriteBatch.Draw(boardImage, new Rectangle(0, 0, boardImage.Width, boardImage.Height), Color.White);
             drawBoard();
             spriteBatch.End();
             base.Draw(gameTime);

@@ -62,13 +62,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="board.png">
-      <Name>board</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="smallBlackPeg.png">
       <Name>smallBlackPeg</Name>
       <Importer>TextureImporter</Importer>
@@ -76,6 +69,13 @@
     </Compile>
     <Compile Include="smallWhitePeg.png">
       <Name>smallWhitePeg</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="boardFixed.png">
+      <Name>board</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
