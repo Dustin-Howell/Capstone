@@ -41,17 +41,18 @@ namespace XNAControlGame
                     if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
                     {
                         spriteBatch.Draw(whitePeg,
-                            new Rectangle(r * (boardImage.Width / CreeperBoard.PegRows), c * (boardImage.Height / CreeperBoard.PegRows), whitePeg.Width, whitePeg.Height),
+                            new Rectangle((c * (boardImage.Width / (CreeperBoard.PegRows - 1)))-whitePeg.Width/2, (r * (boardImage.Height / (CreeperBoard.PegRows - 1))) - whitePeg.Height/2, whitePeg.Width, whitePeg.Height),
                             Color.White);
                     }
                     if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
                     {
                         spriteBatch.Draw(blackPeg,
-                            new Rectangle(r * (boardImage.Width / CreeperBoard.PegRows), c * (boardImage.Height / CreeperBoard.PegRows), blackPeg.Width, blackPeg.Height),
+                            new Rectangle((c * (boardImage.Width / (CreeperBoard.PegRows - 1))) - blackPeg.Width/2, (r * (boardImage.Height / (CreeperBoard.PegRows -1))) -blackPeg.Height/2, blackPeg.Width, blackPeg.Height),
                             Color.Black);
                     }
                 }
             }
+            //board.PrintToConsole();
         }
 
         Move move;
@@ -115,8 +116,8 @@ namespace XNAControlGame
             if (mouseState.LeftButton == ButtonState.Pressed &&
                 previousMouseState.LeftButton == ButtonState.Released)
             {
-                row = mouseState.X / (boardImage.Width / 7);
-                column = mouseState.Y / (boardImage.Height / 7);
+                row = mouseState.Y / (boardImage.Width / CreeperBoard.PegRows - 1);
+                column = mouseState.X / (boardImage.Height / CreeperBoard.PegRows - 1);
                 row = Math.Round(row);
                 column = Math.Round(column);
                 
@@ -142,14 +143,16 @@ namespace XNAControlGame
             {
                 //last paramiter needs to be changed for sake of change
                 move = new Move(start, end, turn); 
-                board.Move(move);
-                if (turn == CreeperColor.White)
+                if(board.Move(move))
                 {
-                    turn = CreeperColor.Black;
-                }
-                else
-                {
-                    turn = CreeperColor.White;
+                    if (turn == CreeperColor.White)
+                    {
+                        turn = CreeperColor.Black;
+                    }
+                    else
+                    {
+                        turn = CreeperColor.White;
+                    }
                 }
                 Console.WriteLine("Start: " + start.Row + "," + start.Column);
                 Console.WriteLine("End: " + end.Row + "," + end.Column);
@@ -169,8 +172,12 @@ namespace XNAControlGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+            spriteBatch.DrawString(font, "Board: Width = " + boardImage.Width + " Height = " + boardImage.Height, new Vector2(400, 50), Color.Black);
             spriteBatch.DrawString(font, "Start: " + start.Row + "," + start.Column, new Vector2(400, 100), Color.Black);
-            spriteBatch.DrawString(font, "End: " + end.Row + "," + end.Column, new Vector2(400, 300), Color.Black);
+            spriteBatch.DrawString(font, "End: " + end.Row + "," + end.Column, new Vector2(400, 200), Color.Black);
+            spriteBatch.DrawString(font, "Mouse At: " + Mouse.GetState().Y + "," + Mouse.GetState().X, new Vector2(400, 300), Color.Black);
+            spriteBatch.DrawString(font, "Mouse At(r,c): " + Mouse.GetState().Y / (boardImage.Width / CreeperBoard.PegRows - 1) + "," + Mouse.GetState().X / (boardImage.Width / CreeperBoard.PegRows - 1), new Vector2(400, 350), Color.Black);
+            spriteBatch.DrawString(font, "Players turn: " + turn.ToString(), new Vector2(400, 400), Color.Black);
             spriteBatch.Draw(boardImage, new Rectangle(0, 0, boardImage.Width, boardImage.Height), Color.White);
             drawBoard();
             spriteBatch.End();

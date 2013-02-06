@@ -111,7 +111,7 @@ namespace Creeper
 
         public bool IsFinished(CreeperColor playerTurn)
         {
-            return GetGameState(playerTurn) != CreeperGameState.Unfinished;
+            return BetterGetGameState(playerTurn) != CreeperGameState.Unfinished;
         }
 
         public CreeperGameState GetGameState(CreeperColor playerTurn)
