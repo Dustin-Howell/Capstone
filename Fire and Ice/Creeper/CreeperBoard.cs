@@ -230,10 +230,14 @@ namespace Creeper
 
             foreach (Piece validTile in knownValidTiles)
             {
-                Piece southTile = Tiles.At(validTile.Position.AtDirection(CardinalDirection.South));
-                if (southTile.Color == color)
+                Position southPosition = validTile.Position.AtDirection(CardinalDirection.South);
+                if (IsValidPosition(southPosition, PieceType.Tile))
                 {
-                    validTiles.Add(southTile);
+                    Piece southTile = Tiles.At(validTile.Position.AtDirection(CardinalDirection.South));
+                    if (southTile.Color == color)
+                    {
+                        validTiles.Add(southTile);
+                    }
                 }
             }
 
