@@ -107,8 +107,10 @@ namespace ProtoCreeper
             //WhiteWin(board);
             AIGame(board);
             //Testfunction(board);
-
-            //using (XNAControlGame.Game1 game = new XNAControlGame.Game1()) { game.Run(); }
+            //using (XNAControlGame.Game1 game = new XNAControlGame.Game1())
+            //{
+            //    game.Run();
+            //}
         }
     }
 }

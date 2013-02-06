@@ -15,7 +15,7 @@ namespace XNAControlGame
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : XNAControl.XNAControlGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -27,13 +27,18 @@ namespace XNAControlGame
         Texture2D boardImage;
         Texture2D blackPeg;
         Texture2D whitePeg;
+        Texture2D whiteTile;
+        Texture2D blackTile;
         Position start = new Position(-1,-1);
         Position end = new Position(-1,-1);
         CreeperBoard board = new CreeperBoard();
         CreeperColor turn;
 
+        public Game1(IntPtr handle) : base( handle, "Content" ) {}
+
         private void drawBoard()
         {
+            //Print Pegs
             for (int r = 0; r < CreeperBoard.PegRows; r++)
             {
                 for (int c = 0; c < CreeperBoard.PegRows; c++)
@@ -52,16 +57,32 @@ namespace XNAControlGame
                     }
                 }
             }
-            //board.PrintToConsole();
+            //Print Tiles
+            for (int r = 0; r < CreeperBoard.TileRows; r++)
+            {
+                for (int c = 0; c < CreeperBoard.TileRows; c++)
+                {
+                    if (board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
+                    {
+                        spriteBatch.Draw(whiteTile,
+                            new Rectangle((((boardImage.Width / CreeperBoard.TileRows) * c) + ((boardImage.Width / CreeperBoard.TileRows)/2) - whiteTile.Width / 2),
+                                (((boardImage.Height / CreeperBoard.TileRows) * r) + ((boardImage.Height / CreeperBoard.TileRows) / 2) - whiteTile.Width / 2),
+                                whiteTile.Width, whiteTile.Height),
+                                Color.White);
+                    }
+                    if (board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
+                    {
+                        spriteBatch.Draw(blackTile,
+                            new Rectangle((((boardImage.Width / CreeperBoard.TileRows) * c) + ((boardImage.Width / CreeperBoard.TileRows) / 2) - blackTile.Width / 2),
+                                (((boardImage.Height / CreeperBoard.TileRows) * r) + ((boardImage.Height / CreeperBoard.TileRows) / 2) - blackTile.Width / 2),
+                                blackTile.Width, blackTile.Height),
+                                Color.Black);
+                    }
+                }
+            }
         }
 
         Move move;
-        public Game1()
-        {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-        }
-        
         
         protected override void Initialize()
         {
@@ -78,6 +99,8 @@ namespace XNAControlGame
             boardImage = this.Content.Load<Texture2D>("board");
             blackPeg = this.Content.Load<Texture2D>("smallBlackPeg");
             whitePeg = this.Content.Load<Texture2D>("smallWhitePeg");
+            whiteTile = this.Content.Load<Texture2D>("whiteTile");
+            blackTile = this.Content.Load<Texture2D>("blackTile");
             font = Content.Load<SpriteFont>("defaultFont");
         }
 
@@ -101,15 +124,6 @@ namespace XNAControlGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            KeyboardState keystate = Keyboard.GetState();
-
-            if (keystate.IsKeyDown(Keys.Escape))
-            {
-                graphics.PreferredBackBufferWidth = 640;
-                graphics.PreferredBackBufferHeight = 360;
-                graphics.ToggleFullScreen();
-                graphics.ApplyChanges();
-            }
 
             mouseState = Mouse.GetState();
 
