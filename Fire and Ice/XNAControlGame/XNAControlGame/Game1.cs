@@ -34,7 +34,7 @@ namespace XNAControlGame
         CreeperBoard board = new CreeperBoard();
         CreeperColor turn;
 
-        public Game1(IntPtr handle) : base( handle, "Content" ) {}
+        public Game1(IntPtr handle, int width, int height) : base( handle, "Content", width, height ) {}
 
         private void drawBoard()
         {
