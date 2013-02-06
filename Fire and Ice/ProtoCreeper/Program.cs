@@ -62,7 +62,7 @@ namespace ProtoCreeper
             Position startPosition;
             Position endPosition;
             Move move;
-            bool pausePrint = true;
+            bool pausePrint = false;
 
             for (int i = 0; i < 4; i++)
             {
@@ -94,7 +94,7 @@ namespace ProtoCreeper
             board.PrintToConsole(pausePrint);
 
 
-            if(board.GetGameState(CreeperColor.White) == CreeperGameState.Complete)
+            if(board.BetterGetGameState(CreeperColor.White) == CreeperGameState.Complete)
             {
                 Console.WriteLine("White wins!");
             }
@@ -105,12 +105,10 @@ namespace ProtoCreeper
             CreeperBoard board = new CreeperBoard();
             //board.PrintToConsole();
             //WhiteWin(board);
-            //AIGame(board);
+            AIGame(board);
             //Testfunction(board);
-            using (XNAControlGame.Game1 game = new XNAControlGame.Game1())
-            {
-                game.Run();
-            }
+
+            //using (XNAControlGame.Game1 game = new XNAControlGame.Game1()) { game.Run(); }
         }
     }
 }

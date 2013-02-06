@@ -5,14 +5,17 @@ using System.Text;
 using Creeper;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
 
 namespace CreeperAI
 {
     public class CreeperAI
     {
-        //Debug Variables
-        private bool _DEBUG = true;
+        //***************Debug Variables*************\\
+        private const bool _DEBUG = true;
+        private const bool _writeTimesToFile = true;
         private int _recursiveCalls = 0;
+        //***************Debug Variables*************\\
 
         private Random _random = new Random();
         private CreeperBoard _board;
@@ -25,6 +28,10 @@ namespace CreeperAI
         private const double _MaterialWeight = 1000000.0;
 
         private const int _MiniMaxDepth = 3;
+
+        public CreeperAI()
+        {
+        }
 
         public Move GetMove(CreeperBoard board, CreeperColor AIColor)
         {

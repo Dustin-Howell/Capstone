@@ -169,6 +169,116 @@ namespace Creeper
             return gameOver ? CreeperGameState.Complete : CreeperGameState.Unfinished;
         }
 
+        public List<Piece> GetValidTilesFromCurrentRow(List<Piece> knownValidTiles, int row, CreeperColor color)
+        {
+            //All tiles on the current row
+            List<Piece> currentRow = Pegs.Where(x => x.Position.Row == row).ToList();
+
+            //The list of tiles we will return
+            List<Piece> validTiles = new List<Piece>();
+
+            //We want to add the ones that are already known to be valid to the valid tiles list
+            validTiles.AddRange(knownValidTiles);
+
+
+            foreach (Piece validTile in knownValidTiles)
+            {
+                int column = validTile.Position.Column;
+                //Starting from our current known valid tile's column, go toward zero
+                for (int i = column; i > 0; i--)
+                {
+                    Position adjacentPosition = new Position(validTile.Position.Row, i - 1);
+                    Piece adjacentTile = Tiles.At(adjacentPosition);
+
+                    //if the adjacent tile is our color, it's valid
+                    if (adjacentTile.Color == color
+                        && !validTiles.Contains(adjacentTile))
+                    {
+                        validTiles.Add(adjacentTile);
+                    }
+
+                    //if the adjacent tile is not valid, the one next to it won't be either, so we just break
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                //Same as above, but we're going toward the higher column values now
+                for (int i = column; i < TileRows - 1; i++)
+                {
+                    Position adjacentPosition = new Position(validTile.Position.Row, i + 1);
+                    Piece adjacentTile = Tiles.At(adjacentPosition);
+                    if (adjacentTile.Color == color
+                        && !validTiles.Contains(adjacentTile))
+                    {
+                        validTiles.Add(adjacentTile);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return validTiles;
+        }
+
+        public List<Piece> GetValidTilesFromNextRow(List<Piece> knownValidTiles, CreeperColor color)
+        {
+            List<Piece> validTiles = new List<Piece>();
+
+            foreach (Piece validTile in knownValidTiles)
+            {
+                Piece southTile = Tiles.At(validTile.Position.AtDirection(CardinalDirection.South));
+                if (southTile.Color == color)
+                {
+                    validTiles.Add(southTile);
+                }
+            }
+
+            return validTiles;
+        }
+
+        public CreeperGameState BetterGetGameState(CreeperColor playerTurn)
+        {
+            //Copy-Pasted from GetGameState()
+            List<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);
+            if (!opponent.Any() || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
+            {
+                return CreeperGameState.Draw;
+            }
+
+            CreeperGameState gameState = CreeperGameState.Unfinished;
+            Position startPosition = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
+            Position endPosition = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
+            Piece winTile1 = Tiles.At(endPosition.AtDirection(CardinalDirection.North));
+            Piece winTile2 = Tiles.At(
+                (IsValidPosition(endPosition.AtDirection(CardinalDirection.East), PieceType.Tile)?
+                endPosition.AtDirection(CardinalDirection.East) : endPosition.AtDirection(CardinalDirection.West) ));
+
+            List<Piece> validPieces = new List<Piece>();
+            validPieces.Add(Tiles.At(startPosition));            
+
+            for (int i = 0; i < TileRows; i++)
+            {
+                validPieces = GetValidTilesFromCurrentRow(validPieces, i, playerTurn);
+                if (!validPieces.Any())
+                {
+                    break;
+                }
+                if (validPieces.Any() && 
+                    (validPieces.Contains(winTile1) || validPieces.Contains(winTile2)))
+                {
+                    gameState = CreeperGameState.Complete;
+                    break;
+                }
+                validPieces = GetValidTilesFromNextRow(validPieces, playerTurn);
+            }
+
+            return gameState;
+        }
+
         private Piece GetFlippedTile(Move move)
         {
             CardinalDirection direction = move.EndPosition.Row < move.StartPosition.Row ? (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Northwest : CardinalDirection.Northeast)

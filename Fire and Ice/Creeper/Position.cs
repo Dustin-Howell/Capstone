@@ -37,23 +37,23 @@ namespace Creeper
             Position position = new Position();
             if (direction == CardinalDirection.North)
             {
-                position.Row = this.Row;
-                position.Column = this.Column - 1;
+                position.Row = this.Row - 1;
+                position.Column = this.Column;
             }
             else if (direction == CardinalDirection.South)
-            {
-                position.Row = this.Row;
-                position.Column = this.Column + 1;
-            }
-            else if (direction == CardinalDirection.East)
             {
                 position.Row = this.Row + 1;
                 position.Column = this.Column;
             }
+            else if (direction == CardinalDirection.East)
+            {
+                position.Row = this.Row;
+                position.Column = this.Column + 1;
+            }
             else if (direction == CardinalDirection.West)
             {
-                position.Row = this.Row - 1;
-                position.Column = this.Column;
+                position.Row = this.Row;
+                position.Column = this.Column - 1;
             }
             else if (direction == CardinalDirection.Northwest)
             {
@@ -62,8 +62,8 @@ namespace Creeper
             }
             else if (direction == CardinalDirection.Northeast)
             {
-                position.Row = this.Row + 1;
-                position.Column = this.Column - 1;
+                position.Row = this.Row - 1;
+                position.Column = this.Column + 1;
             }
             else if (direction == CardinalDirection.Southeast)
             {
@@ -72,8 +72,8 @@ namespace Creeper
             }
             else if (direction == CardinalDirection.Southwest)
             {
-                position.Row = this.Row - 1;
-                position.Column = this.Column + 1;
+                position.Row = this.Row + 1;
+                position.Column = this.Column - 1;
             }
             return position;
         }
