@@ -25,9 +25,34 @@ namespace XNAControlGame
         MouseState previousMouseState = new MouseState();
         MouseState mouseState = new MouseState();
         Texture2D boardImage;
+        Texture2D blackPeg;
+        Texture2D whitePeg;
         Position start = new Position(-1,-1);
         Position end = new Position(-1,-1);
         CreeperBoard board = new CreeperBoard();
+        CreeperColor turn;
+
+        private void drawBoard()
+        {
+            for (int r = 0; r < CreeperBoard.PegRows; r++)
+            {
+                for (int c = 0; c < CreeperBoard.PegRows; c++)
+                {
+                    if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
+                    {
+                        spriteBatch.Draw(whitePeg,
+                            new Rectangle(r * (boardImage.Width / CreeperBoard.PegRows), c * (boardImage.Height / CreeperBoard.PegRows), whitePeg.Width, whitePeg.Height),
+                            Color.White);
+                    }
+                    if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
+                    {
+                        spriteBatch.Draw(blackPeg,
+                            new Rectangle(r * (boardImage.Width / CreeperBoard.PegRows), c * (boardImage.Height / CreeperBoard.PegRows), blackPeg.Width, blackPeg.Height),
+                            Color.Black);
+                    }
+                }
+            }
+        }
 
         Move move;
         public Game1()
@@ -40,6 +65,7 @@ namespace XNAControlGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            turn = CreeperColor.White;
             IsMouseVisible = true;
             base.Initialize();
         }
@@ -49,6 +75,8 @@ namespace XNAControlGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             boardImage = this.Content.Load<Texture2D>("board");
+            blackPeg = this.Content.Load<Texture2D>("smallBlackPeg");
+            whitePeg = this.Content.Load<Texture2D>("smallWhitePeg");
             font = Content.Load<SpriteFont>("defaultFont");
         }
 
@@ -113,8 +141,16 @@ namespace XNAControlGame
             if (start.Row != -1 && end.Row != -1)
             {
                 //last paramiter needs to be changed for sake of change
-                move = new Move(start, end, CreeperColor.White); 
+                move = new Move(start, end, turn); 
                 board.Move(move);
+                if (turn == CreeperColor.White)
+                {
+                    turn = CreeperColor.Black;
+                }
+                else
+                {
+                    turn = CreeperColor.White;
+                }
                 Console.WriteLine("Start: " + start.Row + "," + start.Column);
                 Console.WriteLine("End: " + end.Row + "," + end.Column);
                 start = new Position(-1, -1);
@@ -136,6 +172,7 @@ namespace XNAControlGame
             spriteBatch.DrawString(font, "Start: " + start.Row + "," + start.Column, new Vector2(400, 100), Color.Black);
             spriteBatch.DrawString(font, "End: " + end.Row + "," + end.Column, new Vector2(400, 300), Color.Black);
             spriteBatch.Draw(boardImage, new Rectangle(-10, 0, boardImage.Width, boardImage.Height), Color.White);
+            drawBoard();
             spriteBatch.End();
             base.Draw(gameTime);
         }
