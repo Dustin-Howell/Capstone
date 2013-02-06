@@ -172,9 +172,12 @@ namespace XNAControlGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+            spriteBatch.DrawString(font, "Board: Width = " + boardImage.Width + " Height = " + boardImage.Height, new Vector2(400, 50), Color.Black);
             spriteBatch.DrawString(font, "Start: " + start.Row + "," + start.Column, new Vector2(400, 100), Color.Black);
             spriteBatch.DrawString(font, "End: " + end.Row + "," + end.Column, new Vector2(400, 200), Color.Black);
-            spriteBatch.DrawString(font, "Mouse At: " + Mouse.GetState().X + "," + Mouse.GetState().Y, new Vector2(400, 300), Color.Black);
+            spriteBatch.DrawString(font, "Mouse At: " + Mouse.GetState().Y + "," + Mouse.GetState().X, new Vector2(400, 300), Color.Black);
+            spriteBatch.DrawString(font, "Mouse At(r,c): " + Mouse.GetState().Y / (boardImage.Width / CreeperBoard.PegRows - 1) + "," + Mouse.GetState().X / (boardImage.Width / CreeperBoard.PegRows - 1), new Vector2(400, 350), Color.Black);
+            spriteBatch.DrawString(font, "Players turn: " + turn.ToString(), new Vector2(400, 400), Color.Black);
             spriteBatch.Draw(boardImage, new Rectangle(0, 0, boardImage.Width, boardImage.Height), Color.White);
             drawBoard();
             spriteBatch.End();
