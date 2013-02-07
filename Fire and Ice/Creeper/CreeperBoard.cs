@@ -28,8 +28,8 @@ namespace Creeper
         private static Position _SouthBlackPegCorner { get { return new Position(6, 0); } }
         private static Position _SouthWhitePegCorner { get { return new Position(6, 6); } }
 
-        public List<Piece> Pegs { get; private set; }
-        public List<Piece> Tiles { get; private set; }
+        public IEnumerable<Piece> Pegs { get; private set; }
+        public IEnumerable<Piece> Tiles { get; private set; }
 
         public CreeperBoard()
         {
@@ -47,7 +47,7 @@ namespace Creeper
 
         public IEnumerable<Piece> WhereTeam(CreeperColor color, PieceType pieceType)
         {
-            List<Piece> pieces = (pieceType == PieceType.Peg) ? Pegs : Tiles;
+            IEnumerable<Piece> pieces = (pieceType == PieceType.Peg) ? Pegs : Tiles;
             return pieces.Where(x => x.Color == color);
         }
 
