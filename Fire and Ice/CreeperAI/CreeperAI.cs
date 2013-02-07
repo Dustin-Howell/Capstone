@@ -135,7 +135,7 @@ namespace CreeperAI
         private double ScoreAlphaBetaMiniMaxMove(CreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
         {
             // if  depth = 0 or node is a terminal node
-            if (board.IsFinished(turnColor) || depth <= 0)
+            if ((depth <= 0) || board.IsFinished(turnColor))
             {
                 // return the heuristic value of node
                 return ScoreBoard(board, turnColor);
@@ -241,6 +241,7 @@ namespace CreeperAI
 
         private double ScoreBoardVictoryProximity(CreeperBoard board, CreeperColor turn)
         {
+            return 0.0;
         }
 
         private double ScoreBoardRandom(CreeperBoard board)
