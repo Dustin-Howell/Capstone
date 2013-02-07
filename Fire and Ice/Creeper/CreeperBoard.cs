@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Creeper
 {
@@ -370,6 +371,7 @@ namespace Creeper
             return isCorner;
         }
 
+        #region Debug Functions
         public void PrintToConsole(bool pause = false)
         {
             for (int row = 0; row < PegRows; row++)
@@ -436,5 +438,93 @@ namespace Creeper
                 Console.ReadLine();
             }
         }
+
+        private void ClearCreeperBoard()
+        {
+            foreach (Piece peg in Pegs)
+            {
+                peg.Color = CreeperColor.Empty;
+            }
+            foreach (Piece tile in Tiles)
+            {
+                tile.Color = CreeperColor.Empty;
+            }
+        }
+
+        public void ReadFromFile(String path)
+        {
+            ClearCreeperBoard();
+            List<String> fileStrings = File.ReadAllLines(path).ToList();
+            List<String> pegStrings = new List<string>();
+            List<String> tileStrings = new List<string>();
+
+            for (int i = 0; i < fileStrings.Count; i++)
+            {
+                if (fileStrings[i][0] == '|')
+                {
+                    tileStrings.Add(fileStrings[i]);
+                }
+                else
+                {
+                    pegStrings.Add(fileStrings[i]);
+                }
+            }
+
+            for (int row = 0; row < pegStrings.Count; row++)
+            {
+                int column = 0;
+                for (int i = 0; i < pegStrings[row].Length; i++)
+                {
+                    switch (pegStrings[row][i])
+                    {
+                        case ' ':
+                            Pegs.At(new Position(row, column)).Color = CreeperColor.Empty;
+                            column++;
+                            break;
+                        case 'B':
+                            Pegs.At(new Position(row, column)).Color = CreeperColor.Black;
+                            column++;
+                            break;
+                        case 'W':
+                            Pegs.At(new Position(row, column)).Color = CreeperColor.White;
+                            column++;
+                            break;
+                        case 'I':
+                            Pegs.At(new Position(row, column)).Color = CreeperColor.Invalid;
+                            column++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            for (int row = 0; row < tileStrings.Count; row++)
+            {
+                int column = 0;
+                for (int i = 0; i < tileStrings[row].Length; i++)
+                {
+                    switch (tileStrings[row][i])
+                    {
+                        case ' ':
+                            Tiles.At(new Position(row, column)).Color = CreeperColor.Empty;
+                            column++;
+                            break;
+                        case 'X':
+                            Tiles.At(new Position(row, column)).Color = CreeperColor.Black;
+                            column++;
+                            break;
+                        case 'O':
+                            Tiles.At(new Position(row, column)).Color = CreeperColor.White;
+                            column++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }
