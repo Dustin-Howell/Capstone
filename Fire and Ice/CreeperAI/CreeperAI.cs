@@ -49,6 +49,10 @@ namespace CreeperAI
             {
                 stopwatch.Stop();
                 System.Console.WriteLine("Seconds elapsed: {0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
+                using (StreamWriter file = new StreamWriter("Times.log", true))
+                {
+                    file.WriteLine("Seconds elapsed: {0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
+                }
             }
 
             return bestMove;
