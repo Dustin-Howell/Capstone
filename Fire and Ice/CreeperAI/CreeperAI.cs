@@ -27,7 +27,7 @@ namespace CreeperAI
         private const double _TerritorialWeight = 1.0;
         private const double _MaterialWeight = 1000000.0;
 
-        private const int _MiniMaxDepth = 4;
+        private const int _MiniMaxDepth = 3;
 
         public CreeperAI()
         {
