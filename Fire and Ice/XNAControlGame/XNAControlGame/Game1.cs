@@ -137,15 +137,18 @@ namespace XNAControlGame
 
                 if (board.IsValidPosition(new Position((int)row, (int)column), PieceType.Peg))
                 {
-                    if (start.Row == -1)
+                    if (board.Pegs.At(new Position((int)row, (int)column)).Color == turn)
                     {
                         start.Row = (int)row;
                         start.Column = (int)column;
                     }
-                    else if (end.Row == -1)
+                    else
                     {
-                        end.Row = (int)row;
-                        end.Column = (int)column;
+                        if (start.Row != -1)
+                        {
+                            end.Row = (int)row;
+                            end.Column = (int)column;
+                        }
                     }
                 }
                 else
@@ -157,6 +160,12 @@ namespace XNAControlGame
 
             previousMouseState = mouseState;
 
+            //Peg Selection Logic (Start Position is Selection, End Position is Selection's Move)
+            //A peg (start position) is selected when the user in a turn selects a peg the same color as his turn. This peg is then set as the start position.
+            //The move (end position) is selected when a user selects a valid position that is empty.
+            //If a user selects an invalid position (off board or corner), an invalid end position (invalid move), or the opposite color's peg, the selected peg (start
+            //  position) is deselected (set back to (-1, -1)).
+            //If a user selects a different peg the same color as his turn after already selecting a peg, the selection (start position) is changed to the new peg selection.
             if (start.Row != -1 && end.Row != -1)
             {
                 //last paramiter needs to be changed for sake of change
