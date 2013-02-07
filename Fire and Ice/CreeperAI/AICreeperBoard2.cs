@@ -6,6 +6,8 @@ using Creeper;
 
 namespace CreeperAI
 {
+    //Only adds nodes where there are tiles
+    //Nodes point to positions, not nodes
     class AICreeperBoard2
     {
         AIBoardNode2[ , ] Board { get; set; }

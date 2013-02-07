@@ -9,6 +9,8 @@ using System.IO;
 
 namespace CreeperAI
 {
+    // Every slot in the array has a node, some are just defined as empty
+    // Nodes have reference to neighbor nodes
     public class AICreeperBoard
     {
         AIBoardNode[ , ] Board { get; set; }
