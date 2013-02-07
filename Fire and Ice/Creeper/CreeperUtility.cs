@@ -18,7 +18,7 @@ namespace Creeper
                 .Select(x => board.Tiles.At(tile.Position.AtDirection(x)));
         }
 
-        public static Piece At(this List<Piece> pieces, Position position)
+        public static Piece At(this IEnumerable<Piece> pieces, Position position)
         {
             return pieces.First(x => x.Position == position);
         }

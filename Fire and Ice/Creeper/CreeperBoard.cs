@@ -60,9 +60,6 @@ namespace Creeper
 
         public void ResetCreeperBoard()
         {
-            Tiles.Clear();
-            Pegs.Clear();
-
             Tiles = GenerateEmptyPieces(_TileRows).ToList();
             Pegs = GenerateEmptyPieces(_PegRows).ToList();
 
