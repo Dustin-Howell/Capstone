@@ -135,6 +135,12 @@ namespace XNAControlGame
                 row = Math.Round(row);
                 column = Math.Round(column);
 
+                //Peg Selection Logic (Start Position is Selection, End Position is Selection's Move)
+                //A peg (start position) is selected when the user in a turn selects a peg the same color as his turn. This peg is then set as the start position.
+                //The move (end position) is selected when a user selects a valid position that is empty.
+                //If a user selects an invalid position (off board or corner), an invalid end position (invalid move), or the opposite color's peg, the selected peg (start
+                //  position) is deselected (set back to (-1, -1)).
+                //If a user selects a different peg the same color as his turn after already selecting a peg, the selection (start position) is changed to the new peg selection.
                 if (board.IsValidPosition(new Position((int)row, (int)column), PieceType.Peg))
                 {
                     if (board.Pegs.At(new Position((int)row, (int)column)).Color == turn)
