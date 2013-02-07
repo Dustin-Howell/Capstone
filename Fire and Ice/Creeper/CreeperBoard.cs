@@ -167,19 +167,19 @@ namespace Creeper
             return validTiles;
         }
 
-        public List<Piece> GetValidTilesFromNextRow(List<Piece> knownValidTiles, CreeperColor color)
+        public List<Piece> GetValidTilesFromNextRow(List<Piece> knownValidTiles, CardinalDirection direction, CreeperColor color)
         {
             List<Piece> validTiles = new List<Piece>();
 
             foreach (Piece validTile in knownValidTiles)
             {
-                Position southPosition = validTile.Position.AtDirection(CardinalDirection.South);
-                if (IsValidPosition(southPosition, PieceType.Tile))
+                Position nextPosition = validTile.Position.AtDirection(direction);
+                if (IsValidPosition(nextPosition, PieceType.Tile))
                 {
-                    Piece southTile = Tiles.At(validTile.Position.AtDirection(CardinalDirection.South));
-                    if (southTile.Color == color)
+                    Piece nextTile = Tiles.At(validTile.Position.AtDirection(direction));
+                    if (nextTile.Color == color)
                     {
-                        validTiles.Add(southTile);
+                        validTiles.Add(nextTile);
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace Creeper
                     gameState = CreeperGameState.Complete;
                     break;
                 }
-                validPieces = GetValidTilesFromNextRow(validPieces, playerTurn);
+                validPieces = GetValidTilesFromNextRow(validPieces, CardinalDirection.South, playerTurn);
             }
 
             return gameState;
