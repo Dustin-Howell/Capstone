@@ -94,7 +94,7 @@ namespace ProtoCreeper
             board.PrintToConsole(pausePrint);
 
 
-            if(board.BetterGetGameState(CreeperColor.White) == CreeperGameState.Complete)
+            if(board.GetGameState(CreeperColor.White) == CreeperGameState.Complete)
             {
                 Console.WriteLine("White wins!");
             }

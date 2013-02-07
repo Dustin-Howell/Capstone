@@ -109,62 +109,7 @@ namespace Creeper
 
         public bool IsFinished(CreeperColor playerTurn)
         {
-            return BetterGetGameState(playerTurn) != CreeperGameState.Unfinished;
-        }
-
-        public CreeperGameState GetGameState(CreeperColor playerTurn)
-        {
-            IEnumerable<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);
-            if (!opponent.Any()  || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
-            {
-                return CreeperGameState.Draw;
-            }
-
-            bool gameOver = false;
-            bool stackEmpty = false;
-            Stack<Piece> stack = new Stack<Piece>();
-            HashSet<Piece> foundTiles = new HashSet<Piece>();
-            HashSet<Piece> endTiles = new HashSet<Piece>();
-            Position start = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
-            Position end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
-
-            endTiles.UnionWith(Tiles.At(end).GetNeighbors(this).Where(x => x.Color == playerTurn));
-            if (!endTiles.Any())
-            {
-                return CreeperGameState.Unfinished;
-            }
-
-            Piece currentTile = Tiles.At(start);
-            IEnumerable<Piece> neighbors = currentTile.GetNeighbors(this).Where(x => x.Color == playerTurn);
-            while (!stackEmpty && !currentTile.Position.Equals(end))
-            {
-                foreach (Piece neighbor in neighbors)
-                {
-                    if (!foundTiles.Contains(neighbor))
-                    {
-                        stack.Push(neighbor);
-                    }
-                    else if (foundTiles.Intersect(endTiles).Any())
-                    {
-                        gameOver = true;
-                    }
-                }
-
-                foundTiles.UnionWith(neighbors);
-
-                if (stack.Any())
-                {
-                    currentTile = stack.Pop();
-                }
-                else
-                {
-                    stackEmpty = true;
-                }
-
-                neighbors = currentTile.GetNeighbors(this).Where(x => x.Color == playerTurn);
-            }
-
-            return gameOver ? CreeperGameState.Complete : CreeperGameState.Unfinished;
+            return GetGameState(playerTurn) != CreeperGameState.Unfinished;
         }
 
         public List<Piece> GetValidTilesFromCurrentRow(List<Piece> knownValidTiles, int row, CreeperColor color)
@@ -242,7 +187,7 @@ namespace Creeper
             return validTiles;
         }
 
-        public CreeperGameState BetterGetGameState(CreeperColor playerTurn)
+        public CreeperGameState GetGameState(CreeperColor playerTurn)
         {
             //Copy-Pasted from GetGameState()
             IEnumerable<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);

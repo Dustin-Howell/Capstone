@@ -27,7 +27,7 @@ namespace CreeperAI
         private const double _TerritorialWeight = 1.0;
         private const double _MaterialWeight = 1000000.0;
 
-        private const int _MiniMaxDepth = 3;
+        private const int _MiniMaxDepth = 4;
 
         public CreeperAI()
         {
@@ -237,6 +237,10 @@ namespace CreeperAI
             }
 
             return myTeamCount / opponentTeamCount;
+        }
+
+        private double ScoreBoardVictoryProximity(CreeperBoard board, CreeperColor turn)
+        {
         }
 
         private double ScoreBoardRandom(CreeperBoard board)
