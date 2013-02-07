@@ -45,10 +45,10 @@ namespace Creeper
             Tiles = board.Tiles.Select(x => new Piece(x.Color, x.Position)).ToList();
         }
 
-        public List<Piece> WhereTeam(CreeperColor color, PieceType pieceType)
+        public IEnumerable<Piece> WhereTeam(CreeperColor color, PieceType pieceType)
         {
             List<Piece> pieces = (pieceType == PieceType.Peg) ? Pegs : Tiles;
-            return pieces.Where(x => x.Color == color).ToList();
+            return pieces.Where(x => x.Color == color);
         }
 
         public bool IsValidPosition(Position position, PieceType pieceType)
@@ -63,8 +63,8 @@ namespace Creeper
             Tiles.Clear();
             Pegs.Clear();
 
-            Tiles = GenerateEmptyPieces(_TileRows);
-            Pegs = GenerateEmptyPieces(_PegRows);
+            Tiles = GenerateEmptyPieces(_TileRows).ToList();
+            Pegs = GenerateEmptyPieces(_PegRows).ToList();
 
             foreach (Piece tile in Tiles.Where(x => x.Position == _BlackStart
                 || x.Position == _WhiteStart
@@ -96,13 +96,13 @@ namespace Creeper
             }
         }
 
-        private List<Piece> GenerateEmptyPieces(int size)
+        private IEnumerable<Piece> GenerateEmptyPieces(int size)
         {
             IEnumerable<int> range = Enumerable.Range(0, size);
             return range.Join(range,
                 row => 0,
                 column => 0,
-                (row, column) => new Piece(CreeperColor.Empty, new Position(row, column))).ToList();
+                (row, column) => new Piece(CreeperColor.Empty, new Position(row, column)));
         }
 
         public bool IsValidMove(Move move)
@@ -117,7 +117,7 @@ namespace Creeper
 
         public CreeperGameState GetGameState(CreeperColor playerTurn)
         {
-            List<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);
+            IEnumerable<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);
             if (!opponent.Any()  || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
             {
                 return CreeperGameState.Draw;
@@ -173,7 +173,7 @@ namespace Creeper
         public List<Piece> GetValidTilesFromCurrentRow(List<Piece> knownValidTiles, int row, CreeperColor color)
         {
             //All tiles on the current row
-            List<Piece> currentRow = Pegs.Where(x => x.Position.Row == row).ToList();
+            IEnumerable<Piece> currentRow = Pegs.Where(x => x.Position.Row == row);
 
             //The list of tiles we will return
             List<Piece> validTiles = new List<Piece>();
@@ -248,7 +248,7 @@ namespace Creeper
         public CreeperGameState BetterGetGameState(CreeperColor playerTurn)
         {
             //Copy-Pasted from GetGameState()
-            List<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);
+            IEnumerable<Piece> opponent = WhereTeam((playerTurn == CreeperColor.Black) ? CreeperColor.White : CreeperColor.Black, PieceType.Peg);
             if (!opponent.Any() || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
             {
                 return CreeperGameState.Draw;
@@ -427,11 +427,11 @@ namespace Creeper
                 Console.Write("\n");
             }
 
-            Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.White, PieceType.Peg).Count));
-            Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Black, PieceType.Peg).Count));
+            Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.White, PieceType.Peg).Count()));
+            Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Black, PieceType.Peg).Count()));
             Console.WriteLine();
-            Console.WriteLine(String.Format("White Tiles: {0}", WhereTeam(CreeperColor.White, PieceType.Tile).Count));
-            Console.WriteLine(String.Format("Black Tiles: {0}", WhereTeam(CreeperColor.Black, PieceType.Tile).Count));
+            Console.WriteLine(String.Format("White Tiles: {0}", WhereTeam(CreeperColor.White, PieceType.Tile).Count()));
+            Console.WriteLine(String.Format("Black Tiles: {0}", WhereTeam(CreeperColor.Black, PieceType.Tile).Count()));
             Console.WriteLine();
             if (pause)
             {

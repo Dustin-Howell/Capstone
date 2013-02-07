@@ -57,7 +57,7 @@ namespace CreeperAI
         //This is where I functionalized the stuff we were doing to prepare to call minimax
         private Move GetNaiveMiniMaxMove(CreeperBoard board)
         {
-            List<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board)).ToList();
+            IEnumerable<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board));
 
             double max = Double.MinValue;
             Move bestMove = new Move();
@@ -78,13 +78,13 @@ namespace CreeperAI
 
         private Move GetAlphaBetaMiniMaxMove(CreeperBoard board)
         {
-            List<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board))
+            IEnumerable<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board))
                 .OrderByDescending(x =>
                 {
                     CreeperBoard newBoard = new CreeperBoard(board);
                     newBoard.Move(x);
                     return ScoreBoard(newBoard, _turnColor);
-                }).ToList();
+                });
 
             double max = Double.MinValue;
             Move bestMove = new Move();
@@ -119,7 +119,7 @@ namespace CreeperAI
                 return ScoreBoard(board, turnColor);
             }
 
-            List<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board)).ToList();
+            IEnumerable<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board));
 
             double alpha = Double.MinValue;
             foreach (Move move in possibleMoves)
@@ -142,18 +142,18 @@ namespace CreeperAI
             }
 
             // children of current node
-            List<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board)).ToList();
+            IEnumerable<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board));
 
             // if  Player = MaximizedPlayer
             if (turnColor == _turnColor)
             {
                 // prioitize favorable boards
-                List<CreeperBoard> boards = possibleMoves.Select(x =>
+                IEnumerable<CreeperBoard> boards = possibleMoves.Select(x =>
                 {
                     CreeperBoard newBoard = new CreeperBoard(board);
                     newBoard.Move(x);
                     return newBoard;
-                }).OrderByDescending(x => ScoreBoard(x, turnColor)).ToList();
+                }).OrderByDescending(x => ScoreBoard(x, turnColor));
 
                 // for each child of node
                 foreach (CreeperBoard currentBoard in boards)
@@ -174,12 +174,12 @@ namespace CreeperAI
             else
             {
                 // prioitize favorable boards
-                List<CreeperBoard> boards = possibleMoves.Select(x =>
+                IEnumerable<CreeperBoard> boards = possibleMoves.Select(x =>
                 {
                     CreeperBoard newBoard = new CreeperBoard(board);
                     newBoard.Move(x);
                     return newBoard;
-                }).OrderBy(x => ScoreBoard(x, turnColor)).ToList();
+                }).OrderBy(x => ScoreBoard(x, turnColor));
 
                 // for each child of node
                 foreach (CreeperBoard currentBoard in boards)
@@ -212,8 +212,8 @@ namespace CreeperAI
         private double ScoreBoardTerritorial(CreeperBoard board, CreeperColor turn)
         {
             CreeperColor opponentTurn = (turn == CreeperColor.White)? CreeperColor.Black : CreeperColor.White;
-            double myTeamCount = board.WhereTeam(turn, PieceType.Tile).Count;
-            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Tile).Count;
+            double myTeamCount = board.WhereTeam(turn, PieceType.Tile).Count();
+            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Tile).Count();
 
             //TODO: maybe fix this
             if (opponentTeamCount == 0)
@@ -227,8 +227,8 @@ namespace CreeperAI
         private double ScoreBoardMaterial(CreeperBoard board, CreeperColor turn)
         {
             CreeperColor opponentTurn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
-            double myTeamCount = board.WhereTeam(turn, PieceType.Peg).Count;
-            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Peg).Count;
+            double myTeamCount = board.WhereTeam(turn, PieceType.Peg).Count();
+            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Peg).Count();
 
             //TODO: maybe fix this
             if (opponentTeamCount == 0)
