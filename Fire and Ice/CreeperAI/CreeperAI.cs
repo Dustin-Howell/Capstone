@@ -69,7 +69,7 @@ namespace CreeperAI
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                double moveScore = -ScoreNaiveMiniMaxMove(newBoard, (_turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, _MiniMaxDepth);
+                double moveScore = -ScoreNaiveMiniMaxMove(newBoard, _turnColor.Opposite(), _MiniMaxDepth);
                 if (moveScore > max)
                 {
                     max = moveScore;
@@ -97,7 +97,7 @@ namespace CreeperAI
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                double moveScore = ScoreAlphaBetaMiniMaxMove(newBoard, (_turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, Double.NegativeInfinity, Double.PositiveInfinity, _MiniMaxDepth);
+                double moveScore = ScoreAlphaBetaMiniMaxMove(newBoard, _turnColor.Opposite(), Double.NegativeInfinity, Double.PositiveInfinity, _MiniMaxDepth);
                 if (moveScore > max)
                 {
                     max = moveScore;
@@ -130,7 +130,7 @@ namespace CreeperAI
             {
                 CreeperBoard newBoard = new CreeperBoard(board);
                 newBoard.Move(move);
-                alpha = Math.Max(alpha, -ScoreNaiveMiniMaxMove(newBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, depth - 1));
+                alpha = Math.Max(alpha, -ScoreNaiveMiniMaxMove(newBoard, turnColor.Opposite(), depth - 1));
             }
 
             return alpha;
@@ -163,7 +163,7 @@ namespace CreeperAI
                 foreach (CreeperBoard currentBoard in boards)
                 {
                     // α := max(α, alphabeta(child, depth-1, α, β, not(Player) ))
-                    alpha = Math.Max(alpha, ScoreAlphaBetaMiniMaxMove(currentBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, alpha, beta, depth - 1));
+                    alpha = Math.Max(alpha, ScoreAlphaBetaMiniMaxMove(currentBoard, turnColor.Opposite(), alpha, beta, depth - 1));
 
                     // if β ≤ α
                     if (beta <= alpha)
@@ -189,7 +189,7 @@ namespace CreeperAI
                 foreach (CreeperBoard currentBoard in boards)
                 {
                     // β := min(β, alphabeta(child, depth-1, α, β, not(Player) ))
-                    beta = Math.Min(beta, ScoreAlphaBetaMiniMaxMove(currentBoard, (turnColor == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White, alpha, beta, depth - 1));
+                    beta = Math.Min(beta, ScoreAlphaBetaMiniMaxMove(currentBoard, turnColor.Opposite(), alpha, beta, depth - 1));
 
                     // if β ≤ α
                     if (beta <= alpha)
@@ -215,7 +215,7 @@ namespace CreeperAI
 
         private double ScoreBoardTerritorial(CreeperBoard board, CreeperColor turn)
         {
-            CreeperColor opponentTurn = (turn == CreeperColor.White)? CreeperColor.Black : CreeperColor.White;
+            CreeperColor opponentTurn = turn.Opposite();
             double myTeamCount = board.WhereTeam(turn, PieceType.Tile).Count();
             double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Tile).Count();
 
@@ -230,7 +230,7 @@ namespace CreeperAI
 
         private double ScoreBoardMaterial(CreeperBoard board, CreeperColor turn)
         {
-            CreeperColor opponentTurn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+            CreeperColor opponentTurn = turn.Opposite();
             double myTeamCount = board.WhereTeam(turn, PieceType.Peg).Count();
             double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Peg).Count();
 
