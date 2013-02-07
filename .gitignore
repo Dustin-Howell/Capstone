@@ -4,3 +4,4 @@ obj/
 *.db
 *.cachefile
 *.vsp
+*.psess
