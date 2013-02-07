@@ -28,6 +28,14 @@ namespace Creeper
             return position.Row >= 0 && position.Row <= 6 && position.Column >= 0 && position.Column <= 6;
         }
 
+        public static CreeperColor Opposite(this CreeperColor color)
+        {
+            if (color != CreeperColor.Black && color != CreeperColor.White)
+                throw new ArgumentOutOfRangeException("Argument must be either Black or White to have an opposite color.");
+
+            return (color == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+        }
+
         static public List<Move> PossibleMoves(this Piece peg, CreeperBoard board)
         {
             List<Piece> pegs = new List<Piece>(board.Pegs);
