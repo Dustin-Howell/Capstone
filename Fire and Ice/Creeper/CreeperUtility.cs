@@ -20,7 +20,7 @@ namespace Creeper
 
         public static Piece At(this List<Piece> pieces, Position position)
         {
-            return pieces.Where(x => x.Position == position).First();
+            return pieces.First(x => x.Position == position);
         }
 
         private static bool IsPegOnBoard(Position position)

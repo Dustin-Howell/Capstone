@@ -336,8 +336,8 @@ namespace Creeper
             {
                 isValid = true;
 
-                Pegs.Where(x => x.Position.Equals(move.StartPosition)).First().Color = CreeperColor.Empty;
-                Pegs.Where(x => x.Position.Equals(move.EndPosition)).First().Color = move.PlayerColor;
+                Pegs.First(x => x.Position.Equals(move.StartPosition)).Color = CreeperColor.Empty;
+                Pegs.First(x => x.Position.Equals(move.EndPosition)).Color = move.PlayerColor;
 
                 if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
                 {
