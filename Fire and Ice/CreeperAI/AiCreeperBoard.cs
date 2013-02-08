@@ -14,6 +14,10 @@ namespace CreeperAI
     public class AICreeperBoard
     {
         AIBoardNode[ , ] Board { get; set; }
+        AIBoardNode[] RowHeadBlack { get; set; }
+        AIBoardNode[] RowHeadWhite { get; set; }
+        AIBoardNode[] ColumnHeadBlack { get; set; }
+        AIBoardNode[] ColumnHeadWhite { get; set; }
         // This will be tileRows + 1 to account for heads
         // Which makes me realize, the pieces in our AI board are going to be 1 indexed, aren't they?
         private int _boardRows;
@@ -25,26 +29,24 @@ namespace CreeperAI
 
             Board = new AIBoardNode[_boardRows, _boardRows];
 
+            int row = 0;
+            int column = 0;
+
             foreach (Piece tile in board.Tiles)
             {
-                Board[tile.Position.Row, tile.Position.Column] = new AIBoardNode(tile.Color.ToNodeType());
-            }
+                row = tile.Position.Row;
+                column = tile.Position.Column;
 
-            for (int row = 0; row < _boardRows; row++)
-            {
-                for (int column = 0; column < _boardRows; column++)
+                Board[row, column] = new AIBoardNode(tile.Color.ToNodeType());
+
+                if (Board[row, column].NodeType == NodeType.Black || Board[row, column].NodeType == NodeType.White)
                 {
-                    if (Board[row, column].NodeType == NodeType.Black || Board[row, column].NodeType == NodeType.White)
-                    {
-                        Board[row, column].TeamNorth = GetNextNode(row, column, CardinalDirection.North);
-                        Board[row, column].TeamSouth = GetNextNode(row, column, CardinalDirection.South);
-                        Board[row, column].TeamEast = GetNextNode(row, column, CardinalDirection.East);
-                        Board[row, column].TeamWest = GetNextNode(row, column, CardinalDirection.West);
-                    }                    
+                    Board[row, column].TeamNorth = GetNextNode(row, column, CardinalDirection.North);
+                    Board[row, column].TeamSouth = GetNextNode(row, column, CardinalDirection.South);
+                    Board[row, column].TeamEast = GetNextNode(row, column, CardinalDirection.East);
+                    Board[row, column].TeamWest = GetNextNode(row, column, CardinalDirection.West);
                 }
             }
-
-
         }
 
         private AIBoardNode GetNextNode(int row, int column, CardinalDirection direction)
@@ -86,7 +88,5 @@ namespace CreeperAI
 
             return nextNode;
         }
-
-
     }
 }
