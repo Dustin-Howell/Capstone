@@ -2,8 +2,4 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" WindowState="Maximized" WindowStyle="None" Background="Black">
-    <Button HorizontalAlignment="Center" VerticalAlignment="Center" Name="StartGame" Click="StartGame_Click"
-            Height="124" Width="200" FontFamily="Edwardian Script ITC" FontSize="40">
-        Start Game
-    </Button>
 </Window>

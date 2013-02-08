@@ -22,11 +22,11 @@ namespace FireAndIce
         public MainWindow()
         {
             InitializeComponent();
+            this.Content = new GameControl();
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
         {
-            this.Content = new GameControl();
         }
     }
 }

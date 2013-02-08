@@ -7,7 +7,7 @@
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <MediaElement Name="SplashScreenVideo" 
-                          Source="Videos/Lorem.wmv" 
+                          Source="Videos/SplashScreenPlaceholder.wmv" 
                           LoadedBehavior="Play" 
                           VerticalAlignment="Center" 
                           HorizontalAlignment="Center" 

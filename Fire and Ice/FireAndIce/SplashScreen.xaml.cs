@@ -22,6 +22,7 @@ namespace FireAndIce
         public SplashScreen()
         {
             InitializeComponent();
+            SplashScreenVideo.Play();
         }
     }
 }

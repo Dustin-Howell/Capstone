@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assemblies\XNAControl.dll" />
+    <Resource Include="Videos\SplashScreenPlaceholder.wmv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CreeperCore\CreeperCore.csproj">
@@ -133,9 +134,7 @@
       <Name>XNAControlGame</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Videos\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
