@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              VerticalAlignment="Stretch"
              HorizontalAlignment="Stretch">
+    
     <UserControl.Resources>
         <Style TargetType="{x:Type Grid}" x:Key="GameGridStyle">
             <Setter Property="Background" Value="Black" />
@@ -35,6 +36,7 @@
         </StackPanel>
         <Grid Name="GameGrid" 
               Style="{StaticResource GameGridStyle}">
+            <Border BorderBrush="White" BorderThickness="1"/>
             <xna:UserControl1 x:Name="xnaControl" 
                               Height="600" 
                               Width="800" 
