@@ -28,6 +28,10 @@ namespace CreeperAI
             _boardRows = CreeperBoard.TileRows;
 
             Board = new AIBoardNode[_boardRows, _boardRows];
+            RowHeadBlack = new AIBoardNode[_boardRows];
+            RowHeadWhite = new AIBoardNode[_boardRows];
+            ColumnHeadBlack = new AIBoardNode[_boardRows];
+            ColumnHeadWhite = new AIBoardNode[_boardRows];
 
             int row = 0;
             int column = 0;
@@ -41,6 +45,7 @@ namespace CreeperAI
 
                 if (Board[row, column].NodeType == NodeType.Black || Board[row, column].NodeType == NodeType.White)
                 {
+                    UpdateListHeads(row, column, Board[row, column].NodeType);
                     Board[row, column].TeamNorth = GetNextNode(row, column, CardinalDirection.North);
                     Board[row, column].TeamSouth = GetNextNode(row, column, CardinalDirection.South);
                     Board[row, column].TeamEast = GetNextNode(row, column, CardinalDirection.East);
@@ -87,6 +92,26 @@ namespace CreeperAI
             while (nextNode != Board[currentRow, currentColumn]);
 
             return nextNode;
+        }
+
+        private void UpdateListHeads(int row, int column, NodeType type)
+        {
+            // This gives us direct access to the first node added to a given row, column, and color.
+            if (type == NodeType.Black)
+            {
+                RowHeadBlack[row] = RowHeadBlack[row] ?? Board[row, column];
+                ColumnHeadBlack[column] = ColumnHeadBlack[column] ?? Board[row, column];
+            }
+            else if (type == NodeType.White)
+            {
+                RowHeadWhite[row] = RowHeadWhite[row] ?? Board[row, column];
+                ColumnHeadWhite[column] = ColumnHeadWhite[column] ?? Board[row, column];
+            }
+            else
+            {
+                // We don't want this method called with anything but tiles.
+                throw new ArgumentOutOfRangeException(type.ToString());
+            }
         }
     }
 }
