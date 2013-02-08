@@ -10,10 +10,10 @@ namespace CreeperAI
 
     class AIBoardNode
     {
-        public AIBoardNode North { get; set; }
-        public AIBoardNode South { get; set; }
-        public AIBoardNode East { get; set; }
-        public AIBoardNode West { get; set; }
+        public AIBoardNode TeamNorth { get; set; }
+        public AIBoardNode TeamSouth { get; set; }
+        public AIBoardNode TeamEast { get; set; }
+        public AIBoardNode TeamWest { get; set; }
 
         public NodeType NodeType { get; set; }
 
