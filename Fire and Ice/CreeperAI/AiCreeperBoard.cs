@@ -210,6 +210,8 @@ namespace CreeperAI
             {
                 tile.Color = move.PlayerColor;
             }
+
+            // TODO: Update counts
         }
 
         private void Capture(Move move)
@@ -230,6 +232,8 @@ namespace CreeperAI
             {
                 PegBoard[move.StartPosition.Row, move.StartPosition.Column - 1].Color = CreeperColor.Empty;
             }
+
+            // TODO: Update counts
         }
 
         public void Move(Move move)
@@ -245,6 +249,8 @@ namespace CreeperAI
             {
                 Capture(move);
             }
+
+            // TODO: Do stuff to Heads of lists or you will be very sorry!!!
         }
 
         public void PrintToConsole()
