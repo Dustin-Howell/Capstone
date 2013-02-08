@@ -41,9 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AIBoardNode.cs" />
-    <Compile Include="AIBoardNode2.cs" />
     <Compile Include="AiCreeperBoard.cs" />
-    <Compile Include="AICreeperBoard2.cs" />
     <Compile Include="AIUtility.cs" />
     <Compile Include="CreeperAI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

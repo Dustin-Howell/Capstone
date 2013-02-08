@@ -6,8 +6,6 @@ using Creeper;
 
 namespace CreeperAI
 {
-    public enum NodeType { Black, White, Invalid, Empty, Head }
-
     class AIBoardNode
     {
         public AIBoardNode TeamNorth { get; set; }
@@ -15,11 +13,11 @@ namespace CreeperAI
         public AIBoardNode TeamEast { get; set; }
         public AIBoardNode TeamWest { get; set; }
 
-        public NodeType NodeType { get; set; }
+        public CreeperColor Color { get; set; }
 
-        public AIBoardNode(NodeType color)
+        public AIBoardNode(CreeperColor color)
         {
-            NodeType = color;
+            Color = color;
         }
     }
 }

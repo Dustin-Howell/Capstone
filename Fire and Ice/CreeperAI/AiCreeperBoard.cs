@@ -41,11 +41,11 @@ namespace CreeperAI
                 row = tile.Position.Row;
                 column = tile.Position.Column;
 
-                Board[row, column] = new AIBoardNode(tile.Color.ToNodeType());
+                Board[row, column] = new AIBoardNode(tile.Color);
 
-                if (Board[row, column].NodeType == NodeType.Black || Board[row, column].NodeType == NodeType.White)
+                if (Board[row, column].Color == CreeperColor.Black || Board[row, column].Color == CreeperColor.White)
                 {
-                    UpdateListHeads(row, column, Board[row, column].NodeType);
+                    UpdateListHeads(row, column, Board[row, column].Color);
                     Board[row, column].TeamNorth = GetNextNode(row, column, CardinalDirection.North);
                     Board[row, column].TeamSouth = GetNextNode(row, column, CardinalDirection.South);
                     Board[row, column].TeamEast = GetNextNode(row, column, CardinalDirection.East);
@@ -87,22 +87,22 @@ namespace CreeperAI
                 currentRow = (currentRow + rowIncrement) % _boardRows;
                 currentColumn = (currentColumn + columnIncrement) % _boardRows;
 
-                nextNode = (Board[currentRow, currentColumn].NodeType == nextNode.NodeType) ? Board[currentRow, currentColumn] : nextNode;                
+                nextNode = (Board[currentRow, currentColumn].Color == nextNode.Color) ? Board[currentRow, currentColumn] : nextNode;                
             }
             while (nextNode != Board[currentRow, currentColumn]);
 
             return nextNode;
         }
 
-        private void UpdateListHeads(int row, int column, NodeType type)
+        private void UpdateListHeads(int row, int column, CreeperColor type)
         {
             // This gives us direct access to the first node added to a given row, column, and color.
-            if (type == NodeType.Black)
+            if (type == CreeperColor.Black)
             {
                 RowHeadBlack[row] = RowHeadBlack[row] ?? Board[row, column];
                 ColumnHeadBlack[column] = ColumnHeadBlack[column] ?? Board[row, column];
             }
-            else if (type == NodeType.White)
+            else if (type == CreeperColor.White)
             {
                 RowHeadWhite[row] = RowHeadWhite[row] ?? Board[row, column];
                 ColumnHeadWhite[column] = ColumnHeadWhite[column] ?? Board[row, column];
