@@ -100,13 +100,21 @@ namespace ProtoCreeper
             }
         }
 
+        static void PrintAICreeperBoard(CreeperBoard board)
+        {
+            board.ReadFromFile("TestBoard.txt");
+            AICreeperBoard AIBoard = new AICreeperBoard(board);
+            AIBoard.PrintToConsole();
+        }
+
         static void Main(string[] args)
         {
             CreeperBoard board = new CreeperBoard();
+            PrintAICreeperBoard(board);
             //board.ReadFromFile("TestBoard.txt");
             //board.PrintToConsole();
             //WhiteWin(board);
-            AIGame(board);
+            //AIGame(board);
             //Testfunction(board);
             //using (XNAControlGame.Game1 game = new XNAControlGame.Game1())
             //{

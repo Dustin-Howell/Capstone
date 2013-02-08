@@ -13,43 +13,52 @@ namespace CreeperAI
     // Nodes have reference to neighbor nodes
     public class AICreeperBoard
     {
-        AIBoardNode[ , ] Board { get; set; }
+        AIBoardNode[ , ] TileBoard { get; set; }
+        AIBoardNode[ , ] PegBoard { get; set; }
         AIBoardNode[] RowHeadBlack { get; set; }
         AIBoardNode[] RowHeadWhite { get; set; }
         AIBoardNode[] ColumnHeadBlack { get; set; }
         AIBoardNode[] ColumnHeadWhite { get; set; }
         // This will be tileRows + 1 to account for heads
         // Which makes me realize, the pieces in our AI board are going to be 1 indexed, aren't they?
-        private int _boardRows;
+        private int _tileRows;
+        private int _pegRows;
         private int _headIndex;
 
         public AICreeperBoard(CreeperBoard board)
         {
-            _boardRows = CreeperBoard.TileRows;
+            _tileRows = CreeperBoard.TileRows;
+            _pegRows = CreeperBoard.PegRows;
 
-            Board = new AIBoardNode[_boardRows, _boardRows];
-            RowHeadBlack = new AIBoardNode[_boardRows];
-            RowHeadWhite = new AIBoardNode[_boardRows];
-            ColumnHeadBlack = new AIBoardNode[_boardRows];
-            ColumnHeadWhite = new AIBoardNode[_boardRows];
-
-            int row = 0;
-            int column = 0;
+            TileBoard = new AIBoardNode[_tileRows, _tileRows];
+            PegBoard = new AIBoardNode[_pegRows, _pegRows];
+            RowHeadBlack = new AIBoardNode[_tileRows];
+            RowHeadWhite = new AIBoardNode[_tileRows];
+            ColumnHeadBlack = new AIBoardNode[_tileRows];
+            ColumnHeadWhite = new AIBoardNode[_tileRows];
 
             foreach (Piece tile in board.Tiles)
             {
-                row = tile.Position.Row;
-                column = tile.Position.Column;
+                TileBoard[tile.Position.Row, tile.Position.Column] = new AIBoardNode(tile.Color);
+            }
 
-                Board[row, column] = new AIBoardNode(tile.Color);
+            foreach (Piece peg in board.Pegs)
+            {
+                PegBoard[peg.Position.Row, peg.Position.Column] = new AIBoardNode(peg.Color);
+            }
 
-                if (Board[row, column].Color == CreeperColor.Black || Board[row, column].Color == CreeperColor.White)
+            for (int row = 0; row < _tileRows; row++)
+            {
+                for (int column = 0; column < _tileRows; column++)
                 {
-                    UpdateListHeads(row, column, Board[row, column].Color);
-                    Board[row, column].TeamNorth = GetNextNode(row, column, CardinalDirection.North);
-                    Board[row, column].TeamSouth = GetNextNode(row, column, CardinalDirection.South);
-                    Board[row, column].TeamEast = GetNextNode(row, column, CardinalDirection.East);
-                    Board[row, column].TeamWest = GetNextNode(row, column, CardinalDirection.West);
+                    if (TileBoard[row, column].Color == CreeperColor.Black || TileBoard[row, column].Color == CreeperColor.White)
+                    {
+                        UpdateListHeads(row, column, TileBoard[row, column].Color);
+                        TileBoard[row, column].TeamNorth = GetNextNode(row, column, CardinalDirection.North);
+                        TileBoard[row, column].TeamSouth = GetNextNode(row, column, CardinalDirection.South);
+                        TileBoard[row, column].TeamEast = GetNextNode(row, column, CardinalDirection.East);
+                        TileBoard[row, column].TeamWest = GetNextNode(row, column, CardinalDirection.West);
+                    }
                 }
             }
         }
@@ -62,7 +71,7 @@ namespace CreeperAI
             int currentRow = row;
             int currentColumn = column;
 
-            AIBoardNode nextNode = Board[row, column];
+            AIBoardNode nextNode = TileBoard[row, column];
 
             switch (direction)
             {
@@ -84,12 +93,27 @@ namespace CreeperAI
 
             do
             {
-                currentRow = (currentRow + rowIncrement) % _boardRows;
-                currentColumn = (currentColumn + columnIncrement) % _boardRows;
+                if ((currentRow + rowIncrement) == -1)
+                {
+                    currentRow = _tileRows - 1;
+                }
+                else
+                {
+                    currentRow = (currentRow + rowIncrement) % _tileRows;
+                }
 
-                nextNode = (Board[currentRow, currentColumn].Color == nextNode.Color) ? Board[currentRow, currentColumn] : nextNode;                
+                if ((currentColumn + columnIncrement) == -1)
+                {
+                    currentColumn = _tileRows - 1;
+                }
+                else
+                {
+                    currentColumn = (currentColumn + columnIncrement) % _tileRows;
+                }
+
+                nextNode = (TileBoard[currentRow, currentColumn].Color == nextNode.Color) ? TileBoard[currentRow, currentColumn] : nextNode;                
             }
-            while (nextNode != Board[currentRow, currentColumn]);
+            while (nextNode != TileBoard[currentRow, currentColumn]);
 
             return nextNode;
         }
@@ -99,19 +123,186 @@ namespace CreeperAI
             // This gives us direct access to the first node added to a given row, column, and color.
             if (type == CreeperColor.Black)
             {
-                RowHeadBlack[row] = RowHeadBlack[row] ?? Board[row, column];
-                ColumnHeadBlack[column] = ColumnHeadBlack[column] ?? Board[row, column];
+                RowHeadBlack[row] = RowHeadBlack[row] ?? TileBoard[row, column];
+                ColumnHeadBlack[column] = ColumnHeadBlack[column] ?? TileBoard[row, column];
             }
             else if (type == CreeperColor.White)
             {
-                RowHeadWhite[row] = RowHeadWhite[row] ?? Board[row, column];
-                ColumnHeadWhite[column] = ColumnHeadWhite[column] ?? Board[row, column];
+                RowHeadWhite[row] = RowHeadWhite[row] ?? TileBoard[row, column];
+                ColumnHeadWhite[column] = ColumnHeadWhite[column] ?? TileBoard[row, column];
             }
             else
             {
                 // We don't want this method called with anything but tiles.
                 throw new ArgumentOutOfRangeException(type.ToString());
             }
+        }
+
+        public bool IsValidPosition(Position position, PieceType pieceType)
+        {
+            int rows = (pieceType == PieceType.Tile) ? _tileRows : _pegRows;
+
+            return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
+        }
+
+        public bool IsValidMove(Move move)
+        {
+            bool valid = true;
+
+            //is the move in bounds?
+            if (!IsValidPosition(move.StartPosition, PieceType.Peg)
+                || !IsValidPosition(move.EndPosition, PieceType.Peg))
+            {
+                valid = false;
+            }
+
+            //Does the start space have the player's piece?
+            else if (PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color != move.PlayerColor)
+            {
+                valid = false;
+            }
+
+            //Is the end space empty?
+            else if (PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color != CreeperColor.Empty)
+            {
+                valid = false;
+            }
+
+            //is the end space one away from the start space?
+            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) > 1)
+                || (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) > 1)
+                || (move.StartPosition.Equals(move.EndPosition)))
+            {
+                valid = false;
+            }
+
+            return valid;
+        }
+
+        private AIBoardNode GetFlippedTile(Move move)
+        {
+            CardinalDirection direction = move.EndPosition.Row < move.StartPosition.Row ? (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Northwest : CardinalDirection.Northeast)
+                : (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Southwest : CardinalDirection.Southeast);
+
+            switch (direction)
+            {
+                case CardinalDirection.Northwest:
+                    return TileBoard[move.EndPosition.Row, move.EndPosition.Column];
+
+                case CardinalDirection.Northeast:
+                    return TileBoard[move.EndPosition.Row, move.EndPosition.Column - 1];
+
+                case CardinalDirection.Southwest:
+                    return TileBoard[move.EndPosition.Row - 1, move.EndPosition.Column];
+
+                case CardinalDirection.Southeast:
+                    return TileBoard[move.StartPosition.Row, move.StartPosition.Column];
+
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
+        private void Flip(Move move)
+        {
+            AIBoardNode tile = GetFlippedTile(move);
+            if (tile.Color != CreeperColor.Invalid)
+            {
+                tile.Color = move.PlayerColor;
+            }
+        }
+
+        private void Capture(Move move)
+        {
+            if (move.StartPosition.Row + 2 == move.EndPosition.Row && move.StartPosition.Column == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row + 1, move.StartPosition.Column].Color = CreeperColor.Empty;
+            }
+            else if (move.StartPosition.Row - 2 == move.EndPosition.Row && move.StartPosition.Column == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row - 1, move.StartPosition.Column].Color = CreeperColor.Empty;
+            }
+            else if (move.StartPosition.Row == move.EndPosition.Row && move.StartPosition.Column + 2 == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row, move.StartPosition.Column + 1].Color = CreeperColor.Empty;
+            }
+            else if (move.StartPosition.Row == move.EndPosition.Row && move.StartPosition.Column - 2 == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row, move.StartPosition.Column - 1].Color = CreeperColor.Empty;
+            }
+        }
+
+        public void Move(Move move)
+        {
+            PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color = CreeperColor.Empty;
+            PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = move.PlayerColor;
+
+            if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
+            {
+                Flip(move);
+            }
+            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+            {
+                Capture(move);
+            }
+        }
+
+        public void PrintToConsole()
+        {
+            for (int row = 0; row < _pegRows; row++)
+            {
+                for (int column = 0; column < _pegRows; column++)
+                {
+                    switch (PegBoard[row, column].Color)
+                    {
+                        case CreeperColor.Black:
+                            Console.Write("B");
+                            break;
+                        case CreeperColor.Empty:
+                            Console.Write(" ");
+                            break;
+                        case CreeperColor.Invalid:
+                            Console.Write("I");
+                            break;
+                        case CreeperColor.White:
+                            Console.Write("W");
+                            break;
+                    }
+
+                    if (column < _pegRows - 1)
+                    {
+                        Console.Write("-");
+                    }                   
+                }
+
+                System.Console.WriteLine();
+
+                if (row < _tileRows)
+                {
+                    for (int column = 0; column < _tileRows; column++)
+                    {
+                        Console.Write("|");
+                        switch (TileBoard[row, column].Color)
+                        {
+                            case CreeperColor.White:
+                                Console.Write("O");
+                                break;
+                            case CreeperColor.Black:
+                                Console.Write("X");
+                                break;
+                            case CreeperColor.Invalid:
+                                Console.Write("*");
+                                break;
+                            default:
+                                Console.Write(" ");
+                                break;
+                        }
+                    }
+                    Console.Write("|");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
     }
 }
