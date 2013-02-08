@@ -19,21 +19,14 @@ namespace FireAndIce
 {
     public partial class MainWindow : Window
     {
-        protected XNAControlGame.Game1 _xnaGame;
-        protected CreeperCore.CreeperCore _gameCore;
-        protected CreeperBoard _board;
-
         public MainWindow()
         {
             InitializeComponent();
-            _xnaGame = new XNAControlGame.Game1(xnaControl.Handle, 800, 600);//(int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
-            _gameCore = new CreeperCore.CreeperCore(_xnaGame);
-            _gameCore.Run();
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
         {
-            _gameCore.StartGame();
+            this.Content = new GameControl();
         }
     }
 }
