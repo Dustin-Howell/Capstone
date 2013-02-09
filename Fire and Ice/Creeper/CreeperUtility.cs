@@ -36,14 +36,16 @@ namespace Creeper
             return (color == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
         }
 
-        static public List<Move> PossibleMoves(this Piece peg, CreeperBoard board)
+        static public IEnumerable<Move> PossibleMoves(this Piece peg, CreeperBoard board)
         {
             List<Piece> pegs = new List<Piece>(board.Pegs);
-            List<Move> possibleMoves = new List<Move>();
+
             if (peg.Color == CreeperColor.Empty || peg.Color == CreeperColor.Invalid)
             {
-                return new List<Move>();
+                yield return new Move();
+                yield break;
             }
+
             List<CardinalDirection> neighborlyDirections = new List<CardinalDirection>
                                                                 { 
                                                                     CardinalDirection.North,
@@ -62,8 +64,7 @@ namespace Creeper
                 if (board.IsValidPosition(destinationPosition, PieceType.Peg)
                     && pegs.At(destinationPosition).Color == CreeperColor.Empty)
                 {
-                    Move move = new Move(peg.Position, destinationPosition, peg.Color);
-                    possibleMoves.Add(move);
+                    yield return new Move(peg.Position, destinationPosition, peg.Color);
                 }
 
                 if (
@@ -80,12 +81,12 @@ namespace Creeper
                     if (board.IsValidPosition(destinationPosition, PieceType.Peg)
                         && pegs.At(destinationPosition).Color == CreeperColor.Empty)
                     {
-                        possibleMoves.Add(new Move(peg.Position, destinationPosition, peg.Color));
+                        yield return new Move(peg.Position, destinationPosition, peg.Color);
                     }
                 }
-            }            
+            }
 
-            return possibleMoves;
+            yield break;
         }
 
         static public Position NumberToPosition(int number, bool isPeg = false)
