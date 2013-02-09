@@ -19,15 +19,24 @@ namespace CreeperAI
         AIBoardNode[] RowHeadWhite { get; set; }
         AIBoardNode[] ColumnHeadBlack { get; set; }
         AIBoardNode[] ColumnHeadWhite { get; set; }
-        // This will be tileRows + 1 to account for heads
-        // Which makes me realize, the pieces in our AI board are going to be 1 indexed, aren't they?
+
         private int _tileRows;
         private int _pegRows;
+
+        private int BlackTileCount { get; set; }
+        private int WhiteTileCount { get; set; }
+        private int BlackPegCount { get; set; }
+        private int WhitePegCount { get; set; }
 
         public AICreeperBoard(CreeperBoard board)
         {
             _tileRows = CreeperBoard.TileRows;
             _pegRows = CreeperBoard.PegRows;
+
+            BlackTileCount = board.Tiles.Count(x => x.Color == CreeperColor.Black);
+            WhiteTileCount = board.Tiles.Count(x => x.Color == CreeperColor.White);
+            BlackPegCount = board.Pegs.Count(x => x.Color == CreeperColor.Black);
+            WhitePegCount = board.Pegs.Count(x => x.Color == CreeperColor.White);
 
             TileBoard = new AIBoardNode[_tileRows, _tileRows];
             PegBoard = new AIBoardNode[_pegRows, _pegRows];
@@ -65,6 +74,15 @@ namespace CreeperAI
             tile.TeamSouth = GetNextNode(tile.Row, tile.Column, CardinalDirection.South);
             tile.TeamEast = GetNextNode(tile.Row, tile.Column, CardinalDirection.East);
             tile.TeamWest = GetNextNode(tile.Row, tile.Column, CardinalDirection.West);
+
+            if ((tile.Color == CreeperColor.Black))
+            {
+                BlackTileCount++;
+            }
+            else
+            {
+                WhiteTileCount++;
+            }
         }
 
         private void RemoveTileFromTeam(AIBoardNode tile)
@@ -73,6 +91,15 @@ namespace CreeperAI
             tile.TeamSouth.TeamNorth = tile.TeamNorth;
             tile.TeamEast.TeamWest = tile.TeamWest;
             tile.TeamWest.TeamEast = tile.TeamEast;
+
+            if ((tile.Color == CreeperColor.Black))
+            {
+                 if (BlackTileCount-- < 0) throw new InvalidOperationException();
+            }
+            else
+            {
+                if (WhiteTileCount-- < 0) throw new InvalidOperationException();
+            }
         }
 
         private AIBoardNode GetNextNode(int row, int column, CardinalDirection direction)
@@ -254,8 +281,6 @@ namespace CreeperAI
                 tile.Color = move.PlayerColor;
                 UpdateListHeads(tile.Row, tile.Column, tile.Color);
             }
-
-            // TODO: Update counts
         }
 
         private void Capture(Move move)
@@ -277,7 +302,14 @@ namespace CreeperAI
                 PegBoard[move.StartPosition.Row, move.StartPosition.Column - 1].Color = CreeperColor.Empty;
             }
 
-            // TODO: Update counts
+            if (move.PlayerColor == CreeperColor.Black)
+            {
+                if (WhitePegCount-- < 0) throw new InvalidOperationException();
+            }
+            else
+            {
+                if (BlackPegCount-- < 0) throw new InvalidOperationException();
+            }
         }
 
         public void Move(Move move)
