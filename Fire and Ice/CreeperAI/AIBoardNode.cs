@@ -15,9 +15,21 @@ namespace CreeperAI
 
         public CreeperColor Color { get; set; }
 
+        public int Row { get; private set; }
+        public int Column { get; private set; }
+
+        public AIBoardNode(int row, int column, CreeperColor color)
+        {
+            Color = color;
+            Row = row;
+            Column = column;
+        }
+
         public AIBoardNode(CreeperColor color)
         {
             Color = color;
+            Row = -1;
+            Column = -1;
         }
     }
 }
