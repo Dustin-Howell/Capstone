@@ -20,13 +20,14 @@ namespace CreeperAI
         AIBoardNode[] ColumnHeadBlack { get; set; }
         AIBoardNode[] ColumnHeadWhite { get; set; }
 
+        public List<AIBoardNode> BlackPegs { get; private set; }
+        public List<AIBoardNode> WhitePegs { get; private set; }
+
+        public int BlackTileCount { get; private set; }
+        public int WhiteTileCount { get; private set; }
+
         private int _tileRows;
         private int _pegRows;
-
-        private int BlackTileCount { get; set; }
-        private int WhiteTileCount { get; set; }
-        private int BlackPegCount { get; set; }
-        private int WhitePegCount { get; set; }
 
         public AICreeperBoard(CreeperBoard board)
         {
@@ -35,8 +36,8 @@ namespace CreeperAI
 
             BlackTileCount = board.Tiles.Count(x => x.Color == CreeperColor.Black);
             WhiteTileCount = board.Tiles.Count(x => x.Color == CreeperColor.White);
-            BlackPegCount = board.Pegs.Count(x => x.Color == CreeperColor.Black);
-            WhitePegCount = board.Pegs.Count(x => x.Color == CreeperColor.White);
+            BlackPegs = board.WhereTeam(CreeperColor.Black, PieceType.Peg).Select(x => new AIBoardNode(x)).ToList();
+            WhitePegs = board.WhereTeam(CreeperColor.White, PieceType.Peg).Select(x => new AIBoardNode(x)).ToList();
 
             TileBoard = new AIBoardNode[_tileRows, _tileRows];
             PegBoard = new AIBoardNode[_pegRows, _pegRows];
@@ -198,11 +199,12 @@ namespace CreeperAI
             }
         }
 
-        public bool IsValidPosition(Position position, PieceType pieceType)
+        public bool IsValidPosition(int row, int column, PieceType pieceType)
         {
             int rows = (pieceType == PieceType.Tile) ? _tileRows : _pegRows;
 
-            return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
+            return ((column >= 0 && column < rows && row >= 0 && row < rows)
+                && (((pieceType == PieceType.Tile) ? TileBoard : PegBoard)[row, column].Color != CreeperColor.Invalid));
         }
 
         public bool IsValidMove(Move move)
@@ -210,8 +212,8 @@ namespace CreeperAI
             bool valid = true;
 
             //is the move in bounds?
-            if (!IsValidPosition(move.StartPosition, PieceType.Peg)
-                || !IsValidPosition(move.EndPosition, PieceType.Peg))
+            if (!IsValidPosition(move.StartPosition.Row, move.StartPosition.Column, PieceType.Peg)
+                || !IsValidPosition(move.EndPosition.Row, move.EndPosition.Column, PieceType.Peg))
             {
                 valid = false;
             }
@@ -232,6 +234,16 @@ namespace CreeperAI
             else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) > 1)
                 || (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) > 1)
                 || (move.StartPosition.Equals(move.EndPosition)))
+            {
+                valid = false;
+            }
+            //is it a capture?
+            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) == (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+            {
+                valid = false;
+            }
+            //is there a capturable piece?
+            else if (PegBoard[move.StartPosition.Row + ((move.StartPosition.Row - move.EndPosition.Row) / 2), move.StartPosition.Column + ((move.StartPosition.Column - move.EndPosition.Column) / 2)].Color == move.PlayerColor.Opposite())
             {
                 valid = false;
             }
@@ -288,42 +300,70 @@ namespace CreeperAI
             if (move.StartPosition.Row + 2 == move.EndPosition.Row && move.StartPosition.Column == move.EndPosition.Column)
             {
                 PegBoard[move.StartPosition.Row + 1, move.StartPosition.Column].Color = CreeperColor.Empty;
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.StartPosition.Row + 1, move.StartPosition.Column]);
             }
             else if (move.StartPosition.Row - 2 == move.EndPosition.Row && move.StartPosition.Column == move.EndPosition.Column)
             {
                 PegBoard[move.StartPosition.Row - 1, move.StartPosition.Column].Color = CreeperColor.Empty;
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.StartPosition.Row - 1, move.StartPosition.Column]);
             }
             else if (move.StartPosition.Row == move.EndPosition.Row && move.StartPosition.Column + 2 == move.EndPosition.Column)
             {
                 PegBoard[move.StartPosition.Row, move.StartPosition.Column + 1].Color = CreeperColor.Empty;
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.StartPosition.Row, move.StartPosition.Column + 1]);
             }
             else if (move.StartPosition.Row == move.EndPosition.Row && move.StartPosition.Column - 2 == move.EndPosition.Column)
             {
                 PegBoard[move.StartPosition.Row, move.StartPosition.Column - 1].Color = CreeperColor.Empty;
-            }
-
-            if (move.PlayerColor == CreeperColor.Black)
-            {
-                if (WhitePegCount-- < 0) throw new InvalidOperationException();
-            }
-            else
-            {
-                if (BlackPegCount-- < 0) throw new InvalidOperationException();
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.StartPosition.Row, move.StartPosition.Column - 1]);
             }
         }
 
         public void Move(Move move)
         {
             PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color = CreeperColor.Empty;
+            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
             PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = move.PlayerColor;
+            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.EndPosition.Row, move.EndPosition.Column]);
 
             if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
             {
+                // Undoing tile flips will be tricky, since there will be no way of distinguishing flipping and originating a tile.
                 Flip(move);
             }
             else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
             {
                 Capture(move);
+            }
+        }
+
+        public IEnumerable<Move> AllPossibleMoves(CreeperColor color)
+        {
+            Position startPosition = new Position();
+            foreach (AIBoardNode peg in (color == CreeperColor.Black) ? BlackPegs : WhitePegs)
+            {
+                startPosition = new Position(peg.Row, peg.Column);
+                foreach (Move move in new Move[]
+                    {
+                        new Move(startPosition, new Position(peg.Row + 1, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row - 1, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column + 1), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column - 1), color),
+                        new Move(startPosition, new Position(peg.Row + 1, peg.Column + 1), color),
+                        new Move(startPosition, new Position(peg.Row + 1, peg.Column - 1), color),
+                        new Move(startPosition, new Position(peg.Row - 1, peg.Column + 1), color),
+                        new Move(startPosition, new Position(peg.Row - 1, peg.Column - 1), color),
+                        new Move(startPosition, new Position(peg.Row + 2, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row - 2, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column + 2), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column - 2), color),
+                    })
+                {
+                    if (IsValidMove(move))
+                    {
+                        yield return move;
+                    }
+                }
             }
         }
 

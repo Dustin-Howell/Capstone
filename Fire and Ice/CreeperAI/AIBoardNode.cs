@@ -6,7 +6,7 @@ using Creeper;
 
 namespace CreeperAI
 {
-    class AIBoardNode
+    public class AIBoardNode
     {
         public AIBoardNode TeamNorth { get; set; }
         public AIBoardNode TeamSouth { get; set; }
@@ -23,6 +23,13 @@ namespace CreeperAI
             Color = color;
             Row = row;
             Column = column;
+        }
+
+        public AIBoardNode(Piece piece)
+        {
+            Color = piece.Color;
+            Row = piece.Position.Row;
+            Column = piece.Position.Column;
         }
 
         public AIBoardNode(CreeperColor color)
