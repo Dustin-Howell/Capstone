@@ -13,4 +13,16 @@
     <SolidColorBrush x:Key="Complementary4">#34C6CD</SolidColorBrush>
     <SolidColorBrush x:Key="Complementary5">#5DC8CD</SolidColorBrush>
 
+    <Color x:Key="PrimaryColor1">#FF7600</Color>
+    <Color x:Key="PrimaryColor2">#BF7230</Color>
+    <Color x:Key="PrimaryColor3">#A64D00</Color>
+    <Color x:Key="PrimaryColor4">#FF9840</Color>
+    <Color x:Key="PrimaryColor5">#FFB473</Color>
+
+    <Color x:Key="ComplementaryColor1">#01939A</Color>
+    <Color x:Key="ComplementaryColor2">#1D7074</Color>
+    <Color x:Key="ComplementaryColor3">#006064</Color>
+    <Color x:Key="ComplementaryColor4">#34C6CD</Color>
+    <Color x:Key="ComplementaryColor5">#5DC8CD</Color>
+
 </ResourceDictionary>

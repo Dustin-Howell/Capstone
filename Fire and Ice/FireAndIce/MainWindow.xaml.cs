@@ -19,10 +19,20 @@ namespace FireAndIce
 {
     public partial class MainWindow : Window
     {
+        private bool _debug = true;
         public MainWindow()
         {
             InitializeComponent();
-            this.Content = new SplashScreen(this);
+
+            if (_debug)
+            {
+                this.Content = new MainMenuScreen();
+            }
+
+            else
+            {
+                this.Content = new SplashScreen(this);
+            }
         }
 
         public void StartIntroScreen()
