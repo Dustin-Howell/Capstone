@@ -16,33 +16,33 @@ using System.Timers;
 namespace FireAndIce
 {
     /// <summary>
-    /// Interaction logic for SplashScreen.xaml
+    /// Interaction logic for IntroScreen.xaml
     /// </summary>
-    public partial class SplashScreen : UserControl
+    public partial class IntroScreen : UserControl
     {
         private MainWindow _mainWindow;
 
-        public SplashScreen(MainWindow mainWindow)
+        public IntroScreen(MainWindow mainWindow)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
-            SplashScreenVideo.Play();
-            SplashScreenVideo.MediaEnded += new RoutedEventHandler(SplashScreenVideo_MediaEnded);
+            IntroVideo.Play();
+            IntroVideo.MediaEnded += new RoutedEventHandler(IntroVideo_MediaEnded);
         }
 
-        void SplashScreenVideo_MediaEnded(object sender, RoutedEventArgs e)
+        private void SkipToMainMenu()
         {
-            SkipToIntro();
+            _mainWindow.LoadMainMenu();
         }
 
-        void SkipToIntro()
+        void IntroVideo_MediaEnded(object sender, RoutedEventArgs e)
         {
-            _mainWindow.StartIntroScreen();
+            SkipToMainMenu();
         }
 
-        private void SplashScreenVideo_MouseUp(object sender, MouseButtonEventArgs e)
+        private void IntroVideo_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            SkipToIntro();
+            SkipToMainMenu();
         }
     }
 }

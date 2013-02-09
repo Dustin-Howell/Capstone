@@ -22,11 +22,21 @@ namespace FireAndIce
         public MainWindow()
         {
             InitializeComponent();
-            this.Content = new GameControl();
+            this.Content = new SplashScreen(this);
+        }
+
+        public void StartIntroScreen()
+        {
+            this.Content = new IntroScreen(this);
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
         {
+        }
+
+        public void LoadMainMenu()
+        {
+            this.Content = new MainMenuScreen();
         }
     }
 }
