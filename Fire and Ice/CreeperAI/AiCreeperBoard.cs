@@ -23,7 +23,6 @@ namespace CreeperAI
         // Which makes me realize, the pieces in our AI board are going to be 1 indexed, aren't they?
         private int _tileRows;
         private int _pegRows;
-        private int _headIndex;
 
         public AICreeperBoard(CreeperBoard board)
         {
@@ -39,12 +38,12 @@ namespace CreeperAI
 
             foreach (Piece tile in board.Tiles)
             {
-                TileBoard[tile.Position.Row, tile.Position.Column] = new AIBoardNode(tile.Color);
+                TileBoard[tile.Position.Row, tile.Position.Column] = new AIBoardNode(tile.Position.Row, tile.Position.Column, tile.Color);
             }
 
             foreach (Piece peg in board.Pegs)
             {
-                PegBoard[peg.Position.Row, peg.Position.Column] = new AIBoardNode(peg.Color);
+                PegBoard[peg.Position.Row, peg.Position.Column] = new AIBoardNode(peg.Position.Row, peg.Position.Column, peg.Color);
             }
 
             for (int row = 0; row < _tileRows; row++)
@@ -54,13 +53,26 @@ namespace CreeperAI
                     if (TileBoard[row, column].Color == CreeperColor.Black || TileBoard[row, column].Color == CreeperColor.White)
                     {
                         UpdateListHeads(row, column, TileBoard[row, column].Color);
-                        TileBoard[row, column].TeamNorth = GetNextNode(row, column, CardinalDirection.North);
-                        TileBoard[row, column].TeamSouth = GetNextNode(row, column, CardinalDirection.South);
-                        TileBoard[row, column].TeamEast = GetNextNode(row, column, CardinalDirection.East);
-                        TileBoard[row, column].TeamWest = GetNextNode(row, column, CardinalDirection.West);
+                        AddTileToTeam(TileBoard[row, column]);
                     }
                 }
             }
+        }
+
+        private void AddTileToTeam(AIBoardNode tile)
+        {
+            tile.TeamNorth = GetNextNode(tile.Row, tile.Column, CardinalDirection.North);
+            tile.TeamSouth = GetNextNode(tile.Row, tile.Column, CardinalDirection.South);
+            tile.TeamEast = GetNextNode(tile.Row, tile.Column, CardinalDirection.East);
+            tile.TeamWest = GetNextNode(tile.Row, tile.Column, CardinalDirection.West);
+        }
+
+        private void RemoveTileFromTeam(AIBoardNode tile)
+        {
+            tile.TeamNorth.TeamSouth = tile.TeamSouth;
+            tile.TeamSouth.TeamNorth = tile.TeamNorth;
+            tile.TeamEast.TeamWest = tile.TeamWest;
+            tile.TeamWest.TeamEast = tile.TeamEast;
         }
 
         private AIBoardNode GetNextNode(int row, int column, CardinalDirection direction)
@@ -121,13 +133,34 @@ namespace CreeperAI
         private void UpdateListHeads(int row, int column, CreeperColor type)
         {
             // This gives us direct access to the first node added to a given row, column, and color.
+            // Also, we now remove the tile from the opposite team's head array, when appropriate.
             if (type == CreeperColor.Black)
             {
+                if (RowHeadWhite[row] == TileBoard[row, column])
+                {
+                    RowHeadWhite[row] = (RowHeadWhite[row] == RowHeadWhite[row].TeamNorth) ? null : RowHeadWhite[row].TeamNorth;
+                }
+
+                if (ColumnHeadWhite[column] == TileBoard[row, column])
+                {
+                    ColumnHeadWhite[column] = (ColumnHeadWhite[column] == ColumnHeadWhite[column].TeamEast) ? null : ColumnHeadWhite[column].TeamEast;
+                }
+
                 RowHeadBlack[row] = RowHeadBlack[row] ?? TileBoard[row, column];
                 ColumnHeadBlack[column] = ColumnHeadBlack[column] ?? TileBoard[row, column];
             }
             else if (type == CreeperColor.White)
             {
+                if (RowHeadBlack[row] == TileBoard[row, column])
+                {
+                    RowHeadBlack[row] = (RowHeadBlack[row] == RowHeadBlack[row].TeamNorth) ? null : RowHeadBlack[row].TeamNorth;
+                }
+
+                if (ColumnHeadBlack[column] == TileBoard[row, column])
+                {
+                    ColumnHeadBlack[column] = (ColumnHeadBlack[column] == ColumnHeadBlack[column].TeamEast) ? null : ColumnHeadBlack[column].TeamEast;
+                }
+
                 RowHeadWhite[row] = RowHeadWhite[row] ?? TileBoard[row, column];
                 ColumnHeadWhite[column] = ColumnHeadWhite[column] ?? TileBoard[row, column];
             }
@@ -208,7 +241,18 @@ namespace CreeperAI
             AIBoardNode tile = GetFlippedTile(move);
             if (tile.Color != CreeperColor.Invalid)
             {
+                if (tile.Color == CreeperColor.Empty)
+                {
+                    AddTileToTeam(tile);
+                }
+                else if (tile.Color != move.PlayerColor)
+                {
+                    RemoveTileFromTeam(tile);
+                    AddTileToTeam(tile);
+                }
+
                 tile.Color = move.PlayerColor;
+                UpdateListHeads(tile.Row, tile.Column, tile.Color);
             }
 
             // TODO: Update counts
@@ -249,8 +293,6 @@ namespace CreeperAI
             {
                 Capture(move);
             }
-
-            // TODO: Do stuff to Heads of lists or you will be very sorry!!!
         }
 
         public void PrintToConsole()
