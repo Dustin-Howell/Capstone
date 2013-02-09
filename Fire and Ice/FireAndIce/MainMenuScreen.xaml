@@ -5,7 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-    <Grid Background="White" Height="500" Width="500">
-        <TextBlock>Main Menu</TextBlock>             
-    </Grid>
+    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black">
+        <StackPanel Height="200"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal"
+                    Background="{StaticResource Complementary1}">
+
+        </StackPanel>
+        <StackPanel Width="200" 
+                    DockPanel.Dock="Left" 
+                    Orientation="Vertical"
+                    Background="{StaticResource Primary4}">
+            <Button>New Game</Button>
+            <Button>Settings</Button>
+            <Button>Credits</Button>
+        </StackPanel>
+        <Grid HorizontalAlignment="Stretch" 
+              VerticalAlignment="Stretch"
+              Background="{StaticResource Primary1}">
+            <Border Background="White">
+                <Image Source="Images/Fire and Ice Logo.png"
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"/>
+            </Border>
+        </Grid>
+    </DockPanel>
 </UserControl>

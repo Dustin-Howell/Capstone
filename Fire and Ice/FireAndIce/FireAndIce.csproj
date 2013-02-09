@@ -70,6 +70,10 @@
     <Compile Include="SplashScreen.xaml.cs">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
+    <Page Include="ColorSchemes\Default.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +136,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assemblies\XNAControl.dll" />
+    <Resource Include="Images\Fire and Ice Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Videos\IntroScreenPlaceholder.wmv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Videos\SplashScreenPlaceholder.wmv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
