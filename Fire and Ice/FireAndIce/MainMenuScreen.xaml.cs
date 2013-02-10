@@ -20,43 +20,71 @@ namespace FireAndIce
     /// </summary>
     public partial class MainMenuScreen : UserControl
     {
+        private Border _activeBorder;
+
         public MainMenuScreen()
         {
             InitializeComponent();
         }
 
-        private void ToggleNewGameMenu()
+        private void SlideOutBorder(Border border, double width)
         {
-            bool isVisible = NewGameMenu.Visibility == System.Windows.Visibility.Visible;
+            border.Opacity = 1;
+            border.Visibility = Visibility.Visible;
 
-            if (!isVisible)
+            DoubleAnimation slideIn = new DoubleAnimation();
+            slideIn.From = 0;
+            slideIn.To = width;
+            slideIn.Duration = new Duration(TimeSpan.FromMilliseconds(500));
+
+            Storyboard.SetTargetName(slideIn, border.Name);
+            Storyboard.SetTargetProperty(slideIn, new PropertyPath(Border.WidthProperty));
+
+            Storyboard storyBoard = new Storyboard();
+            storyBoard.Children.Add(slideIn);
+
+            storyBoard.Begin(border);
+        }
+
+        private void ToggleBorder(Border border, double width)
+        {
+            if (_activeBorder == border)
             {
-                //TODO: Animate Here
-                NewGameMenu.Opacity = 1;
-                NewGameMenu.Visibility = Visibility.Visible;
-
-                DoubleAnimation slideIn = new DoubleAnimation();
-                slideIn.From = 0;
-                slideIn.To = 200;
-                slideIn.Duration = new Duration(TimeSpan.FromMilliseconds(500));
-
-                Storyboard.SetTargetName(slideIn, NewGameMenu.Name);
-                Storyboard.SetTargetProperty(slideIn, new PropertyPath(Border.WidthProperty));
-
-                Storyboard storyBoard = new Storyboard();
-                storyBoard.Children.Add(slideIn);
-
-                storyBoard.Begin(NewGameMenu);
+                _activeBorder.Visibility = Visibility.Collapsed;
+                _activeBorder = null;
             }
             else
             {
-                NewGameMenu.Visibility = Visibility.Collapsed;
+                if (_activeBorder != null)
+                {
+                    _activeBorder.Visibility = Visibility.Collapsed;
+                }
+
+                SlideOutBorder(border, width);
+                _activeBorder = border;
             }
         }
 
+
         private void NewGame_Click(object sender, RoutedEventArgs e)
         {
-            ToggleNewGameMenu();
+            ToggleBorder(NewGameMenu, 200d);
+        }
+
+        private void HighScoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleBorder(HighScoreBorder, 400d);
+            HighScoreList.ItemsSource = new List<String> { "score 1", "score 2", "score 3" };
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleBorder(SettingsBorder, 400d);
+        }
+
+        private void CreditsBorderButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleBorder(CreditsBorder, 400d);
         }
     }
 }

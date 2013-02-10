@@ -24,10 +24,10 @@
                     Orientation="Vertical"
                     Background="Transparent"
                     VerticalAlignment="Center">
-                <Button x:Name="NewGame" Click="NewGame_Click" >New Game</Button>
-                <Button >High Scores</Button>
-                <Button >Settings</Button>
-                <Button >Credits</Button>
+                <Button x:Name="NewGameButton" Click="NewGame_Click" >New Game</Button>
+                <Button x:Name="HighScoreButton" Click="HighScoreButton_Click">High Scores</Button>
+                <Button x:Name="SettingsButton" Click="SettingsButton_Click">Settings</Button>
+                <Button x:Name="CreditsBorderButton" Click="CreditsBorderButton_Click">Credits</Button>
             </StackPanel>
 
         </Border>
@@ -75,6 +75,62 @@
                 </StackPanel>
             </Border>
             <!--End New Game Menu-->
+
+            <!--High Score List-->
+            <Border x:Name="HighScoreBorder"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Left"
+                    Grid.ColumnSpan="2"
+                    Visibility="Collapsed"
+                    Background="{StaticResource Primary4}"
+                    Effect="{StaticResource DropShadow}">
+                <ItemsControl x:Name="HighScoreList" 
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center"
+                              HorizontalContentAlignment="Center"
+                              >
+                    
+                </ItemsControl>
+            </Border>
+            <!--End High Score List-->
+
+            <!--Settings-->
+            <Border x:Name="SettingsBorder"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Left"
+                    Grid.ColumnSpan="2"
+                    Visibility="Collapsed"
+                    Background="{StaticResource Primary4}"
+                    Effect="{StaticResource DropShadow}">
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <ToggleButton>Option 1</ToggleButton>
+                    <ToggleButton>Option 2</ToggleButton>
+                    <ToggleButton>Option 3</ToggleButton>
+                </StackPanel>
+            </Border>
+            <!--End Settings-->
+            
+            <!--Credits-->
+            <Border x:Name="CreditsBorder"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Left"
+                    Grid.ColumnSpan="2"
+                    Visibility="Collapsed"
+                    Background="{StaticResource Primary4}"
+                    Effect="{StaticResource DropShadow}">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="Transparent">
+                    <Button>Dustin Howell</Button>
+                    <Button>Jon Scott Smith</Button>
+                    <Button>Josh Griffith</Button>
+                    <Button>Kaleb Lape</Button>
+                    <Button>Gage Gwaltney</Button>
+                </StackPanel>
+            </Border>
+                <!--End Credits-->
         </Grid>
     </DockPanel>
 </UserControl>
