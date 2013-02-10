@@ -6,21 +6,26 @@
              mc:Ignorable="d" 
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black">
-        <StackPanel Height="200"
+        <Border Height="50"
                     DockPanel.Dock="Bottom"
-                    Orientation="Horizontal"
                     Background="{StaticResource Complementary1}">
+            <StackPanel Orientation="Horizontal">
 
-        </StackPanel>
+            </StackPanel>
+
+        </Border>
         <Border Width="200"
                 DockPanel.Dock="Left"
-                Background="{StaticResource Primary1}">
-
+                Background="{StaticResource Primary1}"
+                Panel.ZIndex="1"
+                Effect="{StaticResource DropShadow}">
+                <!--Main Menu-->
             <StackPanel HorizontalAlignment="Stretch"
                     Orientation="Vertical"
                     Background="Transparent"
                     VerticalAlignment="Center">
                 <Button x:Name="NewGame" Click="NewGame_Click" >New Game</Button>
+                <Button >High Scores</Button>
                 <Button >Settings</Button>
                 <Button >Credits</Button>
             </StackPanel>
@@ -28,30 +33,48 @@
         </Border>
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch"
-              Background="White">
+              Background="White"
+              DockPanel.Dock="Right">
             <Grid.ColumnDefinitions>
+                <!--Submenu level 1-->
                 <ColumnDefinition Width="200" />
+                
+                <!--Submenu level 2-->
                 <ColumnDefinition Width="200" />
+                
+                <!--The rest-->
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Border Background="White" Grid.ColumnSpan="3" >
+            
+            <!--Main Image-->
+            <Border Background="White" Grid.ColumnSpan="3" 
+                    Effect="{StaticResource DropShadow}">
                 <Image Source="Images/Fire and Ice Logo.png"
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center"/>
             </Border>
+            
+            <!--New Game Menu-->
             <Border x:Name="NewGameMenu"
                     VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Left"
                     Grid.Column="0"
                     Visibility="Collapsed"
-                    Background="{StaticResource Primary4}">
+                    Background="{StaticResource Primary4}"
+                    Effect="{StaticResource DropShadow}">
                 <StackPanel VerticalAlignment="Center"
                             HorizontalAlignment="Stretch"
                             Background="Transparent">
-                    <Button>Vs. Human</Button>
-                    <Button>Vs. AI</Button>
+                    <TextBlock Foreground="White" 
+                               TextWrapping="NoWrap"
+                               FontSize="20"
+                               FontFamily="pack://application:,,,/Fonts/#Holy Empire"
+                               HorizontalAlignment="Center">Against?</TextBlock>
+                    <Button>Human</Button>
+                    <Button>Computer</Button>
                 </StackPanel>
             </Border>
+            <!--End New Game Menu-->
         </Grid>
     </DockPanel>
 </UserControl>

@@ -32,19 +32,19 @@ namespace FireAndIce
             if (!isVisible)
             {
                 //TODO: Animate Here
-                NewGameMenu.Opacity = 0;
+                NewGameMenu.Opacity = 1;
                 NewGameMenu.Visibility = Visibility.Visible;
 
-                DoubleAnimation fadeIn = new DoubleAnimation();
-                fadeIn.From = 0;
-                fadeIn.To = 1;
-                fadeIn.Duration = new Duration(TimeSpan.FromMilliseconds(500));
+                DoubleAnimation slideIn = new DoubleAnimation();
+                slideIn.From = 0;
+                slideIn.To = 200;
+                slideIn.Duration = new Duration(TimeSpan.FromMilliseconds(500));
 
-                Storyboard.SetTargetName(fadeIn, NewGameMenu.Name);
-                Storyboard.SetTargetProperty(fadeIn, new PropertyPath(Border.OpacityProperty));
+                Storyboard.SetTargetName(slideIn, NewGameMenu.Name);
+                Storyboard.SetTargetProperty(slideIn, new PropertyPath(Border.WidthProperty));
 
                 Storyboard storyBoard = new Storyboard();
-                storyBoard.Children.Add(fadeIn);
+                storyBoard.Children.Add(slideIn);
 
                 storyBoard.Begin(NewGameMenu);
             }
