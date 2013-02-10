@@ -12,21 +12,45 @@
                     Background="{StaticResource Complementary1}">
 
         </StackPanel>
-        <StackPanel Width="200" 
-                    DockPanel.Dock="Left" 
+        <Border Width="200"
+                DockPanel.Dock="Left"
+                Background="{StaticResource Primary1}">
+
+            <StackPanel HorizontalAlignment="Stretch"
                     Orientation="Vertical"
-                    Background="{StaticResource Primary4}">
-            <Button>New Game</Button>
-            <Button>Settings</Button>
-            <Button>Credits</Button>
-        </StackPanel>
+                    Background="Transparent"
+                    VerticalAlignment="Center">
+                <Button x:Name="NewGame" Click="NewGame_Click" >New Game</Button>
+                <Button >Settings</Button>
+                <Button >Credits</Button>
+            </StackPanel>
+
+        </Border>
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch"
-              Background="{StaticResource Primary1}">
-            <Border Background="White">
+              Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border Background="White" Grid.ColumnSpan="3" >
                 <Image Source="Images/Fire and Ice Logo.png"
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center"/>
+            </Border>
+            <Border x:Name="NewGameMenu"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="0"
+                    Visibility="Collapsed"
+                    Background="{StaticResource Primary4}">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent">
+                    <Button>Vs. Human</Button>
+                    <Button>Vs. AI</Button>
+                </StackPanel>
             </Border>
         </Grid>
     </DockPanel>
