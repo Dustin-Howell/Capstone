@@ -21,10 +21,12 @@ namespace FireAndIce
     public partial class MainMenuScreen : UserControl
     {
         private Border _activeBorder;
+        private MainWindow _mainWindow;
 
-        public MainMenuScreen()
+        public MainMenuScreen(MainWindow mainWindow)
         {
             InitializeComponent();
+            _mainWindow = mainWindow;
         }
 
         private void SlideOutBorder(Border border, double width)
@@ -86,6 +88,17 @@ namespace FireAndIce
         private void CreditsBorderButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleBorder(CreditsBorder, 400d);
+        }
+
+        private void PlayHumanGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            //This will change to expand a menu to ask if they want to play locally or over the network
+            _mainWindow.Content = new GameControl();
+        }
+
+        private void PlayComputerGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            _mainWindow.Content = new GameControl();
         }
     }
 }

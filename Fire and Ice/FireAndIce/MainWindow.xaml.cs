@@ -26,7 +26,7 @@ namespace FireAndIce
 
             if (_debug)
             {
-                this.Content = new MainMenuScreen();
+                this.Content = new MainMenuScreen(this);
             }
 
             else
@@ -42,7 +42,7 @@ namespace FireAndIce
 
         public void LoadMainMenu()
         {
-            this.Content = new MainMenuScreen();
+            this.Content = new MainMenuScreen(this);
         }
     }
 }
