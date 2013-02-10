@@ -74,6 +74,7 @@ namespace FireAndIce
         private void HighScoreButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleBorder(HighScoreBorder, 400d);
+            //Initialize high scores here
             HighScoreList.ItemsSource = new List<String> { "score 1", "score 2", "score 3" };
         }
 

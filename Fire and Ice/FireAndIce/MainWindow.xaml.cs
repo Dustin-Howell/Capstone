@@ -19,7 +19,7 @@ namespace FireAndIce
 {
     public partial class MainWindow : Window
     {
-        private bool _debug = true;
+        private bool _debug = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -38,10 +38,6 @@ namespace FireAndIce
         public void StartIntroScreen()
         {
             this.Content = new IntroScreen(this);
-        }
-
-        private void StartGame_Click(object sender, RoutedEventArgs e)
-        {
         }
 
         public void LoadMainMenu()
