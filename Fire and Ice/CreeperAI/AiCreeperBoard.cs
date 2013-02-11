@@ -112,11 +112,11 @@ namespace CreeperAI
 
             if ((tile.Color == CreeperColor.Black))
             {
-                 if (BlackTileCount-- < 0) throw new InvalidOperationException();
+                 if (--BlackTileCount < 0) throw new InvalidOperationException();
             }
             else
             {
-                if (WhiteTileCount-- < 0) throw new InvalidOperationException();
+                if (--WhiteTileCount < 0) throw new InvalidOperationException();
             }
         }
 
@@ -394,9 +394,9 @@ namespace CreeperAI
         {
             MoveHistory.Push(move);
             PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color = CreeperColor.Empty;
-            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
+            ((move.PlayerColor == CreeperColor.Black) ? BlackPegs : WhitePegs).Remove(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
             PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = move.PlayerColor;
-            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.EndPosition.Row, move.EndPosition.Column]);
+            ((move.PlayerColor == CreeperColor.Black) ?  BlackPegs : WhitePegs ).Add(PegBoard[move.EndPosition.Row, move.EndPosition.Column]);
 
             if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
             {
@@ -466,6 +466,23 @@ namespace CreeperAI
             return GetGameState(playerTurn) != CreeperGameState.Unfinished;
         }
 
+        private IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node)
+        {
+            foreach (Position neighborPosition in new[]{
+                new Position(node.Row - 1, node.Column),
+                new Position(node.Row + 1, node.Column),
+                new Position(node.Row, node.Column - 1),
+                new Position(node.Row, node.Column + 1),
+            })
+            {
+                if (IsValidPosition(neighborPosition.Row, neighborPosition.Column, PieceType.Tile)
+                    && TileBoard[neighborPosition.Row, neighborPosition.Column].Color == node.Color)
+                {
+                    yield return TileBoard[neighborPosition.Row, neighborPosition.Column];
+                }
+            }
+        }
+
         public CreeperGameState GetGameState(CreeperColor playerTurn)
         {
             if (TeamCount(playerTurn.Opposite(), PieceType.Peg) == 0)
@@ -473,13 +490,52 @@ namespace CreeperAI
                 return CreeperGameState.Draw;
             }
 
-            CreeperGameState gameState = CreeperGameState.Unfinished;
-            Position startPosition = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
-            Position endPosition = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
+            bool gameOver = false;
+            bool stackEmpty = false;
+            Stack<AIBoardNode> stack = new Stack<AIBoardNode>();
+            HashSet<AIBoardNode> foundTiles = new HashSet<AIBoardNode>();
+            HashSet<AIBoardNode> endTiles = new HashSet<AIBoardNode>();
+            Position start = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
+            Position end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
+            AIBoardNode winTile1 = TileBoard[end.Row - 1, end.Column];
+            AIBoardNode winTile2 = TileBoard[end.Row, IsValidPosition(end.Row, end.Column - 1, PieceType.Tile)? end.Column - 1: end.Column + 1];
 
-            // Here is where the algorithm goes.
+            if (!endTiles.Any())
+            {
+                return CreeperGameState.Unfinished;
+            }
 
-            return gameState;
+            AIBoardNode currentTile = TileBoard[start.Row, start.Column];
+            IEnumerable<AIBoardNode> neighbors = GetNeighbors(currentTile);
+            while (!stackEmpty && !(currentTile.Row == end.Row && currentTile.Column == end.Column))
+            {
+                foreach (AIBoardNode neighbor in neighbors)
+                {
+                    if (!foundTiles.Contains(neighbor))
+                    {
+                        stack.Push(neighbor);
+                    }
+                    else if (foundTiles.Intersect(endTiles).Any())
+                    {
+                        gameOver = true;
+                    }
+                }
+
+                foundTiles.UnionWith(neighbors);
+
+                if (stack.Any())
+                {
+                    currentTile = stack.Pop();
+                }
+                else
+                {
+                    stackEmpty = true;
+                }
+
+                neighbors = GetNeighbors(currentTile);
+            }
+
+            return gameOver ? CreeperGameState.Complete : CreeperGameState.Unfinished;
         }
 
         public void PrintToConsole()

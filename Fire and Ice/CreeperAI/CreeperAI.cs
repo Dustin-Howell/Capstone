@@ -18,7 +18,7 @@ namespace CreeperAI
         private int _MiniMaxDepth = 3;
 
         private const double _TerritorialWeight = 1.0;
-        private const double _MaterialWeight = 1000000.0;
+        private const double _MaterialWeight = 1.0;
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
         {
@@ -44,11 +44,6 @@ namespace CreeperAI
             return bestMove;
         }
 
-        //private Move GetAlphaBetaMiniMaxMove(AICreeperBoard board)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         private Move GetAlphaBetaMiniMaxMove(AICreeperBoard board)
         {
             IEnumerable<Move> possibleMoves = board.AllPossibleMoves(_turnColor)
@@ -58,7 +53,7 @@ namespace CreeperAI
                     double score = ScoreBoard(board, _turnColor);
                     board.PopMove();
                     return score;
-                });
+                }).ToList();
 
             double max = Double.MinValue;
             Move bestMove = new Move();
@@ -97,7 +92,7 @@ namespace CreeperAI
                     double score = ScoreBoard(board, turnColor);
                     board.PopMove();
                     return score;
-                });
+                }).ToList();
 
                 // for each child of node
                 foreach (Move currentMove in moves)
