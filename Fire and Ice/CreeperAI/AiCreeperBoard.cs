@@ -21,7 +21,6 @@ namespace CreeperAI
         AIBoardNode[] ColumnHeadWhite { get; set; }
 
         Stack<CreeperColor> TileHistory { get; set; }
-
         Stack<Move> MoveHistory { get; set; }
 
         public List<AIBoardNode> BlackPegs { get; private set; }
@@ -32,6 +31,11 @@ namespace CreeperAI
 
         private int _tileRows;
         private int _pegRows;
+
+        private static Position _BlackStart { get { return new Position(0, 5); } }
+        private static Position _WhiteStart { get { return new Position(0, 0); } }
+        private static Position _BlackEnd { get { return new Position(5, 0); } }
+        private static Position _WhiteEnd { get { return new Position(5, 5); } }
 
         public AICreeperBoard(CreeperBoard board)
         {
@@ -44,6 +48,7 @@ namespace CreeperAI
             WhitePegs = board.WhereTeam(CreeperColor.White, PieceType.Peg).Select(x => new AIBoardNode(x)).ToList();
 
             TileHistory = new Stack<CreeperColor>();
+            MoveHistory = new Stack<Move>();
 
             TileBoard = new AIBoardNode[_tileRows, _tileRows];
             PegBoard = new AIBoardNode[_pegRows, _pegRows];
@@ -74,6 +79,11 @@ namespace CreeperAI
                     }
                 }
             }
+        }
+
+        public int TeamCount(CreeperColor turn, PieceType type)
+        {
+            return ((turn == CreeperColor.Black) ? ((type == PieceType.Peg) ? BlackPegs.Count : BlackTileCount) : ((type == PieceType.Peg) ? WhitePegs.Count : WhiteTileCount));
         }
 
         private void AddTileToTeam(AIBoardNode tile)
@@ -181,8 +191,11 @@ namespace CreeperAI
                     ColumnHeadWhite[column] = (ColumnHeadWhite[column] == ColumnHeadWhite[column].TeamEast) ? null : ColumnHeadWhite[column].TeamEast;
                 }
 
-                RowHeadBlack[row] = RowHeadBlack[row] ?? TileBoard[row, column];
-                ColumnHeadBlack[column] = ColumnHeadBlack[column] ?? TileBoard[row, column];
+                if (TileBoard[row, column].Color != CreeperColor.Empty)
+                {
+                    RowHeadBlack[row] = RowHeadBlack[row] ?? TileBoard[row, column];
+                    ColumnHeadBlack[column] = ColumnHeadBlack[column] ?? TileBoard[row, column];
+                }
             }
             else if (type == CreeperColor.White)
             {
@@ -196,8 +209,11 @@ namespace CreeperAI
                     ColumnHeadBlack[column] = (ColumnHeadBlack[column] == ColumnHeadBlack[column].TeamEast) ? null : ColumnHeadBlack[column].TeamEast;
                 }
 
-                RowHeadWhite[row] = RowHeadWhite[row] ?? TileBoard[row, column];
-                ColumnHeadWhite[column] = ColumnHeadWhite[column] ?? TileBoard[row, column];
+                if (TileBoard[row, column].Color != CreeperColor.Empty)
+                {
+                    RowHeadWhite[row] = RowHeadWhite[row] ?? TileBoard[row, column];
+                    ColumnHeadWhite[column] = ColumnHeadWhite[column] ?? TileBoard[row, column];
+                }
             }
             else
             {
@@ -245,7 +261,7 @@ namespace CreeperAI
                 valid = false;
             }
             //is it a capture?
-            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) == (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+            else if (Math.Abs(Math.Abs(move.StartPosition.Row - move.EndPosition.Row) - Math.Abs(move.StartPosition.Column - move.EndPosition.Column)) == 2)
             {
                 valid = false;
             }
@@ -309,14 +325,20 @@ namespace CreeperAI
             AIBoardNode tile = GetFlippedTile(move);
             if (tile.Color != CreeperColor.Invalid)
             {
-                if (tile.Color == move.PlayerColor)
+                CreeperColor color = TileHistory.Pop();
+                if (color == CreeperColor.Empty)
                 {
                     RemoveTileFromTeam(tile);
-                    tile.Color = TileHistory.Pop();
+                }
+                // Flipping opposite team's tile.
+                else if (color == move.PlayerColor.Opposite())
+                {
+                    RemoveTileFromTeam(tile);
+                    tile.Color = color;
                     AddTileToTeam(tile);
                 }
 
-                UpdateListHeads(tile.Row, tile.Column, tile.Color);
+                UpdateListHeads(tile.Row, tile.Column, move.PlayerColor.Opposite());
             }
         }
 
@@ -437,6 +459,27 @@ namespace CreeperAI
                     }
                 }
             }
+        }
+
+        public bool IsFinished(CreeperColor playerTurn)
+        {
+            return GetGameState(playerTurn) != CreeperGameState.Unfinished;
+        }
+
+        public CreeperGameState GetGameState(CreeperColor playerTurn)
+        {
+            if (TeamCount(playerTurn.Opposite(), PieceType.Peg) == 0)
+            {
+                return CreeperGameState.Draw;
+            }
+
+            CreeperGameState gameState = CreeperGameState.Unfinished;
+            Position startPosition = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
+            Position endPosition = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
+
+            // Here is where the algorithm goes.
+
+            return gameState;
         }
 
         public void PrintToConsole()

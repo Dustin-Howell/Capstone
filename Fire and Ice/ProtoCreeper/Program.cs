@@ -110,11 +110,11 @@ namespace ProtoCreeper
         static void Main(string[] args)
         {
             CreeperBoard board = new CreeperBoard();
-            PrintAICreeperBoard(board);
+            //PrintAICreeperBoard(board);
             //board.ReadFromFile("TestBoard.txt");
             //board.PrintToConsole();
             //WhiteWin(board);
-            //AIGame(board);
+            AIGame(board);
             //Testfunction(board);
             //using (XNAControlGame.Game1 game = new XNAControlGame.Game1())
             //{
