@@ -38,7 +38,7 @@ namespace ProtoCreeper
 
         public static void AIGame(CreeperBoard board)
         {
-            CreeperAI.OldCreeperAI creeperAI = new CreeperAI.OldCreeperAI();
+            CreeperAI.CreeperAI creeperAI = new CreeperAI.CreeperAI();
             bool pauseAfterPrint = false;
 
             bool gameOver = false;
