@@ -20,6 +20,10 @@ namespace CreeperAI
         AIBoardNode[] ColumnHeadBlack { get; set; }
         AIBoardNode[] ColumnHeadWhite { get; set; }
 
+        Stack<CreeperColor> TileHistory { get; set; }
+
+        Stack<Move> MoveHistory { get; set; }
+
         public List<AIBoardNode> BlackPegs { get; private set; }
         public List<AIBoardNode> WhitePegs { get; private set; }
 
@@ -38,6 +42,8 @@ namespace CreeperAI
             WhiteTileCount = board.Tiles.Count(x => x.Color == CreeperColor.White);
             BlackPegs = board.WhereTeam(CreeperColor.Black, PieceType.Peg).Select(x => new AIBoardNode(x)).ToList();
             WhitePegs = board.WhereTeam(CreeperColor.White, PieceType.Peg).Select(x => new AIBoardNode(x)).ToList();
+
+            TileHistory = new Stack<CreeperColor>();
 
             TileBoard = new AIBoardNode[_tileRows, _tileRows];
             PegBoard = new AIBoardNode[_pegRows, _pegRows];
@@ -64,6 +70,7 @@ namespace CreeperAI
                     {
                         UpdateListHeads(row, column, TileBoard[row, column].Color);
                         AddTileToTeam(TileBoard[row, column]);
+                        TileHistory.Push(TileBoard[row, column].Color);
                     }
                 }
             }
@@ -280,17 +287,35 @@ namespace CreeperAI
             AIBoardNode tile = GetFlippedTile(move);
             if (tile.Color != CreeperColor.Invalid)
             {
+                TileHistory.Push(tile.Color);
                 if (tile.Color == CreeperColor.Empty)
                 {
+                    tile.Color = move.PlayerColor;
                     AddTileToTeam(tile);
                 }
                 else if (tile.Color != move.PlayerColor)
                 {
                     RemoveTileFromTeam(tile);
+                    tile.Color = move.PlayerColor;
                     AddTileToTeam(tile);
                 }
 
-                tile.Color = move.PlayerColor;
+                UpdateListHeads(tile.Row, tile.Column, tile.Color);
+            }
+        }
+
+        private void UnFlip(Move move)
+        {
+            AIBoardNode tile = GetFlippedTile(move);
+            if (tile.Color != CreeperColor.Invalid)
+            {
+                if (tile.Color == move.PlayerColor)
+                {
+                    RemoveTileFromTeam(tile);
+                    tile.Color = TileHistory.Pop();
+                    AddTileToTeam(tile);
+                }
+
                 UpdateListHeads(tile.Row, tile.Column, tile.Color);
             }
         }
@@ -319,8 +344,33 @@ namespace CreeperAI
             }
         }
 
-        public void Move(Move move)
+        private void UnCapture(Move move)
         {
+            if (move.StartPosition.Row + 2 == move.EndPosition.Row && move.StartPosition.Column == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row + 1, move.StartPosition.Column].Color = move.PlayerColor.Opposite();
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.StartPosition.Row + 1, move.StartPosition.Column]);
+            }
+            else if (move.StartPosition.Row - 2 == move.EndPosition.Row && move.StartPosition.Column == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row - 1, move.StartPosition.Column].Color = move.PlayerColor.Opposite();
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.StartPosition.Row - 1, move.StartPosition.Column]);
+            }
+            else if (move.StartPosition.Row == move.EndPosition.Row && move.StartPosition.Column + 2 == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row, move.StartPosition.Column + 1].Color = move.PlayerColor.Opposite();
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.StartPosition.Row, move.StartPosition.Column + 1]);
+            }
+            else if (move.StartPosition.Row == move.EndPosition.Row && move.StartPosition.Column - 2 == move.EndPosition.Column)
+            {
+                PegBoard[move.StartPosition.Row, move.StartPosition.Column - 1].Color = move.PlayerColor.Opposite();
+                ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.StartPosition.Row, move.StartPosition.Column - 1]);
+            }
+        }
+
+        public void PushMove(Move move)
+        {
+            MoveHistory.Push(move);
             PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color = CreeperColor.Empty;
             ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
             PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = move.PlayerColor;
@@ -335,6 +385,28 @@ namespace CreeperAI
             {
                 Capture(move);
             }
+        }
+
+        public Move PopMove()
+        {
+            Move move = MoveHistory.Pop();
+
+            PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color = move.PlayerColor;
+            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
+            PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = CreeperColor.Empty;
+            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.EndPosition.Row, move.EndPosition.Column]);
+
+            if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
+            {
+                // Undoing tile flips will be tricky, since there will be no way of distinguishing flipping and originating a tile.
+                UnFlip(move);
+            }
+            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+            {
+                UnCapture(move);
+            }
+
+            return move;
         }
 
         public IEnumerable<Move> AllPossibleMoves(CreeperColor color)
