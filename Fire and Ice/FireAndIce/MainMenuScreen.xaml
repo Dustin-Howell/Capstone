@@ -17,7 +17,7 @@
         <Border Width="200"
                 DockPanel.Dock="Left"
                 Background="{StaticResource Primary1}"
-                Panel.ZIndex="1"
+                Panel.ZIndex="2"
                 Effect="{StaticResource DropShadow}"
                 x:Name="MainMenuBorder">
                 <!--Main Menu-->
@@ -63,6 +63,29 @@
                     Grid.Column="0"
                     Visibility="Collapsed"
                     Background="{StaticResource Primary4}"
+                    Effect="{StaticResource DropShadow}"
+                    Panel.ZIndex="1">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent"
+                            x:Name="ChooseOpponentButtonPanel">
+                    <TextBlock Foreground="White" 
+                               TextWrapping="NoWrap"
+                               FontSize="20"
+                               FontFamily="pack://application:,,,/Fonts/#Holy Empire"
+                               HorizontalAlignment="Center">Against?</TextBlock>
+                    <ToggleButton x:Name="PlayHumanGameButton" Click="PlayHumanGameButton_Click">Human</ToggleButton>
+                    <ToggleButton x:Name="PlayComputerGameButton" Click="PlayComputerGameButton_Click">Computer</ToggleButton>
+                </StackPanel>
+            </Border>
+
+            <!--New Human Game Menu-->
+            <Border x:Name="NewHumanGameMenu"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Left"
+                    Grid.Column="1"
+                    Visibility="Collapsed"
+                    Background="{StaticResource Primary5}"
                     Effect="{StaticResource DropShadow}">
                 <StackPanel VerticalAlignment="Center"
                             HorizontalAlignment="Stretch"
@@ -71,12 +94,37 @@
                                TextWrapping="NoWrap"
                                FontSize="20"
                                FontFamily="pack://application:,,,/Fonts/#Holy Empire"
-                               HorizontalAlignment="Center">Against?</TextBlock>
-                    <Button x:Name="PlayHumanGameButton" Click="PlayHumanGameButton_Click">Human</Button>
-                    <Button x:Name="PlayComputerGameButton" Click="PlayComputerGameButton_Click">Computer</Button>
+                               HorizontalAlignment="Center">Where?</TextBlock>
+                    <Button x:Name="PlayLocalHumanGameButton" Click="PlayLocalHumanGameButton_Click">Local</Button>
+                    <Button x:Name="PlayNetworkedHumanGameButton" Click="PlayNetworkedHumanGameButton_Click">Network</Button>
                 </StackPanel>
             </Border>
+            <!--End New Human Game Menu-->
+
+            <!--New Computer Game Menu-->
+            <Border x:Name="NewComputerGameMenu"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Left"
+                    Grid.Column="1"
+                    Visibility="Collapsed"
+                    Background="{StaticResource Primary5}"
+                    Effect="{StaticResource DropShadow}">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent">
+                    <TextBlock Foreground="White" 
+                               TextWrapping="NoWrap"
+                               FontSize="20"
+                               FontFamily="pack://application:,,,/Fonts/#Holy Empire"
+                               HorizontalAlignment="Center">Difficulty?</TextBlock>
+                    <Button x:Name="PlayNoviceComputerButton" Click="PlayNoviceComputerButton_Click">Novice</Button>
+                    <Button x:Name="PlayExpertComputerButton" Click="PlayExpertComputerButton_Click">Expert</Button>
+                </StackPanel>
+            </Border>
+            <!--End New Computer Game Menu-->
             <!--End New Game Menu-->
+            
+            
 
             <!--High Score List-->
             <Border x:Name="HighScoreBorder"
@@ -132,7 +180,9 @@
                     <Button>Gage Gwaltney</Button>
                 </StackPanel>
             </Border>
-                <!--End Credits-->
+            <!--End Credits-->
+            
+            
         </Grid>
     </DockPanel>
 </UserControl>

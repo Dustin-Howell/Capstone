@@ -21,7 +21,8 @@ namespace FireAndIce
     /// </summary>
     public partial class MainMenuScreen : UserControl
     {
-        private Border _activeBorder;
+        private Border _activeBorder1;
+        private Border _activeBorder2;
         private MainWindow _mainWindow;
 
         public MainMenuScreen(MainWindow mainWindow)
@@ -35,36 +36,66 @@ namespace FireAndIce
             border.Opacity = 1;
             border.Visibility = Visibility.Visible;
 
-            DoubleAnimation slideIn = new DoubleAnimation();
-            slideIn.From = 0;
-            slideIn.To = width;
-            slideIn.Duration = new Duration(TimeSpan.FromMilliseconds(500));
+            DoubleAnimation slideAnimation = new DoubleAnimation();
+            slideAnimation.From = 0;
+            slideAnimation.To = width;
+            slideAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(500));
 
-            Storyboard.SetTargetName(slideIn, border.Name);
-            Storyboard.SetTargetProperty(slideIn, new PropertyPath(Border.WidthProperty));
+            Storyboard.SetTargetName(slideAnimation, border.Name);
+            Storyboard.SetTargetProperty(slideAnimation, new PropertyPath(Border.WidthProperty));
 
             Storyboard storyBoard = new Storyboard();
-            storyBoard.Children.Add(slideIn);
+            storyBoard.Children.Add(slideAnimation);
 
             storyBoard.Begin(border);
         }
 
-        private void ToggleBorder(Border border, double width)
+        private void ToggleBorder(Border border, int borderLevel, double width)
         {
-            if (_activeBorder == border)
+            if (borderLevel == 1)
             {
-                _activeBorder.Visibility = Visibility.Collapsed;
-                _activeBorder = null;
-            }
-            else
-            {
-                if (_activeBorder != null)
+                if (_activeBorder1 == border)
                 {
-                    _activeBorder.Visibility = Visibility.Collapsed;
+                    _activeBorder1.Visibility = Visibility.Collapsed;
+                    if (_activeBorder2 != null)
+                    {
+                        _activeBorder2.Visibility = Visibility.Collapsed;
+                    }
+                    _activeBorder1 = null;
+                    _activeBorder2 = null;
                 }
+                else
+                {
+                    if (_activeBorder1 != null)
+                    {
+                        _activeBorder1.Visibility = Visibility.Collapsed;
+                    }
+                    if (_activeBorder2 != null)
+                    {
+                        _activeBorder2.Visibility = Visibility.Collapsed;
+                    }
 
-                SlideOutBorder(border, width);
-                _activeBorder = border;
+                    SlideOutBorder(border, width);
+                    _activeBorder1 = border;
+                }
+            }
+            if (borderLevel == 2)
+            {
+                if (_activeBorder2 == border)
+                {
+                    _activeBorder2.Visibility = Visibility.Collapsed;
+                    _activeBorder2 = null;
+                }
+                else
+                {
+                    if (_activeBorder2 != null)
+                    {
+                        _activeBorder2.Visibility = Visibility.Collapsed;
+                    }
+
+                    SlideOutBorder(border, width);
+                    _activeBorder2 = border;
+                }
             }
         }
 
@@ -82,13 +113,13 @@ namespace FireAndIce
 
         private void NewGame_Click(object sender, RoutedEventArgs e)
         {
-            ToggleBorder(NewGameMenu, 200d);
+            ToggleBorder(NewGameMenu, 1, 200d);
             ToggleButtons(NewGameButton, MainMenuButtonPanel);
         }
 
         private void HighScoreButton_Click(object sender, RoutedEventArgs e)
         {
-            ToggleBorder(HighScoreBorder, 400d);
+            ToggleBorder(HighScoreBorder, 1, 400d);
             ToggleButtons(HighScoreButton, MainMenuButtonPanel);
             //Initialize high scores here
             HighScoreList.ItemsSource = new List<String> { "score 1", "score 2", "score 3" };
@@ -96,25 +127,45 @@ namespace FireAndIce
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            ToggleBorder(SettingsBorder, 400d);
+            ToggleBorder(SettingsBorder, 1, 400d);
             ToggleButtons(SettingsButton, MainMenuButtonPanel);
         }
 
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
-            ToggleBorder(CreditsBorder, 400d);
+            ToggleBorder(CreditsBorder, 1, 400d);
             ToggleButtons(CreditsButton, MainMenuButtonPanel);
         }
 
         private void PlayHumanGameButton_Click(object sender, RoutedEventArgs e)
         {
-            //This will change to expand a menu to ask if they want to play locally or over the network
-            _mainWindow.Content = new GameControl();
+            ToggleBorder(NewHumanGameMenu, 2, 200d);
+            ToggleButtons(PlayHumanGameButton, ChooseOpponentButtonPanel);
         }
 
         private void PlayComputerGameButton_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.Content = new GameControl();
+            ToggleBorder(NewComputerGameMenu, 2, 200d);
+            ToggleButtons(PlayComputerGameButton, ChooseOpponentButtonPanel);
+        }
+
+        private void PlayLocalHumanGameButton_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void PlayNetworkedHumanGameButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PlayNoviceComputerButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PlayExpertComputerButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
