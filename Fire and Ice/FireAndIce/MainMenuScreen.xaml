@@ -18,16 +18,17 @@
                 DockPanel.Dock="Left"
                 Background="{StaticResource Primary1}"
                 Panel.ZIndex="1"
-                Effect="{StaticResource DropShadow}">
+                Effect="{StaticResource DropShadow}"
+                x:Name="MainMenuBorder">
                 <!--Main Menu-->
-            <StackPanel HorizontalAlignment="Stretch"
+            <StackPanel x:Name="MainMenuButtonPanel" HorizontalAlignment="Stretch"
                     Orientation="Vertical"
                     Background="Transparent"
                     VerticalAlignment="Center">
-                <Button x:Name="NewGameButton" Click="NewGame_Click" >New Game</Button>
-                <Button x:Name="HighScoreButton" Click="HighScoreButton_Click">High Scores</Button>
-                <Button x:Name="SettingsButton" Click="SettingsButton_Click">Settings</Button>
-                <Button x:Name="CreditsBorderButton" Click="CreditsBorderButton_Click">Credits</Button>
+                <ToggleButton x:Name="NewGameButton" Click="NewGame_Click" >New Game</ToggleButton>
+                <ToggleButton x:Name="HighScoreButton" Click="HighScoreButton_Click">High Scores</ToggleButton>
+                <ToggleButton x:Name="SettingsButton" Click="SettingsButton_Click">Settings</ToggleButton>
+                <ToggleButton x:Name="CreditsButton" Click="CreditsButton_Click">Credits</ToggleButton>
             </StackPanel>
 
         </Border>
@@ -72,7 +73,7 @@
                                FontFamily="pack://application:,,,/Fonts/#Holy Empire"
                                HorizontalAlignment="Center">Against?</TextBlock>
                     <Button x:Name="PlayHumanGameButton" Click="PlayHumanGameButton_Click">Human</Button>
-                    <Button>Computer</Button>
+                    <Button x:Name="PlayComputerGameButton" Click="PlayComputerGameButton_Click">Computer</Button>
                 </StackPanel>
             </Border>
             <!--End New Game Menu-->

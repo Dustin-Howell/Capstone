@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
+using System.Windows.Controls.Primitives;
 
 namespace FireAndIce
 {
@@ -67,15 +68,28 @@ namespace FireAndIce
             }
         }
 
+        private void ToggleButtons(ToggleButton activeButton, StackPanel buttonPanel)
+        {
+            IEnumerable<ToggleButton> toggles = buttonPanel.Children.OfType<ToggleButton>();
+            foreach (ToggleButton toggle in toggles)
+            {
+                if (toggle != activeButton)
+                {
+                    toggle.IsChecked = false;
+                }
+            }
+        }
 
         private void NewGame_Click(object sender, RoutedEventArgs e)
         {
             ToggleBorder(NewGameMenu, 200d);
+            ToggleButtons(NewGameButton, MainMenuButtonPanel);
         }
 
         private void HighScoreButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleBorder(HighScoreBorder, 400d);
+            ToggleButtons(HighScoreButton, MainMenuButtonPanel);
             //Initialize high scores here
             HighScoreList.ItemsSource = new List<String> { "score 1", "score 2", "score 3" };
         }
@@ -83,11 +97,13 @@ namespace FireAndIce
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleBorder(SettingsBorder, 400d);
+            ToggleButtons(SettingsButton, MainMenuButtonPanel);
         }
 
-        private void CreditsBorderButton_Click(object sender, RoutedEventArgs e)
+        private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleBorder(CreditsBorder, 400d);
+            ToggleButtons(CreditsButton, MainMenuButtonPanel);
         }
 
         private void PlayHumanGameButton_Click(object sender, RoutedEventArgs e)
