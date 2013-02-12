@@ -61,7 +61,7 @@ namespace CreeperAI
             foreach (Move move in possibleMoves)
             {
                 board.PushMove(move);
-                double moveScore = ScoreAlphaBetaMiniMaxMove(board, _turnColor.Opposite(), Double.NegativeInfinity, Double.PositiveInfinity, _MiniMaxDepth);
+                double moveScore = ScoreAlphaBetaMiniMaxMove(board, _turnColor, Double.NegativeInfinity, Double.PositiveInfinity, _MiniMaxDepth);
                 if (moveScore > max)
                 {
                     max = moveScore;

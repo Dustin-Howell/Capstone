@@ -349,6 +349,7 @@ namespace CreeperAI
                 if (color == CreeperColor.Empty)
                 {
                     RemoveTileFromTeam(tile);
+                    tile.Color = color;
                 }
                 // Flipping opposite team's tile.
                 else if (color == move.PlayerColor.Opposite())
@@ -434,8 +435,8 @@ namespace CreeperAI
             Move move = MoveHistory.Pop();
 
             PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color = move.PlayerColor;
-            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Add(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
-            ((move.PlayerColor == CreeperColor.Black) ? WhitePegs : BlackPegs).Remove(PegBoard[move.EndPosition.Row, move.EndPosition.Column]);
+            ((move.PlayerColor == CreeperColor.White) ? WhitePegs : BlackPegs).Add(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
+            ((move.PlayerColor == CreeperColor.White) ? WhitePegs : BlackPegs).Remove(PegBoard[move.EndPosition.Row, move.EndPosition.Column]);
             PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = CreeperColor.Empty;
 
             if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
