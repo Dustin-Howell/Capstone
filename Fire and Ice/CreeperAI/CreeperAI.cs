@@ -122,7 +122,7 @@ namespace CreeperAI
                     double score = ScoreBoard(board, turnColor);
                     board.PopMove();
                     return score;
-                });
+                }).ToList();
 
                 // for each child of node
                 foreach (Move currentMove in moves)
