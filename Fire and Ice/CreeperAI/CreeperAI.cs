@@ -79,7 +79,7 @@ namespace CreeperAI
             if ((depth <= 0) || board.IsFinished(turnColor))
             {
                 // return the heuristic value of node
-                return ScoreBoard(board, turnColor);
+                return ScoreBoard(board, turnColor.Opposite());
             }
 
             // if  Player = MaximizedPlayer
