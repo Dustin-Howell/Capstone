@@ -157,7 +157,6 @@ namespace CreeperAI
 
         private double ScoreBoardTerritorial(AICreeperBoard board, CreeperColor turn)
         {
-            CreeperColor opponentTurn = turn.Opposite();
             double myTeamCount = board.TeamCount(turn, PieceType.Tile);
             double opponentTeamCount = board.TeamCount(turn.Opposite(), PieceType.Tile);
 
@@ -172,7 +171,6 @@ namespace CreeperAI
 
         private double ScoreBoardMaterial(AICreeperBoard board, CreeperColor turn)
         {
-            CreeperColor opponentTurn = turn.Opposite();
             double myTeamCount = board.TeamCount(turn, PieceType.Peg);
             double opponentTeamCount = board.TeamCount(turn.Opposite(), PieceType.Peg);
 
