@@ -82,6 +82,9 @@ namespace CreeperAI
 
         public int TeamCount(CreeperColor turn, PieceType type)
         {
+            if (turn == CreeperColor.Invalid || turn == CreeperColor.Empty)
+                throw new ArgumentOutOfRangeException(turn.ToString());
+
             return ((turn == CreeperColor.Black) ? ((type == PieceType.Peg) ? BlackPegs.Count : BlackTileCount) : ((type == PieceType.Peg) ? WhitePegs.Count : WhiteTileCount));
         }
 
@@ -94,11 +97,11 @@ namespace CreeperAI
 
             if ((tile.Color == CreeperColor.Black))
             {
-                BlackTileCount++;
+                if (++BlackTileCount > 32) throw new InvalidOperationException(BlackTileCount.ToString() + " is to big!");
             }
             else
             {
-                WhiteTileCount++;
+                if (++WhiteTileCount > 32) throw new InvalidOperationException(WhiteTileCount.ToString() + " is to big!");
             }
         }
 
@@ -109,9 +112,9 @@ namespace CreeperAI
             tile.TeamEast.TeamWest = tile.TeamWest;
             tile.TeamWest.TeamEast = tile.TeamEast;
 
-            if ((tile.Color == CreeperColor.Black))
+            if (tile.Color == CreeperColor.Black)
             {
-                 if (--BlackTileCount < 0) throw new InvalidOperationException();
+                if (--BlackTileCount < 0) throw new InvalidOperationException();
             }
             else
             {
@@ -121,6 +124,9 @@ namespace CreeperAI
 
         private AIBoardNode GetNextNode(int row, int column, CardinalDirection direction)
         {
+            if (row > 5) throw new ArgumentOutOfRangeException(row.ToString());
+            if (column > 5) throw new ArgumentOutOfRangeException(column.ToString());
+
             int rowIncrement = 0;
             int columnIncrement = 0;
 
@@ -176,6 +182,9 @@ namespace CreeperAI
 
         private void UpdateListHeads(int row, int column, CreeperColor type)
         {
+            if (row > 5) throw new ArgumentOutOfRangeException(row.ToString());
+            if (column > 5) throw new ArgumentOutOfRangeException(column.ToString());
+
             // This gives us direct access to the first node added to a given row, column, and color.
             // Also, we now remove the tile from the opposite team's head array, when appropriate.
             if (type == CreeperColor.Black)
@@ -269,6 +278,10 @@ namespace CreeperAI
             {
                 valid = false;
             }
+            else if (move.PlayerColor == CreeperColor.Empty || move.PlayerColor == CreeperColor.Invalid)
+            {
+                throw new ArgumentOutOfRangeException(move.ToString());
+            }
 
             return valid;
         }
@@ -293,7 +306,7 @@ namespace CreeperAI
                     return TileBoard[move.StartPosition.Row, move.StartPosition.Column];
 
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentOutOfRangeException(move.ToString() + " must be a flipping move!");
             }
         }
 
@@ -392,6 +405,7 @@ namespace CreeperAI
         public void PushMove(Move move)
         {
             MoveHistory.Push(move);
+
             PegBoard[move.StartPosition.Row, move.StartPosition.Column].Color = CreeperColor.Empty;
             ((move.PlayerColor == CreeperColor.Black) ? BlackPegs : WhitePegs).Remove(PegBoard[move.StartPosition.Row, move.StartPosition.Column]);
             PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = move.PlayerColor;
@@ -399,7 +413,6 @@ namespace CreeperAI
 
             if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
             {
-                // Undoing tile flips will be tricky, since there will be no way of distinguishing flipping and originating a tile.
                 Flip(move);
             }
             else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
@@ -432,6 +445,8 @@ namespace CreeperAI
 
         public IEnumerable<Move> AllPossibleMoves(CreeperColor color)
         {
+            if (color == CreeperColor.Invalid || color == CreeperColor.Empty) throw new ArgumentOutOfRangeException(color.ToString());
+
             Position startPosition = new Position();
             foreach (AIBoardNode peg in (color == CreeperColor.Black) ? BlackPegs : WhitePegs)
             {
