@@ -117,7 +117,7 @@ namespace CreeperAI
             {
                 // prioitize favorable boards
                 IEnumerable<Move> moves = board.AllPossibleMoves(turnColor)
-                .OrderBy(x =>
+                .OrderByDescending(x =>
                 {
                     board.PushMove(x);
                     double score = ScoreBoard(board, turnColor);
