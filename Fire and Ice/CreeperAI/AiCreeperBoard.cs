@@ -75,7 +75,6 @@ namespace CreeperAI
                     {
                         UpdateListHeads(row, column, TileBoard[row, column].Color);
                         AddTileToTeam(TileBoard[row, column]);
-                        TileHistory.Push(TileBoard[row, column].Color);
                     }
                 }
             }
