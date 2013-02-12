@@ -269,27 +269,27 @@ namespace CreeperAI
                 valid = false;
             }
 
-            //is the end space one away from the start space?
-            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) > 1)
+            else
+            {
+                if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) > 1)
                 || (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) > 1)
                 || (move.StartPosition.Equals(move.EndPosition)))
-            {
-                valid = false;
-            }
-            //is it a capture?
-            else if (Math.Abs(Math.Abs(move.StartPosition.Row - move.EndPosition.Row) - Math.Abs(move.StartPosition.Column - move.EndPosition.Column)) == 2)
-            {
-                valid = false;
-            }
-            //is there a capturable piece?
-            else if (PegBoard[move.StartPosition.Row + ((move.StartPosition.Row - move.EndPosition.Row) / 2), move.StartPosition.Column + ((move.StartPosition.Column - move.EndPosition.Column) / 2)].Color == move.PlayerColor.Opposite())
-            {
-                valid = false;
-            }
-            else if (move.PlayerColor == CreeperColor.Empty || move.PlayerColor == CreeperColor.Invalid)
-            {
-                throw new ArgumentOutOfRangeException(move.ToString());
-            }
+                {
+                    valid = false;
+                }
+
+                if (Math.Abs(Math.Abs(move.StartPosition.Row - move.EndPosition.Row) - Math.Abs(move.StartPosition.Column - move.EndPosition.Column)) == 2
+                    && PegBoard[move.StartPosition.Row + ((move.EndPosition.Row - move.StartPosition.Row) / 2), move.StartPosition.Column + ((move.EndPosition.Column - move.StartPosition.Column) / 2)].Color == move.PlayerColor.Opposite())
+                {
+                    valid = true;
+                }
+
+                else if (move.PlayerColor == CreeperColor.Empty || move.PlayerColor == CreeperColor.Invalid)
+                {
+                    throw new ArgumentOutOfRangeException(move.ToString());
+                }
+
+            } 
 
             return valid;
         }

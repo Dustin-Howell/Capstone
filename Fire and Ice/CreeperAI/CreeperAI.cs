@@ -15,10 +15,10 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 3;
+        private int _MiniMaxDepth = 4;
 
         private const double _TerritorialWeight = 1.0;
-        private const double _MaterialWeight = 1.0;
+        private const double _MaterialWeight = 100000000.0;
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
         {
