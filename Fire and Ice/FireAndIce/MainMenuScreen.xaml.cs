@@ -151,6 +151,7 @@ namespace FireAndIce
 
         private void PlayLocalHumanGameButton_Click(object sender, RoutedEventArgs e)
         {
+            _mainWindow.Content = new GameControl();
         }
 
         private void PlayNetworkedHumanGameButton_Click(object sender, RoutedEventArgs e)

@@ -20,11 +20,16 @@ namespace FireAndIce
     public partial class MainWindow : Window
     {
         private bool _debug = false;
+        private bool _XNAGame = true;
         public MainWindow()
         {
             InitializeComponent();
 
-            if (_debug)
+            if (_XNAGame)
+            {
+                this.Content = new GameControl();
+            }
+            else if (_debug)
             {
                 this.Content = new MainMenuScreen(this);
             }
