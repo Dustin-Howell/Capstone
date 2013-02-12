@@ -484,6 +484,30 @@ namespace CreeperAI
             }
         }
 
+        public IEnumerable<Move> AllPossibleFlipMoves(CreeperColor color)
+        {
+            if (color == CreeperColor.Invalid || color == CreeperColor.Empty) throw new ArgumentOutOfRangeException(color.ToString());
+
+            Position startPosition = new Position();
+            foreach (AIBoardNode peg in (color == CreeperColor.Black) ? BlackPegs : WhitePegs)
+            {
+                startPosition = new Position(peg.Row, peg.Column);
+                foreach (Move move in new Move[]
+                    {
+                        new Move(startPosition, new Position(peg.Row + 1, peg.Column + 1), color),
+                        new Move(startPosition, new Position(peg.Row + 1, peg.Column - 1), color),
+                        new Move(startPosition, new Position(peg.Row - 1, peg.Column + 1), color),
+                        new Move(startPosition, new Position(peg.Row - 1, peg.Column - 1), color),
+                    })
+                {
+                    if (IsValidMove(move))
+                    {
+                        yield return move;
+                    }
+                }
+            }
+        }
+
         public bool IsFinished(CreeperColor playerTurn)
         {
             return GetGameState(playerTurn) != CreeperGameState.Unfinished;
