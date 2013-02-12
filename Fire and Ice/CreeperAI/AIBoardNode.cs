@@ -38,5 +38,12 @@ namespace CreeperAI
             Row = -1;
             Column = -1;
         }
+
+        public AIBoardNode(AIBoardNode node)
+        {
+            Color = node.Color;
+            Row = node.Row;
+            Column = node.Column;
+        }
     }
 }

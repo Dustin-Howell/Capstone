@@ -12,13 +12,15 @@ namespace CreeperAI
     {
         //debug variables\\
         private bool _reportTime = true;
+        private bool _sort = true;
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
         private int _MiniMaxDepth = 4;
 
         private const double _TerritorialWeight = 1.0;
-        private const double _MaterialWeight = 100000000.0;
+        private const double _MaterialWeight = 2.0;
+        private const double _pathToVictoryWeight = 1.0;
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
         {
@@ -76,24 +78,20 @@ namespace CreeperAI
         private double ScoreAlphaBetaMiniMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
         {
             // if  depth = 0 or node is a terminal node
-            if ((depth <= 0) || board.IsFinished(turnColor))
+            if ((depth <= 0) 
+                || (board.CouldBeFinished(turnColor) &&
+                board.IsFinished(turnColor)))
             {
                 // return the heuristic value of node
-                return ScoreBoard(board, turnColor.Opposite());
+                return ScoreBoard(board, turnColor);
             }
 
             // if  Player = MaximizedPlayer
             if (turnColor == _turnColor)
             {
                 // prioitize favorable boards
-                IEnumerable<Move> moves = board.AllPossibleMoves(turnColor)
-                 .OrderByDescending(x =>
-                {
-                    board.PushMove(x);
-                    double score = ScoreBoard(board, turnColor);
-                    board.PopMove();
-                    return score;
-                }).ToList();
+                IEnumerable<Move> moves = board.AllPossibleMoves(turnColor).ToList();
+                //TODO: make moves an array and sort it fastly                
 
                 // for each child of node
                 foreach (Move currentMove in moves)
@@ -116,14 +114,7 @@ namespace CreeperAI
             else
             {
                 // prioitize favorable boards
-                IEnumerable<Move> moves = board.AllPossibleMoves(turnColor)
-                .OrderByDescending(x =>
-                {
-                    board.PushMove(x);
-                    double score = ScoreBoard(board, turnColor);
-                    board.PopMove();
-                    return score;
-                }).ToList();
+                IEnumerable<Move> moves = board.AllPossibleMoves(turnColor).ToList();
 
                 // for each child of node
                 foreach (Move currentMove in moves)
@@ -151,6 +142,7 @@ namespace CreeperAI
 
             score += (ScoreBoardTerritorial(board, turnColor) * _TerritorialWeight);
             score += (ScoreBoardMaterial(board, turnColor) * _MaterialWeight);
+            score += ScoreBoardVictory(board, turnColor);
 
             return score;
         }
@@ -181,6 +173,60 @@ namespace CreeperAI
             }
 
             return myTeamCount / opponentTeamCount;
+        }
+        
+        private double ScoreBoardPositional(AICreeperBoard board, CreeperColor turn)
+        {
+            return 0.0;
+        }
+        
+        private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn)
+        {
+            double score = 0.0;
+
+            Move currentMove = board.CurrentMove;
+            if (board.IsFlipMove(currentMove))
+            {
+                AIBoardNode flippedTile = board.GetFlippedTileCopy(currentMove);
+                if (turn == CreeperColor.White)
+                {
+                    int northRow = flippedTile.Row - 1;
+                    int eastColumn = flippedTile.Column + 1;
+
+                    if (northRow >= 0
+                        && board.TileBoard[northRow, flippedTile.Column].Color == turn)
+                    {
+                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._WhiteEnd.Row - flippedTile.Row));
+                    }
+
+                    if (eastColumn < CreeperBoard.TileRows
+                        && board.TileBoard[flippedTile.Row, eastColumn].Color == turn)
+                    {
+                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._WhiteEnd.Column - flippedTile.Column));
+                    }
+                }
+
+                if (turn == CreeperColor.Black)
+                {
+                    int northRow = flippedTile.Row - 1;
+                    int west = flippedTile.Column - 1;
+
+                    if (northRow >= 0
+                        && board.TileBoard[northRow, flippedTile.Column].Color == turn)
+                    {
+                        //Weights it more if the move is closer to the the end goal
+                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._BlackEnd.Row - flippedTile.Row));
+                    }
+
+                    if (west >= 0
+                        && board.TileBoard[flippedTile.Row, west].Color == turn)
+                    {
+                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._BlackEnd.Column - flippedTile.Column));
+                    }
+                }
+            }
+
+            return score;
         }
     }
 }

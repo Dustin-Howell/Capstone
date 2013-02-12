@@ -13,8 +13,8 @@ namespace CreeperAI
     // Nodes have reference to neighbor nodes
     public class AICreeperBoard
     {
-        AIBoardNode[ , ] TileBoard { get; set; }
-        AIBoardNode[ , ] PegBoard { get; set; }
+        public AIBoardNode[ , ] TileBoard { get; private set; }
+        public AIBoardNode[ , ] PegBoard { get; private set; }
         AIBoardNode[] RowHeadBlack { get; set; }
         AIBoardNode[] RowHeadWhite { get; set; }
         AIBoardNode[] ColumnHeadBlack { get; set; }
@@ -25,25 +25,27 @@ namespace CreeperAI
 
         public HashSet<AIBoardNode> BlackPegs { get; private set; }
         public HashSet<AIBoardNode> WhitePegs { get; private set; }
+        public Move CurrentMove { get { return new Move(MoveHistory.Peek()); } }
 
         public int BlackTileCount { get; private set; }
         public int WhiteTileCount { get; private set; }
 
         private int _tileRows;
         private int _pegRows;
+        private const int _MinimumToWin = 9;
 
-        private static Position _BlackStart { get { return new Position(0, 5); } }
-        private static Position _WhiteStart { get { return new Position(0, 0); } }
-        private static Position _BlackEnd { get { return new Position(5, 0); } }
-        private static Position _WhiteEnd { get { return new Position(5, 5); } }
+        public static Position _BlackStart { get { return new Position(0, 5); } }
+        public static Position _WhiteStart { get { return new Position(0, 0); } }
+        public static Position _BlackEnd { get { return new Position(5, 0); } }
+        public static Position _WhiteEnd { get { return new Position(5, 5); } }
 
         public AICreeperBoard(CreeperBoard board)
         {
             _tileRows = CreeperBoard.TileRows;
             _pegRows = CreeperBoard.PegRows;
 
-            BlackTileCount = board.Tiles.Count(x => x.Color == CreeperColor.Black);
-            WhiteTileCount = board.Tiles.Count(x => x.Color == CreeperColor.White);
+            BlackTileCount = 0;
+            WhiteTileCount = 0;
             BlackPegs = new HashSet<AIBoardNode>();
             WhitePegs = new HashSet<AIBoardNode>();
 
@@ -105,11 +107,17 @@ namespace CreeperAI
 
             if ((tile.Color == CreeperColor.Black))
             {
-                if (++BlackTileCount > 32) throw new InvalidOperationException(BlackTileCount.ToString() + " is to big!");
+                if (++BlackTileCount > 32) throw new InvalidOperationException(BlackTileCount.ToString() + " is too big!");
             }
-            else
+
+            else if (tile.Color == CreeperColor.White)
             {
-                if (++WhiteTileCount > 32) throw new InvalidOperationException(WhiteTileCount.ToString() + " is to big!");
+                if (++WhiteTileCount > 32) throw new InvalidOperationException(WhiteTileCount.ToString() + " is too big!");
+            }
+
+            if (WhiteTileCount + BlackTileCount > 32)
+            {
+                throw new InvalidOperationException(WhiteTileCount.ToString() + " is too big!");
             }
         }
 
@@ -124,7 +132,7 @@ namespace CreeperAI
             {
                 if (--BlackTileCount < 0) throw new InvalidOperationException(BlackTileCount.ToString());
             }
-            else
+            else if (tile.Color == CreeperColor.White)
             {
                 if (--WhiteTileCount < 0) throw new InvalidOperationException(WhiteTileCount.ToString());
             }
@@ -318,6 +326,11 @@ namespace CreeperAI
             }
         }
 
+        public AIBoardNode GetFlippedTileCopy(Move move)
+        {
+            return new AIBoardNode(GetFlippedTile(move));
+        }
+
         private void Flip(Move move)
         {
             AIBoardNode tile = GetFlippedTile(move);
@@ -411,6 +424,16 @@ namespace CreeperAI
             }
         }
 
+        public bool IsFlipMove(Move move)
+        {
+            return Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1;
+        }
+
+        public bool IsCaptureMove(Move move)
+        {
+            return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2);
+        }
+
         public void PushMove(Move move)
         {
             MoveHistory.Push(move);
@@ -420,14 +443,15 @@ namespace CreeperAI
             PegBoard[move.EndPosition.Row, move.EndPosition.Column].Color = move.PlayerColor;
             ((move.PlayerColor == CreeperColor.Black) ?  BlackPegs : WhitePegs ).Add(PegBoard[move.EndPosition.Row, move.EndPosition.Column]);
 
-            if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
+            if (IsFlipMove(move))
             {
                 Flip(move);
             }
-            else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+            else if (IsCaptureMove(move))
             {
                 Capture(move);
             }
+
         }
 
         public Move PopMove()
@@ -641,6 +665,25 @@ namespace CreeperAI
                 Console.WriteLine();
             }
             Console.WriteLine();
+        }
+
+        public bool CouldBeFinished(CreeperColor turnColor)
+        {
+            if (TeamCount(turnColor, PieceType.Tile) < _MinimumToWin)
+            {
+                return false;
+            }
+            
+            AIBoardNode[] rowHeadArray = (turnColor == CreeperColor.White)? RowHeadWhite : RowHeadBlack;
+            AIBoardNode[] columnHeadArray = (turnColor == CreeperColor.White)? ColumnHeadWhite : ColumnHeadBlack;
+
+            if (rowHeadArray.Count(x => x != null) < _tileRows - 2
+                || columnHeadArray.Count(x => x != null) < _tileRows - 2)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
