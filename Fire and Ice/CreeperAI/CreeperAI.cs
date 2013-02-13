@@ -18,9 +18,18 @@ namespace CreeperAI
         private CreeperColor _turnColor;
         private int _MiniMaxDepth = 6;
 
-        private const double _TerritorialWeight = 2.0;
-        private const double _MaterialWeight = 5.0;
-        private const double _pathToVictoryWeight = 6.0;
+        private double _territorialWeight;
+        private double _materialWeight;
+        private double _pathToVictoryWeight;
+        private double _victoryWeight;
+
+        public CreeperAI(double territoryWeight, double materialWeight, double victoryPathWeight, double victoryWeight)
+        {
+            _territorialWeight = territoryWeight;
+            _materialWeight = materialWeight;
+            _pathToVictoryWeight = victoryPathWeight;
+            _victoryWeight = victoryWeight;
+        }
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
         {
@@ -203,8 +212,8 @@ namespace CreeperAI
                     break;
 
                 default:
-                    score += (ScoreBoardTerritorial(board, turnColor) * _TerritorialWeight);
-                    score += (ScoreBoardMaterial(board, turnColor) * _MaterialWeight);
+                    score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
+                    score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
                     score += ScoreBoardVictory(board, turnColor);
                     break;
             }
