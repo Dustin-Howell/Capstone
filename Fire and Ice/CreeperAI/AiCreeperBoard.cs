@@ -15,10 +15,10 @@ namespace CreeperAI
     {
         public AIBoardNode[ , ] TileBoard { get; private set; }
         public AIBoardNode[ , ] PegBoard { get; private set; }
-        AIBoardNode[] RowHeadBlack { get; set; }
-        AIBoardNode[] RowHeadWhite { get; set; }
-        AIBoardNode[] ColumnHeadBlack { get; set; }
-        AIBoardNode[] ColumnHeadWhite { get; set; }
+        public AIBoardNode[] RowHeadBlack { get; private set; }
+        public AIBoardNode[] RowHeadWhite { get; private set; }
+        public AIBoardNode[] ColumnHeadBlack { get; private set; }
+        public AIBoardNode[] ColumnHeadWhite { get; private set; }
 
         Stack<CreeperColor> TileHistory { get; set; }
         Stack<Move> MoveHistory { get; set; }

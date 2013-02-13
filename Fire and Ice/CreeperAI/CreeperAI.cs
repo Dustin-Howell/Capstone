@@ -181,8 +181,18 @@ namespace CreeperAI
         {
             return 0.0;
         }
-        
+
         private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn)
+        {
+            double score = 0.0;
+
+            //see if we are filling in a row with a null head
+            //bonus points for doing that with an adjacency
+
+            return score;
+        }
+        
+        private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn, bool randomFlag)
         {
             double score = 0.0;
 
