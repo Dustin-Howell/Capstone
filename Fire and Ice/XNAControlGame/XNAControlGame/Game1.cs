@@ -29,6 +29,30 @@ namespace XNAControlGame
 
         public Game1(IntPtr handle, int width, int height) : base(handle, "Content", width, height) { }
 
+
+
+        static public Position NumberToPosition(int number)
+        {
+            Position position = new Position();
+
+            if (number >= CreeperBoard.PegRows - 1)
+            {
+                number++;
+            }
+
+            if (number >= (CreeperBoard.PegRows - 1) * CreeperBoard.PegRows)
+            {
+                number++;
+            }
+
+            position.Row = (int)number / CreeperBoard.PegRows;
+            position.Column = number % CreeperBoard.PegRows;
+           
+          
+
+            return position;
+        }
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -44,6 +68,16 @@ namespace XNAControlGame
 
             // Load a scene from a content file
             scene = Content.Load<Scene>("Scene1");
+
+            for (int pegNumber = 1; pegNumber < 46; pegNumber++)
+            {
+                Nine.Graphics.Model peg = new Nine.Graphics.Model( GraphicsDevice );
+                Position pegPosition = NumberToPosition(pegNumber);
+                String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
+                peg.Name = pegName;
+                peg.Visible = true;
+                scene.Add(peg);
+            }
 
             base.LoadContent();
         }
@@ -133,7 +167,6 @@ namespace XNAControlGame
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            
             scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             base.Draw(gameTime);
         }
