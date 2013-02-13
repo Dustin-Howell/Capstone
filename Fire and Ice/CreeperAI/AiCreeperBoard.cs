@@ -250,8 +250,13 @@ namespace CreeperAI
         {
             int rows = (pieceType == PieceType.Tile) ? _tileRows : _pegRows;
 
-            return ((column >= 0 && column < rows && row >= 0 && row < rows)
-                && (((pieceType == PieceType.Tile) ? TileBoard : PegBoard)[row, column].Color != CreeperColor.Invalid));
+            return (column >= 0 && column < rows && row >= 0 && row < rows)
+
+                // Not a corner piece
+                && !(row == 0 && column == 0)
+                && !(row == 0 && column == rows - 1)
+                && !(row == rows - 1 && column == 0)
+                && !(row == rows - 1 && column == rows - 1);
         }
 
         public bool IsValidMove(Move move)
@@ -486,7 +491,8 @@ namespace CreeperAI
             foreach (AIBoardNode peg in (color == CreeperColor.Black) ? BlackPegs : WhitePegs)
             {
                 startPosition = new Position(peg.Row, peg.Column);
-                foreach (Move move in new Move[]
+
+                Move[] movesForPeg = new Move[]
                     {
                         new Move(startPosition, new Position(peg.Row + 1, peg.Column), color),
                         new Move(startPosition, new Position(peg.Row - 1, peg.Column), color),
@@ -500,11 +506,13 @@ namespace CreeperAI
                         new Move(startPosition, new Position(peg.Row - 2, peg.Column), color),
                         new Move(startPosition, new Position(peg.Row, peg.Column + 2), color),
                         new Move(startPosition, new Position(peg.Row, peg.Column - 2), color),
-                    })
+                    };
+
+                for (int i = 0; i < movesForPeg.Length; i++)
                 {
-                    if (IsValidMove(move))
+                    if (IsValidMove(movesForPeg[i]))
                     {
-                        possibleMoves[index++] = move;
+                        possibleMoves[index++] = movesForPeg[i];
                     }
                 }
             }

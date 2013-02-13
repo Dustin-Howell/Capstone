@@ -93,7 +93,7 @@ namespace CreeperAI
                 Move[] moves = board.AllPossibleMoves(turnColor);              
 
                 // for each child of node
-                for (int i = 0; i < moves.Count(); i++)
+                for (int i = 0; i < moves.Length; i++)
                 {
                     Move currentMove = moves[i];
                     // α := max(α, alphabeta(child, depth-1, α, β, not(Player) ))
@@ -117,7 +117,7 @@ namespace CreeperAI
                 Move[] moves = board.AllPossibleMoves(turnColor);
 
                 // for each child of node
-                for (int i = 0; i < moves.Count(); i++)
+                for (int i = 0; i < moves.Length; i++)
                 {
                     Move currentMove = moves[i];
 
