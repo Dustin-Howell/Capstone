@@ -16,11 +16,11 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 6;
+        private int _MiniMaxDepth = 4;
 
-        private const double _TerritorialWeight = 1.0;
-        private const double _MaterialWeight = 2.0;
-        private const double _pathToVictoryWeight = 1.0;
+        private const double _TerritorialWeight = 2.0;
+        private const double _MaterialWeight = 5.0;
+        private const double _pathToVictoryWeight = 6.0;
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
         {
@@ -186,8 +186,57 @@ namespace CreeperAI
         {
             double score = 0.0;
 
-            //see if we are filling in a row with a null head
-            //bonus points for doing that with an adjacency
+            Move currentMove = board.CurrentMove;
+            if (board.IsFlipMove(currentMove))
+            {
+                AIBoardNode flippedTile = board.GetFlippedTileCopy(currentMove);
+                AIBoardNode[] columnHead = (turn == CreeperColor.White) ? board.ColumnHeadWhite : board.ColumnHeadWhite;
+                AIBoardNode[] rowHead = (turn == CreeperColor.White) ? board.RowHeadWhite : board.RowHeadWhite;
+
+                //If we are null in this row, we want to add a new tile here
+                if (rowHead[flippedTile.Row] == null)
+                {
+                    //so we add to the score
+                    score += _pathToVictoryWeight;
+
+                    //if the tile above us is our color
+                    if (flippedTile.Row - 1 >= 0
+                        && board.TileBoard[flippedTile.Row - 1, flippedTile.Column].Color == turn)
+                    {
+                        //bonus points for an adjacency when moving to a null row
+                        score += _pathToVictoryWeight;
+                    }
+                    //and if the row below us is our color
+                    if (flippedTile.Row + 1 <= CreeperBoard.TileRows - 1
+                        && board.TileBoard[flippedTile.Row + 1, flippedTile.Column].Color == turn)
+                    {
+                        //more bonus points
+                        score += _pathToVictoryWeight;
+                    }
+                }
+
+                //if this column is null
+                if (columnHead[flippedTile.Column] == null)
+                {
+                    //that's good--we want to be filling in columns with no pieces
+                    score += _pathToVictoryWeight;
+
+                    //and if the column to our left has someone there
+                    if (flippedTile.Column - 1 >= 0
+                        && board.TileBoard[flippedTile.Row, flippedTile.Column - 1].Color == turn)
+                    {
+                        //great, another connection
+                        score += _pathToVictoryWeight;
+                    }
+                    //and if the column to our right does as well
+                    if (flippedTile.Column + 1 <= CreeperBoard.TileRows - 1
+                        && board.TileBoard[flippedTile.Row, flippedTile.Column + 1].Color == turn)
+                    {
+                        //even better
+                        score += _pathToVictoryWeight;
+                    }
+                }
+            }
 
             return score;
         }
