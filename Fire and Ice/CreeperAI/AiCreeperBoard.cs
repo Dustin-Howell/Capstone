@@ -22,6 +22,7 @@ namespace CreeperAI
 
         Stack<CreeperColor> TileHistory { get; set; }
         Stack<Move> MoveHistory { get; set; }
+        Stack<CreeperGameState> GameStateHistory { get; set; }
 
         public HashSet<AIBoardNode> BlackPegs { get; private set; }
         public HashSet<AIBoardNode> WhitePegs { get; private set; }
@@ -29,6 +30,22 @@ namespace CreeperAI
 
         public int BlackTileCount { get; private set; }
         public int WhiteTileCount { get; private set; }
+
+        public CreeperGameState GameState
+        {
+            get
+            {
+                return IsFinished ? GameStateHistory.Peek() : CreeperGameState.Unfinished;
+            }
+        }
+
+        public bool IsFinished
+        {
+            get
+            {
+                return GameStateHistory.Any() && GameStateHistory.Peek() == CreeperGameState.Complete;
+            }
+        }
 
         private int _tileRows;
         private int _pegRows;
@@ -51,6 +68,7 @@ namespace CreeperAI
 
             TileHistory = new Stack<CreeperColor>();
             MoveHistory = new Stack<Move>();
+            GameStateHistory = new Stack<CreeperGameState>();
 
             TileBoard = new AIBoardNode[_tileRows, _tileRows];
             PegBoard = new AIBoardNode[_pegRows, _pegRows];
@@ -457,6 +475,7 @@ namespace CreeperAI
                 Capture(move);
             }
 
+            GameStateHistory.Push(CouldBeFinished(move.PlayerColor) ? GetGameState(move.PlayerColor) : CreeperGameState.Unfinished);
         }
 
         public Move PopMove()
@@ -478,6 +497,7 @@ namespace CreeperAI
                 UnCapture(move);
             }
 
+            GameStateHistory.Pop();
             return move;
         }
 
@@ -543,11 +563,6 @@ namespace CreeperAI
                     }
                 }
             }
-        }
-
-        public bool IsFinished(CreeperColor playerTurn)
-        {
-            return GetGameState(playerTurn) != CreeperGameState.Unfinished;
         }
 
         private IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node)

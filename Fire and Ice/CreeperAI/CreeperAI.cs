@@ -16,7 +16,7 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 4;
+        private int _MiniMaxDepth = 6;
 
         private const double _TerritorialWeight = 2.0;
         private const double _MaterialWeight = 5.0;
@@ -105,9 +105,7 @@ namespace CreeperAI
         private double ScoreAlphaBetaNegaMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
         {
             // if  depth = 0 or node is a terminal node
-            if ((depth <= 0)
-                || (board.CouldBeFinished(turnColor) &&
-                board.IsFinished(turnColor)))
+            if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
                 return ScoreBoard(board, turnColor);
@@ -136,9 +134,7 @@ namespace CreeperAI
         private double ScoreAlphaBetaMiniMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
         {
             // if  depth = 0 or node is a terminal node
-            if ((depth <= 0) 
-                || (board.CouldBeFinished(turnColor) &&
-                board.IsFinished(turnColor)))
+            if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
                 return ScoreBoard(board, turnColor);
@@ -200,9 +196,20 @@ namespace CreeperAI
         {
             double score = 0.0;
 
-            score += (ScoreBoardTerritorial(board, turnColor) * _TerritorialWeight);
-            score += (ScoreBoardMaterial(board, turnColor) * _MaterialWeight);
-            score += ScoreBoardVictory(board, turnColor);
+            switch (board.GameState)
+            {
+                case CreeperGameState.Complete:
+                    score = Double.PositiveInfinity;
+                    break;
+
+                default:
+                    score += (ScoreBoardTerritorial(board, turnColor) * _TerritorialWeight);
+                    score += (ScoreBoardMaterial(board, turnColor) * _MaterialWeight);
+                    score += ScoreBoardVictory(board, turnColor);
+                    break;
+            }
+
+
 
             return score;
         }
