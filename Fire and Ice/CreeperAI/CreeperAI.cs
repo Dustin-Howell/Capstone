@@ -240,54 +240,5 @@ namespace CreeperAI
 
             return score;
         }
-        
-        private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn, bool randomFlag)
-        {
-            double score = 0.0;
-
-            Move currentMove = board.CurrentMove;
-            if (board.IsFlipMove(currentMove))
-            {
-                AIBoardNode flippedTile = board.GetFlippedTileCopy(currentMove);
-                if (turn == CreeperColor.White)
-                {
-                    int northRow = flippedTile.Row - 1;
-                    int eastColumn = flippedTile.Column + 1;
-
-                    if (northRow >= 0
-                        && board.TileBoard[northRow, flippedTile.Column].Color == turn)
-                    {
-                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._WhiteEnd.Row - flippedTile.Row));
-                    }
-
-                    if (eastColumn < CreeperBoard.TileRows
-                        && board.TileBoard[flippedTile.Row, eastColumn].Color == turn)
-                    {
-                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._WhiteEnd.Column - flippedTile.Column));
-                    }
-                }
-
-                if (turn == CreeperColor.Black)
-                {
-                    int northRow = flippedTile.Row - 1;
-                    int west = flippedTile.Column - 1;
-
-                    if (northRow >= 0
-                        && board.TileBoard[northRow, flippedTile.Column].Color == turn)
-                    {
-                        //Weights it more if the move is closer to the the end goal
-                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._BlackEnd.Row - flippedTile.Row));
-                    }
-
-                    if (west >= 0
-                        && board.TileBoard[flippedTile.Row, west].Color == turn)
-                    {
-                        score += _pathToVictoryWeight * (CreeperBoard.TileRows - Math.Abs(AICreeperBoard._BlackEnd.Column - flippedTile.Column));
-                    }
-                }
-            }
-
-            return score;
-        }
     }
 }
