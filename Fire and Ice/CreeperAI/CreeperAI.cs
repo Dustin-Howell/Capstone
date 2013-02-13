@@ -31,7 +31,7 @@ namespace CreeperAI
             if (_reportTime) stopwatch.Start();
 
             Move bestMove = new Move();
-            bestMove = GetAlphaBetaMiniMaxMove(_board);
+            bestMove = GetAlphaBetaNegaMaxMove(_board);
 
             if (_reportTime)
             {
@@ -73,6 +73,64 @@ namespace CreeperAI
             }
 
             return bestMove;
+        }
+
+        Move GetAlphaBetaNegaMaxMove(AICreeperBoard board)
+        {
+            Move bestMove = new Move();
+
+            double best = Double.NegativeInfinity;
+            double alpha = Double.NegativeInfinity;
+            double beta = Double.PositiveInfinity;
+
+            // Enumerate the children of the current node
+            Move[] moves = board.AllPossibleMoves(_turnColor);
+            for (int i = 0; i < moves.Length; i++)
+            {
+                // Evaluate child node
+                board.PushMove(moves[i]);
+                double score = -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -Math.Max(alpha, best), _MiniMaxDepth - 1);
+                board.PopMove();
+
+                if (score > best)
+                {
+                    best = score;
+                    bestMove = moves[i];
+                }
+            }
+
+            return bestMove;
+        }
+
+        private double ScoreAlphaBetaNegaMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
+        {
+            // if  depth = 0 or node is a terminal node
+            if ((depth <= 0)
+                || (board.CouldBeFinished(turnColor) &&
+                board.IsFinished(turnColor)))
+            {
+                // return the heuristic value of node
+                return ScoreBoard(board, turnColor);
+            }
+
+            // Initialize the best score
+            double best = Double.NegativeInfinity;
+
+            // Enumerate the children of the current node
+            Move[] moves = board.AllPossibleMoves(turnColor);
+            for (int i = 0; i < moves.Length; i++)
+            {
+                // Evaluate child node:
+                board.PushMove(moves[i]);
+                best = Math.Max(best, -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -Math.Max(alpha, best), depth - 1));
+                board.PopMove();
+
+                // Prune if the current best score crosses beta
+                if (best >= beta)
+                    return best;
+            }
+
+            return best;
         }
 
         private double ScoreAlphaBetaMiniMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
