@@ -16,7 +16,7 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 4;
+        private int _MiniMaxDepth = 6;
 
         private const double _TerritorialWeight = 1.0;
         private const double _MaterialWeight = 2.0;
@@ -90,12 +90,12 @@ namespace CreeperAI
             if (turnColor == _turnColor)
             {
                 // prioitize favorable boards
-                IEnumerable<Move> moves = board.AllPossibleMoves(turnColor).ToList();
-                //TODO: make moves an array and sort it fastly                
+                Move[] moves = board.AllPossibleMoves(turnColor);              
 
                 // for each child of node
-                foreach (Move currentMove in moves)
+                for (int i = 0; i < moves.Count(); i++)
                 {
+                    Move currentMove = moves[i];
                     // α := max(α, alphabeta(child, depth-1, α, β, not(Player) ))
                     board.PushMove(currentMove);
                     alpha = Math.Max(alpha, ScoreAlphaBetaMiniMaxMove(board, turnColor.Opposite(), alpha, beta, depth - 1));
@@ -114,11 +114,13 @@ namespace CreeperAI
             else
             {
                 // prioitize favorable boards
-                IEnumerable<Move> moves = board.AllPossibleMoves(turnColor).ToList();
+                Move[] moves = board.AllPossibleMoves(turnColor);
 
                 // for each child of node
-                foreach (Move currentMove in moves)
+                for (int i = 0; i < moves.Count(); i++)
                 {
+                    Move currentMove = moves[i];
+
                     // β := min(β, alphabeta(child, depth-1, α, β, not(Player) ))
                     board.PushMove(currentMove);
                     beta = Math.Min(beta, ScoreAlphaBetaMiniMaxMove(board, turnColor.Opposite(), alpha, beta, depth - 1));

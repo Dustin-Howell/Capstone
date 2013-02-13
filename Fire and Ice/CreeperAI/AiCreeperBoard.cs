@@ -476,11 +476,13 @@ namespace CreeperAI
             return move;
         }
 
-        public IEnumerable<Move> AllPossibleMoves(CreeperColor color)
+        public Move[] AllPossibleMoves(CreeperColor color)
         {
             if (color == CreeperColor.Invalid || color == CreeperColor.Empty) throw new ArgumentOutOfRangeException(color.ToString());
 
             Position startPosition = new Position();
+            Move[] possibleMoves = new Move[100];
+            int index = 0;
             foreach (AIBoardNode peg in (color == CreeperColor.Black) ? BlackPegs : WhitePegs)
             {
                 startPosition = new Position(peg.Row, peg.Column);
@@ -502,10 +504,13 @@ namespace CreeperAI
                 {
                     if (IsValidMove(move))
                     {
-                        yield return move;
+                        possibleMoves[index++] = move;
                     }
                 }
             }
+
+            Array.Resize(ref possibleMoves, index);
+            return possibleMoves;
         }
 
         public IEnumerable<Move> AllPossibleFlipMoves(CreeperColor color)
