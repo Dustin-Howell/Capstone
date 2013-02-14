@@ -43,7 +43,7 @@ namespace CreeperAI
         {
             get
             {
-                return GameStateHistory.Any() && GameStateHistory.Peek() == CreeperGameState.Complete;
+                return GameStateHistory.Any() && GameStateHistory.Peek() != CreeperGameState.Unfinished;
             }
         }
 
