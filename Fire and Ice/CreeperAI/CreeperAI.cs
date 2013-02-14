@@ -208,7 +208,7 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = Double.PositiveInfinity;
+                    score = 1000000.0;
                     break;
 
                 default:
