@@ -101,7 +101,6 @@ namespace XNAControl
             m_graphics.GraphicsDevice.DeviceReset += new EventHandler<EventArgs>(GraphicsDevice_DeviceReset);
                 
             this.Initialize();
-            this.LoadContent();
 
             timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1 / 60);
