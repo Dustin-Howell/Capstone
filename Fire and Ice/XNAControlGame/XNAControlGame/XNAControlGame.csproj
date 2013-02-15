@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Button.cs" />
+    <Compile Include="CreeperBoardViewModel.cs" />
     <Compile Include="Clickable.cs" />
     <Compile Include="GameScreen.cs" />
     <Compile Include="InGame.cs" />
