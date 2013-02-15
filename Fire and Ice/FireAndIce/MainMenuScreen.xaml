@@ -26,6 +26,7 @@
                     Background="Transparent"
                     VerticalAlignment="Center">
                 <ToggleButton x:Name="NewGameButton" Click="NewGame_Click" >New Game</ToggleButton>
+                <ToggleButton x:Name="HelpButton" Click="HelpButton_Click">Help</ToggleButton>
                 <ToggleButton x:Name="HighScoreButton" Click="HighScoreButton_Click">High Scores</ToggleButton>
                 <ToggleButton x:Name="SettingsButton" Click="SettingsButton_Click">Settings</ToggleButton>
                 <ToggleButton x:Name="CreditsButton" Click="CreditsButton_Click">Credits</ToggleButton>
@@ -123,8 +124,20 @@
             </Border>
             <!--End New Computer Game Menu-->
             <!--End New Game Menu-->
-            
-            
+
+            <!--Help Menu-->
+            <Border x:Name="HelpBorder"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Left"
+                    Grid.Column="0"
+                    Visibility="Collapsed"
+                    Background="{StaticResource Primary4}"
+                    Effect="{StaticResource DropShadow}">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <Button x:Name="HelpRulesButton" Click="HelpRulesButton_Click">Rules</Button>
+                    <Button x:Name="HelpTutorialButton" Click="HelpTutorialButton_Click">Tutorial</Button>
+                </StackPanel>
+            </Border>
 
             <!--High Score List-->
             <Border x:Name="HighScoreBorder"

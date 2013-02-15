@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <SolidColorBrush x:Key="Complementary1">#FF7600</SolidColorBrush>
+    <SolidColorBrush x:Key="Complementary2">#BF7230</SolidColorBrush>
+    <SolidColorBrush x:Key="Complementary3">#A64D00</SolidColorBrush>
+    <SolidColorBrush x:Key="Complementary4">#FF9840</SolidColorBrush>
+    <SolidColorBrush x:Key="Complementary5">#FFB473</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Primary1">#01939A</SolidColorBrush>
+    <SolidColorBrush x:Key="Primary2">#1D7074</SolidColorBrush>
+    <SolidColorBrush x:Key="Primary3">#006064</SolidColorBrush>
+    <SolidColorBrush x:Key="Primary4">#34C6CD</SolidColorBrush>
+    <SolidColorBrush x:Key="Primary5">#5DC8CD</SolidColorBrush>
+
+    <Color x:Key="ComplementaryColor1">#FF7600</Color>
+    <Color x:Key="ComplementaryColor2">#BF7230</Color>
+    <Color x:Key="ComplementaryColor3">#A64D00</Color>
+    <Color x:Key="ComplementaryColor4">#FF9840</Color>
+    <Color x:Key="ComplementaryColor5">#FFB473</Color>
+
+    <Color x:Key="PrimaryColor1">#01939A</Color>
+    <Color x:Key="PrimaryColor2">#1D7074</Color>
+    <Color x:Key="PrimaryColor3">#006064</Color>
+    <Color x:Key="PrimaryColor4">#34C6CD</Color>
+    <Color x:Key="PrimaryColor5">#5DC8CD</Color>
+
+</ResourceDictionary>

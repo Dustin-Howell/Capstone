@@ -70,6 +70,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ColorSchemes\Inverted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Effects\Effects.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

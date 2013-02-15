@@ -168,5 +168,21 @@ namespace FireAndIce
         {
 
         }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleBorder(HelpBorder, 1, 200d);
+            ToggleButtons(HelpButton, MainMenuButtonPanel);
+        }
+
+        private void HelpRulesButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HelpTutorialButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
