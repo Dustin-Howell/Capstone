@@ -144,7 +144,9 @@ namespace XNAControlGame
         /// </summary>
         private void Input_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            Ray pickRay = GetPickRay();
+            Vector2 winformMouseCoor = new Vector2(e.X, e.Y);
+            Vector2 nineMouseCoor = _EngineNineMouseCoor( winformMouseCoor );
+            Ray pickRay = GetPickRay( nineMouseCoor );
             float maxDistance = float.MaxValue;
             String selectedPeg = "";
             Position pegLocation;
@@ -166,15 +168,10 @@ namespace XNAControlGame
             }
         }
 
-        Ray GetPickRay()
+        Ray GetPickRay( Vector2 nineMouseCoor )
         {
-            MouseState mouseState = Mouse.GetState();
-
-            int mouseX = mouseState.X;
-            int mouseY = mouseState.Y;
-
-            Vector3 nearsource = new Vector3((float)mouseX, (float)mouseY, 0f);
-            Vector3 farsource = new Vector3((float)mouseX, (float)mouseY, 1f);
+            Vector3 nearsource = new Vector3(nineMouseCoor, 0f);
+            Vector3 farsource = new Vector3(nineMouseCoor, 1f);
 
             Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
@@ -190,10 +187,10 @@ namespace XNAControlGame
             return pickRay;
         }
 
-        //private Vector2 _toEngineNineMouseCoor(System.Windows.Forms.MouseEventArgs e)
-        //{
-        //    return new Vector2( e.X 
-        //}
+        private Vector2 _EngineNineMouseCoor( Vector2 winformMouseCoor )
+        {
+            return new Vector2(winformMouseCoor.X - GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - winformMouseCoor.Y);
+        }
 
         /// <summary>
         /// This is called when the game should update itself.
