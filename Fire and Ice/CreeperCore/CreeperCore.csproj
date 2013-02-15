@@ -40,9 +40,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="XNAControl">
-      <HintPath>..\FireAndIce\Assemblies\XNAControl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreeperCore.cs" />
@@ -56,6 +53,10 @@
     <ProjectReference Include="..\XNAControlGame\XNAControlGame\XNAControlGame.csproj">
       <Project>{6B40F385-30BC-4BE7-9E8F-A5E82821C047}</Project>
       <Name>XNAControlGame</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XNAControl\XNAControl.csproj">
+      <Project>{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}</Project>
+      <Name>XNAControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

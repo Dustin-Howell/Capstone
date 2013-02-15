@@ -114,9 +114,6 @@
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
-    <Reference Include="XNAControl">
-      <HintPath>..\..\FireAndIce\Assemblies\XNAControl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Button.cs" />
@@ -136,6 +133,10 @@
     <ProjectReference Include="..\..\Creeper\Creeper.csproj">
       <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
       <Name>Creeper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\XNAControl\XNAControl.csproj">
+      <Project>{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}</Project>
+      <Name>XNAControl</Name>
     </ProjectReference>
     <ProjectReference Include="..\XNAControlGameContent\XNAControlGameContent.contentproj">
       <Name>XNAControlGameContent</Name>
