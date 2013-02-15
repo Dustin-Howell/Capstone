@@ -27,6 +27,7 @@ namespace XNAControlGame
         Matrix _cameraView;
         Matrix _cameraProj;
         Panel GamePanel { get; set; }
+        CreeperBoard board = new CreeperBoard();
 
         public Game1(IntPtr handle, Panel gamePanel, int width, int height) : base(handle, "Content", width, height)
         {
@@ -57,6 +58,37 @@ namespace XNAControlGame
           
 
             return position;
+        }
+
+        private void DrawBoard()
+        {
+            string peglocation;
+            for (int r = 0; r < CreeperBoard.PegRows; r++)
+            {
+                for (int c = 0; c < CreeperBoard.PegRows; c++)
+                {
+                    peglocation = 'p' + r.ToString() + 'x' + c.ToString();
+
+                    if(board.Pegs.At(new Position(r,c)).Color == CreeperColor.White)
+                    {
+                        
+                        _scene.FindName<Nine.Graphics.Model>(peglocation).Visible = true;
+                    }
+                    else if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
+                    {
+                        _scene.FindName<Nine.Graphics.Model>(peglocation).Visible = true;
+                    }
+                    else
+                    {
+                        if (_scene.FindName<Nine.Graphics.Model>(peglocation) != null)
+                        {
+                            _scene.FindName<Nine.Graphics.Model>(peglocation).Visible = false;
+                        }
+                    }
+                }
+            }
+
+            
         }
 
         /// <summary>
@@ -158,6 +190,11 @@ namespace XNAControlGame
             return pickRay;
         }
 
+        //private Vector2 _toEngineNineMouseCoor(System.Windows.Forms.MouseEventArgs e)
+        //{
+        //    return new Vector2( e.X 
+        //}
+
         /// <summary>
         /// This is called when the game should update itself.
         /// </summary>
@@ -176,6 +213,7 @@ namespace XNAControlGame
         protected override void Draw(GameTime gameTime)
         {
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
+            DrawBoard();
             base.Draw(gameTime);
         }
     }
