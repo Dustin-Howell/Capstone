@@ -82,7 +82,7 @@ namespace XNAControlGame
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
-                scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName });
+                scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
             }
 
             base.LoadContent();
@@ -114,10 +114,11 @@ namespace XNAControlGame
             Ray pickRay = GetPickRay();
             float maxDistance = float.MaxValue;
             String selectedPeg = "";
-
-            for (int pegNum = 1; pegNum <= _scene.FindName<Group>("Pegs").Count; pegNum++)
+            Position pegLocation;
+            for (int pegNum = 1; pegNum <= 45; pegNum++)
             {
-                String currentPeg = 'p' + pegNum.ToString();
+                pegLocation = NumberToPosition(pegNum);
+                String currentPeg = 'p' + pegLocation.Row.ToString() + 'x' + pegLocation.Column.ToString();
                 //Need to make new boudingbox!!!
                 BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
                     _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
