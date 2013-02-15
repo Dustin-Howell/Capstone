@@ -5,6 +5,9 @@ using System.Text;
 using Creeper;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace CreeperAI
 {
@@ -13,6 +16,7 @@ namespace CreeperAI
         //debug variables\\
         private bool _reportTime = true;
         private bool _sort = true;
+        private bool _parallel = true;
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
@@ -22,6 +26,8 @@ namespace CreeperAI
         private double _materialWeight;
         private double _pathToVictoryWeight;
         private double _victoryWeight;
+
+        private static Random _Random = new Random();
 
         public CreeperAI(double territoryWeight, double materialWeight, double victoryPathWeight, double victoryWeight)
         {
@@ -40,51 +46,29 @@ namespace CreeperAI
             if (_reportTime) stopwatch.Start();
 
             Move bestMove = new Move();
-            bestMove = GetAlphaBetaNegaMaxMove(_board);
+            if (_parallel)
+            {
+                bestMove = GetAlphaBetaNegaMaxMove(board);
+            }
+            else
+            {
+                bestMove = GetAlphaBetaNegaMaxMoveSequential(_board);
+            }
 
             if (_reportTime)
             {
                 stopwatch.Stop();
                 System.Console.WriteLine("Seconds elapsed: {0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
-                using (StreamWriter file = new StreamWriter("Times.log", true))
+                using (StreamWriter file = new StreamWriter("Times.csv", true))
                 {
-                    file.WriteLine("Seconds elapsed: {0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
+                    file.WriteLine("{0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
                 }
             }
 
             return bestMove;
         }
 
-        private Move GetAlphaBetaMiniMaxMove(AICreeperBoard board)
-        {
-            IEnumerable<Move> possibleMoves = board.AllPossibleMoves(_turnColor)
-                .OrderByDescending(x =>
-                {
-                    board.PushMove(x);
-                    double score = ScoreBoard(board, _turnColor);
-                    board.PopMove();
-                    return score;
-                }).ToList();
-
-            double max = Double.MinValue;
-            Move bestMove = new Move();
-
-            foreach (Move move in possibleMoves)
-            {
-                board.PushMove(move);
-                double moveScore = ScoreAlphaBetaMiniMaxMove(board, _turnColor.Opposite(), Double.NegativeInfinity, Double.PositiveInfinity, _MiniMaxDepth - 1);
-                board.PopMove();
-                if (moveScore > max)
-                {
-                    max = moveScore;
-                    bestMove = move;
-                }
-            }
-
-            return bestMove;
-        }
-
-        Move GetAlphaBetaNegaMaxMove(AICreeperBoard board)
+        Move GetAlphaBetaNegaMaxMoveSequential(AICreeperBoard board)
         {
             Move bestMove = new Move();
 
@@ -105,6 +89,43 @@ namespace CreeperAI
                 {
                     best = score;
                     bestMove = moves[i];
+                }
+            }
+
+            return bestMove;
+        }
+
+        Move GetAlphaBetaNegaMaxMove(CreeperBoard board)
+        {
+            Move bestMove = new Move();
+
+            double best = Double.NegativeInfinity;
+            double alpha = Double.NegativeInfinity;
+            double beta = Double.PositiveInfinity;
+
+            // Enumerate the children of the current node
+            Move[] moves = new AICreeperBoard(board).AllPossibleMoves(_turnColor);
+
+            Dictionary<Move, double> moveScores = new Dictionary<Move, double>();
+
+            Parallel.ForEach(moves, move =>
+                {
+                    // If you have weird bugs, maybe use IDisposable?
+                    AICreeperBoard currentBoard = new AICreeperBoard(board);
+                    currentBoard.PushMove(move);
+                    double score = -ScoreAlphaBetaNegaMaxMove(currentBoard, _turnColor.Opposite(), -beta, -Math.Max(alpha, best), _MiniMaxDepth - 1);
+                    lock (this)
+                    {
+                        moveScores.Add(move, score);
+                    }
+                });
+
+            bestMove = moveScores.First().Key;
+            foreach (KeyValuePair<Move, double> move in moveScores)
+            {
+                if (moveScores[move.Key] > moveScores[bestMove])
+                {
+                    bestMove = move.Key;
                 }
             }
 

@@ -25,12 +25,14 @@ namespace GeneticOptimizer
             _victoryWeight = victoryWeight;
         }
 
-        public override CreeperGene CrossOver(CreeperGene crossOverWith)
+        public override Gene CrossOver(Gene crossOverWith)
         {
-            return new CreeperGene((_materialWeight + crossOverWith._materialWeight) / 2,
-                                    (_territorialWeight + crossOverWith._territorialWeight) / 2,
-                                    (_pathWeight + crossOverWith._pathWeight) / 2,
-                                    (_victoryWeight + crossOverWith._victoryWeight) / 2);
+            CreeperGene crossOver = (CreeperGene)crossOverWith;
+
+            return new CreeperGene((_materialWeight + crossOver._materialWeight) / 2,
+                                    (_territorialWeight + crossOver._territorialWeight) / 2,
+                                    (_pathWeight + crossOver._pathWeight) / 2,
+                                    (_victoryWeight + crossOver._victoryWeight) / 2);
         }
 
         public override double Evaluate()
