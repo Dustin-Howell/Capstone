@@ -93,7 +93,7 @@ namespace XNAControl
             m_graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(PreparingDeviceSettings);
 
             // Now set the resolution and create the graphics device manually
-            ChangeGraphics(1366, 680);
+            ChangeGraphics(width, height);
 
             Content.RootDirectory = contentRoot;
 
