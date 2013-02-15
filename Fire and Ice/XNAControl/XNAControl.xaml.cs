@@ -52,20 +52,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
 
 namespace XNAControl
 {
     /// <summary>
     /// Interaktionslogik für UserControl1.xaml
     /// </summary>
-    public partial class UserControl1 : UserControl
+    public partial class XNAUserControl : System.Windows.Controls.UserControl
     {
         public IntPtr Handle
         {
             get { return GamePanel.Handle; }
         }
 
-        public UserControl1()
+        public System.Windows.Forms.Panel Panel { get { return GamePanel; } }
+
+        public XNAUserControl()
         {
             InitializeComponent();
         }

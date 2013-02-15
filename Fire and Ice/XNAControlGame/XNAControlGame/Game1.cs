@@ -12,24 +12,31 @@ using Nine.Graphics.ParticleEffects;
 using Nine.Graphics.PostEffects;
 using Nine.Graphics.Primitives;
 using Nine.Physics;
+using System.Windows.Forms;
 using Creeper;
 
 namespace XNAControlGame
 {
     public class Game1 : XNAControl.XNAControlGame
     {
-        Position startPosition = new Position(-1, -1);
-        Position endPostion = new Position(-1, -1);
-        Scene scene;
-        Input input;
-        SpriteFont font;
-        GraphicsDeviceManager graphics;
-        Matrix cameraView;
-        Matrix cameraProj;
+        Position _startPosition = new Position(-1, -1);
+        Position _endPostion = new Position(-1, -1);
+        Scene _scene;
+        Input _input;
+        SpriteFont _font;
+        GraphicsDeviceManager _graphics;
+        Matrix _cameraView;
+        Matrix _cameraProj;
+        Panel GamePanel { get; set; }
 
-        public Game1(IntPtr handle, int width, int height) : base(handle, "Content", width, height) { }
+        public Game1(IntPtr handle, Panel gamePanel, int width, int height) : base(handle, "Content", width, height)
+        {
+            Content = new ContentLoader(Services);
+            GamePanel = gamePanel;
 
 
+            GamePanel.MouseClick += new MouseEventHandler(Input_MouseDown);
+        }
 
         static public Position NumberToPosition(int number)
         {
@@ -59,16 +66,8 @@ namespace XNAControlGame
         /// </summary>
         protected override void LoadContent()
         {
-           
-            Components.Add(new InputComponent(Window.Handle));
-
-            input = new Input();
-            input.MouseDown += new EventHandler<MouseEventArgs>(Input_MouseDown);
-
-            // Load models from the models folder
-            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/tank");
             // Load a scene from a content file
-            scene = Content.Load<Scene>("Scene1");
+            _scene = Content.Load<Scene>("Scene1");
 
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = scene.FindName<Sprite>("boardImage").Texture.Height;
@@ -99,29 +98,29 @@ namespace XNAControlGame
             double column = clickLocation.Column;
             double row = clickLocation.Row;
 
-            column = Math.Round((-(column / (scene.FindName<Sprite>("boardImage").Texture.Width / 6)) + 3));
-            row = Math.Round((row / (scene.FindName<Sprite>("boardImage").Texture.Height / 6)) + 3);
+            column = Math.Round((-(column / (_scene.FindName<Sprite>("boardImage").Texture.Width / 6)) + 3));
+            row = Math.Round((row / (_scene.FindName<Sprite>("boardImage").Texture.Height / 6)) + 3);
 
             //Returns the row, column of the peg selected.
-            return new Position(-(clickLocation.Column / (scene.FindName<Sprite>("boardImage").Texture.Width / 6)) + 3,
-                clickLocation.Row / (scene.FindName<Sprite>("boardImage").Texture.Height / 6) + 3);
+            return new Position(-(clickLocation.Column / (_scene.FindName<Sprite>("boardImage").Texture.Width / 6)) + 3,
+                clickLocation.Row / (_scene.FindName<Sprite>("boardImage").Texture.Height / 6) + 3);
         }
 
         /// <summary>
         /// Handle mouse input events
         /// </summary>
-        private void Input_MouseDown(object sender, MouseEventArgs e)
+        private void Input_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Ray pickRay = GetPickRay();
             float maxDistance = float.MaxValue;
             String selectedPeg = "";
 
-            for (int pegNum = 1; pegNum <= scene.FindName<Group>("Pegs").Count; pegNum++)
+            for (int pegNum = 1; pegNum <= _scene.FindName<Group>("Pegs").Count; pegNum++)
             {
                 String currentPeg = 'p' + pegNum.ToString();
                 //Need to make new boudingbox!!!
-                BoundingBox modelIntersect = new BoundingBox(scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
-                    scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
+                BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
+                    _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
                 Nullable<float> intersect = pickRay.Intersects(modelIntersect);
                 if (intersect.HasValue == true)
                 {
@@ -145,9 +144,9 @@ namespace XNAControlGame
 
             Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
-            Vector3 nearPoint = graphics.GraphicsDevice.Viewport.Unproject(nearsource, cameraProj, cameraView, world);
+            Vector3 nearPoint = _graphics.GraphicsDevice.Viewport.Unproject(nearsource, _cameraProj, _cameraView, world);
 
-            Vector3 farPoint = graphics.GraphicsDevice.Viewport.Unproject(farsource, cameraProj, cameraView, world);
+            Vector3 farPoint = _graphics.GraphicsDevice.Viewport.Unproject(farsource, _cameraProj, _cameraView, world);
 
             // Create a ray from the near clip plane to the far clip plane.
             Vector3 direction = farPoint - nearPoint;
@@ -162,10 +161,10 @@ namespace XNAControlGame
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
-            scene.Update(gameTime.ElapsedGameTime);
-            scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
-            cameraView = scene.Find<FreeCamera>().View;
-            cameraProj = scene.Find<FreeCamera>().Projection;
+            _scene.Update(gameTime.ElapsedGameTime);
+            _scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
+            _cameraView = _scene.Find<FreeCamera>().View;
+            _cameraProj = _scene.Find<FreeCamera>().Projection;
             base.Update(gameTime);
         }
 
@@ -174,7 +173,7 @@ namespace XNAControlGame
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
+            _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             base.Draw(gameTime);
         }
     }

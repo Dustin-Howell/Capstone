@@ -37,7 +37,7 @@
         <Grid Name="GameGrid" 
               Style="{StaticResource GameGridStyle}">
             <Border BorderBrush="White" BorderThickness="1"/>
-            <xna:UserControl1 x:Name="xnaControl" 
+            <xna:XNAUserControl x:Name="xnaControl" 
                               Height="600" 
                               Width="800" 
                               VerticalAlignment="Center" 
