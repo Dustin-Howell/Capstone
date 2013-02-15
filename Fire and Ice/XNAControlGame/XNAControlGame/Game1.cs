@@ -24,7 +24,6 @@ namespace XNAControlGame
         Scene _scene;
         Input _input;
         SpriteFont _font;
-        GraphicsDeviceManager _graphics;
         Matrix _cameraView;
         Matrix _cameraProj;
         Panel GamePanel { get; set; }
@@ -66,12 +65,14 @@ namespace XNAControlGame
         /// </summary>
         protected override void LoadContent()
         {
+            // Load the peg model
+            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/tank");
             // Load a scene from a content file
             _scene = Content.Load<Scene>("Scene1");
 
             float boardHeight, boardWidth, squareWidth, squareHeight;
-            boardHeight = scene.FindName<Sprite>("boardImage").Texture.Height;
-            boardWidth = scene.FindName<Sprite>("boardImage").Texture.Width;
+            boardHeight = _scene.FindName<Sprite>("boardImage").Texture.Height;
+            boardWidth = _scene.FindName<Sprite>("boardImage").Texture.Width;
             squareWidth = boardWidth /6;
             squareHeight = boardHeight / 6;
             Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
@@ -82,7 +83,7 @@ namespace XNAControlGame
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
-                scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
             }
 
             base.LoadContent();
@@ -145,9 +146,9 @@ namespace XNAControlGame
 
             Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
-            Vector3 nearPoint = _graphics.GraphicsDevice.Viewport.Unproject(nearsource, _cameraProj, _cameraView, world);
+            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource, _cameraProj, _cameraView, world);
 
-            Vector3 farPoint = _graphics.GraphicsDevice.Viewport.Unproject(farsource, _cameraProj, _cameraView, world);
+            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, _cameraProj, _cameraView, world);
 
             // Create a ray from the near clip plane to the far clip plane.
             Vector3 direction = farPoint - nearPoint;
