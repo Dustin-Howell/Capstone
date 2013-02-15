@@ -73,16 +73,17 @@ namespace XNAControlGame
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = scene.FindName<Sprite>("boardImage").Texture.Height;
             boardWidth = scene.FindName<Sprite>("boardImage").Texture.Width;
-            squareWidth = boardWidth / 7;
-            squareHeight = boardHeight / 7;
+            squareWidth = boardWidth /6;
+            squareHeight = boardHeight / 6;
             Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
+            Position pegPosition;
 
             for (int pegNumber = 1; pegNumber < 46; pegNumber++)
             {
-                Position pegPosition = NumberToPosition(pegNumber);
+                pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
-                scene.Add( new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateTranslation(pegCoordinates) * Matrix.CreateScale(.02f, .02f, .02f), Name = pegName } );
+                scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName });
             }
 
             base.LoadContent();

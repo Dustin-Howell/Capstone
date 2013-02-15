@@ -2,7 +2,7 @@
     
     <FreeCamera Position="0,0, 500" Speed="200" Name="theCamera" /> 
     
-    <Sprite Texture="{ContentReference Assets/board}" Name="boardImage" Position="0, 0" />
+    <Sprite Texture="{ContentReference Assets/boardFixed}" Name="boardImage" Position="0, 0" />
     
     <!--<Model Source="{ContentReference Model/tank}" Name="middle" Transform.Position="0, 0, 0" Transform.Scale="0.02, 0.02, 0.02" />-->
     
