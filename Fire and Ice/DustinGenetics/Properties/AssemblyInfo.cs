@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GeneticOptimizer")]
+[assembly: AssemblyTitle("DustinGenetics")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GeneticOptimizer")]
+[assembly: AssemblyProduct("DustinGenetics")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d39e17ac-5bf9-42ec-a78a-0817ec411636")]
+[assembly: Guid("6c301047-b461-4fc2-b5e9-8c23ae60e562")]
 
 // Version information for an assembly consists of the following four values:
 //

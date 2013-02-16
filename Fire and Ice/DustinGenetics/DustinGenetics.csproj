@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A09FC823-9A49-4C56-A067-32FE27A4C0F4}</ProjectGuid>
+    <ProjectGuid>{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GeneticOptimizer</RootNamespace>
-    <AssemblyName>GeneticOptimizer</AssemblyName>
+    <RootNamespace>DustinGenetics</RootNamespace>
+    <AssemblyName>DustinGenetics</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,22 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AnticipatingMinds.ArtificialMind.GeneticAlgorithms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ab33801829156559">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\AnticipatingMinds.ArtificialMind.GeneticAlgorithms.dll</HintPath>
-    </Reference>
-    <Reference Include="AnticipatingMinds.ArtificialMind.NeuralNets, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ab33801829156559">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\AnticipatingMinds.ArtificialMind.NeuralNets.dll</HintPath>
-    </Reference>
-    <Reference Include="AnticipatingMinds.ArtificialMind.SearchAlgorithms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ab33801829156559">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\AnticipatingMinds.ArtificialMind.SearchAlgorithms.dll</HintPath>
-    </Reference>
-    <Reference Include="AnticipatingMinds.ArtificialMind.Visualization, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ab33801829156559">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\AnticipatingMinds.ArtificialMind.Visualization.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -59,18 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreeperGene.cs" />
-    <Compile Include="CreeperGenerationalGA.cs" />
-    <Compile Include="CreeperGeneticAlgorithm.cs" />
-    <Compile Include="CreeperPopulation.cs" />
+    <Compile Include="Gene.cs" />
+    <Compile Include="Population.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assemblies\AnticipatingMinds.ArtificialMind.GeneticAlgorithms.dll" />
-    <Content Include="Assemblies\AnticipatingMinds.ArtificialMind.NeuralNets.dll" />
-    <Content Include="Assemblies\AnticipatingMinds.ArtificialMind.SearchAlgorithms.dll" />
-    <Content Include="Assemblies\AnticipatingMinds.ArtificialMind.Visualization.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CreeperAI\CreeperAI.csproj">

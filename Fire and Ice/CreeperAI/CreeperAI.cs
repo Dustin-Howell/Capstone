@@ -14,13 +14,13 @@ namespace CreeperAI
     public class CreeperAI
     {
         //debug variables\\
-        private bool _reportTime = true;
+        private bool _reportTime = false;
         private bool _sort = true;
         private bool _parallel = true;
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 6;
+        private int _MiniMaxDepth = 3;
 
         private double _territorialWeight;
         private double _materialWeight;
