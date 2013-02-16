@@ -145,8 +145,7 @@ namespace XNAControlGame
         private void Input_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Vector2 winformMouseCoor = new Vector2(e.X, e.Y);
-            Vector2 nineMouseCoor = _EngineNineMouseCoor( winformMouseCoor );
-            Ray pickRay = GetPickRay( nineMouseCoor );
+            Ray pickRay = GetPickRay( winformMouseCoor );
             float maxDistance = float.MaxValue;
             String selectedPeg = "";
             Position pegLocation;
@@ -185,11 +184,6 @@ namespace XNAControlGame
             Ray pickRay = new Ray(nearPoint, direction);
 
             return pickRay;
-        }
-
-        private Vector2 _EngineNineMouseCoor( Vector2 winformMouseCoor )
-        {
-            return new Vector2(winformMouseCoor.X - GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - winformMouseCoor.Y);
         }
 
         /// <summary>
