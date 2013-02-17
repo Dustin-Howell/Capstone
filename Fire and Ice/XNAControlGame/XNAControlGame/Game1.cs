@@ -30,6 +30,9 @@ namespace XNAControlGame
         CreeperBoard board = new CreeperBoard();
         bool SecondClick = false;
         CreeperColor PlayerTurn = CreeperColor.White;
+        Texture2D _blankTile;
+        Texture2D _whiteTile;
+        Texture2D _blackTile;
 
 
         public Game1(IntPtr handle, Panel gamePanel, int width, int height) : base(handle, "Content", width, height)
@@ -69,26 +72,51 @@ namespace XNAControlGame
         /// </summary>
         private void DrawBoard()
         {
-            string peglocation;
+            string location;
+            
             for (int r = 0; r < CreeperBoard.PegRows; r++)
             {
                 for (int c = 0; c < CreeperBoard.PegRows; c++)
                 {
-                    peglocation = 'p' + r.ToString() + 'x' + c.ToString();
+                    location = 'p' + r.ToString() + 'x' + c.ToString();
 
                     if(board.Pegs.At(new Position(r,c)).Color == CreeperColor.White)
                     {
-                        _scene.FindName<Nine.Graphics.Model>(peglocation).Visible = true;
+                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
                     }
                     else if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
                     {
-                        _scene.FindName<Nine.Graphics.Model>(peglocation).Visible = true;
+                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
                     }
                     else
                     {
-                        if (_scene.FindName<Nine.Graphics.Model>(peglocation) != null)
+                        if (_scene.FindName<Nine.Graphics.Model>(location) != null)
                         {
-                            _scene.FindName<Nine.Graphics.Model>(peglocation).Visible = false;
+                            _scene.FindName<Nine.Graphics.Model>(location).Visible = false;
+                        }
+                    }
+                }
+            }
+
+            for (int r = 0; r < CreeperBoard.TileRows; r++)
+            {
+                for (int c = 0; c < CreeperBoard.TileRows; c++)
+                {
+                    location = 't' + r.ToString() + 'x' + c.ToString();
+
+                    if (board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
+                    {
+                        _scene.FindName<Sprite>(location).Texture = _whiteTile;
+                    }
+                    else if (board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
+                    {
+                        _scene.FindName<Sprite>(location).Texture = _blackTile;
+                    }
+                    else
+                    {
+                        if (_scene.FindName<Sprite>(location) != null)
+                        {
+                            _scene.FindName<Sprite>(location).Texture = _blankTile;
                         }
                     }
                 }
@@ -103,6 +131,13 @@ namespace XNAControlGame
         {
             // Load the peg model
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/tank");
+            // Load the Tile sprite.
+            Sprite tile = new Sprite(GraphicsDevice);
+            
+            _blankTile = Content.Load<Texture2D>("square");
+            _whiteTile = Content.Load<Texture2D>("whiteTile");
+            _blackTile = Content.Load<Texture2D>("blackTile");
+
             // Load a scene from a content file
             _scene = Content.Load<Scene>("Scene1");
 
@@ -125,6 +160,22 @@ namespace XNAControlGame
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
             }
+            //Place a transparent sprite for tiles in every possible tile position.
+            startCoordinates += new Vector3(squareWidth / 2, -(squareHeight / 2), 0);
+            for (int tileNumber = 0; tileNumber < 35; tileNumber++)
+            {
+                Position tilePosition = CreeperUtility.NumberToPosition(tileNumber);
+                String tileName = 't' + tilePosition.Row.ToString() + 'x' + tilePosition.Column.ToString();
+                tile.Position = new Vector2(startCoordinates.X + squareWidth * tilePosition.Column, startCoordinates.Y - squareHeight * tilePosition.Row);
+                tile.ZOrder = 1;
+                tile.Name = tileName;
+                tile.Texture = _blankTile;
+                _scene.Add(tile);
+                tile = new Sprite(GraphicsDevice);
+            }
+
+
+            
             base.LoadContent();
         }
 
