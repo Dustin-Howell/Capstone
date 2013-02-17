@@ -28,6 +28,9 @@ namespace XNAControlGame
         Matrix _cameraProj;
         Panel GamePanel { get; set; }
         CreeperBoard board = new CreeperBoard();
+        bool SecondClick = false;
+        CreeperColor PlayerTurn = CreeperColor.White;
+
 
         public Game1(IntPtr handle, Panel gamePanel, int width, int height) : base(handle, "Content", width, height)
         {
@@ -112,6 +115,7 @@ namespace XNAControlGame
             Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
             Position pegPosition;
 
+            _font = Content.Load<SpriteFont>("defaultFont");
             //Create a Nine Model peg with a XNA model, set its properties, and place it in its correct location relative to the middle of the board.
             //Do this for ever possible peg location on the board.
             for (int pegNumber = 1; pegNumber < 46; pegNumber++)
@@ -129,6 +133,7 @@ namespace XNAControlGame
         /// </summary>
         private void Input_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+            
             //Create a ray fired from the point of click point.
             Ray pickRay = GetSelectionRay( new Vector2( e.X, e.Y ) );
             float maxDistance = float.MaxValue;
@@ -143,12 +148,62 @@ namespace XNAControlGame
                 BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
                     _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
                 Nullable<float> intersect = pickRay.Intersects(modelIntersect);
-                if (intersect.HasValue == true)
+
+                //Calculates a move
+                if (!SecondClick)
                 {
-                    if (intersect.Value < maxDistance)
+                    if (intersect.HasValue == true)
                     {
-                        selectedPeg = currentPeg;
+                        if (intersect.Value < maxDistance)
+                        {
+                            selectedPeg = currentPeg;
+                            _startPosition = new Position(Convert.ToInt32(currentPeg[1] -'0'), Convert.ToInt32(currentPeg[3]-'0'));
+                            SecondClick = true;
+                        }
                     }
+                }
+                else
+                {
+                    if (intersect.HasValue == true)
+                    {
+                        if (intersect.Value < maxDistance)
+                        {
+                            //selectedPeg = currentPeg;
+                            _endPostion = new Position(Convert.ToInt32(currentPeg[1] -'0'), Convert.ToInt32(currentPeg[3] -'0'));
+                        }
+                        else
+                        {
+                            _startPosition = new Position(-1,-1);
+                            
+                        }
+                        SecondClick = false;
+                    }
+                }
+
+                selectedPeg = 'p' + _startPosition.Row.ToString() + 'x' + _startPosition.Column.ToString();
+                if (_endPostion.Row != -1)
+                {
+
+                    Move move = new Move (_startPosition,_endPostion, PlayerTurn);
+
+                    if (_scene.FindName<Nine.Graphics.Model>(selectedPeg).Visible == true)
+                    {
+                        if (board.Move(move))
+                        {
+                            if (PlayerTurn == CreeperColor.White)
+                            {
+                                PlayerTurn = CreeperColor.Black;
+                            }
+                            else
+                            {
+                                PlayerTurn = CreeperColor.White;
+                            }
+                        }
+                    }
+
+                    _startPosition = new Position(-1, -1);
+                    _endPostion = new Position(-1, -1);
+
                 }
             }
         }
@@ -194,6 +249,16 @@ namespace XNAControlGame
         {
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             DrawBoard();
+
+
+
+            //Test String drawing
+            SpriteBatch spritebatch = new SpriteBatch(GraphicsDevice);
+            spritebatch.Begin();
+            spritebatch.DrawString(_font, "Player Turn = " + PlayerTurn.ToString(), new Vector2(0, 0), Color.Black);
+
+            spritebatch.End();
+                
             base.Draw(gameTime);
         }
     }
