@@ -28,6 +28,7 @@ namespace XNAControlGame
         Matrix _cameraProj;
         Panel GamePanel { get; set; }
         CreeperBoard board = new CreeperBoard();
+        Vector3 _modelScale = new Vector3( 6, 6, 6 );
         bool SecondClick = false;
         CreeperColor PlayerTurn = CreeperColor.White;
         Texture2D _blankTile;
@@ -130,7 +131,7 @@ namespace XNAControlGame
         protected override void LoadContent()
         {
             // Load the peg model
-            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/tank");
+            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/sphere");
             // Load the Tile sprite.
             Sprite tile = new Sprite(GraphicsDevice);
             
@@ -158,7 +159,7 @@ namespace XNAControlGame
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
-                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale( _modelScale ) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
             }
             //Place a transparent sprite for tiles in every possible tile position.
             startCoordinates += new Vector3(squareWidth / 2, -(squareHeight / 2), 0);
