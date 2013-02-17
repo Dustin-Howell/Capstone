@@ -38,6 +38,9 @@ namespace XNAControlGame
             GamePanel.MouseClick += new MouseEventHandler(Input_MouseDown);
         }
 
+        /// <summary>
+        /// Convert a peg number a board position (row and column).
+        /// </summary>
         static public Position NumberToPosition(int number)
         {
             Position position = new Position();
@@ -55,11 +58,12 @@ namespace XNAControlGame
             position.Row = (int)number / CreeperBoard.PegRows;
             position.Column = number % CreeperBoard.PegRows;
            
-          
-
             return position;
         }
 
+        /// <summary>
+        /// Determine what the display properties of each board location should and set them.
+        /// </summary>
         private void DrawBoard()
         {
             string peglocation;
@@ -71,7 +75,6 @@ namespace XNAControlGame
 
                     if(board.Pegs.At(new Position(r,c)).Color == CreeperColor.White)
                     {
-                        
                         _scene.FindName<Nine.Graphics.Model>(peglocation).Visible = true;
                     }
                     else if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
@@ -87,8 +90,6 @@ namespace XNAControlGame
                     }
                 }
             }
-
-            
         }
 
         /// <summary>
@@ -102,6 +103,7 @@ namespace XNAControlGame
             // Load a scene from a content file
             _scene = Content.Load<Scene>("Scene1");
 
+            //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = _scene.FindName<Sprite>("boardImage").Texture.Height;
             boardWidth = _scene.FindName<Sprite>("boardImage").Texture.Width;
@@ -110,6 +112,8 @@ namespace XNAControlGame
             Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
             Position pegPosition;
 
+            //Create a Nine Model peg with a XNA model, set its properties, and place it in its correct location relative to the middle of the board.
+            //Do this for ever possible peg location on the board.
             for (int pegNumber = 1; pegNumber < 46; pegNumber++)
             {
                 pegPosition = NumberToPosition(pegNumber);
@@ -117,26 +121,7 @@ namespace XNAControlGame
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(.02f, .02f, .02f) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
             }
-
             base.LoadContent();
-        }
-
-        private int DistanceBetween(Position start, Position end)
-        {
-            return (int)Math.Sqrt((Math.Pow((start.Row - end.Row), 2) + Math.Pow((start.Column - end.Column), 2)));
-        }
-
-        private Position toBoardPosition(Position clickLocation)
-        {
-            double column = clickLocation.Column;
-            double row = clickLocation.Row;
-
-            column = Math.Round((-(column / (_scene.FindName<Sprite>("boardImage").Texture.Width / 6)) + 3));
-            row = Math.Round((row / (_scene.FindName<Sprite>("boardImage").Texture.Height / 6)) + 3);
-
-            //Returns the row, column of the peg selected.
-            return new Position(-(clickLocation.Column / (_scene.FindName<Sprite>("boardImage").Texture.Width / 6)) + 3,
-                clickLocation.Row / (_scene.FindName<Sprite>("boardImage").Texture.Height / 6) + 3);
         }
 
         /// <summary>
@@ -144,16 +129,17 @@ namespace XNAControlGame
         /// </summary>
         private void Input_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            Vector2 winformMouseCoor = new Vector2(e.X, e.Y);
-            Ray pickRay = GetPickRay( winformMouseCoor );
+            //Create a ray fired from the point of click point.
+            Ray pickRay = GetSelectionRay( new Vector2( e.X, e.Y ) );
             float maxDistance = float.MaxValue;
+
+            //Test all 45 locations to see if one was click. If one was, determine which one was clicked.
             String selectedPeg = "";
             Position pegLocation;
             for (int pegNum = 1; pegNum <= 45; pegNum++)
             {
                 pegLocation = NumberToPosition(pegNum);
                 String currentPeg = 'p' + pegLocation.Row.ToString() + 'x' + pegLocation.Column.ToString();
-                //Need to make new boudingbox!!!
                 BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
                     _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
                 Nullable<float> intersect = pickRay.Intersects(modelIntersect);
@@ -167,10 +153,13 @@ namespace XNAControlGame
             }
         }
 
-        Ray GetPickRay( Vector2 nineMouseCoor )
+        /// <summary>
+        /// Returns a ray fired from the click point to test for intersection with a model.
+        /// </summary>
+        Ray GetSelectionRay( Vector2 mouseCoor )
         {
-            Vector3 nearsource = new Vector3(nineMouseCoor, 0f);
-            Vector3 farsource = new Vector3(nineMouseCoor, 1f);
+            Vector3 nearsource = new Vector3(mouseCoor, 0f);
+            Vector3 farsource = new Vector3(mouseCoor, 1f);
 
             Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
