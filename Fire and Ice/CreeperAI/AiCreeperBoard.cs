@@ -598,6 +598,8 @@ namespace CreeperAI
             Position end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
             AIBoardNode winTile1 = TileBoard[end.Row - 1, end.Column];
             AIBoardNode winTile2 = TileBoard[end.Row, IsValidPosition(end.Row, end.Column - 1, PieceType.Tile)? end.Column - 1: end.Column + 1];
+            endTiles.Add(winTile1);
+            endTiles.Add(winTile2);
 
             if (!endTiles.Any())
             {
