@@ -142,9 +142,6 @@ namespace XNAControlGame
         {
             // Load the peg model
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/sphere");
-            _blackPeg = Content.Load<Texture2D>("Textures/HexesSpecular");
-            _whitePeg = Content.Load<Texture2D>("Textures/Hexes");
-            _hightlightPeg = Content.Load<Texture2D>("Textures/Wood");
             // Load the Tile sprite.
             Sprite tile = new Sprite(GraphicsDevice);
             
