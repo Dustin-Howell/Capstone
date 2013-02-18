@@ -27,13 +27,12 @@ namespace FireAndIce
 
             if (_XNAGame)
             {
-                this.Content = new GameControl();
+                this.Content = new GameControl(PlayerType.Human, PlayerType.Human);
             }
             else if (_debug)
             {
                 this.Content = new MainMenuScreen(this);
             }
-
             else
             {
                 this.Content = new SplashScreen(this);

@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 using System.Windows.Controls.Primitives;
+using CreeperCore;
 
 namespace FireAndIce
 {
@@ -151,7 +152,7 @@ namespace FireAndIce
 
         private void PlayLocalHumanGameButton_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.Content = new GameControl();
+            _mainWindow.Content = new GameControl(PlayerType.Human, PlayerType.Human);
         }
 
         private void PlayNetworkedHumanGameButton_Click(object sender, RoutedEventArgs e)
@@ -166,7 +167,7 @@ namespace FireAndIce
 
         private void PlayExpertComputerButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _mainWindow.Content = new GameControl(PlayerType.Human, PlayerType.AI);
         }
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)

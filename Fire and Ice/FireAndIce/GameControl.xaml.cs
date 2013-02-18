@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Creeper;
+using CreeperCore;
 
 namespace FireAndIce
 {
@@ -24,15 +25,13 @@ namespace FireAndIce
         protected CreeperBoard _board;
         protected XNAControlGame.Game1 _xnaGame;
 
-        public GameControl()
+        public GameControl(PlayerType playerType, PlayerType opponentType)
         {
             InitializeComponent();
 
-
-
             _xnaGame = new XNAControlGame.Game1(xnaControl.Handle, 800, 600);
             _gameCore = new CreeperCore.CreeperCore(_xnaGame);
-            _gameCore.Run();
+            _gameCore.StartGame(playerType, opponentType);
         }
     }
 }

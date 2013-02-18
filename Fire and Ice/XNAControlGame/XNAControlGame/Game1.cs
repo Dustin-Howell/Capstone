@@ -26,7 +26,7 @@ namespace XNAControlGame
         SpriteFont _font;
         Matrix _cameraView;
         Matrix _cameraProj;
-        CreeperBoard board = new CreeperBoard();
+        public CreeperBoard Board { get; set; }
         Vector3 _modelScale = new Vector3( 6, 6, 6 );
         bool _secondClick = false;
         CreeperColor PlayerTurn = CreeperColor.White;
@@ -36,16 +36,18 @@ namespace XNAControlGame
         private Texture2D _whitePeg;
         private Texture2D _blackPeg;
         private Texture2D _hightlightPeg;
+        private bool _isMyTurnToMakeAMove = false;
+        public Move LastMoveMade { get; private set; }
 
 
-        public Game1(IntPtr handle, int width, int height) : base(handle, "Content", width, height)
+        public Move GetMove(CreeperColor currentTurn)
         {
-            Content = new ContentLoader(Services);
- 
-            Components.Add(new InputComponent(handle));
-            _input = new Input();
+            _isMyTurnToMakeAMove = true;
+            PlayerTurn = currentTurn;
 
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>(Input_MouseDown);
+            while (_isMyTurnToMakeAMove) ;
+
+            return LastMoveMade;
         }
 
         /// <summary>
@@ -67,72 +69,21 @@ namespace XNAControlGame
 
             position.Row = (int)number / CreeperBoard.PegRows;
             position.Column = number % CreeperBoard.PegRows;
-           
+
             return position;
         }
 
-        /// <summary>
-        /// Determine what the display properties of each board location should and set them.
-        /// </summary>
-        private void DrawBoard()
+        public Game1(IntPtr handle, int width, int height) : base(handle, "Content", width, height)
         {
-            string location;
+            Content = new ContentLoader(Services);
+ 
+            Components.Add(new InputComponent(handle));
+            _input = new Input();
 
-            BasicMaterial black = new BasicMaterial(GraphicsDevice);
-            black.DiffuseColor = new Vector3(0, 0, 0);
-            BasicMaterial white = new BasicMaterial(GraphicsDevice);
-            white.DiffuseColor = new Vector3(255, 255, 255);
-
-            for (int r = 0; r < CreeperBoard.PegRows; r++)
-            {
-                for (int c = 0; c < CreeperBoard.PegRows; c++)
-                {
-                    location = 'p' + r.ToString() + 'x' + c.ToString();
-
-                    if(board.Pegs.At(new Position(r,c)).Color == CreeperColor.White)
-                    {
-                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                        _scene.FindName<Nine.Graphics.Model>(location).Material = white;
-                    }
-                    else if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
-                    {
-                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                        _scene.FindName<Nine.Graphics.Model>(location).Material = black;
-                    }
-                    else
-                    {
-                        if (_scene.FindName<Nine.Graphics.Model>(location) != null)
-                        {
-                            _scene.FindName<Nine.Graphics.Model>(location).Visible = false;
-                        }
-                    }
-                }
-            }
-
-            for (int r = 0; r < CreeperBoard.TileRows; r++)
-            {
-                for (int c = 0; c < CreeperBoard.TileRows; c++)
-                {
-                    location = 't' + r.ToString() + 'x' + c.ToString();
-
-                    if (board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
-                    {
-                        _scene.FindName<Sprite>(location).Texture = _whiteTile;
-                    }
-                    else if (board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
-                    {
-                        _scene.FindName<Sprite>(location).Texture = _blackTile;
-                    }
-                    else
-                    {
-                        if (_scene.FindName<Sprite>(location) != null)
-                        {
-                            _scene.FindName<Sprite>(location).Texture = _blankTile;
-                        }
-                    }
-                }
-            }
+            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>(Input_MouseDown);
         }
+
+        
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -197,83 +148,79 @@ namespace XNAControlGame
         /// </summary>
         private void Input_MouseDown(object sender, Nine.MouseEventArgs e)
         {
-            
-            //Create a ray fired from the point of click point.
-            Ray pickRay = GetSelectionRay( new Vector2( e.X, e.Y ) );
-            float maxDistance = float.MaxValue;
-
-            //Test all 45 locations to see if one was click. If one was, determine which one was clicked.
-            Position pegLocation;
-            bool intersectionNotFound = true;
-            for (int pegNum = 1; pegNum <= 45 && intersectionNotFound; pegNum++)
+            if (_isMyTurnToMakeAMove)
             {
-                pegLocation = NumberToPosition(pegNum);
-                String currentPeg = 'p' + pegLocation.Row.ToString() + 'x' + pegLocation.Column.ToString();
-                BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
-                    _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
-                Nullable<float> intersect = pickRay.Intersects(modelIntersect);
+                //Create a ray fired from the point of click point.
+                Ray pickRay = GetSelectionRay(new Vector2(e.X, e.Y));
+                float maxDistance = float.MaxValue;
 
-                //Selection Logic
-
-                //If a model was selected
-                if (intersect.HasValue == true)
+                //Test all 45 locations to see if one was click. If one was, determine which one was clicked.
+                Position pegLocation;
+                bool intersectionNotFound = true;
+                for (int pegNum = 1; pegNum <= 45 && intersectionNotFound; pegNum++)
                 {
-                    intersectionNotFound = false;
+                    pegLocation = NumberToPosition(pegNum);
+                    String currentPeg = 'p' + pegLocation.Row.ToString() + 'x' + pegLocation.Column.ToString();
+                    BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
+                        _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
+                    Nullable<float> intersect = pickRay.Intersects(modelIntersect);
 
-                    if (intersect.Value < maxDistance)
+                    //Selection Logic
+
+                    //If a model was selected
+                    if (intersect.HasValue == true)
                     {
-                        //And if the peg to move has not been selected or the peg clicked matches the current turn
-                        if (!_secondClick || board.Pegs.At(pegLocation).Color == PlayerTurn)
+                        intersectionNotFound = false;
+
+                        if (intersect.Value < maxDistance)
                         {
-                            _selectedPeg = currentPeg;
-                            _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
-                            _secondClick = true;
-                        }
-                        //Otherwise the end point of the move is being selected
-                        else
-                        {
-                            //Check to see if the location being selected is an empty peg location. It must be so to be moved to.
-                            if (board.Pegs.At(pegLocation).Color == CreeperColor.Empty && _secondClick)
+                            //And if the peg to move has not been selected or the peg clicked matches the current turn
+                            if (!_secondClick || Board.Pegs.At(pegLocation).Color == PlayerTurn)
                             {
-                                _endPostion = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
+                                _selectedPeg = currentPeg;
+                                _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
+                                _secondClick = true;
                             }
-                            //If it isn't, deselect the peg
+                            //Otherwise the end point of the move is being selected
                             else
                             {
-                                _startPosition = _endPostion = new Position(-1, -1);
-                                _selectedPeg = "";
+                                //Check to see if the location being selected is an empty peg location. It must be so to be moved to.
+                                if (Board.Pegs.At(pegLocation).Color == CreeperColor.Empty && _secondClick)
+                                {
+                                    _endPostion = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
+                                }
+                                //If it isn't, deselect the peg
+                                else
+                                {
+                                    _startPosition = _endPostion = new Position(-1, -1);
+                                    _selectedPeg = "";
+                                }
+                                _secondClick = false;
                             }
-                            _secondClick = false;
                         }
                     }
                 }
-            }
 
-            //If both the start and end position have been determined, send the move to the board and reset start and end.
-            if (_endPostion.Row != -1)
-            {
-                Move move = new Move(_startPosition, _endPostion, PlayerTurn);
-
-                if (_scene.FindName<Nine.Graphics.Model>(_selectedPeg).Visible == true)
+                //If both the start and end position have been determined, send the move to the board and reset start and end.
+                if (_endPostion.Row != -1)
                 {
-                    if (board.Move(move))
+                    Move move = new Move(_startPosition, _endPostion, PlayerTurn);
+
+                    if (_scene.FindName<Nine.Graphics.Model>(_selectedPeg).Visible == true)
                     {
-                        if (PlayerTurn == CreeperColor.White)
+                        if (Board.IsValidMove(move))
                         {
-                            PlayerTurn = CreeperColor.Black;
-                        }
-                        else
-                        {
-                            PlayerTurn = CreeperColor.White;
+                            LastMoveMade = move;
+                            _isMyTurnToMakeAMove = false;
                         }
                     }
-                }
 
-                _startPosition = new Position(-1, -1);
-                _endPostion = new Position(-1, -1);
-                _secondClick = false;
-                _selectedPeg = "";
-            }
+                    _startPosition = new Position(-1, -1);
+                    _endPostion = new Position(-1, -1);
+                    _secondClick = false;
+                    _selectedPeg = "";
+                }
+            }           
         }
 
         /// <summary>
@@ -326,6 +273,69 @@ namespace XNAControlGame
             spritebatch.End();
                 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// Determine what the display properties of each board location should and set them.
+        /// </summary>
+        private void DrawBoard()
+        {
+            string location;
+
+            BasicMaterial black = new BasicMaterial(GraphicsDevice);
+            black.DiffuseColor = new Vector3(0, 0, 0);
+            BasicMaterial white = new BasicMaterial(GraphicsDevice);
+            white.DiffuseColor = new Vector3(255, 255, 255);
+
+            for (int r = 0; r < CreeperBoard.PegRows; r++)
+            {
+                for (int c = 0; c < CreeperBoard.PegRows; c++)
+                {
+                    location = 'p' + r.ToString() + 'x' + c.ToString();
+
+                    if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
+                    {
+                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                        _scene.FindName<Nine.Graphics.Model>(location).Material = white;
+                    }
+                    else if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
+                    {
+                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                        _scene.FindName<Nine.Graphics.Model>(location).Material = black;
+                    }
+                    else
+                    {
+                        if (_scene.FindName<Nine.Graphics.Model>(location) != null)
+                        {
+                            _scene.FindName<Nine.Graphics.Model>(location).Visible = false;
+                        }
+                    }
+                }
+            }
+
+            for (int r = 0; r < CreeperBoard.TileRows; r++)
+            {
+                for (int c = 0; c < CreeperBoard.TileRows; c++)
+                {
+                    location = 't' + r.ToString() + 'x' + c.ToString();
+
+                    if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
+                    {
+                        _scene.FindName<Sprite>(location).Texture = _whiteTile;
+                    }
+                    else if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
+                    {
+                        _scene.FindName<Sprite>(location).Texture = _blackTile;
+                    }
+                    else
+                    {
+                        if (_scene.FindName<Sprite>(location) != null)
+                        {
+                            _scene.FindName<Sprite>(location).Texture = _blankTile;
+                        }
+                    }
+                }
+            }
         }
     }
 }
