@@ -38,7 +38,7 @@ namespace ProtoCreeper
 
         public static void AIGame(CreeperBoard board)
         {
-            CreeperAI.CreeperAI creeperAI = new CreeperAI.CreeperAI();
+            CreeperAI.CreeperAI creeperAI = new CreeperAI.CreeperAI(1.0, 2.0, 3.0, 100.0);
             bool pauseAfterPrint = false;
 
             bool gameOver = false;
@@ -100,9 +100,17 @@ namespace ProtoCreeper
             }
         }
 
+        static void PrintAICreeperBoard(CreeperBoard board)
+        {
+            board.ReadFromFile("TestBoard.txt");
+            AICreeperBoard AIBoard = new AICreeperBoard(board);
+            AIBoard.PrintToConsole();
+        }
+
         static void Main(string[] args)
         {
             CreeperBoard board = new CreeperBoard();
+            //PrintAICreeperBoard(board);
             //board.ReadFromFile("TestBoard.txt");
             //board.PrintToConsole();
             //WhiteWin(board);

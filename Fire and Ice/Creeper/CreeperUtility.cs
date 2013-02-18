@@ -37,7 +37,32 @@ namespace Creeper
             return (color == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
         }
 
-        static public IEnumerable<Move> PossibleMoves(this Piece peg, CreeperBoard board)
+        public static bool IsWhite(this CreeperColor color)
+        {
+            return color == CreeperColor.White;
+        }
+
+        public static bool IsBlack(this CreeperColor color)
+        {
+            return color == CreeperColor.Black;
+        }
+
+        public static bool IsEmpty(this CreeperColor color)
+        {
+            return color == CreeperColor.Empty;
+        }
+
+        public static bool IsInvalid(this CreeperColor color)
+        {
+            return color == CreeperColor.Invalid;
+        }
+
+        public static bool IsTeamColor(this CreeperColor color)
+        {
+            return color == CreeperColor.Black || color == CreeperColor.White;
+        }
+
+        static public List<Move> PossibleMoves(this Piece peg, CreeperBoard board)
         {
             List<Piece> pegs = new List<Piece>(board.Pegs);
 

@@ -3,167 +3,187 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Creeper;
-using System.Threading;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace CreeperAI
 {
     public class CreeperAI
     {
-        //***************Debug Variables*************\\
-        private const bool _DEBUG = true;
-        private const bool _writeTimesToFile = true;
-        private int _recursiveCalls = 0;
-        //***************Debug Variables*************\\
+        //debug variables\\
+        private bool _reportTime = false;
+        private bool _sort = true;
+        private bool _parallel = true;
 
-        private Random _random = new Random();
-        private CreeperBoard _board;
+        private AICreeperBoard _board;
         private CreeperColor _turnColor;
+        private int _MiniMaxDepth = 3;
 
-        private const int _White = 0;
-        private const int _Black = 1;
+        private double _territorialWeight;
+        private double _materialWeight;
+        private double _pathToVictoryWeight;
+        private double _victoryWeight;
 
-        private const double _TerritorialWeight = 1.0;
-        private const double _MaterialWeight = 1000000.0;
+        private static Random _Random = new Random();
 
-        private const int _MiniMaxDepth = 3;
-
-        public CreeperAI()
+        public CreeperAI(double territoryWeight, double materialWeight, double victoryPathWeight, double victoryWeight)
         {
+            _territorialWeight = territoryWeight;
+            _materialWeight = materialWeight;
+            _pathToVictoryWeight = victoryPathWeight;
+            _victoryWeight = victoryWeight;
         }
 
-        public Move GetMove(CreeperBoard board, CreeperColor AIColor)
+        public Move GetMove(CreeperBoard board, CreeperColor turnColor)
         {
-            //This must be a copy
-            _board = new CreeperBoard(board);
-            _turnColor = AIColor;
+            _board = new AICreeperBoard(board);
+            _turnColor = turnColor;
 
             Stopwatch stopwatch = new Stopwatch();
-            if (_DEBUG) stopwatch.Start();
+            if (_reportTime) stopwatch.Start();
 
             Move bestMove = new Move();
-            bestMove = GetAlphaBetaMiniMaxMove(_board);
+            if (_parallel)
+            {
+                bestMove = GetAlphaBetaNegaMaxMove(board);
+            }
+            else
+            {
+                bestMove = GetAlphaBetaNegaMaxMoveSequential(_board);
+            }
 
-            if (_DEBUG)
+            if (_reportTime)
             {
                 stopwatch.Stop();
                 System.Console.WriteLine("Seconds elapsed: {0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
-                using (StreamWriter file = new StreamWriter("Times.log", true))
+                using (StreamWriter file = new StreamWriter("Times.csv", true))
                 {
-                    file.WriteLine("Seconds elapsed: {0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
+                    file.WriteLine("{0}", ((double)stopwatch.ElapsedMilliseconds) / 1000);
                 }
             }
 
             return bestMove;
         }
 
-        //This is where I functionalized the stuff we were doing to prepare to call minimax
-        private Move GetNaiveMiniMaxMove(CreeperBoard board)
+        Move GetAlphaBetaNegaMaxMoveSequential(AICreeperBoard board)
         {
-            IEnumerable<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board));
-
-            double max = Double.MinValue;
             Move bestMove = new Move();
-            foreach (Move move in possibleMoves)
+
+            double best = Double.NegativeInfinity;
+            double alpha = Double.NegativeInfinity;
+            double beta = Double.PositiveInfinity;
+
+            // Enumerate the children of the current node
+            Move[] moves = board.AllPossibleMoves(_turnColor);
+            for (int i = 0; i < moves.Length; i++)
             {
-                CreeperBoard newBoard = new CreeperBoard(board);
-                newBoard.Move(move);
-                double moveScore = -ScoreNaiveMiniMaxMove(newBoard, _turnColor.Opposite(), _MiniMaxDepth);
-                if (moveScore > max)
+                // Evaluate child node
+                board.PushMove(moves[i]);
+                double score = -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -Math.Max(alpha, best), _MiniMaxDepth - 1);
+                board.PopMove();
+
+                if (score > best)
                 {
-                    max = moveScore;
-                    bestMove = move;
+                    best = score;
+                    bestMove = moves[i];
                 }
             }
 
             return bestMove;
         }
 
-        private Move GetAlphaBetaMiniMaxMove(CreeperBoard board)
+        Move GetAlphaBetaNegaMaxMove(CreeperBoard board)
         {
-            IEnumerable<Move> possibleMoves = board.WhereTeam(_turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board))
-                .OrderByDescending(x =>
+            Move bestMove = new Move();
+
+            double best = Double.NegativeInfinity;
+            double alpha = Double.NegativeInfinity;
+            double beta = Double.PositiveInfinity;
+
+            // Enumerate the children of the current node
+            Move[] moves = new AICreeperBoard(board).AllPossibleMoves(_turnColor);
+
+            Dictionary<Move, double> moveScores = new Dictionary<Move, double>();
+
+            Parallel.ForEach(moves, move =>
                 {
-                    CreeperBoard newBoard = new CreeperBoard(board);
-                    newBoard.Move(x);
-                    return ScoreBoard(newBoard, _turnColor);
+                    // If you have weird bugs, maybe use IDisposable?
+                    AICreeperBoard currentBoard = new AICreeperBoard(board);
+                    currentBoard.PushMove(move);
+                    double score = -ScoreAlphaBetaNegaMaxMove(currentBoard, _turnColor.Opposite(), -beta, -Math.Max(alpha, best), _MiniMaxDepth - 1);
+                    lock (this)
+                    {
+                        moveScores.Add(move, score);
+                    }
                 });
 
-            double max = Double.MinValue;
-            Move bestMove = new Move();
-
-            foreach (Move move in possibleMoves)
+            bestMove = moveScores.First().Key;
+            foreach (KeyValuePair<Move, double> move in moveScores)
             {
-                CreeperBoard newBoard = new CreeperBoard(board);
-                newBoard.Move(move);
-                double moveScore = ScoreAlphaBetaMiniMaxMove(newBoard, _turnColor.Opposite(), Double.NegativeInfinity, Double.PositiveInfinity, _MiniMaxDepth);
-                if (moveScore > max)
+                if (moveScores[move.Key] > moveScores[bestMove])
                 {
-                    max = moveScore;
-                    bestMove = move;
+                    bestMove = move.Key;
                 }
             }
 
             return bestMove;
         }
 
-        //This i renamed to ScoreMiniMaxMove because it made more sense to me this way
-        //And this is the actual recursive function
-        private double ScoreNaiveMiniMaxMove(CreeperBoard board, CreeperColor turnColor, int depth)
-        {
-            if (_DEBUG)
-            {
-                //Console.WriteLine("Calls: " + _recursiveCalls++);
-            }
-
-            if (board.IsFinished(turnColor) || depth <= 0)
-            {
-                //This is where we call our specific score board implementation
-                return ScoreBoard(board, turnColor);
-            }
-
-            IEnumerable<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board));
-
-            double alpha = Double.MinValue;
-            foreach (Move move in possibleMoves)
-            {
-                CreeperBoard newBoard = new CreeperBoard(board);
-                newBoard.Move(move);
-                alpha = Math.Max(alpha, -ScoreNaiveMiniMaxMove(newBoard, turnColor.Opposite(), depth - 1));
-            }
-
-            return alpha;
-        }
-
-        private double ScoreAlphaBetaMiniMaxMove(CreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
+        private double ScoreAlphaBetaNegaMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
         {
             // if  depth = 0 or node is a terminal node
-            if ((depth <= 0) || board.IsFinished(turnColor))
+            if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
                 return ScoreBoard(board, turnColor);
             }
 
-            // children of current node
-            IEnumerable<Move> possibleMoves = board.WhereTeam(turnColor, PieceType.Peg).SelectMany(x => x.PossibleMoves(board));
+            // Initialize the best score
+            double best = Double.NegativeInfinity;
+
+            // Enumerate the children of the current node
+            Move[] moves = board.AllPossibleMoves(turnColor);
+            for (int i = 0; i < moves.Length; i++)
+            {
+                // Evaluate child node:
+                board.PushMove(moves[i]);
+                best = Math.Max(best, -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -Math.Max(alpha, best), depth - 1));
+                board.PopMove();
+
+                // Prune if the current best score crosses beta
+                if (best >= beta)
+                    return best;
+            }
+
+            return best;
+        }
+
+        private double ScoreAlphaBetaMiniMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
+        {
+            // if  depth = 0 or node is a terminal node
+            if ((depth <= 0) || board.IsFinished)
+            {
+                // return the heuristic value of node
+                return ScoreBoard(board, turnColor);
+            }
 
             // if  Player = MaximizedPlayer
             if (turnColor == _turnColor)
             {
                 // prioitize favorable boards
-                IEnumerable<CreeperBoard> boards = possibleMoves.Select(x =>
-                {
-                    CreeperBoard newBoard = new CreeperBoard(board);
-                    newBoard.Move(x);
-                    return newBoard;
-                }).OrderByDescending(x => ScoreBoard(x, turnColor));
+                Move[] moves = board.AllPossibleMoves(turnColor);              
 
                 // for each child of node
-                foreach (CreeperBoard currentBoard in boards)
+                for (int i = 0; i < moves.Length; i++)
                 {
+                    Move currentMove = moves[i];
                     // α := max(α, alphabeta(child, depth-1, α, β, not(Player) ))
-                    alpha = Math.Max(alpha, ScoreAlphaBetaMiniMaxMove(currentBoard, turnColor.Opposite(), alpha, beta, depth - 1));
+                    board.PushMove(currentMove);
+                    alpha = Math.Max(alpha, ScoreAlphaBetaMiniMaxMove(board, turnColor.Opposite(), alpha, beta, depth - 1));
+                    board.PopMove();
 
                     // if β ≤ α
                     if (beta <= alpha)
@@ -178,18 +198,17 @@ namespace CreeperAI
             else
             {
                 // prioitize favorable boards
-                IEnumerable<CreeperBoard> boards = possibleMoves.Select(x =>
-                {
-                    CreeperBoard newBoard = new CreeperBoard(board);
-                    newBoard.Move(x);
-                    return newBoard;
-                }).OrderBy(x => ScoreBoard(x, turnColor));
+                Move[] moves = board.AllPossibleMoves(turnColor);
 
                 // for each child of node
-                foreach (CreeperBoard currentBoard in boards)
+                for (int i = 0; i < moves.Length; i++)
                 {
+                    Move currentMove = moves[i];
+
                     // β := min(β, alphabeta(child, depth-1, α, β, not(Player) ))
-                    beta = Math.Min(beta, ScoreAlphaBetaMiniMaxMove(currentBoard, turnColor.Opposite(), alpha, beta, depth - 1));
+                    board.PushMove(currentMove);
+                    beta = Math.Min(beta, ScoreAlphaBetaMiniMaxMove(board, turnColor.Opposite(), alpha, beta, depth - 1));
+                    board.PopMove();
 
                     // if β ≤ α
                     if (beta <= alpha)
@@ -202,22 +221,33 @@ namespace CreeperAI
                 return beta;
             }
         }
-        
-        private double ScoreBoard(CreeperBoard board, CreeperColor turn)
+
+        private double ScoreBoard(AICreeperBoard board, CreeperColor turnColor)
         {
             double score = 0.0;
 
-            score += (ScoreBoardTerritorial(board, turn) * _TerritorialWeight);
-            score += (ScoreBoardMaterial(board, turn) * _MaterialWeight);
+            switch (board.GameState)
+            {
+                case CreeperGameState.Complete:
+                    score = 1000000.0;
+                    break;
+
+                default:
+                    score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
+                    score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
+                    score += ScoreBoardVictory(board, turnColor);
+                    break;
+            }
+
+
 
             return score;
         }
 
-        private double ScoreBoardTerritorial(CreeperBoard board, CreeperColor turn)
+        private double ScoreBoardTerritorial(AICreeperBoard board, CreeperColor turn)
         {
-            CreeperColor opponentTurn = turn.Opposite();
-            double myTeamCount = board.WhereTeam(turn, PieceType.Tile).Count();
-            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Tile).Count();
+            double myTeamCount = board.TeamCount(turn, PieceType.Tile);
+            double opponentTeamCount = board.TeamCount(turn.Opposite(), PieceType.Tile);
 
             //TODO: maybe fix this
             if (opponentTeamCount == 0)
@@ -228,11 +258,10 @@ namespace CreeperAI
             return myTeamCount / opponentTeamCount;
         }
 
-        private double ScoreBoardMaterial(CreeperBoard board, CreeperColor turn)
+        private double ScoreBoardMaterial(AICreeperBoard board, CreeperColor turn)
         {
-            CreeperColor opponentTurn = turn.Opposite();
-            double myTeamCount = board.WhereTeam(turn, PieceType.Peg).Count();
-            double opponentTeamCount = board.WhereTeam(opponentTurn, PieceType.Peg).Count();
+            double myTeamCount = board.TeamCount(turn, PieceType.Peg);
+            double opponentTeamCount = board.TeamCount(turn.Opposite(), PieceType.Peg);
 
             //TODO: maybe fix this
             if (opponentTeamCount == 0)
@@ -242,23 +271,69 @@ namespace CreeperAI
 
             return myTeamCount / opponentTeamCount;
         }
-
-        private double ScoreBoardVictoryProximity(CreeperBoard board, CreeperColor turn)
+        
+        private double ScoreBoardPositional(AICreeperBoard board, CreeperColor turn)
         {
             return 0.0;
         }
 
-        private double ScoreBoardRandom(CreeperBoard board)
+        private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn)
         {
-            return (((double)_random.Next()) % 100) / 100;
+            double score = 0.0;
+
+            Move currentMove = board.CurrentMove;
+            if (board.IsFlipMove(currentMove))
+            {
+                AIBoardNode flippedTile = board.GetFlippedTileCopy(currentMove);
+                AIBoardNode[] columnHead = (turn == CreeperColor.White) ? board.ColumnHeadWhite : board.ColumnHeadWhite;
+                AIBoardNode[] rowHead = (turn == CreeperColor.White) ? board.RowHeadWhite : board.RowHeadWhite;
+
+                //If we are null in this row, we want to add a new tile here
+                if (rowHead[flippedTile.Row] == null)
+                {
+                    //so we add to the score
+                    score += _pathToVictoryWeight;
+
+                    //if the tile above us is our color
+                    if (flippedTile.Row - 1 >= 0
+                        && board.TileBoard[flippedTile.Row - 1, flippedTile.Column].Color == turn)
+                    {
+                        //bonus points for an adjacency when moving to a null row
+                        score += _pathToVictoryWeight;
+                    }
+                    //and if the row below us is our color
+                    if (flippedTile.Row + 1 <= CreeperBoard.TileRows - 1
+                        && board.TileBoard[flippedTile.Row + 1, flippedTile.Column].Color == turn)
+                    {
+                        //more bonus points
+                        score += _pathToVictoryWeight;
+                    }
+                }
+
+                //if this column is null
+                if (columnHead[flippedTile.Column] == null)
+                {
+                    //that's good--we want to be filling in columns with no pieces
+                    score += _pathToVictoryWeight;
+
+                    //and if the column to our left has someone there
+                    if (flippedTile.Column - 1 >= 0
+                        && board.TileBoard[flippedTile.Row, flippedTile.Column - 1].Color == turn)
+                    {
+                        //great, another connection
+                        score += _pathToVictoryWeight;
+                    }
+                    //and if the column to our right does as well
+                    if (flippedTile.Column + 1 <= CreeperBoard.TileRows - 1
+                        && board.TileBoard[flippedTile.Row, flippedTile.Column + 1].Color == turn)
+                    {
+                        //even better
+                        score += _pathToVictoryWeight;
+                    }
+                }
+            }
+
+            return score;
         }
-
-        public int TilesToVictory()
-        {
-            return 0;
-        }
-
-        //**************************Debug Functions******************************\\
-
     }
 }

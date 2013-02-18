@@ -18,6 +18,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreeperNetwork", "CreeperNetwork\CreeperNetwork.csproj", "{0FCE3293-C97E-4A99-95C7-2D592B7F949D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAControl", "XNAControl\XNAControl.csproj", "{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB2596A8-749E-4DAA-877D-3BECB1BFA6D4}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DustinGenetics", "DustinGenetics\DustinGenetics.csproj", "{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +121,16 @@ Global
 		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|x86.ActiveCfg = Release|Any CPU
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|x86.ActiveCfg = Debug|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|x86.Build.0 = Debug|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Release|Any CPU.ActiveCfg = Release|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Release|Mixed Platforms.Build.0 = Release|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Release|x86.ActiveCfg = Release|x86
+		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
