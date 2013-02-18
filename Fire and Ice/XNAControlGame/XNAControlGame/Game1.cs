@@ -21,6 +21,7 @@ namespace XNAControlGame
     {
         Position _startPosition = new Position(-1, -1);
         Position _endPostion = new Position(-1, -1);
+        String _selectedPeg;
         Scene _scene;
         Input _input;
         SpriteFont _font;
@@ -29,7 +30,7 @@ namespace XNAControlGame
         Panel GamePanel { get; set; }
         CreeperBoard board = new CreeperBoard();
         Vector3 _modelScale = new Vector3( 6, 6, 6 );
-        bool SecondClick = false;
+        bool _secondClick = false;
         CreeperColor PlayerTurn = CreeperColor.White;
         Texture2D _blankTile;
         Texture2D _whiteTile;
@@ -191,9 +192,9 @@ namespace XNAControlGame
             float maxDistance = float.MaxValue;
 
             //Test all 45 locations to see if one was click. If one was, determine which one was clicked.
-            String selectedPeg = "";
             Position pegLocation;
-            for (int pegNum = 1; pegNum <= 45; pegNum++)
+            bool intersectionNotFound = true;
+            for (int pegNum = 1; pegNum <= 45 && intersectionNotFound; pegNum++)
             {
                 pegLocation = NumberToPosition(pegNum);
                 String currentPeg = 'p' + pegLocation.Row.ToString() + 'x' + pegLocation.Column.ToString();
@@ -201,62 +202,66 @@ namespace XNAControlGame
                     _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
                 Nullable<float> intersect = pickRay.Intersects(modelIntersect);
 
-                //Calculates a move
-                if (!SecondClick)
+                //Selection Logic
+
+                //If a model was selected
+                if (intersect.HasValue == true)
                 {
-                    if (intersect.HasValue == true)
+                    intersectionNotFound = false;
+
+                    if (intersect.Value < maxDistance)
                     {
-                        if (intersect.Value < maxDistance)
+                        //And if the peg to move has not been selected or the peg clicked matches the current turn
+                        if (!_secondClick || board.Pegs.At(pegLocation).Color == PlayerTurn)
                         {
-                            selectedPeg = currentPeg;
-                            _startPosition = new Position(Convert.ToInt32(currentPeg[1] -'0'), Convert.ToInt32(currentPeg[3]-'0'));
-                            SecondClick = true;
+                            _selectedPeg = currentPeg;
+                            _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
+                            _secondClick = true;
+                        }
+                        //Otherwise the end point of the move is being selected
+                        else
+                        {
+                            //Check to see if the location being selected is an empty peg location. It must be so to be moved to.
+                            if (board.Pegs.At(pegLocation).Color == CreeperColor.Empty && _secondClick)
+                            {
+                                _endPostion = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
+                            }
+                            //If it isn't, deselect the peg
+                            else
+                            {
+                                _startPosition = _endPostion = new Position(-1, -1);
+                                _selectedPeg = "";
+                            }
+                            _secondClick = false;
                         }
                     }
                 }
-                else
+            }
+
+            //If both the start and end position have been determined, send the move to the board and reset start and end.
+            if (_endPostion.Row != -1)
+            {
+                Move move = new Move(_startPosition, _endPostion, PlayerTurn);
+
+                if (_scene.FindName<Nine.Graphics.Model>(_selectedPeg).Visible == true)
                 {
-                    if (intersect.HasValue == true)
+                    if (board.Move(move))
                     {
-                        if (intersect.Value < maxDistance)
+                        if (PlayerTurn == CreeperColor.White)
                         {
-                            //selectedPeg = currentPeg;
-                            _endPostion = new Position(Convert.ToInt32(currentPeg[1] -'0'), Convert.ToInt32(currentPeg[3] -'0'));
+                            PlayerTurn = CreeperColor.Black;
                         }
                         else
                         {
-                            _startPosition = new Position(-1,-1);
-                            
+                            PlayerTurn = CreeperColor.White;
                         }
-                        SecondClick = false;
                     }
                 }
 
-                selectedPeg = 'p' + _startPosition.Row.ToString() + 'x' + _startPosition.Column.ToString();
-                if (_endPostion.Row != -1)
-                {
-
-                    Move move = new Move (_startPosition,_endPostion, PlayerTurn);
-
-                    if (_scene.FindName<Nine.Graphics.Model>(selectedPeg).Visible == true)
-                    {
-                        if (board.Move(move))
-                        {
-                            if (PlayerTurn == CreeperColor.White)
-                            {
-                                PlayerTurn = CreeperColor.Black;
-                            }
-                            else
-                            {
-                                PlayerTurn = CreeperColor.White;
-                            }
-                        }
-                    }
-
-                    _startPosition = new Position(-1, -1);
-                    _endPostion = new Position(-1, -1);
-
-                }
+                _startPosition = new Position(-1, -1);
+                _endPostion = new Position(-1, -1);
+                _secondClick = false;
+                _selectedPeg = "";
             }
         }
 
