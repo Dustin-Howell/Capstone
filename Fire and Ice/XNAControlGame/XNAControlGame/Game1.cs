@@ -12,7 +12,6 @@ using Nine.Graphics.ParticleEffects;
 using Nine.Graphics.PostEffects;
 using Nine.Graphics.Primitives;
 using Nine.Physics;
-using System.Windows.Forms;
 using Creeper;
 
 namespace XNAControlGame
@@ -27,7 +26,6 @@ namespace XNAControlGame
         SpriteFont _font;
         Matrix _cameraView;
         Matrix _cameraProj;
-        Panel GamePanel { get; set; }
         CreeperBoard board = new CreeperBoard();
         Vector3 _modelScale = new Vector3( 6, 6, 6 );
         bool _secondClick = false;
@@ -40,13 +38,14 @@ namespace XNAControlGame
         private Texture2D _hightlightPeg;
 
 
-        public Game1(IntPtr handle, Panel gamePanel, int width, int height) : base(handle, "Content", width, height)
+        public Game1(IntPtr handle, int width, int height) : base(handle, "Content", width, height)
         {
             Content = new ContentLoader(Services);
-            GamePanel = gamePanel;
+ 
+            Components.Add(new InputComponent(handle));
+            _input = new Input();
 
-
-            GamePanel.MouseClick += new MouseEventHandler(Input_MouseDown);
+            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>(Input_MouseDown);
         }
 
         /// <summary>
@@ -199,7 +198,7 @@ namespace XNAControlGame
         /// <summary>
         /// Handle mouse input events
         /// </summary>
-        private void Input_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void Input_MouseDown(object sender, Nine.MouseEventArgs e)
         {
             
             //Create a ray fired from the point of click point.

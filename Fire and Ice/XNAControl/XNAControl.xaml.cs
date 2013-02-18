@@ -66,8 +66,6 @@ namespace XNAControl
             get { return GamePanel.Handle; }
         }
 
-        public System.Windows.Forms.Panel Panel { get { return GamePanel; } }
-
         public XNAUserControl()
         {
             InitializeComponent();
