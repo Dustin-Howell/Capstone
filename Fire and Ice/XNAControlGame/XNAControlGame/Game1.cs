@@ -105,6 +105,8 @@ namespace XNAControlGame
             // Load a scene from a content file
             _scene = Content.Load<Scene>("Scene1");
 
+            _scene.FindName<FreeCamera>("theCamera").Position = new Vector3(0, (float)-470.27, (float)249.5);
+            _scene.FindName<FreeCamera>("theCamera").Angle = new Vector3((float)-1.13, 0, 0);
             //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = _scene.FindName<Sprite>("boardImage").Texture.Height;
@@ -277,7 +279,15 @@ namespace XNAControlGame
             SpriteBatch spritebatch = new SpriteBatch(GraphicsDevice);
             spritebatch.Begin();
             spritebatch.DrawString(_font, "Player Turn = " + PlayerTurn.ToString(), new Vector2(0, 0), Color.Black);
-
+            spritebatch.DrawString(_font, "CameraPosition = (" + _scene.FindName<FreeCamera>("theCamera").Position.X.ToString() + ","
+                + _scene.FindName<FreeCamera>("theCamera").Position.Y.ToString() + ","
+                + _scene.FindName<FreeCamera>("theCamera").Position.Z.ToString() + ")"
+            , new Vector2(0, 25), Color.Black);
+            spritebatch.DrawString(_font, "CameraAngle = (" + _scene.FindName<FreeCamera>("theCamera").Angle.X.ToString() + ","
+                + _scene.FindName<FreeCamera>("theCamera").Angle.Y.ToString() + ","
+                + _scene.FindName<FreeCamera>("theCamera").Angle.Z.ToString() + ")"
+            , new Vector2(0, 50), Color.Black);
+            
             spritebatch.End();
                 
             base.Draw(gameTime);
