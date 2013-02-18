@@ -35,6 +35,9 @@ namespace XNAControlGame
         Texture2D _blankTile;
         Texture2D _whiteTile;
         Texture2D _blackTile;
+        private Texture2D _whitePeg;
+        private Texture2D _blackPeg;
+        private Texture2D _hightlightPeg;
 
 
         public Game1(IntPtr handle, Panel gamePanel, int width, int height) : base(handle, "Content", width, height)
@@ -75,7 +78,12 @@ namespace XNAControlGame
         private void DrawBoard()
         {
             string location;
-            
+
+            BasicMaterial black = new BasicMaterial(GraphicsDevice);
+            black.DiffuseColor = new Vector3(0, 0, 0);
+            BasicMaterial white = new BasicMaterial(GraphicsDevice);
+            white.DiffuseColor = new Vector3(255, 255, 255);
+
             for (int r = 0; r < CreeperBoard.PegRows; r++)
             {
                 for (int c = 0; c < CreeperBoard.PegRows; c++)
@@ -85,10 +93,12 @@ namespace XNAControlGame
                     if(board.Pegs.At(new Position(r,c)).Color == CreeperColor.White)
                     {
                         _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                        _scene.FindName<Nine.Graphics.Model>(location).Material = white;
                     }
                     else if (board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
                     {
                         _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                        _scene.FindName<Nine.Graphics.Model>(location).Material = black;
                     }
                     else
                     {
@@ -133,6 +143,9 @@ namespace XNAControlGame
         {
             // Load the peg model
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/sphere");
+            _blackPeg = Content.Load<Texture2D>("Textures/HexesSpecular");
+            _whitePeg = Content.Load<Texture2D>("Textures/Hexes");
+            _hightlightPeg = Content.Load<Texture2D>("Textures/Wood");
             // Load the Tile sprite.
             Sprite tile = new Sprite(GraphicsDevice);
             
@@ -157,10 +170,12 @@ namespace XNAControlGame
             //Do this for ever possible peg location on the board.
             for (int pegNumber = 1; pegNumber < 46; pegNumber++)
             {
+                BasicMaterial defaultMaterial = new BasicMaterial(GraphicsDevice);
+                defaultMaterial.Texture = Content.Load<Texture2D>("Textures/Grid");
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
-                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale( _modelScale ) * Matrix.CreateTranslation(pegCoordinates), Name = pegName});
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale( _modelScale ) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
             }
             //Place a transparent sprite for tiles in every possible tile position.
             startCoordinates += new Vector3(squareWidth / 2, -(squareHeight / 2), 0);
@@ -304,10 +319,8 @@ namespace XNAControlGame
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             DrawBoard();
-
-
+            _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
 
             //Test String drawing
             SpriteBatch spritebatch = new SpriteBatch(GraphicsDevice);
