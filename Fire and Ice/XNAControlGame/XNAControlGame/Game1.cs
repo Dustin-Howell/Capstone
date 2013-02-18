@@ -13,6 +13,7 @@ using Nine.Graphics.PostEffects;
 using Nine.Graphics.Primitives;
 using Nine.Physics;
 using Creeper;
+using System.Collections.Generic;
 
 namespace XNAControlGame
 {
@@ -38,6 +39,7 @@ namespace XNAControlGame
         private Texture2D _hightlightPeg;
         private bool _isMyTurnToMakeAMove = false;
         public Move LastMoveMade { get; private set; }
+        List<Move> possible = new List<Move>();
 
 
         public Move GetMove(CreeperColor currentTurn)
@@ -180,6 +182,7 @@ namespace XNAControlGame
                                 _selectedPeg = currentPeg;
                                 _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
                                 _secondClick = true;
+                                possible =  CreeperUtility.PossibleMoves(Board.Pegs.At(_startPosition), Board).ToList();
                             }
                             //Otherwise the end point of the move is being selected
                             else
@@ -196,6 +199,7 @@ namespace XNAControlGame
                                     _selectedPeg = "";
                                 }
                                 _secondClick = false;
+                                possible.Clear();
                             }
                         }
                     }
@@ -218,6 +222,7 @@ namespace XNAControlGame
                     _startPosition = new Position(-1, -1);
                     _endPostion = new Position(-1, -1);
                     _secondClick = false;
+                    possible.Clear();
                     _selectedPeg = "";
                 }
             }           
@@ -286,6 +291,8 @@ namespace XNAControlGame
             black.DiffuseColor = new Vector3(0, 0, 0);
             BasicMaterial white = new BasicMaterial(GraphicsDevice);
             white.DiffuseColor = new Vector3(255, 255, 255);
+            BasicMaterial yellow = new BasicMaterial(GraphicsDevice);
+            yellow.DiffuseColor = new Vector3(255, 255, 0);
 
             for (int r = 0; r < CreeperBoard.PegRows; r++)
             {
@@ -311,6 +318,14 @@ namespace XNAControlGame
                         }
                     }
                 }
+            }
+
+
+            foreach (Move move in possible)
+            {
+                location = 'p' + move.EndPosition.Row.ToString() + 'x' + move.EndPosition.Column.ToString();
+                _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                _scene.FindName<Nine.Graphics.Model>(location).Material = yellow;
             }
 
             for (int r = 0; r < CreeperBoard.TileRows; r++)
