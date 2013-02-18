@@ -62,7 +62,7 @@ namespace Creeper
             return color == CreeperColor.Black || color == CreeperColor.White;
         }
 
-        static public List<Move> PossibleMoves(this Piece peg, CreeperBoard board)
+        static public IEnumerable<Move> PossibleMoves(this Piece peg, CreeperBoard board)
         {
             List<Piece> pegs = new List<Piece>(board.Pegs);
 
