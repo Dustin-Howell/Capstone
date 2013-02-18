@@ -138,7 +138,7 @@ namespace CreeperAI
             if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
-                return ScoreBoard(board, turnColor);
+                return ScoreBoard(board, turnColor, depth);
             }
 
             // Initialize the best score
@@ -167,7 +167,7 @@ namespace CreeperAI
             if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
-                return ScoreBoard(board, turnColor);
+                return ScoreBoard(board, turnColor, depth);
             }
 
             // if  Player = MaximizedPlayer
@@ -222,14 +222,14 @@ namespace CreeperAI
             }
         }
 
-        private double ScoreBoard(AICreeperBoard board, CreeperColor turnColor)
+        private double ScoreBoard(AICreeperBoard board, CreeperColor turnColor, int depth)
         {
             double score = 0.0;
 
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = 1000000.0;
+                    score = _victoryWeight * (_MiniMaxDepth - depth);
                     break;
 
                 default:
@@ -238,8 +238,6 @@ namespace CreeperAI
                     score += ScoreBoardVictory(board, turnColor);
                     break;
             }
-
-
 
             return score;
         }

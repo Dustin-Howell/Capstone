@@ -21,6 +21,7 @@ namespace FireAndIce
     {
         private bool _debug = false;
         private bool _XNAGame = false;
+        private bool _AIGame = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -32,6 +33,10 @@ namespace FireAndIce
             else if (_debug)
             {
                 this.Content = new MainMenuScreen(this);
+            }
+            else if (_AIGame)
+            {
+                this.Content = new GameControl(PlayerType.AI, PlayerType.AI);
             }
             else
             {

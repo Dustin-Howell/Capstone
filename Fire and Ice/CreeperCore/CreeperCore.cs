@@ -68,9 +68,10 @@ namespace CreeperCore
             }
             else if (opponentType == PlayerType.AI)
             {
-                CreeperColor currentTurn = CreeperColor.White;
+                CreeperColor currentTurn = CreeperColor.Black;
                 while (!Board.IsFinished(currentTurn))
                 {
+                    currentTurn = currentTurn.Opposite();
                     Move move = new Move();
                     if (currentTurn == CreeperColor.White)
                     {
@@ -91,15 +92,37 @@ namespace CreeperCore
                         thread.Join();
                     }
                     Board.Move(move);
-                    currentTurn = currentTurn.Opposite();
                 }
             }
         }
 
         private void AIGame(PlayerType opponentType)
         {
+            CreeperColor currentTurn = CreeperColor.Black;
+            while (!Board.IsFinished(currentTurn))
+            {
+                currentTurn = currentTurn.Opposite();
+                Move move = new Move();
+                if (currentTurn == CreeperColor.White)
+                {
+                    Thread thread = new Thread(delegate()
+                    {
+                        move = _AI.GetMove(Board, currentTurn);
+                    });
+                    thread.Start();
+                    thread.Join();
+                }
+                else
+                {
+                    Thread thread = new Thread(delegate()
+                    {
+                        move = _AI.GetMove(Board, currentTurn);
+                    });
+                    thread.Start();
+                    thread.Join();
+                }
+                Board.Move(move);
+            }
         }
-
-
     }
 }
