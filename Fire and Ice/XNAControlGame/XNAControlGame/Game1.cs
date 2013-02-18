@@ -182,7 +182,10 @@ namespace XNAControlGame
                                 _selectedPeg = currentPeg;
                                 _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
                                 _secondClick = true;
-                                possible =  CreeperUtility.PossibleMoves(Board.Pegs.At(_startPosition), Board).ToList();
+                                if (Board.Pegs.At(pegLocation).Color == PlayerTurn)
+                                {
+                                    possible = CreeperUtility.PossibleMoves(Board.Pegs.At(_startPosition), Board).ToList();
+                                }
                             }
                             //Otherwise the end point of the move is being selected
                             else
@@ -323,9 +326,12 @@ namespace XNAControlGame
 
             foreach (Move move in possible)
             {
-                location = 'p' + move.EndPosition.Row.ToString() + 'x' + move.EndPosition.Column.ToString();
-                _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                _scene.FindName<Nine.Graphics.Model>(location).Material = yellow;
+               if (move.EndPosition.Row != null)
+                {
+                    location = 'p' + move.EndPosition.Row.ToString() + 'x' + move.EndPosition.Column.ToString();
+                    _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                    _scene.FindName<Nine.Graphics.Model>(location).Material = yellow;
+                }
             }
 
             for (int r = 0; r < CreeperBoard.TileRows; r++)
