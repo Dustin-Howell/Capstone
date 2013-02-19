@@ -20,19 +20,21 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 5;
+        private int _MiniMaxDepth = 6;
 
         private double _territorialWeight;
         private double _materialWeight;
+        private double _positionalWeight;
         private double _pathToVictoryWeight;
         private double _victoryWeight;
 
         private static Random _Random = new Random();
 
-        public CreeperAI(double territoryWeight, double materialWeight, double victoryPathWeight, double victoryWeight)
+        public CreeperAI(double territoryWeight, double materialWeight, double positionalWeight, double victoryPathWeight, double victoryWeight)
         {
             _territorialWeight = territoryWeight;
             _materialWeight = materialWeight;
+            _positionalWeight = positionalWeight;
             _pathToVictoryWeight = victoryPathWeight;
             _victoryWeight = victoryWeight;
         }
@@ -235,6 +237,7 @@ namespace CreeperAI
                 default:
                     score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
                     score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
+                    score += (ScoreBoardPositional(board, turnColor) * _positionalWeight);
                     score += ScoreBoardVictory(board, turnColor);
                     break;
             }
@@ -272,7 +275,24 @@ namespace CreeperAI
         
         private double ScoreBoardPositional(AICreeperBoard board, CreeperColor turn)
         {
-            return 0.0;
+            double score = 0d;
+
+            if (turn == CreeperColor.White)
+            {
+                foreach (AIBoardNode peg in board.WhitePegs)
+                {
+                    score += 6 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                }
+            }
+            else
+            {
+                foreach (AIBoardNode peg in board.BlackPegs)
+                {
+                    score += 6 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                }
+            }
+
+            return score;
         }
 
         private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn)

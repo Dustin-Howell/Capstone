@@ -25,7 +25,7 @@ namespace CreeperCore
         public CreeperCore(Game1 xnaGame)
         {
             Board = new CreeperBoard();
-            _AI = new CreeperAI.CreeperAI(1, 2, 3, 1000);
+            _AI = new CreeperAI.CreeperAI(1, 2, 3, 4, 1000);
             _xnaGame = xnaGame;
             _xnaGame.Board = Board;
         }

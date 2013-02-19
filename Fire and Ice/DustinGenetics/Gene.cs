@@ -12,6 +12,7 @@ namespace DustinGenetics
 
         public double MaterialWeight { get; set; }
         public double TerritorialWeight { get; set; }
+        public double PositionalWeight { get; set; }
         public double PathToVictoryWeight { get; set; }
         public double VictoryWeight { get; set; }
 
@@ -19,6 +20,7 @@ namespace DustinGenetics
         {
             MaterialWeight = _Random.Next(1, 100);
             TerritorialWeight = _Random.Next(1, 100);
+            PositionalWeight = _Random.Next(1, 100);
             PathToVictoryWeight = _Random.Next(1, 100);
             VictoryWeight = _Random.Next(1, 100);
         }
@@ -27,14 +29,16 @@ namespace DustinGenetics
         {
             MaterialWeight = gene.MaterialWeight;
             TerritorialWeight = gene.TerritorialWeight;
+            PositionalWeight = gene.PositionalWeight;
             PathToVictoryWeight = gene.PathToVictoryWeight;
             VictoryWeight = gene.VictoryWeight;
         }
 
-        private Gene(double materialWeight, double territorialWeight, double pathToVictoryWeight, double victoryWeight)
+        private Gene(double materialWeight, double territorialWeight, double positionalWeight, double pathToVictoryWeight, double victoryWeight)
         {
             MaterialWeight = materialWeight;
             TerritorialWeight = territorialWeight;
+            PositionalWeight = positionalWeight;
             PathToVictoryWeight = pathToVictoryWeight;
             VictoryWeight = victoryWeight;
         }
@@ -43,10 +47,11 @@ namespace DustinGenetics
         {
             double material = _Random.Next() % 2 == 0 ? gene.MaterialWeight : MaterialWeight;
             double territory = _Random.Next() % 2 == 0 ? gene.TerritorialWeight : TerritorialWeight;
+            double position = _Random.Next() % 2 == 0 ? gene.PositionalWeight : PositionalWeight;
             double path = _Random.Next() % 2 == 0 ? gene.PathToVictoryWeight : PathToVictoryWeight;
             double victory = _Random.Next() % 2 == 0 ? gene.VictoryWeight : VictoryWeight;
 
-            return new Gene(material, territory, path, victory);
+            return new Gene(material, territory, position, path, victory);
         }
 
         public Gene Mutate()
@@ -59,8 +64,8 @@ namespace DustinGenetics
             int moveCount = 0;
             CreeperColor turn = CreeperColor.Black;
             CreeperBoard board = new CreeperBoard();
-            CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PathToVictoryWeight, VictoryWeight);
-            CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PathToVictoryWeight, opponent.VictoryWeight);
+            CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PositionalWeight, PathToVictoryWeight, VictoryWeight);
+            CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PositionalWeight, opponent.PathToVictoryWeight, opponent.VictoryWeight);
 
             while (!board.IsFinished(turn))
             {
