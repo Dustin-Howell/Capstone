@@ -20,7 +20,7 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 6;
+        private int _MiniMaxDepth = 5;
 
         private double _territorialWeight;
         private double _materialWeight;
@@ -281,14 +281,14 @@ namespace CreeperAI
             {
                 foreach (AIBoardNode peg in board.WhitePegs)
                 {
-                    score += 6 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                    score += 2 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
                 }
             }
             else
             {
                 foreach (AIBoardNode peg in board.BlackPegs)
                 {
-                    score += 6 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                    score += 2 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
                 }
             }
 
