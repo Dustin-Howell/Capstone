@@ -565,7 +565,7 @@ namespace CreeperAI
             }
         }
 
-        private IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node)
+        private IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node, CreeperColor color)
         {
             foreach (Position neighborPosition in new[]{
                 new Position(node.Row - 1, node.Column),
@@ -575,7 +575,7 @@ namespace CreeperAI
             })
             {
                 if (IsValidPosition(neighborPosition.Row, neighborPosition.Column, PieceType.Tile)
-                    && TileBoard[neighborPosition.Row, neighborPosition.Column].Color == node.Color)
+                    && TileBoard[neighborPosition.Row, neighborPosition.Column].Color == color)
                 {
                     yield return TileBoard[neighborPosition.Row, neighborPosition.Column];
                 }
@@ -607,7 +607,7 @@ namespace CreeperAI
             }
 
             AIBoardNode currentTile = TileBoard[start.Row, start.Column];
-            IEnumerable<AIBoardNode> neighbors = GetNeighbors(currentTile);
+            IEnumerable<AIBoardNode> neighbors = GetNeighbors(currentTile, playerTurn);
             while (!stackEmpty && !(currentTile.Row == end.Row && currentTile.Column == end.Column))
             {
                 foreach (AIBoardNode neighbor in neighbors)
@@ -616,13 +616,14 @@ namespace CreeperAI
                     {
                         stack.Push(neighbor);
                     }
-                    else if (foundTiles.Intersect(endTiles).Any())
-                    {
-                        gameOver = true;
-                    }
                 }
 
                 foundTiles.UnionWith(neighbors);
+                if (foundTiles.Intersect(endTiles).Any())
+                {
+                    gameOver = true;
+                    break;
+                }
 
                 if (stack.Any())
                 {
@@ -633,7 +634,7 @@ namespace CreeperAI
                     stackEmpty = true;
                 }
 
-                neighbors = GetNeighbors(currentTile);
+                neighbors = GetNeighbors(currentTile, playerTurn);
             }
 
             return gameOver ? CreeperGameState.Complete : CreeperGameState.Unfinished;
