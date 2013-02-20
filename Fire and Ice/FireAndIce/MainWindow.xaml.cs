@@ -20,7 +20,7 @@ namespace FireAndIce
     public partial class MainWindow : Window
     {
         private bool _debug = false;
-        private bool _XNAGame = true;
+        private bool _XNAGame = false;
         private bool _AIGame = false;
         public MainWindow()
         {
