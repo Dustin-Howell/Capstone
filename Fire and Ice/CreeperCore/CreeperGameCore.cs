@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace CreeperCore
 {
-    public class EventCreeperCore
+    public class CreeperGameCore
     {
         public CreeperBoard Board { get; private set; }
         private Player Player1 { get; set; }
@@ -16,15 +16,19 @@ namespace CreeperCore
         private Player CurrentPlayer { get; set; }
         protected Game1 _xnaGame;
         protected CreeperAI.CreeperAI _AI;
-        private CreeperColor _currentTurn;
         private BackgroundWorker _getAIMoveWorker;
         private BackgroundWorker _getXNAMoveWorker;
         private BackgroundWorker _getNetworkMoveWorker;
 
-        public EventCreeperCore(Game1 xnaGame)
+        public CreeperGameCore(Game1 xnaGame)
         {
             _xnaGame = xnaGame;
             InitializeBackgroundWorkers();
+
+            Board = new CreeperBoard();
+            _AI = new CreeperAI.CreeperAI(2, 10, .01, 11, 1000);
+            _xnaGame = xnaGame;
+            _xnaGame.Board = Board;
         }
 
         private void InitializeBackgroundWorkers()
@@ -69,7 +73,7 @@ namespace CreeperCore
 
         void _getXNAMoveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            throw new NotImplementedException();
+            e.Result = _xnaGame.GetMove(CurrentPlayer.Color);
         }
 
         void _getAIMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -79,13 +83,11 @@ namespace CreeperCore
 
         void _getAIMoveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            throw new NotImplementedException();
+            e.Result = _AI.GetMove(Board, CurrentPlayer.Color);
         }
-
 
         public void StartGame(PlayerType player1Type, PlayerType player2Type)
         {
-            _currentTurn = CreeperColor.White;
             Player1 = new Player(player1Type, CreeperColor.White);
             Player2 = new Player(player2Type, CreeperColor.Black);
             CurrentPlayer = Player1;

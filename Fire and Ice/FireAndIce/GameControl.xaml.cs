@@ -21,7 +21,8 @@ namespace FireAndIce
     /// </summary>
     public partial class GameControl : UserControl
     {
-        protected CreeperCore.CreeperCore _gameCore;
+        //protected CreeperCore.CreeperCore _gameCore;
+        protected CreeperGameCore _gameCore;
         protected CreeperBoard _board;
         protected XNAControlGame.Game1 _xnaGame;
 
@@ -30,7 +31,8 @@ namespace FireAndIce
             InitializeComponent();
 
             _xnaGame = new XNAControlGame.Game1(xnaControl.Handle, 800, 600);
-            _gameCore = new CreeperCore.CreeperCore(_xnaGame);
+            //_gameCore = new CreeperCore.CreeperCore(_xnaGame);
+            _gameCore = new CreeperGameCore(_xnaGame);
             _gameCore.StartGame(playerType, opponentType);
         }
     }

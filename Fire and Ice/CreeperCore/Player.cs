@@ -6,6 +6,8 @@ using Creeper;
 
 namespace CreeperCore
 {
+    public enum PlayerType { AI, Human, Network }
+
     public class Player
     {
         public CreeperColor Color { get; private set; }
