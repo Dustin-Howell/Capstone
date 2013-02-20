@@ -19,28 +19,45 @@ namespace XNAControlGame
 {
     public class Game1 : XNAControl.XNAControlGame
     {
-        Position _startPosition = new Position(-1, -1);
-        Position _endPostion = new Position(-1, -1);
-        String _selectedPeg;
+        private Position _startPosition = new Position(-1, -1);
+        private Position _endPostion = new Position(-1, -1);
+        private String _selectedPeg;
+
+
         Scene _scene;
         Input _input;
+
+        //Used For Testing, Can Delete for the final project.
         SpriteFont _font;
-        Matrix _cameraView;
-        Matrix _cameraProj;
+
+        //Holds the Status of the board.
         public CreeperBoard Board { get; set; }
+
+        //Keeps track of which click is happening.
         bool _secondClick = false;
+
+        //Keeps track of whose turn it is
         CreeperColor PlayerTurn = CreeperColor.White;
+
+        //Tile Textures
         Texture2D _blankTile;
         Texture2D _whiteTile;
         Texture2D _blackTile;
-        private Texture2D _whitePeg;
-        private Texture2D _blackPeg;
-        private Texture2D _hightlightPeg;
+
+        //Allows access to clicking on the board only when it's supposed to be accessed.
         private bool _isMyTurnToMakeAMove = false;
+
+        //The Move to be returned to the Creeper Core
         public Move LastMoveMade { get; private set; }
+
+        //List of possible moves so that highlighting is possible
         List<Move> possible = new List<Move>();
 
-
+        /// <summary>
+        /// Get's a move from a player using the GUI. Returns a valid move they selected.
+        /// </summary>
+        /// <param name="currentTurn"></param>
+        /// <returns></returns>
         public Move GetMove(CreeperColor currentTurn)
         {
             _isMyTurnToMakeAMove = true;
@@ -52,7 +69,7 @@ namespace XNAControlGame
         }
 
         /// <summary>
-        /// Convert a peg number a board position (row and column).
+        /// Convert a peg number a board position (row and column). Specialized for the GUI.
         /// </summary>
         static public Position NumberToPosition(int number)
         {
@@ -74,6 +91,12 @@ namespace XNAControlGame
             return position;
         }
 
+        /// <summary>
+        /// Constructor for Game1.
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public Game1(IntPtr handle, int width, int height) : base(handle, "Content", width, height)
         {
             Content = new ContentLoader(Services);
@@ -94,9 +117,11 @@ namespace XNAControlGame
         {
             // Load the peg model
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
+
             // Load the Tile sprite.
             Sprite tile = new Sprite(GraphicsDevice);
             
+            //Loads in the Textures
             _blankTile = Content.Load<Texture2D>(Resources.Textures.UncapturedTile);
             _whiteTile = Content.Load<Texture2D>(Resources.Textures.WhiteTile);
             _blackTile = Content.Load<Texture2D>(Resources.Textures.BlackTile);
@@ -109,9 +134,10 @@ namespace XNAControlGame
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Height;
             boardWidth = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Width;
-            squareWidth = boardWidth /6;
-            squareHeight = boardHeight / 6;
+            squareWidth = boardWidth / (CreeperBoard.PegRows - 1);
+            squareHeight = boardHeight / (CreeperBoard.PegRows - 1);
             Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
+            
             Position pegPosition;
 
             _font = Content.Load<SpriteFont>("defaultFont");
@@ -139,8 +165,6 @@ namespace XNAControlGame
                 _scene.Add(tile);
                 tile = new Sprite(GraphicsDevice);
             }
-
-
             
             base.LoadContent();
         }
@@ -241,9 +265,11 @@ namespace XNAControlGame
 
             Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
-            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource, _cameraProj, _cameraView, world);
+            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource, _scene.FindName<FreeCamera>("MainCamera").Projection,
+                    _scene.FindName<FreeCamera>("MainCamera").View, world);
 
-            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, _cameraProj, _cameraView, world);
+            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, _scene.FindName<FreeCamera>("MainCamera").Projection, 
+                    _scene.FindName<FreeCamera>("MainCamera").View, world);
 
             // Create a ray from the near clip plane to the far clip plane.
             Vector3 direction = farPoint - nearPoint;
@@ -260,8 +286,6 @@ namespace XNAControlGame
         {
             _scene.Update(gameTime.ElapsedGameTime);
             _scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
-            _cameraView = _scene.Find<FreeCamera>().View;
-            _cameraProj = _scene.Find<FreeCamera>().Projection;
             base.Update(gameTime);
         }
 
