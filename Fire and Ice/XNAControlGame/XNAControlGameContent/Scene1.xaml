@@ -1,7 +1,7 @@
 ﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
     
-    <FreeCamera Position="0,0, 500" Speed="200" Name="theCamera" /> 
+    <FreeCamera Position="0,0, 500" Speed="200" Name="MainCamera" /> 
     
-    <Sprite Texture="{ContentReference Assets/boardFixed}" Name="boardImage" Position="0, 0" />
+    <Sprite Texture="{ContentReference Assets/boardFixed}" Name="TheBoard" Position="0, 0" />
     
 </Scene>

@@ -170,8 +170,10 @@ namespace XNAControl
         protected override void EndDraw()
         {
             base.EndDraw();
-
-            GraphicsDevice.Present();
+            if (GraphicsDevice != null)
+            {
+                GraphicsDevice.Present();
+            }
         }
 
         protected override void Dispose(bool disposing)

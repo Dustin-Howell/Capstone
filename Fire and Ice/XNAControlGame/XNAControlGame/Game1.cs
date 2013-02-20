@@ -28,7 +28,6 @@ namespace XNAControlGame
         Matrix _cameraView;
         Matrix _cameraProj;
         public CreeperBoard Board { get; set; }
-        Vector3 _modelScale = new Vector3( 6, 6, 6 );
         bool _secondClick = false;
         CreeperColor PlayerTurn = CreeperColor.White;
         Texture2D _blankTile;
@@ -94,23 +93,23 @@ namespace XNAControlGame
         protected override void LoadContent()
         {
             // Load the peg model
-            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/sphere");
+            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
             // Load the Tile sprite.
             Sprite tile = new Sprite(GraphicsDevice);
             
-            _blankTile = Content.Load<Texture2D>("square");
-            _whiteTile = Content.Load<Texture2D>("whiteTile");
-            _blackTile = Content.Load<Texture2D>("blackTile");
+            _blankTile = Content.Load<Texture2D>(Resources.Textures.UncapturedTile);
+            _whiteTile = Content.Load<Texture2D>(Resources.Textures.WhiteTile);
+            _blackTile = Content.Load<Texture2D>(Resources.Textures.BlackTile);
 
             // Load a scene from a content file
-            _scene = Content.Load<Scene>("Scene1");
+            _scene = Content.Load<Scene>(Resources.Scenes.MainPlayScene);
 
-            _scene.FindName<FreeCamera>("theCamera").Position = new Vector3(0, (float)-470.27, (float)249.5);
-            _scene.FindName<FreeCamera>("theCamera").Angle = new Vector3((float)-1.13, 0, 0);
+            _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position = new Vector3(0, -242, 379);
+            _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle = new Vector3(-0.5f, 0, 0);
             //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
-            boardHeight = _scene.FindName<Sprite>("boardImage").Texture.Height;
-            boardWidth = _scene.FindName<Sprite>("boardImage").Texture.Width;
+            boardHeight = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Height;
+            boardWidth = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Width;
             squareWidth = boardWidth /6;
             squareHeight = boardHeight / 6;
             Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
@@ -122,11 +121,11 @@ namespace XNAControlGame
             for (int pegNumber = 1; pegNumber < 46; pegNumber++)
             {
                 BasicMaterial defaultMaterial = new BasicMaterial(GraphicsDevice);
-                defaultMaterial.Texture = Content.Load<Texture2D>("Textures/Grid");
+                defaultMaterial.Texture = Content.Load<Texture2D>(Resources.Textures.Default);
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
-                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale( _modelScale ) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale( Resources.Models.PegScale ) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
             }
             //Place a transparent sprite for tiles in every possible tile position.
             startCoordinates += new Vector3(squareWidth / 2, -(squareHeight / 2), 0);
@@ -279,13 +278,13 @@ namespace XNAControlGame
             SpriteBatch spritebatch = new SpriteBatch(GraphicsDevice);
             spritebatch.Begin();
             spritebatch.DrawString(_font, "Player Turn = " + PlayerTurn.ToString(), new Vector2(0, 0), Color.Black);
-            spritebatch.DrawString(_font, "CameraPosition = (" + _scene.FindName<FreeCamera>("theCamera").Position.X.ToString() + ","
-                + _scene.FindName<FreeCamera>("theCamera").Position.Y.ToString() + ","
-                + _scene.FindName<FreeCamera>("theCamera").Position.Z.ToString() + ")"
+            spritebatch.DrawString(_font, "CameraPosition = (" + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position.X.ToString() + ","
+                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position.Y.ToString() + ","
+                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position.Z.ToString() + ")"
             , new Vector2(0, 25), Color.Black);
-            spritebatch.DrawString(_font, "CameraAngle = (" + _scene.FindName<FreeCamera>("theCamera").Angle.X.ToString() + ","
-                + _scene.FindName<FreeCamera>("theCamera").Angle.Y.ToString() + ","
-                + _scene.FindName<FreeCamera>("theCamera").Angle.Z.ToString() + ")"
+            spritebatch.DrawString(_font, "CameraAngle = (" + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.X.ToString() + ","
+                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.Y.ToString() + ","
+                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.Z.ToString() + ")"
             , new Vector2(0, 50), Color.Black);
             
             spritebatch.End();
@@ -332,7 +331,6 @@ namespace XNAControlGame
                     }
                 }
             }
-
 
             foreach (Move move in possible)
             {
