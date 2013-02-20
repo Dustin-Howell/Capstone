@@ -16,7 +16,7 @@
         </Style>
     </UserControl.Resources>
 
-    <DockPanel  VerticalAlignment="Stretch" 
+    <DockPanel  VerticalAlignment="Stretch" Name="XNAPanel"
                 HorizontalAlignment="Stretch">
         <StackPanel Width="125" 
                     Orientation="Vertical"
@@ -37,9 +37,9 @@
         <Grid Name="GameGrid" 
               Style="{StaticResource GameGridStyle}">
             <Border BorderBrush="White" BorderThickness="1"/>
-            <xna:XNAUserControl x:Name="xnaControl" 
-                              Height="600" 
-                              Width="800" 
+            <xna:XNAUserControl x:Name="xnaControl"
+                              Height="720"
+                              Width="1280"
                               VerticalAlignment="Center" 
                               HorizontalAlignment="Center" />
         </Grid>
