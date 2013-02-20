@@ -104,8 +104,7 @@ namespace XNAControlGame
             // Load a scene from a content file
             _scene = Content.Load<Scene>(Resources.Scenes.MainPlayScene);
 
-            _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position = new Vector3(0, -242, 379);
-            _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle = new Vector3(-0.5f, 0, 0);
+            
             //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Height;
