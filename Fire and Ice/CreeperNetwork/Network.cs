@@ -4,20 +4,16 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
+using System.Timers;
 
-/**********************************************
- * Class: Network
- * Description: Contains all the functions 
- * necessary to create a working, networked 
- * game. 
- **********************************************/
 namespace CreeperNetwork
 {
-    public static class Network
+    class Network
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
         public const int SERVER_PORT = 1875;
+        public const int ALT_SERVER_PORT = 1876;
         public const int ACKNOWLEDGEMENT_TIMER = 100;
         public const int PACKET_LOSS = 1000;
         public const int CONNECTION_TIMEOUT = 1000;
@@ -35,177 +31,129 @@ namespace CreeperNetwork
         private const byte CMD_ACK = 0x08;
 
         //Network Variables
-        private static int sequenceNumber = -1;
-        private static int otherSequenceNumber = -1;
-        private static Boolean isServer = false;
-        private static Boolean gameRunning = false;
-        private static UdpClient listener = new UdpClient(SERVER_PORT);
-        private static UdpClient sender = new UdpClient();
-        private static IPEndPoint ipOfLastPacket = new IPEndPoint(IPAddress.Any, SERVER_PORT);
+        private bool isServer = false;
+        private bool serverFull = false;
+        private Timer broadcastTimer = new Timer();
+        private UdpClient listener = new UdpClient(SERVER_PORT);
+        private UdpClient listenerAlt = new UdpClient(ALT_SERVER_PORT);
+        private UdpClient sender = new UdpClient();
+        private IPEndPoint ipOfLastPacket = new IPEndPoint(IPAddress.Any, SERVER_PORT);
+        private int lastReceivedHomeSeqNum = 0;
+        private int homeSequenceNumber = 0;
+        private int awaySequenceNumber = -1;
+        private bool acknowledged = false;
+        private bool gameRunning = true;
+        private string currentMessage = "";
+        private bool newMessage = false;
 
         //Game variables
-        static string hostGameName = "";
-        static string hostPlayerName = "";
-        static string clientPlayerName = "";
+        private string hostGameName = "";
+        private string hostPlayerName = "";
+        private string clientPlayerName = "";
 
 
-        /******************************
-         * Function: hostGame
-         * Description: 
-         *****************************/
-        public static void hostGame(string gameName, string playerName)
+        //SERVER functions
+
+        public void server_hostGame(string gameNameIn, string playerNameIn)
         {
             isServer = true;
-            hostGameName = gameName;
-            hostPlayerName = playerName;
-            startServer();
+            hostGameName = gameNameIn;
+            hostPlayerName = playerNameIn;
+
+            byte[] packet = new byte[MAX_PACKET_SIZE];
+
+            //okay, now what if someone wants to join?
+            //uh...while...
+            while (!serverFull)
+            {
+                packet = receivePacket_blocking();
+
+                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_FIND_SERVER)
+                {
+                    sendPacket(packet_OfferGame(), ipOfLastPacket.Address.ToString());
+                }
+                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_JOIN_GAME)
+                {
+                    if (!server_acceptClient(packet))
+                    {
+                        sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+                    }
+                }
+            }
         }
+
+        public bool server_acceptClient(byte[] packetIn)
+        {
+            bool accepted = false;
+
+            //valid game..for now, just accept all.
+            if (!serverFull)
+            {
+                serverFull = true;
+                accepted = true;
+                clientPlayerName = BitConverter.ToString(packetIn, 23, 9);
+            }
+
+            return accepted;
+        }
+
+        public void server_startGame()
+        {
+            sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
+
+            try
+            {
+                //As soon as the client ACK the packet, we begin.
+                byte[] packet = new byte[MAX_PACKET_SIZE];
+
+                while (!acknowledged)
+                {
+                    packet = receivePacket_blocking();
+
+                    if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
+                    {
+                        //does the sequence number they sent us back match ours?
+                        if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                        {
+                            awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                            lastReceivedHomeSeqNum = homeSequenceNumber;
+                            acknowledged = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //timeout...
+            }
+        }
+
+        //client functions
 
         /******************************
          * Function: findGames
          * Description: 
          *****************************/
-        public static string[,] findGames()
-        {
-            isServer = false;
-            return searchForGames();
-        }
-
-        public static void joinGame(string[] gameIn)
-        {
-            sendPacket(JoinGame(gameIn), gameIn[0]);
-        }
-
-        public static void startGame()
-        {
-            sendPacket(StartGame(), ipOfLastPacket.Address.ToString());
-        }
-
-        public static void runGame()
-        {
-            gameRunning = true;
-
-            while (gameRunning)
-            {
-                //first let's check to see if there are any packets out there...
-                byte[] packet = new byte[MAX_PACKET_SIZE];
-
-                listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
-
-                try
-                {
-                    packet = receivePacket();
-                }
-                catch (Exception)
-                {
-                    packet = null;
-                }
-
-                listener.Client.ReceiveTimeout = 0;
-
-                if (packet != null && packet[0] == PACKET_SIGNATURE)
-                {
-                    //certain commands shouldn't come at this point...let's ignore FindServers, OfferGame, JoinGame, StartGame
-                    //only disconnect, ack, or a control command should arrive.
-                    if (packet[1] == CMD_ACK)
-                    {
-                        otherSequenceNumber = BitConverter.ToInt32(packet, 2);
-
-                        //to be erased....
-                        Console.WriteLine("StartGame Acknowledged.");
-                    }
-                    else if (packet[1] == CMD_DISCONNECT)
-                    {
-                        //this is game over...should shut it all down now. 
-                        gameRunning = false;
-                    }
-                    else if (packet[1] == CMD_CHAT)
-                    {
-                        otherSequenceNumber = BitConverter.ToInt32(packet, 2);
-                        sendPacket(Ack(), ipOfLastPacket.Address.ToString());
-                    }
-                    else if (packet[1] == CMD_MAKE_MOVE)
-                    {
-                        otherSequenceNumber = BitConverter.ToInt32(packet, 2);
-                        sendPacket(Ack(), ipOfLastPacket.Address.ToString());
-                    }
-                }
-
-                //now we can send our control commands...
-                if (sequenceNumber == otherSequenceNumber)
-                {
-                    //control command...make move, chat
-                    //let's set some flags that can be set statically. 
-                    //This'll make it easier to keep track. 
-
-
-                }
-            }
-        }
-
-        /******************************
-         * Function: startServer
-         * Description: 
-         *****************************/
-        public static void startServer()
-        {
-            while (isServer)
-            {
-                byte[] packet = new byte[MAX_PACKET_SIZE];
-                packet = receivePacket();
-
-                //Is someone looking for this server?
-                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_FIND_SERVER)
-                {
-                    sendPacket(OfferGame(), ipOfLastPacket.Address.ToString());
-                }
-
-                //Did someone want to join this server?
-                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_JOIN_GAME)
-                {
-                    //should probably authenticate here...or maybe when searching for games...or both? Yeah, probably both.
-                    Boolean gameValid = true;
-
-                    if (gameValid)
-                    {
-                        sequenceNumber = BitConverter.ToInt32(packet, 2);
-                        otherSequenceNumber = sequenceNumber;
-                        clientPlayerName = BitConverter.ToString(packet, 23, 9);
-                        break;
-                    }
-                    else
-                    {
-                        sendPacket(Disconnect(), ipOfLastPacket.Address.ToString());
-                    }
-                }
-            }
-        }
-
-        public static string[,] searchForGames()
+        public string[,] client_findGames()
         {
             string[,] games = new string[256, 7];
             int gameCounter = 0;
             Stopwatch serverStopwatch = new Stopwatch();
 
-            sendPacket(FindServers(), BROADCAST_IP);
+            broadcastPacket(packet_FindServers());
 
-            //Start time...
-            listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
             serverStopwatch.Start();
 
             while (serverStopwatch.Elapsed < TimeSpan.FromMilliseconds(CONNECTION_TIMEOUT))
             {
                 byte[] packet = new byte[MAX_PACKET_SIZE];
-                packet = receivePacket();
+                packet = receivePacket_blockWithTimeout();
 
                 if (packet == null)
                     break;
 
                 if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_OFFER_GAME)
                 {
-                    //sequence number...not sure what to do with it.
-                    BitConverter.ToInt32(packet, 2);
-
                     games[gameCounter, 0] = ipOfLastPacket.Address.ToString();
                     games[gameCounter, 1] = packet[6].ToString();
                     games[gameCounter, 2] = BitConverter.ToInt32(packet, 7).ToString();
@@ -218,11 +166,232 @@ namespace CreeperNetwork
                 }
             }
 
-            listener.Client.ReceiveTimeout = 0;
-
             serverStopwatch.Stop();
 
             return games;
+        }
+
+        public void client_joinGame(string[] gameIn)
+        {
+            sendPacket(packet_JoinGame(gameIn), gameIn[0]);
+        }
+
+        public void client_ackStartGame()
+        {
+            byte[] packet = new byte[MAX_PACKET_SIZE];
+            Boolean gameStarted = false;
+
+            while (!gameStarted)
+            {
+                packet = receivePacket_blocking();
+
+                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_START_GAME)
+                {
+                    awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                    sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
+                    gameStarted = true;
+                    acknowledged = true;
+                }
+            }
+        }
+
+        //Game functions
+
+        public void playGame()
+        {
+            byte[] packet = new byte[MAX_PACKET_SIZE];
+
+            Console.WriteLine("GAME STARTED.");
+
+            gameRunning = true;
+
+            while (gameRunning)
+            {
+                packet = receivePacket_blocking();
+
+                if (packet[0] == PACKET_SIGNATURE)
+                {
+                    //Did someone disconnect?
+                    if (packet[1] == CMD_DISCONNECT)
+                    {
+                        gameRunning = false;
+                    }
+                    //Are we waiting for an ACK?
+                    else if (!acknowledged)
+                    {
+                        if (packet[1] == CMD_ACK && homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                        {
+                            acknowledged = true;
+                            awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                        }
+
+                        lastReceivedHomeSeqNum = BitConverter.ToInt32(packet, 6);
+                    }
+                    //something else...
+                    else if (packet[1] == CMD_CHAT)
+                    {
+                        currentMessage = Encoding.ASCII.GetString(packet, 10, 14);
+                        awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                        newMessage = true;
+                        acknowledged = true;
+                        sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
+                    }
+                    else if (packet[1] == CMD_MAKE_MOVE)
+                    {
+                        awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                        sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
+                        acknowledged = true;
+                    }
+
+                }
+            }
+
+
+        }
+
+        public void disconnect()
+        {
+            sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+            listener.Close();
+            sender.Close();
+        }
+
+        public void keepAlive()
+        {
+            Timer ackTimer = new Timer();
+            ackTimer.Elapsed += new ElapsedEventHandler(sendAckOnTime);
+            // Set the Interval to 5 seconds.
+            ackTimer.Interval = ACKNOWLEDGEMENT_TIMER;
+            ackTimer.Enabled = true;
+            ackTimer.AutoReset = true;
+
+            byte[] packet;
+            Stopwatch stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
+            while (gameRunning)
+            {
+                packet = receivePacket_blockWithTimeout_altPort();
+
+                if (packet == null)
+                {
+                    Console.WriteLine("We have connection issues");
+                }
+                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
+                {
+                    if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                    {
+                        stopwatch.Restart();
+                    }
+
+                    awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+
+                    if (stopwatch.ElapsedMilliseconds > PACKET_LOSS)
+                    {
+                        //resend the last command...whatever it was...
+                        Console.WriteLine("Packet lost. Resend the last command.");
+                    }
+                }
+            }
+        }
+
+        public void chat(string messageIn)
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                sendPacket(packet_Chat(messageIn), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        public void move()
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                sendPacket(packet_MakeMove(), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        public string getChatMessage()
+        {
+            string message = "";
+
+            newMessage = false;
+            message = currentMessage;
+
+            return message;
+        }
+
+        public bool newMessageAvailable()
+        {
+            return newMessage;
+        }
+
+        //BACKGROUND functions
+
+        private void sendAckOnTime(object source, ElapsedEventArgs e)
+        {
+            sendPacket_altPort(packet_Ack(), ipOfLastPacket.Address.ToString());
+        }
+
+        private byte[] receivePacket_blocking()
+        {
+            byte[] data = new byte[256];
+
+            data = listener.Receive(ref ipOfLastPacket);
+
+            return data;
+        }
+
+        private byte[] receivePacket_blockWithTimeout()
+        {
+            byte[] data = new byte[256];
+
+            listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+
+            try
+            {
+                data = listener.Receive(ref ipOfLastPacket);
+            }
+            catch (Exception)
+            {
+                data = null;
+            }
+
+            listener.Client.ReceiveTimeout = 0;
+
+            return data;
+        }
+
+        private byte[] receivePacket_blockWithTimeout_altPort()
+        {
+            byte[] data = new byte[256];
+
+            listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+
+            try
+            {
+                data = listenerAlt.Receive(ref ipOfLastPacket);
+            }
+            catch (Exception)
+            {
+                data = null;
+            }
+
+            listenerAlt.Client.ReceiveTimeout = 0;
+
+            return data;
+        }
+
+        private byte[] receivePacket_noBlock()
+        {
+            byte[] data = new byte[256];
+
+            data = listener.Receive(ref ipOfLastPacket);
+
+            return data;
         }
 
         /******************************
@@ -230,54 +399,35 @@ namespace CreeperNetwork
          * Description: Sends a packet 
          * destination ip and port
          *****************************/
-        public static void sendPacket(byte[] packetIn, String ipAddressIn)
+        public void sendPacket(byte[] packetIn, String ipAddressIn)
         {
             sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
         }
 
+        public void sendPacket_altPort(byte[] packetIn, String ipAddressIn)
+        {
+            sender.Send(packetIn, packetIn.Length, ipAddressIn, ALT_SERVER_PORT);
+        }
+
         /******************************
          * Function: broadcastPacket
          * Description: broadcasts
          * a packet to all devices
          * on the network
          *****************************/
-        public static void broadcastPacket(byte[] packetIn)
+        public void broadcastPacket(byte[] packetIn)
         {
             sendPacket(packetIn, BROADCAST_IP);
         }
 
-        //IN PROGRESS
-        public static void closeServer()
-        {
-            isServer = false;
-        }
 
-        //IN PROGRESS
-        public static void closeClient()
-        {
+        //TIME TRIGGERED BACKGROUND functions
 
-        }
 
-        /******************************
-         * Function: broadcastPacket
-         * Description: broadcasts
-         * a packet to all devices
-         * on the network
-         *****************************/
-        public static byte[] receivePacket()
-        {
-            byte[] data = new byte[256];
 
-            try
-            {
-                data = listener.Receive(ref ipOfLastPacket);
-            }
-            catch (Exception) { data = null; }
+        //PACKETS
 
-            return data;
-        }
-
-        static byte[] OfferGame()
+        private byte[] packet_OfferGame()
         {
             byte[] packet = new byte[33];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
@@ -285,7 +435,7 @@ namespace CreeperNetwork
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_OFFER_GAME;
 
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             packet[6] = PROTOCOL_VERSION;
 
@@ -336,20 +486,20 @@ namespace CreeperNetwork
             return packet;
         }
 
-        static byte[] FindServers()
+        private byte[] packet_FindServers()
         {
             byte[] packet = new byte[6];
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_FIND_SERVER;
 
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             return packet;
         }
 
         //note that the first element of gameIn is the ipAddress of the game
-        static byte[] JoinGame(string[] gameIn)
+        private byte[] packet_JoinGame(string[] gameIn)
         {
             byte[] packet = new byte[33];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
@@ -358,7 +508,7 @@ namespace CreeperNetwork
             packet[1] = CMD_JOIN_GAME;
 
             //sequence number
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             //game protocol version
             packet[6] = Convert.ToByte(gameIn[1]);
@@ -407,40 +557,42 @@ namespace CreeperNetwork
             return packet;
         }
 
-        static byte[] StartGame()
+        private byte[] packet_StartGame()
         {
             byte[] packet = new byte[6];
+
+            homeSequenceNumber++;
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_START_GAME;
 
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
-
-            sequenceNumber++;
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             return packet;
         }
 
-        static byte[] Disconnect()
+        private byte[] packet_Disconnect()
         {
             byte[] packet = new byte[6];
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_DISCONNECT;
 
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             return packet;
         }
 
-        static byte[] MakeMove()
+        private byte[] packet_MakeMove()
         {
             byte[] packet = new byte[11];
+
+            homeSequenceNumber++;
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_MAKE_MOVE;
 
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             //move type
             packet[6] = 0x01;
@@ -456,51 +608,64 @@ namespace CreeperNetwork
             return packet;
         }
 
-        static byte[] Chat()
+        private byte[] packet_Chat(string messageIn)
         {
-            byte[] packet = new byte[11];
+            byte[] packet = new byte[24];
+            System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+
+            homeSequenceNumber++;
 
             packet[0] = PACKET_SIGNATURE;
-            packet[1] = CMD_MAKE_MOVE;
+            packet[1] = CMD_CHAT;
 
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             //message length
-            packet[6] = 0x01;
-            packet[7] = 0x01;
-            packet[8] = 0x01;
-            packet[9] = 0x01;
+            packet[6] = 0x00;
+            packet[7] = 0x00;
+            packet[8] = 0x00;
+            packet[9] = 0x00;
 
             //message
-            packet[10] = 0x01;
-            packet[11] = 0x01;
-            packet[12] = 0x01;
-            packet[13] = 0x01;
-            packet[14] = 0x01;
-            packet[15] = 0x01;
-            packet[16] = 0x01;
-            packet[17] = 0x01;
-            packet[18] = 0x01;
-            packet[19] = 0x01;
-            packet[20] = 0x01;
-            packet[21] = 0x01;
-            packet[22] = 0x01;
-            packet[23] = 0x01;
+            packet[10] = 0x00;
+            packet[11] = 0x00;
+            packet[12] = 0x00;
+            packet[13] = 0x00;
+            packet[14] = 0x00;
+            packet[15] = 0x00;
+            packet[16] = 0x00;
+            packet[17] = 0x00;
+            packet[18] = 0x00;
+            packet[19] = 0x00;
+            packet[20] = 0x00;
+            packet[21] = 0x00;
+            packet[22] = 0x00;
+            packet[23] = 0x00;
+
+            (encoding.GetBytes(messageIn)).CopyTo(packet, 10);
 
             return packet;
         }
 
-        static byte[] Ack()
+        private byte[] packet_Ack()
         {
             byte[] packet = new byte[10];
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_ACK;
 
-            (BitConverter.GetBytes(sequenceNumber)).CopyTo(packet, 2);
-            (BitConverter.GetBytes(otherSequenceNumber)).CopyTo(packet, 6);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(awaySequenceNumber)).CopyTo(packet, 6);
+
+            // Console.WriteLine("ACK.");
 
             return packet;
         }
+    }
+
+    class UdpState
+    {
+        public IPEndPoint ip;
+        public UdpClient client;
     }
 }
