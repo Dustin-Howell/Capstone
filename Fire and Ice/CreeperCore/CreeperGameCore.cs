@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Creeper;
+using CreeperNetwork;
 using XNAControlGame;
 using System.ComponentModel;
 
@@ -14,8 +15,9 @@ namespace CreeperCore
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
         private Player CurrentPlayer { get; set; }
-        protected Game1 _xnaGame;
-        protected CreeperAI.CreeperAI _AI;
+        private Game1 _xnaGame;
+        private CreeperAI.CreeperAI _AI;
+        private Network _network;
         private BackgroundWorker _getAIMoveWorker;
         private BackgroundWorker _getXNAMoveWorker;
         private BackgroundWorker _getNetworkMoveWorker;
@@ -29,6 +31,7 @@ namespace CreeperCore
             _AI = new CreeperAI.CreeperAI(2, 10, .01, 11, 1000);
             _xnaGame = xnaGame;
             _xnaGame.Board = Board;
+            _network = new Network();
         }
 
         private void InitializeBackgroundWorkers()
@@ -86,12 +89,30 @@ namespace CreeperCore
             e.Result = _AI.GetMove(Board, CurrentPlayer.Color);
         }
 
-        public void StartGame(PlayerType player1Type, PlayerType player2Type)
+        public void StartLocalGame(PlayerType player1Type, PlayerType player2Type)
         {
+            if (player1Type == PlayerType.Network || player2Type == PlayerType.Network)
+            {
+                throw new ArgumentException("Cannot start a local game with a player type of network.");
+            }
+
             Player1 = new Player(player1Type, CreeperColor.White);
             Player2 = new Player(player2Type, CreeperColor.Black);
             CurrentPlayer = Player1;
             GetNextMove();
+        }
+
+        public void StartNetworkGame(PlayerType player1Type, PlayerType player2Type, Network network)
+        {
+            if (player1Type == PlayerType.Network && player2Type == PlayerType.Network)
+            {
+                throw new ArgumentException("Cannot start network game where both players are network players.");
+            }
+
+            _network = network;
+
+            Player1 = new Player(player1Type, CreeperColor.White);
+            Player2 = new Player(player2Type, CreeperColor.Black);
         }
 
         private void GetNextMove()

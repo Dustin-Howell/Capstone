@@ -51,6 +51,10 @@
       <Project>{33BA3E7F-7DA1-4A7D-8215-845273C681AA}</Project>
       <Name>CreeperAI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CreeperNetwork\CreeperNetwork.csproj">
+      <Project>{0FCE3293-C97E-4A99-95C7-2D592B7F949D}</Project>
+      <Name>CreeperNetwork</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Creeper\Creeper.csproj">
       <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
       <Name>Creeper</Name>

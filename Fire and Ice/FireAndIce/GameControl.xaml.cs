@@ -33,7 +33,7 @@ namespace FireAndIce
             _xnaGame = new XNAControlGame.Game1(xnaControl.Handle, 1280, 720);
             //_gameCore = new CreeperCore.CreeperCore(_xnaGame);
             _gameCore = new CreeperGameCore(_xnaGame);
-            _gameCore.StartGame(playerType, opponentType);
+            _gameCore.StartLocalGame(playerType, opponentType);
         }
     }
 }

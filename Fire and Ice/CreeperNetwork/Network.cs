@@ -5,10 +5,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
 using System.Timers;
+using Creeper;
 
 namespace CreeperNetwork
 {
-    class Network
+    public class Network
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
@@ -45,6 +46,8 @@ namespace CreeperNetwork
         private bool gameRunning = true;
         private string currentMessage = "";
         private bool newMessage = false;
+        private Move currentMove;
+        private bool newMove = false;
 
         //Game variables
         private string hostGameName = "";
@@ -130,10 +133,6 @@ namespace CreeperNetwork
 
         //client functions
 
-        /******************************
-         * Function: findGames
-         * Description: 
-         *****************************/
         public string[,] client_findGames()
         {
             string[,] games = new string[256, 7];
@@ -241,6 +240,16 @@ namespace CreeperNetwork
                         awaySequenceNumber = BitConverter.ToInt32(packet, 2);
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                         acknowledged = true;
+
+                        if (packet[6] == NetworkMoveType.MOVE)
+                        {
+                            currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
+                            newMove = true;
+                        }
+                        else if (packet[6] == NetworkMoveType.FORFEIT || packet[6] == NetworkMoveType.ILLEGAL)
+                        {
+                            sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+                        }
                     }
 
                 }
@@ -305,29 +314,58 @@ namespace CreeperNetwork
             }
         }
 
-        public void move()
+        public void move(Move moveIn)
         {
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
-                sendPacket(packet_MakeMove(), ipOfLastPacket.Address.ToString());
+                sendPacket(packet_MakeMove(moveIn, NetworkMoveType.MOVE), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        public void forfeit()
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty), 
+                    NetworkMoveType.FORFEIT), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        public void illegalMove()
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty),
+                    NetworkMoveType.ILLEGAL), ipOfLastPacket.Address.ToString());
                 acknowledged = false;
             }
         }
 
         public string getChatMessage()
         {
-            string message = "";
-
             newMessage = false;
-            message = currentMessage;
-
-            return message;
+            return currentMessage;
         }
 
         public bool newMessageAvailable()
         {
             return newMessage;
         }
+
+        public Move getNextMove()
+        {
+            newMove = false;
+            return currentMove;
+        }
+
+        public bool newMoveAvailable()
+        {
+            return newMove;
+        }
+
+
 
         //BACKGROUND functions
 
@@ -399,12 +437,12 @@ namespace CreeperNetwork
          * Description: Sends a packet 
          * destination ip and port
          *****************************/
-        public void sendPacket(byte[] packetIn, String ipAddressIn)
+        private void sendPacket(byte[] packetIn, String ipAddressIn)
         {
             sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
         }
 
-        public void sendPacket_altPort(byte[] packetIn, String ipAddressIn)
+        private void sendPacket_altPort(byte[] packetIn, String ipAddressIn)
         {
             sender.Send(packetIn, packetIn.Length, ipAddressIn, ALT_SERVER_PORT);
         }
@@ -415,7 +453,7 @@ namespace CreeperNetwork
          * a packet to all devices
          * on the network
          *****************************/
-        public void broadcastPacket(byte[] packetIn)
+        private void broadcastPacket(byte[] packetIn)
         {
             sendPacket(packetIn, BROADCAST_IP);
         }
@@ -583,7 +621,7 @@ namespace CreeperNetwork
             return packet;
         }
 
-        private byte[] packet_MakeMove()
+        private byte[] packet_MakeMove(Move moveIn, byte moveTypeIn)
         {
             byte[] packet = new byte[11];
 
@@ -595,15 +633,15 @@ namespace CreeperNetwork
             (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             //move type
-            packet[6] = 0x01;
+            packet[6] = moveTypeIn;
 
             //source
-            packet[7] = 0x01;
-            packet[8] = 0x01;
+            packet[7] = (byte)moveIn.StartPosition.Row;
+            packet[8] = (byte)moveIn.StartPosition.Column;
 
             //destination
-            packet[9] = 0x01;
-            packet[10] = 0x01;
+            packet[9] = (byte)moveIn.EndPosition.Row;
+            packet[10] = (byte)moveIn.EndPosition.Column;
 
             return packet;
         }
@@ -667,5 +705,12 @@ namespace CreeperNetwork
     {
         public IPEndPoint ip;
         public UdpClient client;
+    }
+
+    public class NetworkMoveType
+    {
+        public static const byte MOVE = 1;
+        public static const byte FORFEIT = 2;
+        public static const byte ILLEGAL = 3;
     }
 }
