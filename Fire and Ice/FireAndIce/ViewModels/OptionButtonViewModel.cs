@@ -9,6 +9,25 @@ namespace FireAndIce.ViewModels
     public class OptionButtonViewModel : PropertyChangedBase
     {
         public System.Action ClickAction { get; set; }
+        public event EventHandler WasClicked;
+
+        private bool _isOptionChecked;
+        public bool IsOptionChecked
+        {
+            get
+            {
+                return _isOptionChecked;
+            }
+
+            set
+            {
+                if (_isOptionChecked != value)
+                {
+                    _isOptionChecked = value;
+                    NotifyOfPropertyChange(() => IsOptionChecked);
+                }
+            }
+        }
 
         private string _title;
         public string Title
@@ -27,6 +46,10 @@ namespace FireAndIce.ViewModels
         public void Click()
         {
             ClickAction();
+            if (WasClicked != null)
+            {
+                WasClicked(this, null);
+            }
         }
     }
 }

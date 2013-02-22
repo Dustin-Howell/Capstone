@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Caliburn.Micro;
-using System.Collections.ObjectModel;
 
 namespace FireAndIce.ViewModels
 {
@@ -27,6 +26,22 @@ namespace FireAndIce.ViewModels
         public SlideOutPanelViewModel(IEnumerable<OptionButtonViewModel> buttons)
         {
             Buttons = new BindableCollection<OptionButtonViewModel>(buttons);
+
+            foreach (OptionButtonViewModel button in Buttons)
+            {
+                button.WasClicked += new EventHandler(_wasClicked);
+            }
+        }
+
+        private void _wasClicked(object o, EventArgs e)
+        {
+            foreach (OptionButtonViewModel button in Buttons)
+            {
+                if (button != o)
+                {
+                    button.IsOptionChecked = false;
+                }
+            }
         }
     }
 }
