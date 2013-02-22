@@ -709,8 +709,8 @@ namespace CreeperNetwork
 
     public class NetworkMoveType
     {
-        public static const byte MOVE = 1;
-        public static const byte FORFEIT = 2;
-        public static const byte ILLEGAL = 3;
+        public const byte MOVE = 1;
+        public const byte FORFEIT = 2;
+        public const byte ILLEGAL = 3;
     }
 }

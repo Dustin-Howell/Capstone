@@ -68,6 +68,11 @@ namespace XNAControlGame
             return LastMoveMade;
         }
 
+        public void OnMoveMade(Move move)
+        {
+
+        }
+
         /// <summary>
         /// Convert a peg number a board position (row and column). Specialized for the GUI.
         /// </summary>
@@ -90,6 +95,7 @@ namespace XNAControlGame
 
             return position;
         }
+
 
         /// <summary>
         /// Constructor for Game1.

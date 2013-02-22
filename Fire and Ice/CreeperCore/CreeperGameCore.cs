@@ -11,7 +11,41 @@ namespace CreeperCore
 {
     public class CreeperGameCore
     {
-        public CreeperBoard Board { get; private set; }
+        public CreeperBoard Board
+        {
+            get
+            {
+                return _board;
+            }
+
+            private set
+            {
+                _board = value;
+                if (XNAGame != null)
+                {
+                    XNAGame.Board = _board;
+                }
+            }
+        }
+
+        public Game1 XNAGame
+        {
+            get
+            {
+                return _xnaGame;
+            }
+            set
+            {
+                _xnaGame = value;
+                if (Board != null)
+                {
+                    _xnaGame.Board = Board;
+                }
+            }
+        }
+
+        //public EventHandler MoveMade;
+
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
         private Player CurrentPlayer { get; set; }
@@ -21,16 +55,14 @@ namespace CreeperCore
         private BackgroundWorker _getAIMoveWorker;
         private BackgroundWorker _getXNAMoveWorker;
         private BackgroundWorker _getNetworkMoveWorker;
+        private CreeperBoard _board;
 
-        public CreeperGameCore(Game1 xnaGame)
+        public CreeperGameCore()
         {
-            _xnaGame = xnaGame;
             InitializeBackgroundWorkers();
 
             Board = new CreeperBoard();
             _AI = new CreeperAI.CreeperAI(2, 10, .01, 11, 1000);
-            _xnaGame = xnaGame;
-            _xnaGame.Board = Board;
             _network = new Network();
         }
 
@@ -52,6 +84,13 @@ namespace CreeperCore
         private void RunWorkerCompleted(RunWorkerCompletedEventArgs e)
         {
             Board.Move((Move)e.Result);
+            XNAGame.OnMoveMade((Move)e.Result);
+
+            //if (MoveMade != null)
+            //{
+            //    MoveMade((Move)e.Result, null);
+            //}
+
             if (!Board.IsFinished(CurrentPlayer.Color))
             {
                 CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
@@ -76,7 +115,10 @@ namespace CreeperCore
 
         void _getXNAMoveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = _xnaGame.GetMove(CurrentPlayer.Color);
+            if (XNAGame != null)
+            {
+                e.Result = XNAGame.GetMove(CurrentPlayer.Color);
+            }
         }
 
         void _getAIMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -87,6 +129,12 @@ namespace CreeperCore
         void _getAIMoveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             e.Result = _AI.GetMove(Board, CurrentPlayer.Color);
+        }
+
+        public void InitializeGameGUI(IntPtr handle, int width, int height)
+        {
+            XNAGame = new Game1(handle, width, height);
+            //MoveMade += new EventHandler(XNAGame.OnMoveMade);
         }
 
         public void StartLocalGame(PlayerType player1Type, PlayerType player2Type)

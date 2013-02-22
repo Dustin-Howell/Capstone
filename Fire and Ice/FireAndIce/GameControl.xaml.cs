@@ -24,15 +24,16 @@ namespace FireAndIce
         //protected CreeperCore.CreeperCore _gameCore;
         protected CreeperGameCore _gameCore;
         protected CreeperBoard _board;
-        protected XNAControlGame.Game1 _xnaGame;
+        //protected XNAControlGame.Game1 _xnaGame;
 
         public GameControl(PlayerType playerType, PlayerType opponentType)
         {
             InitializeComponent();
 
-            _xnaGame = new XNAControlGame.Game1(xnaControl.Handle, 1280, 720);
+            //_xnaGame = new XNAControlGame.Game1(xnaControl.Handle, 1280, 720);
             //_gameCore = new CreeperCore.CreeperCore(_xnaGame);
-            _gameCore = new CreeperGameCore(_xnaGame);
+            //_gameCore = new CreeperGameCore(_xnaGame);
+            AppModel.Core.InitializeGameGUI(xnaControl.Handle, 1280, 720);
             _gameCore.StartLocalGame(playerType, opponentType);
         }
     }
