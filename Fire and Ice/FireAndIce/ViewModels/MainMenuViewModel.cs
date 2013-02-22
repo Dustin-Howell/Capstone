@@ -6,8 +6,36 @@ using Caliburn.Micro;
 
 namespace FireAndIce.ViewModels
 {
-    public class MainMenuViewModel : Conductor<Screen>.Collection.OneActive
+    public class MainMenuViewModel : Screen
     {
+        private BindableCollection<SlideOutPanelViewModel> _menus;
+        public BindableCollection<SlideOutPanelViewModel> Menus
+        {
+            get
+            {
+                return _menus;
+            }
+            set
+            {
+                _menus = value;
+                NotifyOfPropertyChange(() => Menus);
+            }
+        }
+
+        //private BindableCollection<String> _menus;
+        //public BindableCollection<String> Menus
+        //{
+        //    get
+        //    {
+        //        return _menus;
+        //    }
+        //    set
+        //    {
+        //        _menus = value;
+        //        NotifyOfPropertyChange(() => Menus);
+        //    }
+        //}
+
         private bool _newGameChecked;
         public bool NewGameChecked 
         {
@@ -29,18 +57,39 @@ namespace FireAndIce.ViewModels
 
         public void NewGame()
         {
-            ActivateItem(new SlideOutPanelViewModel(
+            Menus.Clear();
+            Menus.Add(new SlideOutPanelViewModel(
                 new List<OptionButtonViewModel> {
                     new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
-                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
-                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
-                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
-                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
+                    new OptionButtonViewModel { ClickAction = () => StartNetworkGame(), Title = "Network" },
             }));
+
+            NotifyOfPropertyChange(() => Menus);
         }
+
 
         private void StartLocalGame()
         {
+            Menus.Add(new SlideOutPanelViewModel(
+                new List<OptionButtonViewModel>{
+                    new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(), Title = "AI"},
+            }));
+        }
+
+        private void StartLocalAIGame()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void StartLocalHumanGame()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void StartNetworkGame()
+        {
+            
         }
 
         public void Help()
@@ -61,6 +110,10 @@ namespace FireAndIce.ViewModels
 
         public MainMenuViewModel()
         {
+            Menus = new BindableCollection<SlideOutPanelViewModel>()
+                {
+                };
+
             MainMenu = new SlideOutPanelViewModel(
                 new List<OptionButtonViewModel> {
                     new OptionButtonViewModel { ClickAction = () => NewGame(), Title = "New Game" },

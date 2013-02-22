@@ -27,24 +27,14 @@
                     Orientation="Vertical"
                     Background="Transparent"
                     VerticalAlignment="Center">
-                <!--<ToggleButton x:Name="NewGame" IsChecked="{Binding NewGameChecked}">New Game</ToggleButton>
-                <ToggleButton x:Name="Help">Help</ToggleButton>
-                <ToggleButton x:Name="HighScore">High Scores</ToggleButton>
-                <ToggleButton x:Name="Settings">Settings</ToggleButton>
-                <ToggleButton x:Name="Credits">Credits</ToggleButton>-->
+                
                 <ContentControl x:Name="MainMenu" />
+                
             </StackPanel>
         </Border>
         
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            
-            <ContentControl x:Name="ActiveItem" Grid.Column="0" Panel.ZIndex="5"/>
 
             <!--Main Area-->
             <Border Background="White"
@@ -58,6 +48,14 @@
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center"/>
             </Border>
+            
+            <ItemsControl x:Name="Menus" VerticalAlignment="Stretch" HorizontalAlignment="Left" Background="AliceBlue">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Grid>
 
     </DockPanel>
