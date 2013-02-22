@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
              mc:Ignorable="d" 
-             VerticalAlignment="Center">
-    <ItemsControl ItemsSource="{Binding Buttons}">
+             VerticalAlignment="Stretch"
+             Background="{Binding Background}"
+             Width="{Binding Width}">
+    <ItemsControl ItemsSource="{Binding Buttons}" VerticalAlignment="Center">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <ContentControl cal:View.Model="{Binding}" />

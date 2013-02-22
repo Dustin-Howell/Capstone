@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--Button-->
-    <Style TargetType="Button">
+    <Style TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels"
           Value="true" />
         <Setter Property="OverridesDefaultStyle"
@@ -80,7 +80,7 @@
     </Style>
 
     <!-- Toggle Button -->
-    <Style TargetType="ToggleButton">
+    <Style TargetType="{x:Type ToggleButton}">
         <Setter Property="SnapsToDevicePixels"
           Value="true" />
         <Setter Property="OverridesDefaultStyle"

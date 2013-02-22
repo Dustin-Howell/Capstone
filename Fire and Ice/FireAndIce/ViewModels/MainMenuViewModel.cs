@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Caliburn.Micro;
+using System.Windows;
+using System.Windows.Media;
 
 namespace FireAndIce.ViewModels
 {
     public class MainMenuViewModel : Screen
     {
+        //TODO: Move this to App
+        public ResourceDictionary Resources { get { return new ResourceDictionary() { Source = new Uri(@"..\Resources.xaml", UriKind.Relative) }; } }
+
         private BindableCollection<SlideOutPanelViewModel> _menus;
         public BindableCollection<SlideOutPanelViewModel> Menus
         {
@@ -62,7 +67,7 @@ namespace FireAndIce.ViewModels
                 new List<OptionButtonViewModel> {
                     new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
                     new OptionButtonViewModel { ClickAction = () => StartNetworkGame(), Title = "Network" },
-            }));
+            }, Resources["Primary4"] as SolidColorBrush, 200d));
 
             NotifyOfPropertyChange(() => Menus);
         }
@@ -70,11 +75,11 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalGame()
         {
-            Menus.Add(new SlideOutPanelViewModel(
-                new List<OptionButtonViewModel>{
-                    new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
-                    new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(), Title = "AI"},
-            }));
+            //Menus.Add(new SlideOutPanelViewModel(
+            //    new List<OptionButtonViewModel>{
+            //        new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
+            //        new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(), Title = "AI"},
+            //}, ));
         }
 
         private void StartLocalAIGame()
@@ -121,7 +126,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel { ClickAction = () => HighScores(), Title = "High Scores" },
                     new OptionButtonViewModel { ClickAction = () => Settings(), Title = "Settings" },
                     new OptionButtonViewModel { ClickAction = () => Credits(), Title = "Credits" },
-                });
+                }, Resources["Primary1"] as SolidColorBrush, 200d);
         }
     }
 }
