@@ -5,12 +5,13 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources.xaml" />
                 <ResourceDictionary>
                     <local:AppBootStrapper x:Key="boostrapper" />
                 </ResourceDictionary>
+                <ResourceDictionary Source="Styles/Buttons.xaml" />
                 <ResourceDictionary Source="ColorSchemes/Default.xaml" />
                 <ResourceDictionary Source="Effects/Effects.xaml" />
-                <ResourceDictionary Source="Styles/Buttons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
