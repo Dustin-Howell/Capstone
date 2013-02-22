@@ -17,8 +17,11 @@ namespace FireAndIce.ViewModels
             }
             set
             {
-                NotifyOfPropertyChange(() => NewGameChecked);
-                _newGameChecked = value;
+                if (_newGameChecked != value)
+                {
+                    _newGameChecked = value;
+                    NotifyOfPropertyChange(() => NewGameChecked);
+                }
             }
         }
 
@@ -26,14 +29,15 @@ namespace FireAndIce.ViewModels
         {
             ActivateItem(new SlideOutPanelViewModel(new List<OptionButtonViewModel> {
                 new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
+                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
+                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
+                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
+                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
             }));
         }
 
         private void StartLocalGame()
         {
-            ActivateItem(new SlideOutPanelViewModel(new List<OptionButtonViewModel> {
-                new OptionButtonViewModel {ClickAction = () => StartAIGame(), Title = "AI" },
-            }));
         }
 
         private void StartAIGame()

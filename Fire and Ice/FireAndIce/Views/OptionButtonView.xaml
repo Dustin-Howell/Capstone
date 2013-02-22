@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     
-    <ToggleButton x:Name="Click" Content="{Binding Title}">
+    <ToggleButton x:Name="Click" Content="{Binding Title}" IsChecked="{Binding IsOptionChecked}">
     </ToggleButton>
 </UserControl>
