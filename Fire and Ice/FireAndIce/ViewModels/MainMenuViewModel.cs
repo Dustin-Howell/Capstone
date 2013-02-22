@@ -25,14 +25,17 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        public SlideOutPanelViewModel MainMenu { get; set; }
+
         public void NewGame()
         {
-            ActivateItem(new SlideOutPanelViewModel(new List<OptionButtonViewModel> {
-                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
-                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
-                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
-                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
-                new OptionButtonViewModel {ClickAction = () => StartLocalGame(), Title = "Local" },
+            ActivateItem(new SlideOutPanelViewModel(
+                new List<OptionButtonViewModel> {
+                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
+                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
+                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
+                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
+                    new OptionButtonViewModel { ClickAction = () => StartLocalGame(), Title = "Local" },
             }));
         }
 
@@ -40,10 +43,32 @@ namespace FireAndIce.ViewModels
         {
         }
 
-        private void StartAIGame()
+        public void Help()
         {
-            throw new NotImplementedException();
         }
 
+        public void HighScores()
+        {
+        }
+
+        public void Settings()
+        {
+        }
+
+        public void Credits()
+        {
+        }
+
+        public MainMenuViewModel()
+        {
+            MainMenu = new SlideOutPanelViewModel(
+                new List<OptionButtonViewModel> {
+                    new OptionButtonViewModel { ClickAction = () => NewGame(), Title = "New Game" },
+                    new OptionButtonViewModel { ClickAction = () => Help(), Title = "Help" },
+                    new OptionButtonViewModel { ClickAction = () => HighScores(), Title = "High Scores" },
+                    new OptionButtonViewModel { ClickAction = () => Settings(), Title = "Settings" },
+                    new OptionButtonViewModel { ClickAction = () => Credits(), Title = "Credits" },
+                });
+        }
     }
 }

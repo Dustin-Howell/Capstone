@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Caliburn.Micro;
+using FireAndIce.Views;
 
 namespace FireAndIce.ViewModels
 {
@@ -31,6 +32,8 @@ namespace FireAndIce.ViewModels
             {
                 button.WasClicked += new EventHandler(_wasClicked);
             }
+
+            OptionButtonView view = new OptionButtonView();
         }
 
         private void _wasClicked(object o, EventArgs e)

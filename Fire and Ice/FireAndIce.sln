@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireAndIce", "FireAndIce\FireAndIce.csproj", "{5BB11F65-4D02-4B3E-8E94-7B3DB7C6B8A4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{33BA3E7F-7DA1-4A7D-8215-845273C681AA} = {33BA3E7F-7DA1-4A7D-8215-845273C681AA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAControlGame", "XNAControlGame\XNAControlGame\XNAControlGame.csproj", "{6B40F385-30BC-4BE7-9E8F-A5E82821C047}"
 EndProject
@@ -18,6 +21,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreeperNetwork", "CreeperNetwork\CreeperNetwork.csproj", "{0FCE3293-C97E-4A99-95C7-2D592B7F949D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAControl", "XNAControl\XNAControl.csproj", "{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB2596A8-749E-4DAA-877D-3BECB1BFA6D4}"
 	ProjectSection(SolutionItems) = preProject
 		Performance1.psess = Performance1.psess
