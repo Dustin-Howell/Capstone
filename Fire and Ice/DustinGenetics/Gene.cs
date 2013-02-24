@@ -110,14 +110,19 @@ namespace DustinGenetics
 
         public void Print()
         {
-            Console.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
+            Console.Write("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}\n\n", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
         }
 
         public void WriteToFile(string path)
         {
             using (StreamWriter writer = new StreamWriter(path, true))
             {
-                writer.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
+                writer.WriteLine("Material   : {0}", MaterialWeight);
+                writer.WriteLine("Territorial: {0}", TerritorialWeight);
+                writer.WriteLine("Positional : {0}", PositionalWeight);
+                writer.WriteLine("Path       : {0}", PathToVictoryWeight);
+                writer.WriteLine("Victory    : {0}", VictoryWeight);
+                writer.WriteLine();
             }
         }
     }

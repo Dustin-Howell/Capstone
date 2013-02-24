@@ -8,14 +8,14 @@ namespace DustinGenetics
     class Program
     {
         public static string LogPath = @"C:\Users\dhowell2\Dropbox\Capstone\Genetics\bestGenes.log";
-        public static Gene SeedGene = new Gene(-21, 75, -74, 89, 107);
-        public static bool UseSeed = false;
+        public static Gene SeedGene = new Gene(-19, 75, -71, 86, 104);
+        public static bool UseSeed = true;
 
         static void Main(string[] args)
         {
             Random random = new Random();
-            int populationSize = 10;
-            int rounds = 10;
+            int populationSize = 12;
+            int rounds = 5;
             Population population = (UseSeed)? new Population(populationSize, SeedGene) : new Population(populationSize);
             List<Gene> genePool;
 
@@ -30,9 +30,18 @@ namespace DustinGenetics
                     while (genePool.Count > 0
                             && genePool.Count < populationSize)
                     {
-                        Gene randomGene1 = genePool[random.Next() % genePool.Count];
-                        Gene randomGene2 = genePool[random.Next() % genePool.Count];
-                        genePool.Add(randomGene1.CrossWith(randomGene2));
+                        Gene newGene;
+                        if (random.Next() % 4 == 0)
+                        {
+                            newGene = new Gene();
+                        }
+                        else
+                        {
+                            Gene randomGene1 = genePool[random.Next() % genePool.Count];
+                            Gene randomGene2 = genePool[random.Next() % genePool.Count];
+                            newGene = randomGene1.CrossWith(randomGene2);
+                        }
+                        genePool.Add(newGene);
                     }
 
                     if (genePool.Any())
