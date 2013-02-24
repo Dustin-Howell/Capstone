@@ -14,13 +14,13 @@ namespace CreeperAI
     public class CreeperAI
     {
         //debug variables\\
-        private bool _reportTime = true;
+        private bool _reportTime = false;
         private bool _sort = true;
-        private bool _parallel = false;
+        private bool _parallel = true;
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 5;
+        private int _MiniMaxDepth = 3;
 
         private double _territorialWeight;
         private double _materialWeight;
@@ -237,7 +237,7 @@ namespace CreeperAI
                 default:
                     score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
                     score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
-                    //score += (ScoreBoardPositional(board, turnColor) * _positionalWeight);
+                    score += (ScoreBoardPositional(board, turnColor) * _positionalWeight);
                     score += ScoreBoardVictory(board, turnColor);
                     break;
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Creeper;
+using System.IO;
 
 namespace DustinGenetics
 {
@@ -16,13 +17,24 @@ namespace DustinGenetics
         public double PathToVictoryWeight { get; set; }
         public double VictoryWeight { get; set; }
 
+        public int Wins { get; set; }
+        public int Losses { get; set; }
+        public int GamesPlayed { get { return Wins + Losses; } }
+        public double WinPercentage { get { return (double)Wins / (double)GamesPlayed; } }
+
+        public void ResetGames()
+        {
+            Wins = 0;
+            Losses = 0;
+        }
+
         public Gene()
         {
-            MaterialWeight = _Random.Next(1, 100);
-            TerritorialWeight = _Random.Next(1, 100);
-            PositionalWeight = _Random.Next(1, 100);
-            PathToVictoryWeight = _Random.Next(1, 100);
-            VictoryWeight = _Random.Next(1, 100);
+            MaterialWeight = _Random.Next(-100, 100);
+            TerritorialWeight = _Random.Next(-100, 100);
+            PositionalWeight = _Random.Next(-100, 100);
+            PathToVictoryWeight = _Random.Next(-100, 100);
+            VictoryWeight = _Random.Next(100, 1000);
         }
 
         public Gene(Gene gene)
@@ -34,7 +46,7 @@ namespace DustinGenetics
             VictoryWeight = gene.VictoryWeight;
         }
 
-        private Gene(double materialWeight, double territorialWeight, double positionalWeight, double pathToVictoryWeight, double victoryWeight)
+        public Gene(double materialWeight, double territorialWeight, double positionalWeight, double pathToVictoryWeight, double victoryWeight)
         {
             MaterialWeight = materialWeight;
             TerritorialWeight = territorialWeight;
@@ -56,7 +68,13 @@ namespace DustinGenetics
 
         public Gene Mutate()
         {
-            return new Gene();
+            double material = _Random.Next() % 2 == 0 ? MaterialWeight + _Random.Next() % 5 : MaterialWeight - _Random.Next() % 5;
+            double territory = _Random.Next() % 2 == 0 ? TerritorialWeight + _Random.Next() % 5 : TerritorialWeight - _Random.Next() % 5;
+            double position = _Random.Next() % 2 == 0 ? PositionalWeight + _Random.Next() % 5 : PositionalWeight - _Random.Next() % 5;
+            double path = _Random.Next() % 2 == 0 ? PathToVictoryWeight + _Random.Next() % 5 : PathToVictoryWeight - _Random.Next() % 5;
+            double victory = _Random.Next() % 2 == 0 ? VictoryWeight + _Random.Next() % 5 : VictoryWeight - _Random.Next() % 5;
+
+            return new Gene(material, territory, position, path, victory);
         }
 
         public bool Defeats(Gene opponent)
@@ -70,8 +88,9 @@ namespace DustinGenetics
             while (!board.IsFinished(turn))
             {
                 moveCount++;
-                if (moveCount > 200)
+                if (moveCount > 70)
                 {
+                    Console.WriteLine("Move Loop");
                     return false;
                 }
                 turn = turn.Opposite();
@@ -91,7 +110,15 @@ namespace DustinGenetics
 
         public void Print()
         {
-            Console.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\n", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight);
+            Console.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
+        }
+
+        public void WriteToFile(string path)
+        {
+            using (StreamWriter writer = new StreamWriter(path, true))
+            {
+                writer.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
+            }
         }
     }
 }

@@ -7,26 +7,48 @@ namespace DustinGenetics
 {
     class Program
     {
+        public static string LogPath = @"C:\Users\dhowell2\Dropbox\Capstone\Genetics\bestGenes.log";
+        public static Gene SeedGene = new Gene(-21, 75, -74, 89, 107);
+        public static bool UseSeed = false;
+
         static void Main(string[] args)
         {
-            int populationSize = 20;
-            Population population = new Population(populationSize);
-            List<Gene> genePool = new List<Gene>();
+            Random random = new Random();
+            int populationSize = 10;
+            int rounds = 10;
+            Population population = (UseSeed)? new Population(populationSize, SeedGene) : new Population(populationSize);
+            List<Gene> genePool;
 
             while (true)
             {
-                Gene bestGene = population.GetBestGene();
-                genePool.Add(bestGene);
+                genePool = new List<Gene>();
 
-                if (genePool.Count == populationSize)
+                for (int i = 0; i < rounds; i++)
                 {
-                    population = new Population(genePool);
-                    population.WriteToFile("GenePool.log");
+                    genePool = population.GetTopHalf();
+
+                    while (genePool.Count > 0
+                            && genePool.Count < populationSize)
+                    {
+                        Gene randomGene1 = genePool[random.Next() % genePool.Count];
+                        Gene randomGene2 = genePool[random.Next() % genePool.Count];
+                        genePool.Add(randomGene1.CrossWith(randomGene2));
+                    }
+
+                    if (genePool.Any())
+                    {
+                        population = new Population(genePool);
+                    }
+                    else
+                    {
+                        population = new Population(populationSize);
+                    }
                 }
-                else
-                {
-                    population = new Population(populationSize);
-                }
+
+                Gene bestGene = population.GetBestGene();
+                bestGene.Print();
+                bestGene.WriteToFile(LogPath);
+                population = new Population(populationSize, bestGene);
             }
         }
     }

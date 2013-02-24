@@ -9,12 +9,10 @@ namespace DustinGenetics
     public class Population
     {
         private List<Gene> GenePool;
-        private List<Gene> VictoryGenes;
 
         public Population(int size)
         {
             GenePool = new List<Gene>();
-            VictoryGenes = new List<Gene>();
 
             for (int i = 0; i < size; i++)
             {
@@ -25,52 +23,79 @@ namespace DustinGenetics
         public Population(List<Gene> genePool)
         {
             GenePool = genePool;
-            VictoryGenes = new List<Gene>();
+        }
+
+        public Population( int size, Gene seedGene)
+        {
+            GenePool = new List<Gene>();
+
+            for (int i = 0; i < size; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    GenePool.Add(new Gene().CrossWith(seedGene));
+                }
+                else
+                {
+                    GenePool.Add(seedGene.Mutate());
+                }
+            }
+        }
+
+        public List<Gene> GetTopHalf()
+        {
+            List<Gene> topHalf = new List<Gene>();
+            for (int i = 0; i < GenePool.Count; i++)
+            {
+                Gene gene = GenePool[i];
+                Console.WriteLine("Analyzing Gene {0}", GenePool.IndexOf(gene));
+
+                for (int j = 0; j < GenePool.Count; j++)
+                {
+                    Gene opponentGene = GenePool[j];
+                    if (GenePool[j] != gene)
+                    {
+                        if (gene.Defeats(GenePool[j]))
+                        {
+                            gene.Wins += 1;
+                            opponentGene.Losses += 1;
+                            Console.WriteLine("Win");
+                        }
+                        else
+                        {
+                            gene.Losses += 1;
+                            opponentGene.Wins += 1;
+                            Console.WriteLine("Loss");
+                        }
+                    }
+                }
+
+            }
+
+            double averageWinPercentage = GenePool.Average((y) => y.WinPercentage);
+            topHalf = GenePool.Where(x => x.WinPercentage > averageWinPercentage).ToList();
+
+            return topHalf;
         }
 
         public Gene GetBestGene()
         {
             Gene bestGene = new Gene();
+            List<Gene> VictoryGenes = new List<Gene>();
 
             int roundNumber = 0;
             while (GenePool.Count > 1)
             {
                 Console.WriteLine("Round {0}", roundNumber++);
                 Console.WriteLine("Gene Pool Size: {0}\n", GenePool.Count);
-                for (int i = 0; i < GenePool.Count; i++)
-                {
-                    Gene gene = GenePool[i];
-                    Console.WriteLine("Analyzing Gene {0}", GenePool.IndexOf(gene));
-                    int victoryCount = 0;
 
-                    for (int j = 0; j < GenePool.Count; j++)
-                    {
-                        Gene opponentGene = GenePool[j];
-                        if (GenePool[j] != gene)
-                        {
-                            if (gene.Defeats(GenePool[j]))
-                            {
-                                victoryCount++;
-                            }
-                        }
-                    }
-
-                    if (victoryCount >= (GenePool.Count / 2))
-                    {
-                        Console.WriteLine("Pass", GenePool.IndexOf(gene));
-                        VictoryGenes.Add(new Gene(gene));
-                    }
-                    else
-                    {
-                        Console.WriteLine("Fail", GenePool.IndexOf(gene));
-                    }
-                    Console.WriteLine();
-                }
+                VictoryGenes = GetTopHalf();
 
                 if (VictoryGenes.Any())
                 {
                     bestGene = VictoryGenes.First();
                 }
+
                 GenePool = VictoryGenes;
                 VictoryGenes = new List<Gene>();
             }
@@ -84,8 +109,16 @@ namespace DustinGenetics
             {
                 foreach (Gene gene in GenePool)
                 {
-                    writer.WriteLine("{0} {1} {2} {3}", gene.MaterialWeight, gene.TerritorialWeight, gene.PathToVictoryWeight, gene.VictoryWeight);
+                    writer.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", gene.MaterialWeight, gene.TerritorialWeight, gene.PathToVictoryWeight, gene.VictoryWeight, gene.PositionalWeight);
                 }
+            }
+        }
+
+        public void PrintToConsole()
+        {
+            foreach (Gene gene in GenePool)
+            {
+                Console.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", gene.MaterialWeight, gene.TerritorialWeight, gene.PathToVictoryWeight, gene.VictoryWeight, gene.PositionalWeight);
             }
         }
     }
