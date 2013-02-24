@@ -25,11 +25,11 @@ namespace Resources
     {
         //Tiles
         public static String UncapturedTile { get { return "square"; } }
-        public static String WhiteTile { get { return "whiteTile"; } }
-        public static String BlackTile { get { return "blackTile"; } }
+        public static String WhiteTile { get { return "Assets/Fire Tile"; } }
+        public static String BlackTile { get { return "Assets/Ice Tile"; } }
 
         //The Board
-        public static String GameBoard { get { return "Assets/boardFixed"; } }
+        public static String GameBoard { get { return "Assets/MainBoard"; } }
 
         //Pegs
         public static String Default { get { return "Textures/Grid"; } }

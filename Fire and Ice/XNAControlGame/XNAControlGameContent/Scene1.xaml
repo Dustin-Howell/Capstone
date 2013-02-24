@@ -2,6 +2,6 @@
 
     <FreeCamera Position="0, -242, 379" Speed="0" Name="MainCamera" Angle="-0.5,0,0"/> 
     
-    <Sprite Texture="{ContentReference Assets/boardFixed}" Name="TheBoard" Position="0, 0" />
+    <Sprite Texture="{ContentReference Assets/MainBoard}" Name="TheBoard" Position="0, 0" />
     
 </Scene>
