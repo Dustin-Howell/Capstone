@@ -122,6 +122,7 @@ namespace DustinGenetics
                 writer.WriteLine("Positional : {0}", PositionalWeight);
                 writer.WriteLine("Path       : {0}", PathToVictoryWeight);
                 writer.WriteLine("Victory    : {0}", VictoryWeight);
+                writer.WriteLine("Win        : {0}%", WinPercentage * 100);
                 writer.WriteLine();
             }
         }
