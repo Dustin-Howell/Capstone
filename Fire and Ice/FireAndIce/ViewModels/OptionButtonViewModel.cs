@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Caliburn.Micro;
+using System.Windows;
 
 namespace FireAndIce.ViewModels
 {
@@ -25,6 +26,9 @@ namespace FireAndIce.ViewModels
                 {
                     _isOptionChecked = value;
                     NotifyOfPropertyChange(() => IsOptionChecked);
+
+                    // TODO: Fix this nastiness...
+                    NotifyOfPropertyChange(() => CanClick);
                 }
             }
         }
@@ -42,6 +46,8 @@ namespace FireAndIce.ViewModels
                 NotifyOfPropertyChange(() => Title);
             }
         }
+
+        public bool CanClick { get { return !IsOptionChecked; } }
 
         public void Click()
         {

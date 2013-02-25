@@ -6,13 +6,32 @@
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
              mc:Ignorable="d" 
              VerticalAlignment="Stretch"
+             HorizontalAlignment="Left"
              Background="{Binding Background}"
-             Width="{Binding Width}">
-    <ItemsControl ItemsSource="{Binding Buttons}" VerticalAlignment="Center">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <ContentControl cal:View.Model="{Binding}" />
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+             Visibility="{Binding ControlIsVisible, Converter={StaticResource BoolToVis}}"
+             Style="{StaticResource SlidingMenu}"
+             x:Name="SlideOutPanel">
+
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            Foreground="White"
+            TextWrapping="NoWrap"
+            FontSize="20"
+            FontFamily="pack://application:,,,/Fonts/#Holy Empire"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            x:Name="Title" />
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Buttons}" VerticalAlignment="Top">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl cal:View.Model="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
 </UserControl>

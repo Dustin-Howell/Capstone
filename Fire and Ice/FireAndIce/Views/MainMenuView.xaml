@@ -10,10 +10,7 @@
         <Border Height="50"
                     DockPanel.Dock="Bottom"
                     Background="{StaticResource Complementary1}">
-            <StackPanel Orientation="Horizontal">
-
-            </StackPanel>
-
+            <StackPanel Orientation="Horizontal" />
         </Border>
         <Border Width="200"
                 DockPanel.Dock="Left"
@@ -23,14 +20,7 @@
                 x:Name="MainMenuBorder">
             
             <!--Main Menu-->
-            <StackPanel x:Name="MainMenuButtonPanel" HorizontalAlignment="Stretch"
-                    Orientation="Vertical"
-                    Background="Transparent"
-                    VerticalAlignment="Center">
-                
-                <ContentControl x:Name="MainMenu" />
-                
-            </StackPanel>
+                <ContentControl VerticalAlignment="Stretch" x:Name="MainMenu" />
         </Border>
         
         <Grid HorizontalAlignment="Stretch" 
