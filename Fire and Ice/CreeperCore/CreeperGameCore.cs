@@ -6,6 +6,7 @@ using Creeper;
 using CreeperNetwork;
 using XNAControlGame;
 using System.ComponentModel;
+using System.IO;
 
 namespace CreeperCore
 {
@@ -36,15 +37,24 @@ namespace CreeperCore
             }
             set
             {
+                if (_xnaGame != null)
+                {
+                    _xnaGame.UserMadeMove -= new EventHandler<MoveEventArgs>(_xnaGame_UserMadeMove);
+                }
+
                 _xnaGame = value;
+
+                if (_xnaGame != null)
+                {
+                    _xnaGame.UserMadeMove += new EventHandler<MoveEventArgs>(_xnaGame_UserMadeMove);
+                }
+
                 if (Board != null)
                 {
                     _xnaGame.Board = Board;
                 }
             }
         }
-
-        //public EventHandler MoveMade;
 
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
@@ -62,8 +72,19 @@ namespace CreeperCore
             InitializeBackgroundWorkers();
 
             Board = new CreeperBoard();
-            _AI = new CreeperAI.CreeperAI(2, 10, .01, 11, 1000);
+            _AI = new CreeperAI.CreeperAI(2, 10, .01, 11, 10000);
             _network = new Network();
+        }
+
+        private void _xnaGame_UserMadeMove(object sender, MoveEventArgs e)
+        {
+            if (!Board.IsFinished(e.Move.PlayerColor) && e.Move.PlayerColor == CurrentPlayer.Color)
+            {
+                Board.Move(e.Move);
+                XNAGame.OnMoveMade(e.Move);
+                CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
+                XNAGame.CurrentTurn = CurrentPlayer.Color;
+            }
         }
 
         private void InitializeBackgroundWorkers()
@@ -86,10 +107,10 @@ namespace CreeperCore
             Board.Move((Move)e.Result);
             XNAGame.OnMoveMade((Move)e.Result);
 
-            //if (MoveMade != null)
-            //{
-            //    MoveMade((Move)e.Result, null);
-            //}
+            using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
+            {
+                writer.WriteLine("Move made: {0}", ((Move)e.Result).ToString());
+            }
 
             if (!Board.IsFinished(CurrentPlayer.Color))
             {
@@ -117,7 +138,25 @@ namespace CreeperCore
         {
             if (XNAGame != null)
             {
+                using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
+                {
+                    writer.WriteLine("Work attempted.");
+                }
+
                 e.Result = XNAGame.GetMove(CurrentPlayer.Color);
+
+                using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
+                {
+                    writer.WriteLine("XNA Game was not null and we done got us a move");
+                }
+            }
+            else
+            {
+
+                using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
+                {
+                    writer.WriteLine("Get move failed.");
+                }
             }
         }
 
@@ -134,7 +173,6 @@ namespace CreeperCore
         public void InitializeGameGUI(IntPtr handle, int width, int height)
         {
             XNAGame = new Game1(handle, width, height);
-            //MoveMade += new EventHandler(XNAGame.OnMoveMade);
         }
 
         public void StartLocalGame(PlayerType player1Type, PlayerType player2Type)
@@ -147,7 +185,8 @@ namespace CreeperCore
             Player1 = new Player(player1Type, CreeperColor.White);
             Player2 = new Player(player2Type, CreeperColor.Black);
             CurrentPlayer = Player1;
-            GetNextMove();
+            XNAGame.CurrentTurn = CurrentPlayer.Color;
+            //GetNextMove();
         }
 
         public void StartNetworkGame(PlayerType player1Type, PlayerType player2Type, Network network)

@@ -43,6 +43,7 @@
     <Compile Include="CreeperBoard.cs" />
     <Compile Include="CreeperUtility.cs" />
     <Compile Include="Move.cs" />
+    <Compile Include="MoveEventArgs.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

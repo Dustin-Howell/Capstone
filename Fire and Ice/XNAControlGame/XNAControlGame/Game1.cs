@@ -14,6 +14,7 @@ using Nine.Graphics.Primitives;
 using Nine.Physics;
 using Creeper;
 using System.Collections.Generic;
+using System.IO;
 
 namespace XNAControlGame
 {
@@ -33,6 +34,8 @@ namespace XNAControlGame
         //Holds the Status of the board.
         public CreeperBoard Board { get; set; }
 
+        public CreeperColor CurrentTurn { get; set; }
+
         //Keeps track of which click is happening.
         bool _secondClick = false;
 
@@ -45,7 +48,7 @@ namespace XNAControlGame
         Texture2D _blackTile;
 
         //Allows access to clicking on the board only when it's supposed to be accessed.
-        private bool _isMyTurnToMakeAMove = false;
+        private bool _iStillNeedToMakeAMove = false;
 
         //The Move to be returned to the Creeper Core
         public Move LastMoveMade { get; private set; }
@@ -60,13 +63,15 @@ namespace XNAControlGame
         /// <returns></returns>
         public Move GetMove(CreeperColor currentTurn)
         {
-            _isMyTurnToMakeAMove = true;
+            _iStillNeedToMakeAMove = true;
             PlayerTurn = currentTurn;
 
-            while (_isMyTurnToMakeAMove) ;
+            while (_iStillNeedToMakeAMove) ;
 
             return LastMoveMade;
         }
+
+        public event EventHandler<MoveEventArgs> UserMadeMove;
 
         public void OnMoveMade(Move move)
         {
@@ -181,60 +186,57 @@ namespace XNAControlGame
         /// </summary>
         private void Input_MouseDown(object sender, Nine.MouseEventArgs e)
         {
-            if (_isMyTurnToMakeAMove)
+            //Create a ray fired from the point of click point.
+            Ray pickRay = GetSelectionRay(new Vector2(e.X, e.Y));
+            float maxDistance = float.MaxValue;
+
+            //Test all 45 locations to see if one was click. If one was, determine which one was clicked.
+            Position pegLocation;
+            bool intersectionNotFound = true;
+            for (int pegNum = 1; pegNum <= 45 && intersectionNotFound; pegNum++)
             {
-                //Create a ray fired from the point of click point.
-                Ray pickRay = GetSelectionRay(new Vector2(e.X, e.Y));
-                float maxDistance = float.MaxValue;
+                pegLocation = NumberToPosition(pegNum);
+                String currentPeg = 'p' + pegLocation.Row.ToString() + 'x' + pegLocation.Column.ToString();
+                BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
+                    _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
+                Nullable<float> intersect = pickRay.Intersects(modelIntersect);
 
-                //Test all 45 locations to see if one was click. If one was, determine which one was clicked.
-                Position pegLocation;
-                bool intersectionNotFound = true;
-                for (int pegNum = 1; pegNum <= 45 && intersectionNotFound; pegNum++)
+                //Selection Logic
+
+                //If a model was selected
+                if (intersect.HasValue == true)
                 {
-                    pegLocation = NumberToPosition(pegNum);
-                    String currentPeg = 'p' + pegLocation.Row.ToString() + 'x' + pegLocation.Column.ToString();
-                    BoundingBox modelIntersect = new BoundingBox(_scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Min,
-                        _scene.FindName<Nine.Graphics.Model>(currentPeg).BoundingBox.Max);
-                    Nullable<float> intersect = pickRay.Intersects(modelIntersect);
+                    intersectionNotFound = false;
 
-                    //Selection Logic
-
-                    //If a model was selected
-                    if (intersect.HasValue == true)
+                    if (intersect.Value < maxDistance)
                     {
-                        intersectionNotFound = false;
-
-                        if (intersect.Value < maxDistance)
+                        //And if the peg to move has not been selected or the peg clicked matches the current turn
+                        if (!_secondClick || Board.Pegs.At(pegLocation).Color == PlayerTurn)
                         {
-                            //And if the peg to move has not been selected or the peg clicked matches the current turn
-                            if (!_secondClick || Board.Pegs.At(pegLocation).Color == PlayerTurn)
+                            _selectedPeg = currentPeg;
+                            _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
+                            _secondClick = true;
+                            if (Board.Pegs.At(pegLocation).Color == PlayerTurn)
                             {
-                                _selectedPeg = currentPeg;
-                                _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
-                                _secondClick = true;
-                                if (Board.Pegs.At(pegLocation).Color == PlayerTurn)
-                                {
-                                    possible = CreeperUtility.PossibleMoves(Board.Pegs.At(_startPosition), Board).ToList();
-                                }
+                                possible = CreeperUtility.PossibleMoves(Board.Pegs.At(_startPosition), Board).ToList();
                             }
-                            //Otherwise the end point of the move is being selected
+                        }
+                        //Otherwise the end point of the move is being selected
+                        else
+                        {
+                            //Check to see if the location being selected is an empty peg location. It must be so to be moved to.
+                            if (Board.Pegs.At(pegLocation).Color == CreeperColor.Empty && _secondClick)
+                            {
+                                _endPostion = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
+                            }
+                            //If it isn't, deselect the peg
                             else
                             {
-                                //Check to see if the location being selected is an empty peg location. It must be so to be moved to.
-                                if (Board.Pegs.At(pegLocation).Color == CreeperColor.Empty && _secondClick)
-                                {
-                                    _endPostion = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
-                                }
-                                //If it isn't, deselect the peg
-                                else
-                                {
-                                    _startPosition = _endPostion = new Position(-1, -1);
-                                    _selectedPeg = "";
-                                }
-                                _secondClick = false;
-                                possible.Clear();
+                                _startPosition = _endPostion = new Position(-1, -1);
+                                _selectedPeg = "";
                             }
+                            _secondClick = false;
+                            possible.Clear();
                         }
                     }
                 }
@@ -249,7 +251,12 @@ namespace XNAControlGame
                         if (Board.IsValidMove(move))
                         {
                             LastMoveMade = move;
-                            _isMyTurnToMakeAMove = false;
+                            _iStillNeedToMakeAMove = false;
+                            
+                            if (UserMadeMove != null)
+                            {
+                                UserMadeMove(this, new MoveEventArgs(move));
+                            }
                         }
                     }
 

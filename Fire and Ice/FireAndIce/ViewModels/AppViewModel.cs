@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Caliburn.Micro;
+using System.IO;
 
 namespace FireAndIce.ViewModels
 {

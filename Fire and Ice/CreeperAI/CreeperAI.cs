@@ -16,11 +16,11 @@ namespace CreeperAI
         //debug variables\\
         private bool _reportTime = false;
         private bool _sort = true;
-        private bool _parallel = true;
+        private bool _parallel = false;
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 3;
+        private int _MiniMaxDepth = 5;
 
         private double _territorialWeight;
         private double _materialWeight;
@@ -231,7 +231,7 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = _victoryWeight * (_MiniMaxDepth - depth);
+                    score = _victoryWeight * depth;
                     break;
 
                 default:
