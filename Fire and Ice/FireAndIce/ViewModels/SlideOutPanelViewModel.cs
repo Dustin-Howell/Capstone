@@ -8,83 +8,80 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows;
 
 namespace FireAndIce.ViewModels
 {
     public class SlideOutPanelViewModel : Screen
     {
-        public SolidColorBrush Background { get; set; }
-        private double _width;
-        public double Width
+        public SlideOutPanelViewModel MenuParent { get; set; }
+
+        private string _title;
+        public string Title
         {
             get
             {
-                return
-                  _width;
+                return _title;
             }
             set
             {
-                _width = value;
-                NotifyOfPropertyChange(() => Width);
+                _title = value;
+                NotifyOfPropertyChange(() => Title);
             }
         }
 
-        private double _maxWidth;
+        private SolidColorBrush _background;
+        public SolidColorBrush Background
+        {
+            get
+            {
+                return _background = _background ?? new SolidColorBrush();
+            }
+            set
+            {
+                _background = value;
+                NotifyOfPropertyChange(() => Background);
+            }
+        }
+
+        public bool _controlIsVisible;
+        public bool ControlIsVisible { get { return _controlIsVisible; } set { _controlIsVisible = value; NotifyOfPropertyChange(() => ControlIsVisible); } }
 
         private BindableCollection<OptionButtonViewModel> _buttons;
         public BindableCollection<OptionButtonViewModel> Buttons
         {
             get
             {
-                return _buttons;
+                return _buttons = _buttons ?? new BindableCollection<OptionButtonViewModel>();
             }
 
-            private set
+            set
             {
-                _buttons = value;
+                if (_buttons != null)
+                {
+                    foreach (OptionButtonViewModel button in _buttons)
+                    {
+                        button.WasClicked -= new EventHandler(_wasClicked);
+                    }
+                }
+
+                    _buttons = value;
+
+                if (_buttons != null)
+                {
+                    foreach (OptionButtonViewModel button in _buttons)
+                    {
+                        button.WasClicked += new EventHandler(_wasClicked);
+                    }
+                }
+
                 NotifyOfPropertyChange(() => Buttons);
             }
         }
 
-        private void SlideOut()
+        public SlideOutPanelViewModel() : base()
         {
-            double durationInMillis = 500;
-            double lastElapsed = 0;
-            BackgroundWorker animator = new BackgroundWorker();
-            animator.DoWork += (s, e) => {
-                Stopwatch stopwatch = new Stopwatch();
-
-                stopwatch.Start();
-
-                while (Width < _maxWidth)
-                {
-                    double elapsed = stopwatch.Elapsed.Milliseconds - lastElapsed;
-                    if (elapsed > 1)
-                    {                        
-                        Width += _maxWidth * (elapsed / durationInMillis);
-                        lastElapsed = stopwatch.Elapsed.Milliseconds;
-                    }
-                }
-            };
-
-            animator.RunWorkerAsync();
-        }
-
-        public SlideOutPanelViewModel(IEnumerable<OptionButtonViewModel> buttons, 
-            SolidColorBrush background,
-            double maxWidth = 200)
-        {
-            _maxWidth = maxWidth;
-            Buttons = new BindableCollection<OptionButtonViewModel>(buttons);
-            Background = background;
-            SlideOut();
-
-            foreach (OptionButtonViewModel button in Buttons)
-            {
-                button.WasClicked += new EventHandler(_wasClicked);
-            }
-
-            OptionButtonView view = new OptionButtonView();
+            ControlIsVisible = false;
         }
 
         private void _wasClicked(object o, EventArgs e)
