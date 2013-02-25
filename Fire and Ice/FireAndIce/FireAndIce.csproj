@@ -65,15 +65,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppModel.cs" />
-    <Compile Include="IntroScreen.xaml.cs">
-      <DependentUpon>IntroScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainMenuScreen.xaml.cs">
-      <DependentUpon>MainMenuScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SplashScreen.xaml.cs">
-      <DependentUpon>SplashScreen.xaml</DependentUpon>
-    </Compile>
     <Compile Include="AppBootStrapper.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
