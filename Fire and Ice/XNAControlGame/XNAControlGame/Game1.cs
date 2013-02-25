@@ -20,10 +20,15 @@ namespace XNAControlGame
 {
     public class Game1 : XNAControl.XNAControlGame
     {
+
+        int i = 60;
+        //may be used in move and animation
         private Position _startPosition = new Position(-1, -1);
         private Position _endPostion = new Position(-1, -1);
         private String _selectedPeg;
 
+        private Position _returnPosition = new Position(-1, -1);
+        private Position _StopPosition = new Position(-1, -1);
 
         Scene _scene;
         Input _input;
@@ -50,6 +55,9 @@ namespace XNAControlGame
         //Allows access to clicking on the board only when it's supposed to be accessed.
         private bool _iStillNeedToMakeAMove = false;
 
+        //Allows Animation
+        private bool _animatepeg = false;
+
         //The Move to be returned to the Creeper Core
         public Move LastMoveMade { get; private set; }
 
@@ -75,8 +83,14 @@ namespace XNAControlGame
 
         public void OnMoveMade(Move move)
         {
-            String pegToMove = 'p' + move.StartPosition.Row.ToString() + 'x' + move.StartPosition.Row.ToString();
-            Nine.Animations.BoneAnimationClip boneClip = new Nine.Animations.BoneAnimationClip();
+            //Sets the start and end value
+            _returnPosition = _startPosition;
+            _StopPosition = _endPostion;
+            
+            _animatepeg = true;
+            
+            _startPosition = new Position(-1, -1);
+            _endPostion = new Position(-1, -1);
         }
 
         /// <summary>
@@ -109,17 +123,18 @@ namespace XNAControlGame
         /// <param name="handle"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Game1(IntPtr handle, int width, int height) : base(handle, "Content", width, height)
+        public Game1(IntPtr handle, int width, int height)
+            : base(handle, "Content", width, height)
         {
             Content = new ContentLoader(Services);
- 
+
             Components.Add(new InputComponent(handle));
             _input = new Input();
 
             _input.MouseDown += new EventHandler<Nine.MouseEventArgs>(Input_MouseDown);
         }
 
-        
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -132,7 +147,7 @@ namespace XNAControlGame
 
             // Load the Tile sprite.
             Sprite tile = new Sprite(GraphicsDevice);
-            
+
             //Loads in the Textures
             _blankTile = Content.Load<Texture2D>(Resources.Textures.UncapturedTile);
             _whiteTile = Content.Load<Texture2D>(Resources.Textures.WhiteTile);
@@ -141,7 +156,7 @@ namespace XNAControlGame
             // Load a scene from a content file
             _scene = Content.Load<Scene>(Resources.Scenes.MainPlayScene);
 
-            
+
             //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Height;
@@ -149,7 +164,7 @@ namespace XNAControlGame
             squareWidth = boardWidth / (CreeperBoard.PegRows - 1);
             squareHeight = boardHeight / (CreeperBoard.PegRows - 1);
             Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
-            
+
             Position pegPosition;
 
             _font = Content.Load<SpriteFont>("defaultFont");
@@ -162,7 +177,7 @@ namespace XNAControlGame
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
-                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale( Resources.Models.PegScale ) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
             }
             //Place a transparent sprite for tiles in every possible tile position.
             startCoordinates += new Vector3(squareWidth / 2, -(squareHeight / 2), 0);
@@ -177,7 +192,7 @@ namespace XNAControlGame
                 _scene.Add(tile);
                 tile = new Sprite(GraphicsDevice);
             }
-            
+
             base.LoadContent();
         }
 
@@ -258,21 +273,25 @@ namespace XNAControlGame
                                 UserMadeMove(this, new MoveEventArgs(move));
                             }
                         }
+                        else
+                        {
+                            _startPosition = new Position(-1, -1);
+                            _endPostion = new Position(-1, -1);
+                        }
                     }
 
-                    _startPosition = new Position(-1, -1);
-                    _endPostion = new Position(-1, -1);
+
                     _secondClick = false;
                     possible.Clear();
-                    _selectedPeg = "";
+                    //_selectedPeg = "";
                 }
-            }           
+            }
         }
 
         /// <summary>
         /// Returns a ray fired from the click point to test for intersection with a model.
         /// </summary>
-        Ray GetSelectionRay( Vector2 mouseCoor )
+        Ray GetSelectionRay(Vector2 mouseCoor)
         {
             Vector3 nearsource = new Vector3(mouseCoor, 0f);
             Vector3 farsource = new Vector3(mouseCoor, 1f);
@@ -282,7 +301,7 @@ namespace XNAControlGame
             Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource, _scene.FindName<FreeCamera>("MainCamera").Projection,
                     _scene.FindName<FreeCamera>("MainCamera").View, world);
 
-            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, _scene.FindName<FreeCamera>("MainCamera").Projection, 
+            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, _scene.FindName<FreeCamera>("MainCamera").Projection,
                     _scene.FindName<FreeCamera>("MainCamera").View, world);
 
             // Create a ray from the near clip plane to the far clip plane.
@@ -300,6 +319,35 @@ namespace XNAControlGame
         {
             _scene.Update(gameTime.ElapsedGameTime);
             _scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
+
+            if (_animatepeg)
+            {
+                if (_selectedPeg != "")
+                {
+                    var peg = _scene.FindName<Nine.Graphics.Model>(_selectedPeg);
+                    peg.Visible = true;
+
+                    //modify x and y to decide best path
+                    peg.Transform *= Matrix.CreateTranslation( _StopPosition.Column - _returnPosition.Column, -(_StopPosition.Row - _returnPosition.Row), 0);
+
+                    //if statement to decide if it's at the end set _animate to false;
+                    i--;
+                    if (i == 0)
+                    {
+                        _animatepeg = false;
+                        i = 60;
+                        _scene.FindName<Nine.Graphics.Model>("p" + _StopPosition.Row.ToString() + "x" + _StopPosition.Column.ToString()).Visible = true;
+                        peg.Visible = false;
+                        while (i != 0)
+                        {
+                            peg.Transform *= Matrix.CreateTranslation(-(_StopPosition.Column - _returnPosition.Column), (_StopPosition.Row - _returnPosition.Row), 0);
+                            i--;
+                        }
+                        i = 60;
+                    }
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -323,9 +371,9 @@ namespace XNAControlGame
                 + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.Y.ToString() + ","
                 + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.Z.ToString() + ")"
             , new Vector2(0, 50), Color.Black);
-            
+
             spritebatch.End();
-                
+
             base.Draw(gameTime);
         }
 
@@ -343,61 +391,65 @@ namespace XNAControlGame
             BasicMaterial yellow = new BasicMaterial(GraphicsDevice);
             yellow.DiffuseColor = new Vector3(255, 255, 0);
 
-            for (int r = 0; r < CreeperBoard.PegRows; r++)
+            if (!_animatepeg)
             {
-                for (int c = 0; c < CreeperBoard.PegRows; c++)
+                for (int r = 0; r < CreeperBoard.PegRows; r++)
                 {
-                    location = 'p' + r.ToString() + 'x' + c.ToString();
+                    for (int c = 0; c < CreeperBoard.PegRows; c++)
+                    {
+                        location = 'p' + r.ToString() + 'x' + c.ToString();
 
-                    if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
-                    {
-                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                        _scene.FindName<Nine.Graphics.Model>(location).Material = white;
-                    }
-                    else if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
-                    {
-                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                        _scene.FindName<Nine.Graphics.Model>(location).Material = black;
-                    }
-                    else
-                    {
-                        if (_scene.FindName<Nine.Graphics.Model>(location) != null)
+                        if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
                         {
-                            _scene.FindName<Nine.Graphics.Model>(location).Visible = false;
+                            _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                            _scene.FindName<Nine.Graphics.Model>(location).Material = white;
+                        }
+                        else if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
+                        {
+                            _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                            _scene.FindName<Nine.Graphics.Model>(location).Material = black;
+                        }
+                        else
+                        {
+                            if (_scene.FindName<Nine.Graphics.Model>(location) != null)
+                            {
+                                _scene.FindName<Nine.Graphics.Model>(location).Visible = false;
+                            }
                         }
                     }
                 }
-            }
 
-            foreach (Move move in possible)
-            {
-               if (move.EndPosition.Row != null)
+
+                foreach (Move move in possible)
                 {
-                    location = 'p' + move.EndPosition.Row.ToString() + 'x' + move.EndPosition.Column.ToString();
-                    _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                    _scene.FindName<Nine.Graphics.Model>(location).Material = yellow;
+                    if (move.EndPosition.Row != null)
+                    {
+                        location = 'p' + move.EndPosition.Row.ToString() + 'x' + move.EndPosition.Column.ToString();
+                        _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
+                        _scene.FindName<Nine.Graphics.Model>(location).Material = yellow;
+                    }
                 }
-            }
 
-            for (int r = 0; r < CreeperBoard.TileRows; r++)
-            {
-                for (int c = 0; c < CreeperBoard.TileRows; c++)
+                for (int r = 0; r < CreeperBoard.TileRows; r++)
                 {
-                    location = 't' + r.ToString() + 'x' + c.ToString();
+                    for (int c = 0; c < CreeperBoard.TileRows; c++)
+                    {
+                        location = 't' + r.ToString() + 'x' + c.ToString();
 
-                    if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
-                    {
-                        _scene.FindName<Sprite>(location).Texture = _whiteTile;
-                    }
-                    else if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
-                    {
-                        _scene.FindName<Sprite>(location).Texture = _blackTile;
-                    }
-                    else
-                    {
-                        if (_scene.FindName<Sprite>(location) != null)
+                        if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
                         {
-                            _scene.FindName<Sprite>(location).Texture = _blankTile;
+                            _scene.FindName<Sprite>(location).Texture = _whiteTile;
+                        }
+                        else if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
+                        {
+                            _scene.FindName<Sprite>(location).Texture = _blackTile;
+                        }
+                        else
+                        {
+                            if (_scene.FindName<Sprite>(location) != null)
+                            {
+                                _scene.FindName<Sprite>(location).Texture = _blankTile;
+                            }
                         }
                     }
                 }
