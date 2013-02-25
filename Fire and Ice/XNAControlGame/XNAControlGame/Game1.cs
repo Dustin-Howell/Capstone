@@ -70,7 +70,8 @@ namespace XNAControlGame
 
         public void OnMoveMade(Move move)
         {
-
+            String pegToMove = 'p' + move.StartPosition.Row.ToString() + 'x' + move.StartPosition.Row.ToString();
+            Nine.Animations.BoneAnimationClip boneClip = new Nine.Animations.BoneAnimationClip();
         }
 
         /// <summary>
