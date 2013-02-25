@@ -21,14 +21,10 @@ namespace XNAControlGame
     public class Game1 : XNAControl.XNAControlGame
     {
 
-        int i = 60;
         //may be used in move and animation
         private Position _startPosition = new Position(-1, -1);
         private Position _endPostion = new Position(-1, -1);
         private String _selectedPeg;
-
-        private Position _returnPosition = new Position(-1, -1);
-        private Position _StopPosition = new Position(-1, -1);
 
         Scene _scene;
         Input _input;
@@ -55,14 +51,15 @@ namespace XNAControlGame
         //Allows access to clicking on the board only when it's supposed to be accessed.
         private bool _iStillNeedToMakeAMove = false;
 
-        //Allows Animation
-        private bool _animatepeg = false;
-
         //The Move to be returned to the Creeper Core
         public Move LastMoveMade { get; private set; }
 
         //List of possible moves so that highlighting is possible
         List<Move> possible = new List<Move>();
+
+
+        List<Animation> animation = new List<Animation>();
+        List<Animation> finishedAnimation = new List<Animation>();
 
         /// <summary>
         /// Get's a move from a player using the GUI. Returns a valid move they selected.
@@ -84,13 +81,16 @@ namespace XNAControlGame
         public void OnMoveMade(Move move)
         {
             //Sets the start and end value
-            _returnPosition = _startPosition;
-            _StopPosition = _endPostion;
-            
-            _animatepeg = true;
-            
+            var first = _scene.FindName<Nine.Graphics.Model>("p" + move.StartPosition.Row.ToString() + "x" + move.StartPosition.Column.ToString());
+            var second = _scene.FindName<Nine.Graphics.Model>("p" + move.EndPosition.Row.ToString() + "x" + move.EndPosition.Column.ToString());
+
+            Animation animate = new Animation(first.Transform.Translation, second.Transform.Translation, first, (_endPostion.Column - _startPosition.Column), -(_endPostion.Row - _startPosition.Row));
+
+            animation.Add(animate);
+
             _startPosition = new Position(-1, -1);
             _endPostion = new Position(-1, -1);
+            
         }
 
         /// <summary>
@@ -283,7 +283,6 @@ namespace XNAControlGame
 
                     _secondClick = false;
                     possible.Clear();
-                    //_selectedPeg = "";
                 }
             }
         }
@@ -319,33 +318,31 @@ namespace XNAControlGame
         {
             _scene.Update(gameTime.ElapsedGameTime);
             _scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
-
-            if (_animatepeg)
+            if (animation.Count != 0 && animation != null)
             {
-                if (_selectedPeg != "")
+                 foreach (Animation animate in animation)
                 {
-                    var peg = _scene.FindName<Nine.Graphics.Model>(_selectedPeg);
-                    peg.Visible = true;
+                    animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width /CreeperBoard.TileRows) / 50),
+                        (animate.yDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width / CreeperBoard.TileRows) / 50), 0);
 
-                    //modify x and y to decide best path
-                    peg.Transform *= Matrix.CreateTranslation( _StopPosition.Column - _returnPosition.Column, -(_StopPosition.Row - _returnPosition.Row), 0);
-
-                    //if statement to decide if it's at the end set _animate to false;
-                    i--;
-                    if (i == 0)
+                    if(animate.peg.Contains(animate.end))
                     {
-                        _animatepeg = false;
-                        i = 60;
-                        _scene.FindName<Nine.Graphics.Model>("p" + _StopPosition.Row.ToString() + "x" + _StopPosition.Column.ToString()).Visible = true;
-                        peg.Visible = false;
-                        while (i != 0)
-                        {
-                            peg.Transform *= Matrix.CreateTranslation(-(_StopPosition.Column - _returnPosition.Column), (_StopPosition.Row - _returnPosition.Row), 0);
-                            i--;
-                        }
-                        i = 60;
+                        finishedAnimation.Add(animate);  
                     }
+                    
                 }
+
+                 if (finishedAnimation.Count != 0)
+                 {
+                     foreach (Animation animate in finishedAnimation)
+                     {
+                         animate.peg.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(animate.start);
+                         if(animation.Contains(animate))
+                         {
+                             animation.Remove(animate);
+                         }
+                     }
+                 }
             }
 
             base.Update(gameTime);
@@ -391,7 +388,7 @@ namespace XNAControlGame
             BasicMaterial yellow = new BasicMaterial(GraphicsDevice);
             yellow.DiffuseColor = new Vector3(255, 255, 0);
 
-            if (!_animatepeg)
+            if (animation.Count == 0)
             {
                 for (int r = 0; r < CreeperBoard.PegRows; r++)
                 {
