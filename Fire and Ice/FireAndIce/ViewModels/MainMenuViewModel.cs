@@ -5,6 +5,7 @@ using System.Text;
 using Caliburn.Micro;
 using System.Windows;
 using System.Windows.Media;
+using CreeperCore;
 
 namespace FireAndIce.ViewModels
 {
@@ -120,12 +121,12 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalAIGame()
         {
-            throw new NotImplementedException();
+            AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.AI));
         }
 
         private void StartLocalHumanGame()
         {
-            throw new NotImplementedException();
+            AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Human));
         }
 
         private SlideOutPanelViewModel _networkGameMenu;

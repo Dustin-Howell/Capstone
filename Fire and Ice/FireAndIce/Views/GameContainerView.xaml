@@ -1,0 +1,8 @@
+﻿<UserControl x:Class="FireAndIce.Views.GameContainerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xna="clr-namespace:XNAControl;assembly=XNAControl">
+    <Grid>
+        <xna:XNAUserControl x:Name="XNAControl" />
+    </Grid>
+</UserControl>
