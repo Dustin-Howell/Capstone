@@ -56,6 +56,7 @@ namespace CreeperCore
             }
         }
 
+        #region members
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
         private Player CurrentPlayer { get; set; }
@@ -63,9 +64,8 @@ namespace CreeperCore
         private CreeperAI.CreeperAI _AI;
         private Network _network;
         private BackgroundWorker _getAIMoveWorker;
-        private BackgroundWorker _getXNAMoveWorker;
-        private BackgroundWorker _getNetworkMoveWorker;
         private CreeperBoard _board;
+        #endregion
 
         public CreeperGameCore()
         {
@@ -80,11 +80,19 @@ namespace CreeperCore
         {
             if (!Board.IsFinished(e.Move.PlayerColor) && e.Move.PlayerColor == CurrentPlayer.Color)
             {
-                Board.Move(e.Move);
-                XNAGame.OnMoveMade(e.Move);
-                CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
-                XNAGame.CurrentTurn = CurrentPlayer.Color;
+                MakeMove(e.Move);
             }
+        }
+
+        private void MakeMove(Move move)
+        {
+            Board.Move(move);
+            XNAGame.OnMoveMade(move);
+
+            CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
+            XNAGame.CurrentTurn = CurrentPlayer.Color;
+
+            GetNextMove();
         }
 
         private void InitializeBackgroundWorkers()
@@ -92,77 +100,11 @@ namespace CreeperCore
             _getAIMoveWorker = new BackgroundWorker();
             _getAIMoveWorker.DoWork += new DoWorkEventHandler(_getAIMoveWorker_DoWork);
             _getAIMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getAIMoveWorker_RunWorkerCompleted);
-
-            _getXNAMoveWorker = new BackgroundWorker();
-            _getXNAMoveWorker.DoWork += new DoWorkEventHandler(_getXNAMoveWorker_DoWork);
-            _getXNAMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getXNAMoveWorker_RunWorkerCompleted);
-
-            _getNetworkMoveWorker = new BackgroundWorker();
-            _getNetworkMoveWorker.DoWork += new DoWorkEventHandler(_getNetworkMoveWorker_DoWork);
-            _getNetworkMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getNetworkMoveWorker_RunWorkerCompleted);
-        }
-
-        private void RunWorkerCompleted(RunWorkerCompletedEventArgs e)
-        {
-            Board.Move((Move)e.Result);
-            XNAGame.OnMoveMade((Move)e.Result);
-
-            using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
-            {
-                writer.WriteLine("Move made: {0}", ((Move)e.Result).ToString());
-            }
-
-            if (!Board.IsFinished(CurrentPlayer.Color))
-            {
-                CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
-                GetNextMove();
-            }
-        }
-
-        void _getNetworkMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            RunWorkerCompleted(e);
-        }
-
-        void _getNetworkMoveWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        void _getXNAMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            RunWorkerCompleted(e);
-        }
-
-        void _getXNAMoveWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (XNAGame != null)
-            {
-                using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
-                {
-                    writer.WriteLine("Work attempted.");
-                }
-
-                e.Result = XNAGame.GetMove(CurrentPlayer.Color);
-
-                using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
-                {
-                    writer.WriteLine("XNA Game was not null and we done got us a move");
-                }
-            }
-            else
-            {
-
-                using (StreamWriter writer = new StreamWriter(@"C:\users\klape\desktop\sad_output.log", true))
-                {
-                    writer.WriteLine("Get move failed.");
-                }
-            }
         }
 
         void _getAIMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            RunWorkerCompleted(e);
+            MakeMove(e.Result as Move);
         }
 
         void _getAIMoveWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -186,7 +128,7 @@ namespace CreeperCore
             Player2 = new Player(player2Type, CreeperColor.Black);
             CurrentPlayer = Player1;
             XNAGame.CurrentTurn = CurrentPlayer.Color;
-            //GetNextMove();
+            GetNextMove();
         }
 
         public void StartNetworkGame(PlayerType player1Type, PlayerType player2Type, Network network)
@@ -210,10 +152,10 @@ namespace CreeperCore
                     _getAIMoveWorker.RunWorkerAsync();
                     break;
                 case PlayerType.Human:
-                    _getXNAMoveWorker.RunWorkerAsync();
+                    //Wait for move from XNA
                     break;
                 case PlayerType.Network:
-                    _getNetworkMoveWorker.RunWorkerAsync();
+                    //Wait for move from Network
                     break;
             }
         }
