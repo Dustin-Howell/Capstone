@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CreeperCore;
+using FireAndIce.ViewModels;
 
 namespace FireAndIce
 {
@@ -14,5 +15,6 @@ namespace FireAndIce
         }
 
         public static CreeperGameCore Core { get; private set; }
+        public static AppViewModel AppViewModel { get; set; }
     }
 }

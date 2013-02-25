@@ -10,6 +10,7 @@ namespace FireAndIce.ViewModels
     {
         public AppViewModel()
         {
+            AppModel.AppViewModel = this;
             ActivateItem(new MainMenuViewModel());
         }
     }
