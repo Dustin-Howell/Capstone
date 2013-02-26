@@ -6,6 +6,8 @@ using Caliburn.Micro;
 using System.Windows;
 using System.Windows.Media;
 using CreeperCore;
+using CreeperNetwork;
+using System.ComponentModel;
 
 namespace FireAndIce.ViewModels
 {
@@ -137,14 +139,69 @@ namespace FireAndIce.ViewModels
                 return _networkGameMenu = _networkGameMenu ?? new SlideOutPanelViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Networky Stuff"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "More Networky Stuff"},
+                    new OptionButtonViewModel {ClickAction = () => { HostNetworkGame(); }, Title = "Create Game"},
+                    new OptionButtonViewModel {ClickAction = () => { FindNetworkGame(); }, Title = "Find Game"},
                 },
                     Background = Resources["Primary3"] as SolidColorBrush,
                     Title = "Network",
                     MenuParent = NewGameMenu,
                 };
             }
+        }
+
+        private void HostNetworkGame()
+        {
+            BackgroundWorker hostGameWorker = new BackgroundWorker();
+            BackgroundWorker connectServerWorker = new BackgroundWorker();
+
+            Network network = new Network();
+
+            hostGameWorker.DoWork += new DoWorkEventHandler((s, e) => network.server_hostGame("Game 1", "Player 1"));
+            connectServerWorker.DoWork += new DoWorkEventHandler((s, e) => network.server_startGame());
+
+            hostGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) => connectServerWorker.RunWorkerAsync());
+            connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
+                {
+                    AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Network, network));
+                });
+
+            hostGameWorker.RunWorkerAsync();
+        }
+
+        private void FindNetworkGame()
+        {
+            BackgroundWorker findGamesWorker = new BackgroundWorker();
+            BackgroundWorker startGameWorker = new BackgroundWorker();
+            
+            Network network = new Network();
+
+            string[,] gamesFound = new string[256,7];
+            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = network.client_findGames());
+            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => network.client_ackStartGame());
+
+            findGamesWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
+            {
+                string[] gameToJoin = new string[7];
+                //Choose first game -- will crash if run in wrong order.
+
+                gameToJoin[0] = gamesFound[0, 0];
+                gameToJoin[1] = gamesFound[0, 1];
+                gameToJoin[2] = gamesFound[0, 2];
+                gameToJoin[3] = gamesFound[0, 3];
+                gameToJoin[4] = "7";
+                gameToJoin[5] = "Player2";
+                gameToJoin[6] = gamesFound[0, 6];
+
+                network.client_joinGame(gameToJoin);
+                startGameWorker.RunWorkerAsync();
+            });
+
+            startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
+            {
+                AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Network, network));
+            });
+
+            findGamesWorker.RunWorkerAsync();
         }
 
         private SlideOutPanelViewModel _helpMenu;

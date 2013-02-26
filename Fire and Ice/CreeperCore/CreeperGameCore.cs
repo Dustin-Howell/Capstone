@@ -60,10 +60,20 @@ namespace CreeperCore
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
         private Player CurrentPlayer { get; set; }
+
+        private Player OpponentPlayer
+        {
+            get
+            {
+                return CurrentPlayer == Player1 ? Player2 : Player1;
+            }
+        }
+
         private Game1 _xnaGame;
         private CreeperAI.CreeperAI _AI;
         private Network _network;
         private BackgroundWorker _getAIMoveWorker;
+        private BackgroundWorker _networkPlayGame;
         private CreeperBoard _board;
         #endregion
 
@@ -73,10 +83,17 @@ namespace CreeperCore
 
             Board = new CreeperBoard();
             _AI = new CreeperAI.CreeperAI(15, 84, 2,43,1000);
-            _network = new Network();
         }
 
         private void _xnaGame_UserMadeMove(object sender, MoveEventArgs e)
+        {
+            if (e.Move.PlayerColor == CurrentPlayer.Color)
+            {
+                MakeMove(e.Move);
+            }
+        }
+
+        void _network_MoveMade(object sender, MoveEventArgs e)
         {
             if (e.Move.PlayerColor == CurrentPlayer.Color)
             {
@@ -89,12 +106,21 @@ namespace CreeperCore
             Board.Move(move);
             XNAGame.OnMoveMade(move);
 
+            if (OpponentPlayer.PlayerType == PlayerType.Network)
+            {
+                _network.move(move);
+            }
+
             if (!Board.IsFinished(move.PlayerColor))
             {
-                CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
+                CurrentPlayer = OpponentPlayer;
                 XNAGame.CurrentTurn = CurrentPlayer.Color;
 
                 GetNextMove();
+            }
+            else
+            {
+                _network.disconnect();
             }
         }
 
@@ -142,9 +168,16 @@ namespace CreeperCore
             }
 
             _network = network;
+            _network.MoveMade += new EventHandler<MoveEventArgs>(_network_MoveMade);
+
+            _networkPlayGame = new BackgroundWorker();
+            _networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => _network.playGame());
 
             Player1 = new Player(player1Type, CreeperColor.White);
             Player2 = new Player(player2Type, CreeperColor.Black);
+            CurrentPlayer = Player1;
+            XNAGame.CurrentTurn = CurrentPlayer.Color;
+            GetNextMove();
         }
 
         private void GetNextMove()

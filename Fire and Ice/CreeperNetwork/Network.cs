@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Diagnostics;
 using System.Timers;
 using Creeper;
+using System.ComponentModel;
 
 namespace CreeperNetwork
 {
@@ -49,11 +50,21 @@ namespace CreeperNetwork
         private Move currentMove;
         private bool newMove = false;
 
+        private BackgroundWorker _keepAliveWorker;
+
         //Game variables
         private string hostGameName = "";
         private string hostPlayerName = "";
         private string clientPlayerName = "";
 
+        private static int instanceCount = 0;
+        public Network()
+        {
+            if (++instanceCount > 1) throw new InvalidOperationException();
+
+            _keepAliveWorker = new BackgroundWorker();
+            _keepAliveWorker.DoWork += new DoWorkEventHandler((s, e) => keepAlive());
+        }
 
         //SERVER functions
 
@@ -103,6 +114,11 @@ namespace CreeperNetwork
         public void server_startGame()
         {
             sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
+
+            Console.WriteLine("GAME STARTED.");
+            gameRunning = true;
+
+            _keepAliveWorker.RunWorkerAsync();
 
             try
             {
@@ -190,19 +206,22 @@ namespace CreeperNetwork
                     sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                     gameStarted = true;
                     acknowledged = true;
+
+                    Console.WriteLine("GAME STARTED.");
+                    gameRunning = true;
+
+                    _keepAliveWorker.RunWorkerAsync();
                 }
             }
         }
 
         //Game functions
 
+        public event EventHandler<MoveEventArgs> MoveMade;
+
         public void playGame()
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
-
-            Console.WriteLine("GAME STARTED.");
-
-            gameRunning = true;
 
             while (gameRunning)
             {
@@ -244,7 +263,12 @@ namespace CreeperNetwork
                         if (packet[6] == NetworkMoveType.MOVE)
                         {
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
-                            newMove = true;
+                            //newMove = true;
+
+                            if (MoveMade != null)
+                            {
+                                MoveMade(this, new MoveEventArgs(currentMove));
+                            }
                         }
                         else if (packet[6] == NetworkMoveType.FORFEIT || packet[6] == NetworkMoveType.ILLEGAL)
                         {
@@ -519,7 +543,7 @@ namespace CreeperNetwork
             encoding.GetBytes(hostPlayerName).CopyTo(packet, 23);
 
             //who moves first? 1 I do, 0 you do
-            packet[32] = Convert.ToByte(new Random().Next(100) % 2 == 0);
+            packet[32] = Convert.ToByte(1);
 
             return packet;
         }
