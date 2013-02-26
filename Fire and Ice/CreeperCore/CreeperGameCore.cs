@@ -112,7 +112,7 @@ namespace CreeperCore
             if (!Board.IsFinished(move.PlayerColor))
             {
                 CurrentPlayer = OpponentPlayer;
-                XNAGame.CurrentTurn = CurrentPlayer.Color;
+                XNAGame.PlayerTurn = CurrentPlayer.Color;
 
                 GetNextMove();
             }
@@ -154,7 +154,7 @@ namespace CreeperCore
             Player1 = new Player(player1Type, CreeperColor.White);
             Player2 = new Player(player2Type, CreeperColor.Black);
             CurrentPlayer = Player1;
-            XNAGame.CurrentTurn = CurrentPlayer.Color;
+            XNAGame.PlayerTurn = CurrentPlayer.Color;
             GetNextMove();
         }
 
@@ -174,7 +174,7 @@ namespace CreeperCore
             Player1 = new Player(player1Type, CreeperColor.White);
             Player2 = new Player(player2Type, CreeperColor.Black);
             CurrentPlayer = Player1;
-            XNAGame.CurrentTurn = CurrentPlayer.Color;
+            XNAGame.PlayerTurn = CurrentPlayer.Color;
             GetNextMove();
 
             _networkPlayGame.RunWorkerAsync();

@@ -35,14 +35,11 @@ namespace XNAControlGame
         //Holds the Status of the board.
         public CreeperBoard Board { get; set; }
 
-        public CreeperColor CurrentTurn { get; set; }
-
         //Keeps track of which click is happening.
         bool _secondClick = false;
 
         //Keeps track of whose turn it is
-        CreeperColor PlayerTurn = CreeperColor.White;
-
+        public CreeperColor PlayerTurn { get; set; }
         //Tile Textures
         Texture2D _blankTile;
         Texture2D _whiteTile;
