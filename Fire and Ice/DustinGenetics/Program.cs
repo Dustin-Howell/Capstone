@@ -7,7 +7,7 @@ namespace DustinGenetics
 {
     class Program
     {
-        public static string LogPath = @"C:\Users\dhowell2\Dropbox\Capstone\Genetics\bestGenes.log";
+        public static string LogPath = @"C:\Users\Dustin\Dropbox\Capstone\Genetics\bestGenes.log";
         public static Gene SeedGene = new Gene(-19, 75, -71, 86, 104);
         public static bool UseSeed = false;
 
@@ -15,7 +15,7 @@ namespace DustinGenetics
         {
             Random random = new Random();
             int populationSize = 12;
-            int rounds = 1;
+            int rounds = 3;
             Population population = (UseSeed)? new Population(populationSize, SeedGene) : new Population(populationSize);
             List<Gene> genePool;
 

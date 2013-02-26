@@ -79,33 +79,41 @@ namespace DustinGenetics
 
         public bool Defeats(Gene opponent)
         {
-            int moveCount = 0;
-            CreeperColor turn = CreeperColor.Black;
-            CreeperBoard board = new CreeperBoard();
-            CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PositionalWeight, PathToVictoryWeight, VictoryWeight);
-            CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PositionalWeight, opponent.PathToVictoryWeight, opponent.VictoryWeight);
-
-            while (!board.IsFinished(turn))
+            try
             {
-                moveCount++;
-                if (moveCount > 70)
-                {
-                    Console.WriteLine("Move Loop");
-                    return false;
-                }
-                turn = turn.Opposite();
+                int moveCount = 0;
+                CreeperColor turn = CreeperColor.Black;
+                CreeperBoard board = new CreeperBoard();
+                CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PositionalWeight, PathToVictoryWeight, VictoryWeight);
+                CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PositionalWeight, opponent.PathToVictoryWeight, opponent.VictoryWeight);
 
-                if (turn == CreeperColor.White)
+                while (!board.IsFinished(turn))
                 {
-                    board.Move(thisAI.GetMove(board, turn));
+                    moveCount++;
+                    if (moveCount > 70)
+                    {
+                        Console.WriteLine("Move Loop");
+                        return false;
+                    }
+                    turn = turn.Opposite();
+
+                    if (turn == CreeperColor.White)
+                    {
+                        board.Move(thisAI.GetMove(board, turn));
+                    }
+                    else
+                    {
+                        board.Move(opponentAI.GetMove(board, turn));
+                    }
                 }
-                else
-                {
-                    board.Move(opponentAI.GetMove(board, turn));
-                }
+
+                return turn == CreeperColor.White && board.GetGameState(turn) == CreeperGameState.Complete;
             }
-
-            return turn == CreeperColor.White && board.GetGameState(turn) == CreeperGameState.Complete;
+            catch (Exception)
+            {
+                Console.WriteLine("Exception");
+                return false;
+            }
         }
 
         public void Print()
