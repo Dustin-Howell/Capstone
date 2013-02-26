@@ -50,11 +50,11 @@ namespace CreeperAI
             Move bestMove = new Move();
             if (_parallel)
             {
-                bestMove = GetAlphaBetaNegaMaxMove(board);
+                bestMove = GetParallelAlphaBetaNegaMaxMove(board);
             }
             else
             {
-                bestMove = GetAlphaBetaNegaMaxMoveSequential(_board);
+                bestMove = GetAlphaBetaNegaMaxMove(_board);
             }
 
             if (_reportTime)
@@ -70,7 +70,7 @@ namespace CreeperAI
             return bestMove;
         }
 
-        Move GetAlphaBetaNegaMaxMoveSequential(AICreeperBoard board)
+        Move GetAlphaBetaNegaMaxMove(AICreeperBoard board)
         {
             Move bestMove = new Move();
 
@@ -97,7 +97,7 @@ namespace CreeperAI
             return bestMove;
         }
 
-        Move GetAlphaBetaNegaMaxMove(CreeperBoard board)
+        Move GetParallelAlphaBetaNegaMaxMove(CreeperBoard board)
         {
             Move bestMove = new Move();
 
