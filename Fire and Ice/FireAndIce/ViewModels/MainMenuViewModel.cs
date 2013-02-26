@@ -198,7 +198,7 @@ namespace FireAndIce.ViewModels
 
             startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
             {
-                AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Network, network));
+                AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Network, PlayerType.Human, network));
             });
 
             findGamesWorker.RunWorkerAsync();
