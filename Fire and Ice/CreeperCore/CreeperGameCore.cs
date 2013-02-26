@@ -95,10 +95,8 @@ namespace CreeperCore
 
         void _network_MoveMade(object sender, MoveEventArgs e)
         {
-            if (e.Move.PlayerColor == CurrentPlayer.Color)
-            {
-                MakeMove(e.Move);
-            }
+            e.Move.PlayerColor = CurrentPlayer.Color;
+            MakeMove(e.Move);
         }
 
         private void MakeMove(Move move)
