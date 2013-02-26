@@ -342,6 +342,7 @@ namespace CreeperNetwork
         {
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
+                Console.WriteLine("Move Sent.");
                 sendPacket(packet_MakeMove(moveIn, NetworkMoveType.MOVE), ipOfLastPacket.Address.ToString());
                 acknowledged = false;
             }

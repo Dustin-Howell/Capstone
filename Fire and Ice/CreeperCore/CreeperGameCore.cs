@@ -178,6 +178,8 @@ namespace CreeperCore
             CurrentPlayer = Player1;
             XNAGame.CurrentTurn = CurrentPlayer.Color;
             GetNextMove();
+
+            _networkPlayGame.RunWorkerAsync();
         }
 
         private void GetNextMove()
