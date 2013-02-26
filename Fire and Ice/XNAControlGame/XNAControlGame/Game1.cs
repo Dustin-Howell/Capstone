@@ -84,7 +84,7 @@ namespace XNAControlGame
             var first = _scene.FindName<Nine.Graphics.Model>("p" + move.StartPosition.Row.ToString() + "x" + move.StartPosition.Column.ToString());
             var second = _scene.FindName<Nine.Graphics.Model>("p" + move.EndPosition.Row.ToString() + "x" + move.EndPosition.Column.ToString());
 
-            Animation animate = new Animation(first.Transform.Translation, second.Transform.Translation, first, (_endPostion.Column - _startPosition.Column), -(_endPostion.Row - _startPosition.Row));
+            Animation animate = new Animation(first.Transform.Translation, second.Transform.Translation, first, (move.EndPosition.Column - move.StartPosition.Column), -(move.EndPosition.Row - move.StartPosition.Row));
 
             animation.Add(animate);
 
@@ -343,6 +343,7 @@ namespace XNAControlGame
                          }
                      }
                  }
+                 finishedAnimation.Clear();
             }
 
             base.Update(gameTime);
