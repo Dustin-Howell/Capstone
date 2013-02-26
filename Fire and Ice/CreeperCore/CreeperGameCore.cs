@@ -72,7 +72,7 @@ namespace CreeperCore
             InitializeBackgroundWorkers();
 
             Board = new CreeperBoard();
-            _AI = new CreeperAI.CreeperAI(2, 10, .01, 11, 10000);
+            _AI = new CreeperAI.CreeperAI(15, 84, 2,43,1000);
             _network = new Network();
         }
 

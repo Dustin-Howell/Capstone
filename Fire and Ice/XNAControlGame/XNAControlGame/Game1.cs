@@ -82,15 +82,15 @@ namespace XNAControlGame
         {
             //Sets the start and end value
             var first = _scene.FindName<Nine.Graphics.Model>("p" + move.StartPosition.Row.ToString() + "x" + move.StartPosition.Column.ToString());
-            var second = _scene.FindName<Nine.Graphics.Model>("p" + move.EndPosition.Row.ToString() + "x" + move.EndPosition.Column.ToString());
+            var second = _scene.FindName<Nine.Graphics.Model>("i" + move.EndPosition.Row.ToString() + "x" + move.EndPosition.Column.ToString());
 
-            Animation animate = new Animation(first.Transform.Translation, second.Transform.Translation, first, (move.EndPosition.Column - move.StartPosition.Column), -(move.EndPosition.Row - move.StartPosition.Row));
+            Animation animate = new Animation(first.Transform.Translation, second.Transform.Translation, first, (move.EndPosition.Column - move.StartPosition.Column), -(move.EndPosition.Row - move.StartPosition.Row), move.StartPosition, move.EndPosition);
 
             animation.Add(animate);
 
             _startPosition = new Position(-1, -1);
             _endPostion = new Position(-1, -1);
-            
+
         }
 
         /// <summary>
@@ -176,8 +176,10 @@ namespace XNAControlGame
                 defaultMaterial.Texture = Content.Load<Texture2D>(Resources.Textures.Default);
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
-                Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
+                String iPegName = 'i' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
+                Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 30);
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = iPegName, Visible = false });
             }
             //Place a transparent sprite for tiles in every possible tile position.
             startCoordinates += new Vector3(squareWidth / 2, -(squareHeight / 2), 0);
@@ -252,6 +254,7 @@ namespace XNAControlGame
                             }
                             _secondClick = false;
                             possible.Clear();
+                            
                         }
                     }
                 }
@@ -267,7 +270,7 @@ namespace XNAControlGame
                         {
                             LastMoveMade = move;
                             _iStillNeedToMakeAMove = false;
-                            
+
                             if (UserMadeMove != null)
                             {
                                 UserMadeMove(this, new MoveEventArgs(move));
@@ -280,7 +283,7 @@ namespace XNAControlGame
                         }
                     }
 
-
+                    _selectedPeg = null;
                     _secondClick = false;
                     possible.Clear();
                 }
@@ -320,30 +323,31 @@ namespace XNAControlGame
             _scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
             if (animation.Count != 0 && animation != null)
             {
-                 foreach (Animation animate in animation)
+                foreach (Animation animate in animation)
                 {
-                    animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width /CreeperBoard.TileRows) / 50),
-                        (animate.yDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width / CreeperBoard.TileRows) / 50), 0);
+                    animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width / CreeperBoard.TileRows) / 50),
+                            (animate.yDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width / CreeperBoard.TileRows) / 50), 0);
 
-                    if(animate.peg.Contains(animate.end))
+                    if (animate.peg.Contains(animate.endLocation))
                     {
-                        finishedAnimation.Add(animate);  
+                        finishedAnimation.Add(animate);
                     }
-                    
+
                 }
 
-                 if (finishedAnimation.Count != 0)
-                 {
-                     foreach (Animation animate in finishedAnimation)
-                     {
-                         animate.peg.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(animate.start);
-                         if(animation.Contains(animate))
-                         {
-                             animation.Remove(animate);
-                         }
-                     }
-                 }
-                 finishedAnimation.Clear();
+                if (finishedAnimation.Count != 0)
+                {
+                    foreach (Animation animate in finishedAnimation)
+                    {
+                        animate.peg.Visible = false;
+                        animate.peg.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(animate.startLocation);
+                        if (animation.Contains(animate))
+                        {
+                            animation.Remove(animate);
+                        }
+                    }
+                }
+                finishedAnimation.Clear();
             }
 
             base.Update(gameTime);
@@ -388,6 +392,8 @@ namespace XNAControlGame
             white.DiffuseColor = new Vector3(255, 255, 255);
             BasicMaterial yellow = new BasicMaterial(GraphicsDevice);
             yellow.DiffuseColor = new Vector3(255, 255, 0);
+            BasicMaterial blue = new BasicMaterial(GraphicsDevice);
+            blue.DiffuseColor = new Vector3(0, 0, 255);
 
             if (animation.Count == 0)
             {
@@ -452,6 +458,11 @@ namespace XNAControlGame
                     }
                 }
             }
+            if (_selectedPeg != null && !_iStillNeedToMakeAMove)
+            {
+                _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Material = blue;
+            }
         }
+
     }
 }

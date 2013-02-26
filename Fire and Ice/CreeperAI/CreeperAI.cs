@@ -20,7 +20,7 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 3;
+        private int _MiniMaxDepth = 5;
 
         private double _territorialWeight;
         private double _materialWeight;
