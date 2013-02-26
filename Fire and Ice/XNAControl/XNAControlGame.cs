@@ -172,7 +172,14 @@ namespace XNAControl
             base.EndDraw();
             if (GraphicsDevice != null)
             {
-                GraphicsDevice.Present();
+                try
+                {
+                    GraphicsDevice.Present();
+                }
+                catch (DeviceLostException e)
+                {
+                    throw new DeviceLostException("Kaleb or Dustin, fix this. It's possible. There is a Device about to be lost event.");
+                }
             }
         }
 

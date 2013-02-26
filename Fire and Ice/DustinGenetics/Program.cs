@@ -9,13 +9,13 @@ namespace DustinGenetics
     {
         public static string LogPath = @"C:\Users\dhowell2\Dropbox\Capstone\Genetics\bestGenes.log";
         public static Gene SeedGene = new Gene(-19, 75, -71, 86, 104);
-        public static bool UseSeed = true;
+        public static bool UseSeed = false;
 
         static void Main(string[] args)
         {
             Random random = new Random();
             int populationSize = 12;
-            int rounds = 5;
+            int rounds = 1;
             Population population = (UseSeed)? new Population(populationSize, SeedGene) : new Population(populationSize);
             List<Gene> genePool;
 

@@ -78,7 +78,7 @@ namespace CreeperCore
 
         private void _xnaGame_UserMadeMove(object sender, MoveEventArgs e)
         {
-            if (!Board.IsFinished(e.Move.PlayerColor) && e.Move.PlayerColor == CurrentPlayer.Color)
+            if (e.Move.PlayerColor == CurrentPlayer.Color)
             {
                 MakeMove(e.Move);
             }
@@ -89,10 +89,13 @@ namespace CreeperCore
             Board.Move(move);
             XNAGame.OnMoveMade(move);
 
-            CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
-            XNAGame.CurrentTurn = CurrentPlayer.Color;
+            if (!Board.IsFinished(move.PlayerColor))
+            {
+                CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
+                XNAGame.CurrentTurn = CurrentPlayer.Color;
 
-            GetNextMove();
+                GetNextMove();
+            }
         }
 
         private void InitializeBackgroundWorkers()

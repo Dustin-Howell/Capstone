@@ -20,7 +20,7 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 5;
+        private int _MiniMaxDepth = 3;
 
         private double _territorialWeight;
         private double _materialWeight;
@@ -231,7 +231,7 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = _victoryWeight * depth;
+                    score = _victoryWeight * depth * -1;
                     break;
 
                 default:
