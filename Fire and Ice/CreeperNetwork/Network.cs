@@ -403,6 +403,7 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
+            //exception here at game over
             data = listener.Receive(ref ipOfLastPacket);
 
             return data;
