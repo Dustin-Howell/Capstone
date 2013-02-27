@@ -12,7 +12,8 @@
              Effect="{StaticResource DropShadow}"
              x:Name="SlideOutPanel">
 
-    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsSharedSizeScope="True">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsSharedSizeScope="True"
+             Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="2*" />

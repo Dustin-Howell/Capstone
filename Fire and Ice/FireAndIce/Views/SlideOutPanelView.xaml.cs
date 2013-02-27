@@ -25,25 +25,15 @@ namespace FireAndIce.Views
 
             if (oldParent == null || oldParent as ContentPresenter != null)
             {
-                //((UIElement)VisualParent).UpdateLayout();
                 Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
                 DoubleAnimation animation = new DoubleAnimation()
                 {
-                    //From = -SlideOutPanel.DesiredSize.Width,
-                    //To = 0,
                     From = 0,
                     To = 1,
                     Duration = new Duration(new TimeSpan(0, 0, 0, 0, 500)),
-                    EasingFunction = new BounceEase() { Bounciness = 6, Bounces = 1, }
+                    EasingFunction = new QuadraticEase()
                 };
-
-                //Storyboard.SetTargetProperty(animation, new PropertyPath(SlideOutPanelView.WidthProperty));
-                //Storyboard widthStoryboard = new Storyboard() { Children = new TimelineCollection { animation } };
-                //SlideOutPanel.BeginStoryboard(widthStoryboard);
-
-                //SlideOutPanel.RenderTransform = new TranslateTransform();
-                //SlideOutPanel.RenderTransform.BeginAnimation(TranslateTransform.XProperty, animation);
 
                 SlideOutPanel.RenderTransform = new ScaleTransform();
                 SlideOutPanel.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, animation);
