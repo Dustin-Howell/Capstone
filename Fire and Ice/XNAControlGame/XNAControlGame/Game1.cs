@@ -39,7 +39,7 @@ namespace XNAControlGame
         bool _secondClick = false;
 
         //Keeps track of whose turn it is
-        public CreeperColor PlayerTurn { get; set; }
+        public CreeperColor PlayerTurn { get { return TurnTracker.CurrentPlayer.Color; } }
         //Tile Textures
         Texture2D _blankTile;
         Texture2D _whiteTile;
@@ -57,21 +57,6 @@ namespace XNAControlGame
 
         List<Animation> animation = new List<Animation>();
         List<Animation> finishedAnimation = new List<Animation>();
-
-        /// <summary>
-        /// Get's a move from a player using the GUI. Returns a valid move they selected.
-        /// </summary>
-        /// <param name="currentTurn"></param>
-        /// <returns></returns>
-        public Move GetMove(CreeperColor currentTurn)
-        {
-            _iStillNeedToMakeAMove = true;
-            PlayerTurn = currentTurn;
-
-            while (_iStillNeedToMakeAMove) ;
-
-            return LastMoveMade;
-        }
 
         public event EventHandler<MoveEventArgs> UserMadeMove;
 
