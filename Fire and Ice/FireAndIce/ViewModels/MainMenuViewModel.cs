@@ -114,7 +114,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
                     new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(), Title = "AI"},
                 },
-                    Background = Resources["Primary3"] as SolidColorBrush,
+                    Background = Resources["Primary5"] as SolidColorBrush,
                     Title = "Against?",
                     MenuParent = NewGameMenu,
                 };
@@ -142,7 +142,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => { HostNetworkGame(); }, Title = "Create Game"},
                     new OptionButtonViewModel {ClickAction = () => { FindNetworkGame(); }, Title = "Find Game"},
                 },
-                    Background = Resources["Primary3"] as SolidColorBrush,
+                    Background = Resources["Primary5"] as SolidColorBrush,
                     Title = "Network",
                     MenuParent = NewGameMenu,
                 };

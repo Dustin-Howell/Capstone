@@ -12,8 +12,7 @@
                     Background="{StaticResource Complementary1}">
             <StackPanel Orientation="Horizontal" />
         </Border>
-        <Border Width="200"
-                DockPanel.Dock="Left"
+        <Border DockPanel.Dock="Left"
                 Background="{StaticResource Primary1}"
                 Panel.ZIndex="2"
                 Effect="{StaticResource DropShadow}"
@@ -30,7 +29,6 @@
             <Border Background="White"
                     Effect="{StaticResource DropShadow}"
                     x:Name="MainArea"
-                Grid.ColumnSpan="3"
                 Panel.ZIndex="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
@@ -39,7 +37,9 @@
                         VerticalAlignment="Center"/>
             </Border>
             
-            <ItemsControl x:Name="Menus" VerticalAlignment="Stretch" HorizontalAlignment="Left" Background="AliceBlue">
+            <ItemsControl x:Name="Menus"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Left">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />

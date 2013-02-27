@@ -71,6 +71,10 @@
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
     <Compile Include="ViewModels\SlideOutPanelViewModel.cs" />
+    <Compile Include="Views\SlideOutPanelView.xaml.cs">
+      <DependentUpon>SlideOutPanelView.xaml</DependentUpon>
+      <Generator>MSBuild:Compile</Generator>
+    </Compile>
     <Page Include="ColorSchemes\Default.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

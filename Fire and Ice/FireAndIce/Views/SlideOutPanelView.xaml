@@ -9,16 +9,21 @@
              HorizontalAlignment="Left"
              Background="{Binding Background}"
              Visibility="{Binding ControlIsVisible, Converter={StaticResource BoolToVis}}"
-             Style="{StaticResource SlidingMenu}"
+             Effect="{StaticResource DropShadow}"
              x:Name="SlideOutPanel">
 
-    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsSharedSizeScope="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition SharedSizeGroup="A" />
+        </Grid.ColumnDefinitions>
+
         <TextBlock
             Grid.Row="0"
+            Grid.Column="0"
             Foreground="White"
             TextWrapping="NoWrap"
             FontSize="20"
@@ -26,10 +31,16 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             x:Name="Title" />
+
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Buttons}" VerticalAlignment="Top">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl cal:View.Model="{Binding}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="A" />
+                        </Grid.ColumnDefinitions>
+                        <ContentControl Grid.Column="0" cal:View.Model="{Binding}" />
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
