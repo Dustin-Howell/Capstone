@@ -109,6 +109,13 @@ namespace XNAControl
             //this.Tick();
         }
 
+        protected void UpdateWindowHandle(IntPtr handle)
+        {
+            //TODO: Make this actually work somehow
+            m_windowHandle = handle;
+            GraphicsDevice.Reset();
+        }
+
         void GraphicsDevice_DeviceReset(object sender, EventArgs e)
         {
             m_bDeviceResetting = true;

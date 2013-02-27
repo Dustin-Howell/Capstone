@@ -127,7 +127,7 @@ namespace CreeperCore
 
         public void InitializeGameGUI(IntPtr handle, int width, int height)
         {
-            XNAGame = new Game1(handle, width, height);
+            XNAGame = Game1.GetInstance(handle, width, height);
         }
 
         public void StartLocalGame(PlayerType player1Type, PlayerType player2Type)
