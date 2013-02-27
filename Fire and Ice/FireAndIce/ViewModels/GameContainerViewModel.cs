@@ -40,5 +40,10 @@ namespace FireAndIce.ViewModels
                 AppModel.Core.StartNetworkGame(_player1Type, _player2Type, _network);
             }
         }
+
+        public void Quit()
+        {
+            AppModel.AppViewModel.ActivateItem(new MainMenuViewModel());
+        }
     }
 }

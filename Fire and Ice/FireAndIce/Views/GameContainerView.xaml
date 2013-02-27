@@ -3,6 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:xna="clr-namespace:XNAControl;assembly=XNAControl">
     <Grid>
-        <xna:XNAUserControl x:Name="XNAControl" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical"
+                    Grid.Column="0">
+            <Button x:Name="Quit">Quit</Button>
+        </StackPanel>
+        <xna:XNAUserControl x:Name="XNAControl"
+                            Grid.Column="1"/>
     </Grid>
 </UserControl>
