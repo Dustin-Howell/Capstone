@@ -1,7 +1,11 @@
 ﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
-
-    <FreeCamera Name="MainCamera" Position="0, -275, 422" Angle="-0.5,0,0"/>
-
-    <Sprite Texture="{ContentReference Assets/MainBoard}" Name="TheBoard" Position="0, 0" Visible="False" />
+    
+    <SkyBox Texture="{ContentReference Textures/SkyCubeMap}" />
+    <FreeCamera Name="MainCamera" Speed="100" Position="100, 222, 260" Angle="1,0,0"/>
+        
+    <Surface Heightmap.Width="100" Heightmap.Height="100" Heightmap.Step="2"
+             PatchSegmentCount="2" Transform.Position="0, 0, 0" >
+        <BasicMaterial Texture="{ContentReference Assets/MainBoard}" IsTransparent="True" />
+    </Surface>
 
 </Scene>

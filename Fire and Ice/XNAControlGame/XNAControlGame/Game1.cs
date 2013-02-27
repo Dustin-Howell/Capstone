@@ -25,9 +25,11 @@ namespace XNAControlGame
         private Position _startPosition = new Position(-1, -1);
         private Position _endPostion = new Position(-1, -1);
         private String _selectedPeg;
-
         Scene _scene;
         Input _input;
+
+        Nine.Graphics.Primitives.Plane _ground;
+        
 
         //Used For Testing, Can Delete for the final project.
         SpriteFont _font;
@@ -44,6 +46,7 @@ namespace XNAControlGame
         Texture2D _blankTile;
         Texture2D _whiteTile;
         Texture2D _blackTile;
+        Texture2D _board;
 
         //Allows access to clicking on the board only when it's supposed to be accessed.
         private bool _iStillNeedToMakeAMove = false;
@@ -129,6 +132,7 @@ namespace XNAControlGame
             Sprite tile = new Sprite(GraphicsDevice);
 
             //Loads in the Textures
+            _board = Content.Load<Texture2D>(Resources.Textures.GameBoard);
             _blankTile = Content.Load<Texture2D>(Resources.Textures.UncapturedTile);
             _whiteTile = Content.Load<Texture2D>(Resources.Textures.WhiteTile);
             _blackTile = Content.Load<Texture2D>(Resources.Textures.BlackTile);
@@ -136,14 +140,14 @@ namespace XNAControlGame
             // Load a scene from a content file
             _scene = Content.Load<Scene>(Resources.Scenes.MainPlayScene);
 
-
+            
             //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
-            boardHeight = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Height;
-            boardWidth = _scene.FindName<Sprite>(Resources.Board.Name).Texture.Width;
-            squareWidth = boardWidth / (CreeperBoard.PegRows - 1);
-            squareHeight = boardHeight / (CreeperBoard.PegRows - 1);
-            Vector3 startCoordinates = new Vector3(-boardWidth / 2, boardHeight / 2, 0);
+            boardHeight = _scene.Find<Surface>().Heightmap.Height;
+            boardWidth = _scene.Find<Surface>().Heightmap.Width;
+            squareHeight = (boardHeight / CreeperBoard.TileRows) * _scene.Find<Surface>().Heightmap.Step;
+            squareWidth = (boardWidth / CreeperBoard.TileRows) * _scene.Find<Surface>().Heightmap.Step;
+            Vector3 startCoordinates = new Vector3(0, 0, 0);
 
             Position pegPosition;
 
@@ -157,7 +161,7 @@ namespace XNAControlGame
                 pegPosition = NumberToPosition(pegNumber);
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 String iPegName = 'i' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
-                Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, startCoordinates.Y - squareHeight * pegPosition.Row, 0);
+                Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, 0, startCoordinates.Y + squareHeight * pegPosition.Row);
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = iPegName, Visible = false });
             }
@@ -239,7 +243,7 @@ namespace XNAControlGame
                 }
 
                 //If both the start and end position have been determined, send the move to the board and reset start and end.
-                if (_endPostion.Row != -1)
+                if (_endPostion.Row != -1 && _selectedPeg != null)
                 {
                     Move move = new Move(_startPosition, _endPostion, PlayerTurn);
 
@@ -304,8 +308,8 @@ namespace XNAControlGame
             {
                 foreach (Animation animate in animation)
                 {
-                    animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width / CreeperBoard.TileRows) / 50),
-                            (animate.yDirection * (_scene.FindName<Sprite>("TheBoard").Texture.Width / CreeperBoard.TileRows) / 50), 0);
+                    animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_board.Height / CreeperBoard.TileRows) / 50),
+                            0, -(animate.yDirection * (_board.Width / CreeperBoard.TileRows) / 50));
 
                     if (animate.peg.Contains(animate.endLocation))
                     {
@@ -337,22 +341,8 @@ namespace XNAControlGame
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-
-            //Test String drawing
-            SpriteBatch spritebatch = new SpriteBatch(GraphicsDevice);
-            spritebatch.Begin();
-            spritebatch.DrawString(_font, "Player Turn = " + PlayerTurn.ToString(), new Vector2(0, 0), Color.Black);
-            spritebatch.DrawString(_font, "CameraPosition = (" + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position.X.ToString() + ","
-                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position.Y.ToString() + ","
-                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Position.Z.ToString() + ")"
-            , new Vector2(0, 25), Color.Black);
-            spritebatch.DrawString(_font, "CameraAngle = (" + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.X.ToString() + ","
-                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.Y.ToString() + ","
-                + _scene.FindName<FreeCamera>(Resources.Cameras.MainView).Angle.Z.ToString() + ")"
-            , new Vector2(0, 50), Color.Black);
-
-            spritebatch.End();
             DrawBoard();
+
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             base.Draw(gameTime);
         }

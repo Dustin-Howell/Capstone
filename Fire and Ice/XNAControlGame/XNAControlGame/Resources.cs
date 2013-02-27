@@ -14,7 +14,7 @@ namespace Resources
     static class Models
     {
         //Model Scales
-        private static readonly Vector3 _pegScale = new Vector3( 5, 5, 5 );
+        private static readonly Vector3 _pegScale = new Vector3( 2.5f, 2.5f, 2.5f );
         public static Vector3 PegScale { get { return _pegScale; } }
 
         //Model Names
@@ -33,6 +33,9 @@ namespace Resources
 
         //Pegs
         public static String Default { get { return "Textures/Grid"; } }
+
+        //SkyBox
+        public static String SkyBox { get { return "Textures/SkyCubeMap"; } }
     }
 
     static class Cameras
