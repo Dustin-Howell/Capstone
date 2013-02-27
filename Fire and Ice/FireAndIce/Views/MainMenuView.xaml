@@ -13,10 +13,10 @@
             <StackPanel Orientation="Horizontal" />
         </Border>
         <Border DockPanel.Dock="Left"
-                Background="{StaticResource Primary1}"
+                Background="White"
                 Panel.ZIndex="2"
-                Effect="{StaticResource DropShadow}"
-                x:Name="MainMenuBorder">
+                x:Name="MainMenuBorder"
+                BorderBrush="Transparent">
             
             <!--Main Menu-->
                 <ContentControl VerticalAlignment="Stretch" x:Name="MainMenu" />
