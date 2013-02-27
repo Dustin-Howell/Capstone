@@ -296,6 +296,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel { ClickAction = () => AddMenu(HighScoresMenu), Title = "High Scores" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(SettingsMenu), Title = "Settings" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(CreditsMenu), Title = "Credits" },
+                    new OptionButtonViewModel { ClickAction = () => AppModel.AppViewModel.TryClose(), Title = "Exit" },
                 },
                 Background = Resources["Primary1"] as SolidColorBrush,
                 Title = "Main Menu",
