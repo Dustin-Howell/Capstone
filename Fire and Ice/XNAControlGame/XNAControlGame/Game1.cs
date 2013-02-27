@@ -20,7 +20,6 @@ namespace XNAControlGame
 {
     public class Game1 : XNAControl.XNAControlGame
     {
-
         //may be used in move and animation
         private Position _startPosition = new Position(-1, -1);
         private Position _endPostion = new Position(-1, -1);
@@ -60,6 +59,8 @@ namespace XNAControlGame
 
         public event EventHandler<MoveEventArgs> UserMadeMove;
 
+        private static Game1 _instance;
+
         public void OnMoveMade(Move move)
         {
             //Sets the start and end value
@@ -98,6 +99,19 @@ namespace XNAControlGame
             return position;
         }
 
+        public static Game1 GetInstance(IntPtr handle, int width, int height)
+        {
+            if (_instance == null)
+            {
+                _instance = new Game1(handle, width, height);
+            }
+            else
+            {
+                _instance.UpdateWindowHandle(handle);
+            }
+
+            return _instance;
+        }
 
         /// <summary>
         /// Constructor for Game1.
@@ -105,7 +119,7 @@ namespace XNAControlGame
         /// <param name="handle"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Game1(IntPtr handle, int width, int height)
+        private Game1(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
         {
             Content = new ContentLoader(Services);
