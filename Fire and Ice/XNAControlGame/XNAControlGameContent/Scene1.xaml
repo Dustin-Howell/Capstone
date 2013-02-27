@@ -1,7 +1,7 @@
 ﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
-    <FreeCamera Name="MainCamera" Position="0, -275, 422" Angle="-0.5,0,0"/> 
+    <FreeCamera Name="MainCamera" Position="0, -275, 422" Angle="-0.5,0,0"/>
 
-    <Sprite Texture="{ContentReference Assets/MainBoard}" Name="TheBoard" Position="0, 0" />
-    
+    <Sprite Texture="{ContentReference Assets/MainBoard}" Name="TheBoard" Position="0, 0" Visible="False" />
+
 </Scene>

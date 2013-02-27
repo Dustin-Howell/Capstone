@@ -337,8 +337,6 @@ namespace XNAControlGame
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            DrawBoard();
-            _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
 
             //Test String drawing
             SpriteBatch spritebatch = new SpriteBatch(GraphicsDevice);
@@ -354,7 +352,8 @@ namespace XNAControlGame
             , new Vector2(0, 50), Color.Black);
 
             spritebatch.End();
-
+            DrawBoard();
+            _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             base.Draw(gameTime);
         }
 
