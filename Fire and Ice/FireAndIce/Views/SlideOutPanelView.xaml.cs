@@ -25,8 +25,6 @@ namespace FireAndIce.Views
 
             if (oldParent == null || oldParent as ContentPresenter != null)
             {
-                Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
                 DoubleAnimation animation = new DoubleAnimation()
                 {
                     From = 0,

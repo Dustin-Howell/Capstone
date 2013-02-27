@@ -12,10 +12,7 @@ using System.ComponentModel;
 namespace FireAndIce.ViewModels
 {
     public class MainMenuViewModel : Screen
-    {
-        //TODO: Move this to App
-        public ResourceDictionary Resources { get { return new ResourceDictionary() { Source = new Uri(@"..\Resources.xaml", UriKind.Relative) }; } }
-
+    {    
         private BindableCollection<SlideOutPanelViewModel> _menus;
         public BindableCollection<SlideOutPanelViewModel> Menus
         {
@@ -96,7 +93,7 @@ namespace FireAndIce.ViewModels
                         new OptionButtonViewModel { ClickAction = () => AddMenu(LocalGameMenu), Title = "Local" },
                         new OptionButtonViewModel { ClickAction = () => AddMenu(NetworkGameMenu), Title = "Network" },
                     },
-                    Background = Resources["Primary4"] as SolidColorBrush,
+                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Where?",
                     MenuParent = MainMenu,
                 };
@@ -114,7 +111,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
                     new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(), Title = "AI"},
                 },
-                    Background = Resources["Primary5"] as SolidColorBrush,
+                    Background = AppModel.Resources["Primary5"] as SolidColorBrush,
                     Title = "Against?",
                     MenuParent = NewGameMenu,
                 };
@@ -142,7 +139,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => { HostNetworkGame(); }, Title = "Create Game"},
                     new OptionButtonViewModel {ClickAction = () => { FindNetworkGame(); }, Title = "Find Game"},
                 },
-                    Background = Resources["Primary5"] as SolidColorBrush,
+                    Background = AppModel.Resources["Primary5"] as SolidColorBrush,
                     Title = "Network",
                     MenuParent = NewGameMenu,
                 };
@@ -216,7 +213,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Practice"},
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Guided Tour"},
                 },
-                    Background = Resources["Primary4"] as SolidColorBrush,
+                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Help",
                     MenuParent = MainMenu,
                 };
@@ -235,7 +232,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Good"},
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Meh"},
                 },
-                    Background = Resources["Primary4"] as SolidColorBrush,
+                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "High Scores",
                     MenuParent = MainMenu,
                 };
@@ -255,7 +252,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Switch"},
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Pixel"},
                 },
-                    Background = Resources["Primary4"] as SolidColorBrush,
+                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Settings",
                     MenuParent = MainMenu,
                 };
@@ -276,7 +273,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => new object(), Title = "Kaleb Lape"},
                     new OptionButtonViewModel {ClickAction = () => new object(), Title = "Jon Scott Smith"},
                 },
-                    Background = Resources["Primary4"] as SolidColorBrush,
+                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "RRR Software",
                     MenuParent = MainMenu,
                 };
@@ -285,10 +282,9 @@ namespace FireAndIce.ViewModels
 
         public MainMenuViewModel()
         {
-            Menus = new BindableCollection<SlideOutPanelViewModel>()
-                {
-                };
+            AppModel.ResetCreeperCore();
 
+            Menus = new BindableCollection<SlideOutPanelViewModel>();
             MainMenu = new SlideOutPanelViewModel() {
                 Buttons  = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel { ClickAction = () => AddMenu(NewGameMenu), Title = "New Game" },
@@ -298,9 +294,10 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel { ClickAction = () => AddMenu(CreditsMenu), Title = "Credits" },
                     new OptionButtonViewModel { ClickAction = () => AppModel.AppViewModel.TryClose(), Title = "Exit" },
                 },
-                Background = Resources["Primary1"] as SolidColorBrush,
+                Background = AppModel.Resources["Primary1"] as SolidColorBrush,
                 Title = "Main Menu",
             };
+
             MainMenu.ControlIsVisible = true;
         }
     }

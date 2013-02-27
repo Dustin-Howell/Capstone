@@ -56,7 +56,6 @@ namespace CreeperCore
             }
         }
 
-        #region members
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
         private Player CurrentPlayer { get; set; }
@@ -76,7 +75,6 @@ namespace CreeperCore
         private BackgroundWorker _networkPlayGame;
         private CreeperBoard _board;
         private bool _IsNetworkGame { get { return Player1.PlayerType == PlayerType.Network || Player2.PlayerType == PlayerType.Network; } }
-        #endregion
 
         public CreeperGameCore()
         {
