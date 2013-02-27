@@ -75,6 +75,7 @@ namespace CreeperCore
         private BackgroundWorker _getAIMoveWorker;
         private BackgroundWorker _networkPlayGame;
         private CreeperBoard _board;
+        private bool _IsNetworkGame { get { return Player1.PlayerType == PlayerType.Network || Player2.PlayerType == PlayerType.Network; } }
         #endregion
 
         public CreeperGameCore()
@@ -116,7 +117,7 @@ namespace CreeperCore
 
                 GetNextMove();
             }
-            else
+            else if (_IsNetworkGame)
             {
                 _network.disconnect();
             }
