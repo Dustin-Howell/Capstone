@@ -8,6 +8,7 @@ using CreeperCore;
 using FireAndIce.Views;
 using CreeperNetwork;
 using System.Windows.Media;
+using Creeper;
 
 namespace FireAndIce.ViewModels
 {

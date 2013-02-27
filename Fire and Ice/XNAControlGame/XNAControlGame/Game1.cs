@@ -131,8 +131,6 @@ namespace XNAControlGame
             _input.MouseDown += new EventHandler<Nine.MouseEventArgs>(Input_MouseDown);
         }
 
-
-
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
