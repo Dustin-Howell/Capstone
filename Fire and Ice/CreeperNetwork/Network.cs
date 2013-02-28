@@ -32,6 +32,10 @@ namespace CreeperNetwork
         private const byte CMD_CHAT = 0x07;
         private const byte CMD_ACK = 0x08;
 
+        private const byte MOVETYPE_MOVE = 1;
+        private const byte MOVETYPE_FORFEIT = 2;
+        private const byte MOVETYPE_ILLEGAL = 3;
+
         //Network Variables
         private bool isServer = false;
         private bool serverFull = false;
@@ -260,7 +264,7 @@ namespace CreeperNetwork
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                         acknowledged = true;
 
-                        if (packet[6] == NetworkMoveType.MOVE)
+                        if (packet[6] == MOVETYPE_MOVE)
                         {
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
                             //newMove = true;
@@ -270,7 +274,7 @@ namespace CreeperNetwork
                                 MoveMade(this, new MoveEventArgs(currentMove));
                             }
                         }
-                        else if (packet[6] == NetworkMoveType.FORFEIT || packet[6] == NetworkMoveType.ILLEGAL)
+                        else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                         }
@@ -344,7 +348,7 @@ namespace CreeperNetwork
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
                 Console.WriteLine("Move Sent.");
-                sendPacket(packet_MakeMove(moveIn, NetworkMoveType.MOVE), ipOfLastPacket.Address.ToString());
+                sendPacket(packet_MakeMove(moveIn, MOVETYPE_MOVE), ipOfLastPacket.Address.ToString());
                 acknowledged = false;
             }
         }
@@ -354,7 +358,7 @@ namespace CreeperNetwork
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
                 sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty), 
-                    NetworkMoveType.FORFEIT), ipOfLastPacket.Address.ToString());
+                    MOVETYPE_FORFEIT), ipOfLastPacket.Address.ToString());
                 acknowledged = false;
             }
         }
@@ -364,7 +368,7 @@ namespace CreeperNetwork
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
                 sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty),
-                    NetworkMoveType.ILLEGAL), ipOfLastPacket.Address.ToString());
+                    MOVETYPE_ILLEGAL), ipOfLastPacket.Address.ToString());
                 acknowledged = false;
             }
         }
@@ -728,12 +732,5 @@ namespace CreeperNetwork
     {
         public IPEndPoint ip;
         public UdpClient client;
-    }
-
-    public class NetworkMoveType
-    {
-        public const byte MOVE = 1;
-        public const byte FORFEIT = 2;
-        public const byte ILLEGAL = 3;
     }
 }
