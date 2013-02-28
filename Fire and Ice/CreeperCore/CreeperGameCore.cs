@@ -62,7 +62,7 @@ namespace CreeperCore
         private BackgroundWorker _getAIMoveWorker;
         private BackgroundWorker _networkPlayGame;
         private CreeperBoard _board;
-        private bool _IsNetworkGame { get { return TurnTracker.Player1.PlayerType == PlayerType.Network || TurnTracker.Player2.PlayerType == PlayerType.Network; } }
+        private bool _IsNetworkGame { get { return GameTracker.Player1.PlayerType == PlayerType.Network || GameTracker.Player2.PlayerType == PlayerType.Network; } }
 
         public CreeperGameCore()
         {
@@ -74,7 +74,7 @@ namespace CreeperCore
 
         private void _xnaGame_UserMadeMove(object sender, MoveEventArgs e)
         {
-            if (e.Move.PlayerColor == TurnTracker.CurrentPlayer.Color)
+            if (e.Move.PlayerColor == GameTracker.CurrentPlayer.Color)
             {
                 MakeMove(e.Move);
             }
@@ -82,7 +82,7 @@ namespace CreeperCore
 
         void _network_MoveMade(object sender, MoveEventArgs e)
         {
-            e.Move.PlayerColor = TurnTracker.CurrentPlayer.Color;
+            e.Move.PlayerColor = GameTracker.CurrentPlayer.Color;
             MakeMove(e.Move);
         }
 
@@ -91,14 +91,14 @@ namespace CreeperCore
             Board.Move(move);
             XNAGame.OnMoveMade(move);
 
-            if (TurnTracker.OpponentPlayer.PlayerType == PlayerType.Network)
+            if (GameTracker.OpponentPlayer.PlayerType == PlayerType.Network)
             {
                 _network.move(move);
             }
 
             if (!Board.IsFinished(move.PlayerColor))
             {
-                TurnTracker.CurrentPlayer = TurnTracker.OpponentPlayer;
+                GameTracker.CurrentPlayer = GameTracker.OpponentPlayer;
 
                 GetNextMove();
             }
@@ -122,7 +122,7 @@ namespace CreeperCore
 
         void _getAIMoveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = _AI.GetMove(Board, TurnTracker.CurrentPlayer.Color);
+            e.Result = _AI.GetMove(Board, GameTracker.CurrentPlayer.Color);
         }
 
         public void InitializeGameGUI(IntPtr handle, int width, int height)
@@ -137,9 +137,9 @@ namespace CreeperCore
                 throw new ArgumentException("Cannot start a local game with a player type of network.");
             }
 
-            TurnTracker.Player1 = new Player(player1Type, CreeperColor.White);
-            TurnTracker.Player2 = new Player(player2Type, CreeperColor.Black);
-            TurnTracker.CurrentPlayer = TurnTracker.Player1;
+            GameTracker.Player1 = new Player(player1Type, CreeperColor.White);
+            GameTracker.Player2 = new Player(player2Type, CreeperColor.Black);
+            GameTracker.CurrentPlayer = GameTracker.Player1;
             GetNextMove();
         }
 
@@ -156,9 +156,9 @@ namespace CreeperCore
             _networkPlayGame = new BackgroundWorker();
             _networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => _network.playGame());
 
-            TurnTracker.Player1 = new Player(player1Type, CreeperColor.White);
-            TurnTracker.Player2 = new Player(player2Type, CreeperColor.Black);
-            TurnTracker.CurrentPlayer = TurnTracker.Player1;
+            GameTracker.Player1 = new Player(player1Type, CreeperColor.White);
+            GameTracker.Player2 = new Player(player2Type, CreeperColor.Black);
+            GameTracker.CurrentPlayer = GameTracker.Player1;
             GetNextMove();
 
             _networkPlayGame.RunWorkerAsync();
@@ -166,7 +166,7 @@ namespace CreeperCore
 
         private void GetNextMove()
         {
-            switch (TurnTracker.CurrentPlayer.PlayerType)
+            switch (GameTracker.CurrentPlayer.PlayerType)
             {
                 case PlayerType.AI:
                     _getAIMoveWorker.RunWorkerAsync();

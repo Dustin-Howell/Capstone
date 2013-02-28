@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Creeper
 {
-    public static class TurnTracker
+    public static class GameTracker
     {
         public static Player Player1 { get; set; }
         public static Player Player2 { get; set; }
@@ -17,5 +17,6 @@ namespace Creeper
                 return CurrentPlayer == Player1 ? Player2 : Player1;
             }
         }
+        public static CreeperBoard Board { get; set; }
     }
 }
