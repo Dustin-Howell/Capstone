@@ -37,6 +37,8 @@ namespace FireAndIce.ViewModels
 
         public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, Network network = null) : base()
         {
+            AppModel.ResetCreeperCore();
+
             _player1Type = player1Type;
             _player2Type = player2Type;
             _network = network;

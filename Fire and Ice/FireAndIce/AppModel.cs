@@ -12,7 +12,6 @@ namespace FireAndIce
     {
         static AppModel()
         {
-            Core = new CreeperGameCore();
         }
 
         public static CreeperGameCore Core { get; private set; }
