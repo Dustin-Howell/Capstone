@@ -130,8 +130,8 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(CreeperColor.White), Title = "Fire"},
                     new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(CreeperColor.Black), Title = "Ice"},
                 },
-                    Background = new SolidColorBrush(Colors.White),
-                    Title = "Side?",
+                    Background = AppModel.Resources["Primary1"] as SolidColorBrush,
+                    Title = "Choose a Side",
                     MenuParent = LocalGameMenu,
                 };
             }
