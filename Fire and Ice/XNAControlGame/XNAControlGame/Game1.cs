@@ -38,7 +38,7 @@ namespace XNAControlGame
         bool _secondClick;
 
         //Keeps track of whose turn it is
-        public CreeperColor PlayerTurn { get { return TurnTracker.CurrentPlayer.Color; } }
+        public CreeperColor PlayerTurn { get { return GameTracker.CurrentPlayer.Color; } }
         //Tile Textures
         Texture2D _blankTile;
         Texture2D _whiteTile;
