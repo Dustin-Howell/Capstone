@@ -8,7 +8,9 @@ namespace CreeperNetwork
     public enum CONNECTION_ERROR_TYPE
     {
         CONNECTION_LOST,
-        RECONNECTED
+        RECONNECTED,
+        CABLE_UNPLUGGED,
+        CABLE_RECONNECTED
     }
 
     public class ConnectionEventArgs : EventArgs
