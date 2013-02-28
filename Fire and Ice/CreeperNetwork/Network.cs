@@ -329,9 +329,8 @@ namespace CreeperNetwork
 
                     if (stopwatch.ElapsedMilliseconds > PACKET_LOSS)
                     {
-                        //resend the last command...whatever it was...
-                        Console.WriteLine("Packet lost. Resend the last command.");
                         sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
+                        Console.WriteLine("Packet lost. Resent the last command to " + ipOfLastPacket.Address.ToString());
                     }
                 }
             }
