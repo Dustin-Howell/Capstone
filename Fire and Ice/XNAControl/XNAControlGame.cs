@@ -111,7 +111,6 @@ namespace XNAControl
 
         protected void UpdateWindowHandle(IntPtr handle)
         {
-            //TODO: Make this actually work somehow
             m_windowHandle = handle;
             m_graphics.GraphicsDevice.Reset(new PresentationParameters() 
             {  
@@ -121,7 +120,6 @@ namespace XNAControl
                 RenderTargetUsage = RenderTargetUsage.PreserveContents,
                 IsFullScreen = false,
                 MultiSampleCount = 8,
-
             });
         }
 
