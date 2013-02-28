@@ -228,6 +228,7 @@ namespace CreeperNetwork
 
         public event EventHandler<MoveEventArgs> MoveMade;
         public event EventHandler<ConnectionEventArgs> ConnectionIssue;
+        public event EventHandler<ChatEventArgs> ChatMade; 
 
         //Game Functions
 
@@ -265,6 +266,11 @@ namespace CreeperNetwork
                         newMessage = true;
                         acknowledged = true;
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
+
+                        if (ChatMade != null)
+                        {
+                            ChatMade(this, new ChatEventArgs(currentMessage));
+                        }
                     }
                     else if (packet[1] == CMD_MAKE_MOVE)
                     {
@@ -290,8 +296,6 @@ namespace CreeperNetwork
 
                 }
             }
-
-
         }
 
         public void disconnect()
@@ -509,7 +513,6 @@ namespace CreeperNetwork
         {
             sendPacket(packetIn, BROADCAST_IP);
         }
-
 
         //TIME TRIGGERED BACKGROUND functions
 
