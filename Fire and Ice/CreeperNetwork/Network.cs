@@ -53,6 +53,7 @@ namespace CreeperNetwork
         private bool newMessage = false;
         private Move currentMove;
         private bool newMove = false;
+        private bool connectionIssue = false;
 
         private byte[] lastCommand;
 
@@ -62,8 +63,10 @@ namespace CreeperNetwork
         private string hostGameName = "";
         private string hostPlayerName = "";
         private string clientPlayerName = "";
-
+         
+        //Class variables
         private static int instanceCount = 0;
+
         public Network()
         {
             if (++instanceCount > 1) throw new InvalidOperationException();
@@ -221,9 +224,12 @@ namespace CreeperNetwork
             }
         }
 
-        //Game functions
+        //Events
 
         public event EventHandler<MoveEventArgs> MoveMade;
+        public event EventHandler<ConnectionEventArgs> ConnectionIssue;
+
+        //Game Functions
 
         public void playGame()
         {
@@ -296,46 +302,6 @@ namespace CreeperNetwork
             sender.Close();
         }
 
-        public void keepAlive()
-        {
-            Timer ackTimer = new Timer();
-            ackTimer.Elapsed += new ElapsedEventHandler(sendAckOnTime);
-            // Set the Interval to 5 seconds.
-            ackTimer.Interval = ACKNOWLEDGEMENT_TIMER;
-            ackTimer.Enabled = true;
-            ackTimer.AutoReset = true;
-
-            byte[] packet;
-            Stopwatch stopwatch = new Stopwatch();
-
-            stopwatch.Start();
-
-            while (gameRunning)
-            {
-                packet = receivePacket_blockWithTimeout_altPort();
-
-                if (packet == null)
-                {
-                    Console.WriteLine("We have connection issues");
-                }
-                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
-                {
-                    if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
-                    {
-                        stopwatch.Restart();
-                    }
-
-                    awaySequenceNumber = BitConverter.ToInt32(packet, 2);
-
-                    if (stopwatch.ElapsedMilliseconds > PACKET_LOSS)
-                    {
-                        sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
-                        Console.WriteLine("Packet lost. Resent the last command to " + ipOfLastPacket.Address.ToString());
-                    }
-                }
-            }
-        }
-
         public void chat(string messageIn)
         {
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
@@ -405,6 +371,63 @@ namespace CreeperNetwork
         }
 
         //BACKGROUND functions
+
+        private void keepAlive()
+        {
+            Timer ackTimer = new Timer();
+            ackTimer.Elapsed += new ElapsedEventHandler(sendAckOnTime);
+            // Set the Interval to 5 seconds.
+            ackTimer.Interval = ACKNOWLEDGEMENT_TIMER;
+            ackTimer.Enabled = true;
+            ackTimer.AutoReset = true;
+
+            byte[] packet;
+            Stopwatch stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
+            while (gameRunning)
+            {
+                packet = receivePacket_blockWithTimeout_altPort();
+
+                if (packet == null)
+                {
+                    Console.WriteLine("Lost connection. Attemping reconnect.");
+
+                    if (ConnectionIssue != null)
+                    {
+                        ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
+                    }
+
+                    connectionIssue = true;
+                }
+                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
+                {
+                    if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                    {
+                        stopwatch.Restart();
+                    }
+
+                    awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+
+                    if (stopwatch.ElapsedMilliseconds > PACKET_LOSS)
+                    {
+                        sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
+                        Console.WriteLine("Packet lost. Resent the last command to " + ipOfLastPacket.Address.ToString());
+                    }
+                }
+
+                if (packet != null && connectionIssue)
+                {
+                    connectionIssue = false;
+
+                    if (ConnectionIssue != null)
+                    {
+                        ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.RECONNECTED));
+                    }
+                }
+            }
+        }
 
         private void sendAckOnTime(object source, ElapsedEventArgs e)
         {
