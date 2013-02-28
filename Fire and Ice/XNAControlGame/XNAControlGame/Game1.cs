@@ -218,7 +218,9 @@ namespace XNAControlGame
                     if (intersect.Value < maxDistance)
                     {
                         //And if the peg to move has not been selected or the peg clicked matches the current turn
-                        if (!_secondClick || Board.Pegs.At(pegLocation).Color == PlayerTurn)
+                        //and the current player is a local human
+                        if ((!_secondClick || Board.Pegs.At(pegLocation).Color == PlayerTurn)
+                            && TurnTracker.CurrentPlayer.PlayerType == PlayerType.Human)
                         {
                             _selectedPeg = currentPeg;
                             _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
