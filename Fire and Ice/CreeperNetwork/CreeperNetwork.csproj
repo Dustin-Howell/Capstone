@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ChatEventArgs.cs" />
     <Compile Include="ConnectionEventArgs.cs" />
+    <Compile Include="EndGameEventArgs.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
