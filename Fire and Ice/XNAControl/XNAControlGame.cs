@@ -113,7 +113,16 @@ namespace XNAControl
         {
             //TODO: Make this actually work somehow
             m_windowHandle = handle;
-            GraphicsDevice.Reset();
+            m_graphics.GraphicsDevice.Reset(new PresentationParameters() 
+            {  
+                BackBufferWidth = ResolutionWidth,
+                BackBufferHeight = ResolutionHeight,
+                DeviceWindowHandle = m_windowHandle, 
+                RenderTargetUsage = RenderTargetUsage.PreserveContents,
+                IsFullScreen = false,
+                MultiSampleCount = 8,
+
+            });
         }
 
         void GraphicsDevice_DeviceReset(object sender, EventArgs e)
@@ -146,7 +155,6 @@ namespace XNAControl
             e.GraphicsDeviceInformation.PresentationParameters.IsFullScreen = false;
 
             e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
-
 
             m_bLoaded = true;
         }
