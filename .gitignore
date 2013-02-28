@@ -1,5 +1,9 @@
+#Output Directories
 bin/
 obj/
+Deployable/
+
+#File types
 *.suo
 *.db
 *.cachefile
