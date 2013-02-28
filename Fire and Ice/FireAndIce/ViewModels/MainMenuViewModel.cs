@@ -283,8 +283,6 @@ namespace FireAndIce.ViewModels
 
         public MainMenuViewModel()
         {
-            AppModel.ResetCreeperCore();
-
             Menus = new BindableCollection<SlideOutPanelViewModel>();
             MainMenu = new SlideOutPanelViewModel() {
                 Buttons  = new BindableCollection<OptionButtonViewModel> {

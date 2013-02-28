@@ -12,23 +12,6 @@ namespace CreeperCore
 {
     public class CreeperGameCore
     {
-        public CreeperBoard Board
-        {
-            get
-            {
-                return _board;
-            }
-
-            private set
-            {
-                _board = value;
-                if (XNAGame != null)
-                {
-                    XNAGame.Board = _board;
-                }
-            }
-        }
-
         public Game1 XNAGame
         {
             get
@@ -48,11 +31,6 @@ namespace CreeperCore
                 {
                     _xnaGame.UserMadeMove += new EventHandler<MoveEventArgs>(_xnaGame_UserMadeMove);
                 }
-
-                if (Board != null)
-                {
-                    _xnaGame.Board = Board;
-                }
             }
         }
 
@@ -68,13 +46,14 @@ namespace CreeperCore
         {
             InitializeBackgroundWorkers();
 
-            Board = new CreeperBoard();
+            GameTracker.Board = new CreeperBoard();
             _AI = new CreeperAI.CreeperAI(15, 84, 2,43,1000);
         }
 
         private void _xnaGame_UserMadeMove(object sender, MoveEventArgs e)
         {
-            if (e.Move.PlayerColor == GameTracker.CurrentPlayer.Color)
+            if (e.Move.PlayerColor == GameTracker.CurrentPlayer.Color
+                && GameTracker.CurrentPlayer.PlayerType == PlayerType.Human)
             {
                 MakeMove(e.Move);
             }
@@ -88,7 +67,7 @@ namespace CreeperCore
 
         private void MakeMove(Move move)
         {
-            Board.Move(move);
+            GameTracker.Board.Move(move);
             XNAGame.OnMoveMade(move);
 
             if (GameTracker.OpponentPlayer.PlayerType == PlayerType.Network)
@@ -96,7 +75,7 @@ namespace CreeperCore
                 _network.move(move);
             }
 
-            if (!Board.IsFinished(move.PlayerColor))
+            if (!GameTracker.Board.IsFinished(move.PlayerColor))
             {
                 GameTracker.CurrentPlayer = GameTracker.OpponentPlayer;
 
@@ -122,7 +101,7 @@ namespace CreeperCore
 
         void _getAIMoveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = _AI.GetMove(Board, GameTracker.CurrentPlayer.Color);
+            e.Result = _AI.GetMove(GameTracker.Board, GameTracker.CurrentPlayer.Color);
         }
 
         public void InitializeGameGUI(IntPtr handle, int width, int height)
