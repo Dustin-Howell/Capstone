@@ -390,7 +390,12 @@ namespace CreeperNetwork
             return newMove;
         }
 
+        //Utility Functions
 
+        public bool isNetworkConnected()
+        {
+            return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
+        }
 
         //BACKGROUND functions
 
