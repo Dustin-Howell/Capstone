@@ -33,9 +33,6 @@ namespace XNAControlGame
         //Used For Testing, Can Delete for the final project.
         SpriteFont _font;
 
-        //Holds the Status of the board.
-        public CreeperBoard Board { get; set; }
-
         //Keeps track of which click is happening.
         bool _secondClick;
 
@@ -248,16 +245,16 @@ namespace XNAControlGame
                             _selectedPeg = currentPeg;
                             _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
                             _secondClick = true;
-                            if (Board.Pegs.At(pegLocation).Color == PlayerTurn)
+                            if (GameTracker.Board.Pegs.At(pegLocation).Color == PlayerTurn)
                             {
-                                possible = CreeperUtility.PossibleMoves(Board.Pegs.At(_startPosition), Board).ToList();
+                                possible = CreeperUtility.PossibleMoves(GameTracker.Board.Pegs.At(_startPosition), GameTracker.Board).ToList();
                             }
                         }
                         //Otherwise the end point of the move is being selected
                         else
                         {
                             //Check to see if the location being selected is an empty peg location. It must be so to be moved to.
-                            if (Board.Pegs.At(pegLocation).Color == CreeperColor.Empty && _secondClick)
+                            if (GameTracker.Board.Pegs.At(pegLocation).Color == CreeperColor.Empty && _secondClick)
                             {
                                 _endPostion = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
                             }
@@ -280,7 +277,7 @@ namespace XNAControlGame
 
                     if (_scene.FindName<Nine.Graphics.Model>(_selectedPeg).Visible == true)
                     {
-                        if (Board.IsValidMove(move))
+                        if (GameTracker.Board.IsValidMove(move))
                         {
                             LastMoveMade = move;
                             _iStillNeedToMakeAMove = false;
@@ -398,12 +395,12 @@ namespace XNAControlGame
                     {
                         location = 'p' + r.ToString() + 'x' + c.ToString();
 
-                        if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
+                        if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
                         {
                             _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
                             _scene.FindName<Nine.Graphics.Model>(location).Material = white;
                         }
-                        else if (Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
+                        else if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
                         {
                             _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
                             _scene.FindName<Nine.Graphics.Model>(location).Material = black;
@@ -435,11 +432,11 @@ namespace XNAControlGame
                     {
                         location = 't' + r.ToString() + 'x' + c.ToString();
 
-                        if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
+                        if (GameTracker.Board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
                         {
                             _scene.FindName<Surface>(location).Material.Texture = _whiteTile;
                         }
-                        else if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
+                        else if (GameTracker.Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
                         {
                             _scene.FindName<Surface>(location).Material.Texture = _blackTile;
                         }
