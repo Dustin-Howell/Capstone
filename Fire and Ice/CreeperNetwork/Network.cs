@@ -286,6 +286,7 @@ namespace CreeperNetwork
         {
             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
             listener.Close();
+            listenerAlt.Close();
             sender.Close();
         }
 
