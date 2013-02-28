@@ -110,7 +110,7 @@ namespace FireAndIce.ViewModels
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
-                    new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(), Title = "AI"},
+                    new OptionButtonViewModel {ClickAction = () => AddMenu(LocalAIGameMenu), Title = "AI"},
                 },
                     Background = AppModel.Resources["Primary5"] as SolidColorBrush,
                     Title = "Against?",
@@ -119,9 +119,29 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private void StartLocalAIGame()
+        private SlideOutPanelViewModel _localAIGameMenu;
+        private SlideOutPanelViewModel LocalAIGameMenu
         {
-            AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.AI));
+            get
+            {
+                return _localAIGameMenu = _localAIGameMenu ?? new SlideOutPanelViewModel()
+                {
+                    Buttons = new BindableCollection<OptionButtonViewModel> {
+                    new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(CreeperColor.White), Title = "Fire"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(CreeperColor.Black), Title = "Ice"},
+                },
+                    Background = new SolidColorBrush(Colors.White),
+                    Title = "Side?",
+                    MenuParent = LocalGameMenu,
+                };
+            }
+        }
+
+        private void StartLocalAIGame(CreeperColor playerColor)
+        {
+            GameContainerViewModel gameContainer = (playerColor == CreeperColor.White) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human);
+
+            AppModel.AppViewModel.ActivateItem(gameContainer);
         }
 
         private void StartLocalHumanGame()
