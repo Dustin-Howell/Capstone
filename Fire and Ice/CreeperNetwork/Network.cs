@@ -455,15 +455,6 @@ namespace CreeperNetwork
             return data;
         }
 
-        private byte[] receivePacket_noBlock()
-        {
-            byte[] data = new byte[256];
-
-            data = listener.Receive(ref ipOfLastPacket);
-
-            return data;
-        }
-
         /******************************
          * Function: sendPacket
          * Description: Sends a packet 
