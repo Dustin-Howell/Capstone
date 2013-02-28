@@ -18,10 +18,10 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=C:\Users\Kaleeb\Documents\GitHub\Capstone\Docs\License.txt
-InfoBeforeFile=C:\Users\Kaleeb\Documents\GitHub\Capstone\README.md
-InfoAfterFile=C:\Users\Kaleeb\Documents\GitHub\Capstone\README.md
-OutputDir=C:\Users\Kaleeb\Documents\GitHub\Capstone\Deployable
+LicenseFile=..\Docs\License.txt
+InfoBeforeFile=..\README.md
+InfoAfterFile=..\README.md
+OutputDir=..\Deployable
 OutputBaseFilename=Setup-FireAndIce-version_0.0.2a
 Compression=lzma
 SolidCompression=yes
@@ -33,20 +33,10 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\FireAndIce.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\Content\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\Videos\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\Caliburn.Micro.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\Creeper.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\CreeperAI.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\CreeperCore.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\CreeperNetwork.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\Nine.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\Nine.Graphics.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\Nine.Physics.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\System.Windows.Interactivity.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\XNAControl.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Kaleeb\Documents\GitHub\Capstone\Fire and Ice\FireAndIce\bin\Release\XNAControlGame.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Fire and Ice\FireAndIce\bin\Release\FireAndIce.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Fire and Ice\FireAndIce\bin\Release\Content\*"; DestDir: "{app}\Content\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\Fire and Ice\FireAndIce\bin\Release\Videos\*"; DestDir: "{app}\Videos\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\Fire and Ice\FireAndIce\bin\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
