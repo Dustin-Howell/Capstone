@@ -128,8 +128,8 @@ namespace XNAControlGame
             // Load the peg model
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
 
-            // Load the Tile sprite.
-            Sprite tile = new Sprite(GraphicsDevice);
+            // Load the Tile surface.
+            Surface tile = new Surface(GraphicsDevice, 2, 108/CreeperBoard.TileRows, 108/CreeperBoard.TileRows, 2);
 
             //Loads in the Textures
             _board = Content.Load<Texture2D>(Resources.Textures.GameBoard);
@@ -166,17 +166,23 @@ namespace XNAControlGame
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = iPegName, Visible = false });
             }
             //Place a transparent sprite for tiles in every possible tile position.
-            startCoordinates += new Vector3(squareWidth / 2, -(squareHeight / 2), 0);
+            startCoordinates = new Vector3(0, 0, 0);
             for (int tileNumber = 0; tileNumber < 35; tileNumber++)
             {
                 Position tilePosition = CreeperUtility.NumberToPosition(tileNumber);
                 String tileName = 't' + tilePosition.Row.ToString() + 'x' + tilePosition.Column.ToString();
-                tile.Position = new Vector2(startCoordinates.X + squareWidth * tilePosition.Column, startCoordinates.Y - squareHeight * tilePosition.Row);
-                tile.ZOrder = 1;
+                //tile.Position = new Vector2(startCoordinates.X + squareWidth * tilePosition.Column, startCoordinates.Y - squareHeight * tilePosition.Row);
+                tile.Position = new Vector3(startCoordinates.X + squareWidth * tilePosition.Column, 1, -(startCoordinates.Y - squareHeight * tilePosition.Row));
+                //tile.ZOrder = 1;
                 tile.Name = tileName;
-                tile.Texture = _blankTile;
+                //tile.Texture = _blankTile;
+                BasicMaterial transparentTile = new BasicMaterial(GraphicsDevice);
+                transparentTile.Texture = _blankTile;
+                transparentTile.IsTransparent = true;
+                tile.Material = transparentTile;
+                tile.LevelOfDetailEnabled = false;
                 _scene.Add(tile);
-                tile = new Sprite(GraphicsDevice);
+                tile = new Surface(GraphicsDevice, 2, 108 / CreeperBoard.TileRows, 108 / CreeperBoard.TileRows, 2);
             }
 
             base.LoadContent();
@@ -410,17 +416,17 @@ namespace XNAControlGame
 
                         if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
                         {
-                            _scene.FindName<Sprite>(location).Texture = _whiteTile;
+                            _scene.FindName<Surface>(location).Material.Texture = _whiteTile;
                         }
                         else if (Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
                         {
-                            _scene.FindName<Sprite>(location).Texture = _blackTile;
+                            _scene.FindName<Surface>(location).Material.Texture = _blackTile;
                         }
                         else
                         {
-                            if (_scene.FindName<Sprite>(location) != null)
+                            if (_scene.FindName<Surface>(location) != null)
                             {
-                                _scene.FindName<Sprite>(location).Texture = _blankTile;
+                                _scene.FindName<Surface>(location).Material.Texture = _blankTile;
                             }
                         }
                     }
