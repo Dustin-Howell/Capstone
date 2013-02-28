@@ -442,7 +442,9 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            //exception here at game over
+            //Cannot access a disposed object.
+            //Object name: 'System.Net.Sockets.UdpClient'.
+            //this happens to the host of a networked game
             data = listener.Receive(ref ipOfLastPacket);
 
             return data;
