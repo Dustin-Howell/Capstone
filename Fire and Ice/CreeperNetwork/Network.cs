@@ -54,6 +54,8 @@ namespace CreeperNetwork
         private Move currentMove;
         private bool newMove = false;
 
+        private byte[] lastCommand;
+
         private BackgroundWorker _keepAliveWorker;
 
         //Game variables
@@ -329,6 +331,7 @@ namespace CreeperNetwork
                     {
                         //resend the last command...whatever it was...
                         Console.WriteLine("Packet lost. Resend the last command.");
+                        sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
                     }
                 }
             }
@@ -633,6 +636,8 @@ namespace CreeperNetwork
 
             (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
+            lastCommand = packet;
+
             return packet;
         }
 
@@ -669,6 +674,8 @@ namespace CreeperNetwork
             //destination
             packet[9] = (byte)moveIn.EndPosition.Row;
             packet[10] = (byte)moveIn.EndPosition.Column;
+
+            lastCommand = packet;
 
             return packet;
         }
@@ -708,6 +715,8 @@ namespace CreeperNetwork
             packet[23] = 0x00;
 
             (encoding.GetBytes(messageIn)).CopyTo(packet, 10);
+
+            lastCommand = packet;
 
             return packet;
         }
