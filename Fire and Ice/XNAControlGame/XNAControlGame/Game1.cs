@@ -21,8 +21,8 @@ namespace XNAControlGame
     public class Game1 : XNAControl.XNAControlGame
     {
         //may be used in move and animation
-        private Position _startPosition = new Position(-1, -1);
-        private Position _endPostion = new Position(-1, -1);
+        private Position _startPosition;
+        private Position _endPostion;
         private String _selectedPeg;
 
         Scene _scene;
@@ -35,7 +35,7 @@ namespace XNAControlGame
         public CreeperBoard Board { get; set; }
 
         //Keeps track of which click is happening.
-        bool _secondClick = false;
+        bool _secondClick;
 
         //Keeps track of whose turn it is
         public CreeperColor PlayerTurn { get { return TurnTracker.CurrentPlayer.Color; } }
@@ -108,7 +108,21 @@ namespace XNAControlGame
             else
             {
                 _instance.UpdateWindowHandle(handle);
+                _instance._input.MouseDown -= new EventHandler<Nine.MouseEventArgs>(_instance.Input_MouseDown);
             }
+
+            
+            _instance._startPosition = new Position(-1, -1);
+            _instance._endPostion = new Position(-1, -1);
+            _instance._secondClick = false;
+            _instance._iStillNeedToMakeAMove = false;
+            _instance.animation.Clear();
+            _instance.finishedAnimation.Clear();
+            _instance.possible.Clear();
+
+            _instance.Components.Add(new InputComponent(handle));
+            _instance._input = new Input();
+            _instance._input.MouseDown += new EventHandler<Nine.MouseEventArgs>(_instance.Input_MouseDown);
 
             return _instance;
         }
@@ -123,11 +137,6 @@ namespace XNAControlGame
             : base(handle, "Content", width, height)
         {
             Content = new ContentLoader(Services);
-
-            Components.Add(new InputComponent(handle));
-            _input = new Input();
-
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>(Input_MouseDown);
         }
 
         /// <summary>
@@ -327,17 +336,13 @@ namespace XNAControlGame
                     }
 
                 }
-
-                if (finishedAnimation.Count != 0)
+                foreach (Animation animate in finishedAnimation)
                 {
-                    foreach (Animation animate in finishedAnimation)
+                    animate.peg.Visible = false;
+                    animate.peg.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(animate.startLocation);
+                    if (animation.Contains(animate))
                     {
-                        animate.peg.Visible = false;
-                        animate.peg.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(animate.startLocation);
-                        if (animation.Contains(animate))
-                        {
-                            animation.Remove(animate);
-                        }
+                        animation.Remove(animate);
                     }
                 }
                 finishedAnimation.Clear();
