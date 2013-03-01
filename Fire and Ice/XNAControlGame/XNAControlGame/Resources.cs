@@ -30,9 +30,13 @@ namespace Resources
 
         //The Board
         public static String GameBoard { get { return "Assets/MainBoard"; } }
+        public static String FireCorner { get { return "Assets/Fire Corner"; } }
+        public static String IceCorner { get { return "Assets/Ice Corner"; } }
 
         //Pegs
         public static String Default { get { return "Textures/Grid"; } }
+        public static String FirePeg { get { return "Assets/Fire Peg"; } }
+        public static String IcePeg { get { return "Assets/Ice Peg"; } }
 
         //SkyBox
         public static String SkyBox { get { return "Textures/SkyCubeMap"; } }

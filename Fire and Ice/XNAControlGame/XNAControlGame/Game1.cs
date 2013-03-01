@@ -30,6 +30,11 @@ namespace XNAControlGame
 
         Nine.Graphics.ParticleEffects.ParticleEffect particleEffect;
 
+        Nine.Graphics.ParticleEffects.ParticleEffect fireOne;
+        Nine.Graphics.ParticleEffects.ParticleEffect fireTwo;
+        Nine.Graphics.ParticleEffects.ParticleEffect iceOne;
+        Nine.Graphics.ParticleEffects.ParticleEffect iceTwo;
+
         bool _surroundObjects = false;
 
         //Used For Testing, Can Delete for the final project.
@@ -45,9 +50,19 @@ namespace XNAControlGame
         Texture2D _whiteTile;
         Texture2D _blackTile;
         Texture2D _board;
+        Texture2D _iceCorner;
+        Texture2D _fireCorner;
 
-        Texture2D _fire;
-        Texture2D _ice;
+        Texture2D _firePeg;
+        Texture2D _icePeg;
+
+        Texture2D _fireHighlight;
+        Texture2D _iceHighlight;
+
+        Position fireStart = new Position(0, 0);
+        Position iceStart = new Position(CreeperBoard.TileRows - 1, 0);
+        Position fireEnd = new Position(CreeperBoard.TileRows - 1, CreeperBoard.TileRows - 1);
+        Position iceEnd = new Position(0, CreeperBoard.TileRows - 1);
 
         //Allows access to clicking on the board only when it's supposed to be accessed.
         private bool _iStillNeedToMakeAMove = false;
@@ -66,6 +81,53 @@ namespace XNAControlGame
 
         private static Game1 _instance;
 
+        private PointEmitter makePointEmitter()
+        {
+
+            PointEmitter pointEmiter = new PointEmitter();
+            pointEmiter.Emission = 50;
+
+            Nine.Range<float> range = new Nine.Range<float>();
+            CylinderEmitter cylinderEmitter = new CylinderEmitter();
+
+            range.Min = 0.5f;
+            range.Max = 3f;
+            pointEmiter.Duration = range;
+
+            range.Min = 1f;
+            range.Max = 2f;
+            pointEmiter.Speed = range;
+
+            range.Min = 2f;
+            range.Max = 5f;
+            pointEmiter.Size = range;
+            return pointEmiter;
+        }
+        private CylinderEmitter makeCylinderEmitter()
+        {
+            CylinderEmitter cylinderEmitter = new CylinderEmitter();
+            Nine.Range<float> range = new Nine.Range<float>();
+
+            cylinderEmitter.Emission = 50;
+            cylinderEmitter.Radiate = true;
+            cylinderEmitter.Shell = true;
+            cylinderEmitter.Radius = 5;
+            cylinderEmitter.Height = 0;
+
+            range.Min = 0.5f;
+            range.Max = 1.5f;
+            cylinderEmitter.Duration = range;
+
+            range.Min = 1f;
+            range.Max = 2f;
+            cylinderEmitter.Speed = range;
+
+            range.Min = 2f;
+            range.Max = 3f;
+            cylinderEmitter.Size = range;
+
+            return cylinderEmitter;
+        }
         public void OnMoveMade(Move move)
         {
             //Sets the start and end value
@@ -124,7 +186,6 @@ namespace XNAControlGame
             _instance.animation.Clear();
             _instance.finishedAnimation.Clear();
             _instance.possible.Clear();
-
             _instance.Components.Add(new InputComponent(handle));
             _instance._input = new Input();
             _instance._input.MouseDown += new EventHandler<Nine.MouseEventArgs>(_instance.Input_MouseDown);
@@ -144,7 +205,10 @@ namespace XNAControlGame
         {
             Content = new ContentLoader(Services);
         }
-
+        private void RemoveParticleEffects()
+        {
+            particleEffect.Transform = Matrix.CreateTranslation(200, 200, 200);
+        }
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -153,52 +217,28 @@ namespace XNAControlGame
         {
             // Load the peg model
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
-
-
-           /* <ParticleEffect Transform.Position="10, 0, 10" Texture="{ContentReference ../Textures/smoke}" SoftParticleEnabled="True">
-        <!-- 
-            Create an instance of soft particle effect by the SoftParticleEnabled flag. When drawing 3D soft
-            particles, each pixel of the particle is compare against the current depth buffer to eliminate the
-            intersection artifact between the particle geometry and world geometry.
-        -->
-        <ParticleEffect.Emitter>
-            <!-- Use cylinder emitter to emulate a ring -->
-            <CylinderEmitter Emission="50" Radiate="True" Shell="True" Radius="5" Height="0"
-                             Duration="1.5 ~ 3" Speed="0.5 ~ 1" Size="2 ~ 3" Spread="{Degrees 15}" />
-        </ParticleEffect.Emitter>
-            
-        <SizeController EndSize ="4 ~ 5" />
-        <SpeedController EndSpeed ="0" />
-        <FadeController />
-    </ParticleEffect>*/
+            fireOne = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
+            fireTwo = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
+            iceOne = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
+            iceTwo = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
 
             particleEffect = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
 
-            CylinderEmitter cylinderEmitter = new CylinderEmitter();
-            Nine.Range<float> range = new Nine.Range<float>();
 
-            cylinderEmitter.Emission = 50;
-            cylinderEmitter.Radiate = true;
-            cylinderEmitter.Shell = true;
-            cylinderEmitter.Radius = 5;
-            cylinderEmitter.Height = 0;
 
-            range.Min = 1.5f;
-            range.Max = 3f;
-            cylinderEmitter.Duration = range;
+            particleEffect.Emitter = makeCylinderEmitter();
+            
+            _fireHighlight = Content.Load<Texture2D>("Textures/fire");
+            _iceHighlight = Content.Load<Texture2D>("Textures/flake");
+            fireOne.Texture = _fireHighlight;
+            fireTwo.Texture = _fireHighlight;
+            iceOne.Texture = _iceHighlight;
+            iceTwo.Texture = _iceHighlight;
 
-            range.Min = 0.5f;
-            range.Max = 1f;
-            cylinderEmitter.Speed = range;
-
-            range.Min = 2f;
-            range.Max = 3f;
-            cylinderEmitter.Size = range;
-
-            particleEffect.Emitter = cylinderEmitter;
-            _fire = Content.Load<Texture2D>("Textures/fire");
-            _ice = Content.Load<Texture2D>("Textures/flake");
-
+            fireOne.Emitter = makePointEmitter();
+            fireTwo.Emitter = makePointEmitter();
+            iceOne.Emitter = makeCylinderEmitter();
+            iceTwo.Emitter = makeCylinderEmitter();
 
 
             // Load the Tile surface.
@@ -206,9 +246,15 @@ namespace XNAControlGame
 
             //Loads in the Textures
             _board = Content.Load<Texture2D>(Resources.Textures.GameBoard);
+            _iceCorner = Content.Load<Texture2D>(Resources.Textures.IceCorner);
+            _fireCorner = Content.Load<Texture2D>(Resources.Textures.FireCorner);
+
             _blankTile = Content.Load<Texture2D>(Resources.Textures.UncapturedTile);
             _whiteTile = Content.Load<Texture2D>(Resources.Textures.WhiteTile);
             _blackTile = Content.Load<Texture2D>(Resources.Textures.BlackTile);
+
+            _firePeg = Content.Load<Texture2D>(Resources.Textures.FirePeg);
+            _icePeg = Content.Load<Texture2D>(Resources.Textures.IcePeg);
 
             // Load a scene from a content file
             _scene = Content.Load<Scene>(Resources.Scenes.MainPlayScene);
@@ -234,12 +280,12 @@ namespace XNAControlGame
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 String iPegName = 'i' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, 0, startCoordinates.Y + squareHeight * pegPosition.Row);
-                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial  });
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = iPegName, Visible = false });
             }
             //Place a transparent sprite for tiles in every possible tile position.
             startCoordinates = new Vector3(0, 0, 0);
-            for (int tileNumber = 0; tileNumber < 35; tileNumber++)
+            for (int tileNumber = 0; tileNumber < 36; tileNumber++)
             {
                 Position tilePosition = CreeperUtility.NumberToPosition(tileNumber);
                 String tileName = 't' + tilePosition.Row.ToString() + 'x' + tilePosition.Column.ToString();
@@ -252,8 +298,30 @@ namespace XNAControlGame
                 tile.LevelOfDetailEnabled = false;
                 _scene.Add(tile);
                 tile = new Surface(GraphicsDevice, 2, 108 / CreeperBoard.TileRows, 108 / CreeperBoard.TileRows, 2);
-            }
 
+                if (tileNumber == 0)
+                {
+                    fireOne.Transform = Matrix.CreateTranslation((startCoordinates.X + squareWidth * tilePosition.Column) + squareWidth/2, 5, (startCoordinates.Y + squareHeight * tilePosition.Row) + squareHeight/2);
+                    _scene.Add(fireOne);
+                }
+                if (tileNumber == 35)
+                {
+                    fireTwo.Transform = Matrix.CreateTranslation((startCoordinates.X + squareWidth * tilePosition.Column) + squareWidth / 2, 5, (startCoordinates.Y + squareHeight * tilePosition.Row) + squareHeight / 2);
+                    _scene.Add(fireTwo);
+                }
+
+                if (tileNumber == CreeperBoard.TileRows - 1)
+                {
+                    iceOne.Transform = Matrix.CreateTranslation((startCoordinates.X + squareWidth * tilePosition.Column) + squareWidth / 2, 5, (startCoordinates.Y + squareHeight * tilePosition.Row) + squareHeight / 2);
+                    _scene.Add(iceOne);
+                }
+                if (tileNumber == 30)
+                {
+                    iceTwo.Transform = Matrix.CreateTranslation((startCoordinates.X + squareWidth * tilePosition.Column) + squareWidth / 2, 5, (startCoordinates.Y + squareHeight * tilePosition.Row) + squareHeight / 2);
+                    _scene.Add(iceTwo);
+                }
+            }
+            
             base.LoadContent();
         }
 
@@ -299,16 +367,17 @@ namespace XNAControlGame
                             particleEffect.Transform = Matrix.CreateTranslation( _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.X,
                                 _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.Y,
                                 _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.Z);
-                            if (!_scene.Contains(particleEffect))
+
+                            if (GameTracker.CurrentPlayer.Color == CreeperColor.Black)
                             {
-                                if (GameTracker.CurrentPlayer.Color == CreeperColor.Black)
-                                {
-                                    particleEffect.Texture = _ice;
-                                }
-                                else
-                                {
-                                    particleEffect.Texture = _fire;
-                                }
+                                particleEffect.Texture = _iceHighlight;
+                            }
+                            else
+                            {
+                                particleEffect.Texture = _fireHighlight;
+                            }
+                            if (!_scene.Contains(particleEffect))
+                            { 
                                 _scene.Add(particleEffect);
                             }
                             _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
@@ -365,7 +434,10 @@ namespace XNAControlGame
                     _selectedPeg = null;
                     if (_scene.Contains(particleEffect))
                     {
-                        _scene.Remove(particleEffect);
+                        particleEffect.Emitter = makeCylinderEmitter();
+                        //_scene.Remove(particleEffect);
+                        RemoveParticleEffects();
+                        
                     }
                     _secondClick = false;
                     possible.Clear();
@@ -406,25 +478,27 @@ namespace XNAControlGame
             _scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
             if (animation.Count != 0 && animation != null)
             {
-                BasicMaterial black = new BasicMaterial(GraphicsDevice);
-                black.DiffuseColor = new Vector3(0, 0, 0);
-                BasicMaterial white = new BasicMaterial(GraphicsDevice);
-                white.DiffuseColor = new Vector3(255, 255, 255);
+
+                BasicMaterial blue = new BasicMaterial(GraphicsDevice);
+                blue.DiffuseColor = new Vector3(.4f, .576f, .604f);
+
+                BasicMaterial red = new BasicMaterial(GraphicsDevice);
+                red.DiffuseColor = new Vector3(1, .46f, 0);
 
                 foreach (Animation animate in animation)
                 {
                     Position movingPeg = new Position(animate.endCoord.Row, animate.endCoord.Column);
                     if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.White)
                     {
-                        animate.peg.Material = white;
+                        animate.peg.Material = red;
                     }
                     else if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.Black)
                     {
-                        animate.peg.Material = black;
+                        animate.peg.Material = blue;
                     }
 
-                    animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_board.Height / CreeperBoard.TileRows) / 50),
-                            0, -(animate.yDirection * (_board.Width / CreeperBoard.TileRows) / 50));
+                    animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_board.Height / CreeperBoard.TileRows) / 200),
+                            0, -(animate.yDirection * (_board.Width / CreeperBoard.TileRows) / 200));
 
                     if (animate.peg.Contains(animate.endLocation))
                     {
@@ -456,10 +530,9 @@ namespace XNAControlGame
 
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
 
-            //if (_surroundObjects)
-            //{
-                //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
-            //}
+            
+            //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
+            
 
             base.Draw(gameTime);
         }
@@ -471,15 +544,15 @@ namespace XNAControlGame
         {
             string location;
 
-            BasicMaterial black = new BasicMaterial(GraphicsDevice);
-            black.DiffuseColor = new Vector3(0, 0, 0);
-            BasicMaterial white = new BasicMaterial(GraphicsDevice);
-            white.DiffuseColor = new Vector3(255, 255, 255);
+          
             BasicMaterial yellow = new BasicMaterial(GraphicsDevice);
             yellow.DiffuseColor = new Vector3(255, 255, 0);
-            BasicMaterial blue = new BasicMaterial(GraphicsDevice);
-            blue.DiffuseColor = new Vector3(0, 0, 255);
 
+            BasicMaterial blue = new BasicMaterial(GraphicsDevice);
+            blue.DiffuseColor = new Vector3(.4f, .576f, .604f);
+
+            BasicMaterial red = new BasicMaterial(GraphicsDevice);
+            red.DiffuseColor = new Vector3(1, .46f, 0);
             if (animation.Count == 0)
             {
                 for (int r = 0; r < CreeperBoard.PegRows; r++)
@@ -491,12 +564,12 @@ namespace XNAControlGame
                         if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
                         {
                             _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                            _scene.FindName<Nine.Graphics.Model>(location).Material = white;
+                            _scene.FindName<Nine.Graphics.Model>(location).Material = red;
                         }
                         else if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
                         {
                             _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
-                            _scene.FindName<Nine.Graphics.Model>(location).Material = black;
+                            _scene.FindName<Nine.Graphics.Model>(location).Material = blue;
                         }
                         else
                         {
@@ -546,7 +619,7 @@ namespace XNAControlGame
 
             if (_selectedPeg != null && !_iStillNeedToMakeAMove)
             {
-                _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Material = blue;
+                //_scene.FindName<Nine.Graphics.Model>(_selectedPeg).Material = blue;
             }
 
             if (animation.Count > 0)
@@ -573,7 +646,10 @@ namespace XNAControlGame
                     }
                 }
             }
-            
+            _scene.FindName<Surface>('t' + fireStart.Row.ToString() + 'x' + fireStart.Column.ToString()).Material.Texture = _fireCorner;
+            _scene.FindName<Surface>('t' + fireEnd.Row.ToString() + 'x' + fireEnd.Column.ToString()).Material.Texture = _fireCorner;
+            _scene.FindName<Surface>('t' + iceStart.Row.ToString() + 'x' + iceStart.Column.ToString()).Material.Texture = _iceCorner;
+            _scene.FindName<Surface>('t' + iceEnd.Row.ToString() + 'x' + iceEnd.Column.ToString()).Material.Texture = _iceCorner;
         }
     }
 }
