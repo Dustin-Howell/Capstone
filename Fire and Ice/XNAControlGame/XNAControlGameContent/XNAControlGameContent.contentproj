@@ -192,8 +192,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\flake.png">
       <Name>flake</Name>
       <Importer>TextureImporter</Importer>
