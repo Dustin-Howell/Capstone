@@ -533,7 +533,7 @@ namespace CreeperNetwork
 
         private byte[] packet_OfferGame()
         {
-            byte[] packet = new byte[33];
+            byte[] packet = new byte[16 + hostGameName.Length + hostPlayerName.Length];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
 
             packet[0] = PACKET_SIGNATURE;
@@ -543,49 +543,20 @@ namespace CreeperNetwork
 
             packet[6] = PROTOCOL_VERSION;
 
-            //game name length
-            packet[7] = 0;
-            packet[8] = 0;
-            packet[9] = 0;
-            packet[10] = 0;
-
+            //Game Name Length
             (BitConverter.GetBytes(hostGameName.Length)).CopyTo(packet, 7);
 
-            //game name
-            packet[11] = 0;
-            packet[12] = 0;
-            packet[13] = 0;
-            packet[14] = 0;
-            packet[15] = 0;
-            packet[16] = 0;
-            packet[17] = 0;
-            packet[18] = 0;
-
+            //Game Name 
             encoding.GetBytes(hostGameName).CopyTo(packet, 11);
 
-            //player's name length
-            packet[19] = 0;
-            packet[20] = 0;
-            packet[21] = 0;
-            packet[22] = 0;
+            //Player Name Length
+            (BitConverter.GetBytes(hostPlayerName.Length)).CopyTo(packet, 11 + hostGameName.Length);
 
-            (BitConverter.GetBytes(hostPlayerName.Length)).CopyTo(packet, 19);
-
-            //player name
-            packet[23] = 0;
-            packet[24] = 0;
-            packet[25] = 0;
-            packet[26] = 0;
-            packet[27] = 0;
-            packet[28] = 0;
-            packet[29] = 0;
-            packet[30] = 0;
-            packet[31] = 0;
-
-            encoding.GetBytes(hostPlayerName).CopyTo(packet, 23);
+            //Player Name
+            encoding.GetBytes(hostPlayerName).CopyTo(packet, 11 + hostGameName.Length + 4);
 
             //who moves first? 1 I do, 0 you do
-            packet[32] = Convert.ToByte(1);
+            packet[packet.Length - 1] = Convert.ToByte(1);
 
             return packet;
         }
