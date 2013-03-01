@@ -462,10 +462,37 @@ namespace XNAControlGame
                     }
                 }
             }
+
             if (_selectedPeg != null && !_iStillNeedToMakeAMove)
             {
                 _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Material = blue;
             }
+
+            if (animation.Count > 0)
+            {
+                bool notAnimating;
+                for (int r = 0; r < CreeperBoard.PegRows; r++)
+                {
+                    for (int c = 0; c < CreeperBoard.PegRows; c++)
+                    {
+                        location = 'p' + r.ToString() + 'x' + c.ToString();
+                        notAnimating = true;
+
+                        foreach (Animation animate in animation)
+                        {
+                            if (animate.startCoord == new Position(r, c))
+                            {
+                                notAnimating = false;
+                            }
+                        }
+                        if (notAnimating && GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Empty)
+                        {
+                            _scene.FindName<Nine.Graphics.Model>(location).Visible = false;
+                        }
+                    }
+                }
+            }
+            
         }
     }
 }
