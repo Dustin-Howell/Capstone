@@ -194,7 +194,7 @@ namespace FireAndIce.ViewModels
             Network network = new Network();
 
             string[,] gamesFound = new string[256,7];
-            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = network.client_findGames());
+            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = network.client_findGames("Player 2"));
             startGameWorker.DoWork += new DoWorkEventHandler((s, e) => network.client_ackStartGame());
 
             findGamesWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>

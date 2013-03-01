@@ -158,11 +158,13 @@ namespace CreeperNetwork
 
         //client functions
 
-        public string[,] client_findGames()
+        public string[,] client_findGames(string clientNameIn)
         {
             string[,] games = new string[256, 7];
             int gameCounter = 0;
             Stopwatch serverStopwatch = new Stopwatch();
+
+            clientPlayerName = clientNameIn;
 
             broadcastPacket(packet_FindServers());
 
@@ -178,13 +180,29 @@ namespace CreeperNetwork
 
                 if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_OFFER_GAME)
                 {
+                    int gameNameLength = BitConverter.ToInt32(packet, 7);
+                    int playerNameLength = BitConverter.ToInt32(packet, 11 + gameNameLength);
+
+                    //Server IP
                     games[gameCounter, 0] = ipOfLastPacket.Address.ToString();
+
+                    //Protocol Version
                     games[gameCounter, 1] = packet[6].ToString();
-                    games[gameCounter, 2] = BitConverter.ToInt32(packet, 7).ToString();
-                    games[gameCounter, 3] = Encoding.ASCII.GetString(packet, 11, 8);
-                    games[gameCounter, 4] = BitConverter.ToInt32(packet, 19).ToString();
-                    games[gameCounter, 5] = Encoding.ASCII.GetString(packet, 23, 9);
-                    games[gameCounter, 6] = packet[32].ToString();
+
+                    //Game Name Length
+                    games[gameCounter, 2] = gameNameLength.ToString();
+                   
+                    //Game Name
+                    games[gameCounter, 3] = Encoding.ASCII.GetString(packet, 11, gameNameLength);
+                    
+                    //Player Name Length
+                    games[gameCounter, 4] = BitConverter.ToInt32(packet, 11 + gameNameLength).ToString();
+
+                    //Player Name
+                    games[gameCounter, 5] = Encoding.ASCII.GetString(packet, 11 + gameNameLength + 4, 11 + gameNameLength + 4 + playerNameLength);
+                    
+                    //Who moves first?
+                    games[gameCounter, 6] = packet[packet.Length - 1].ToString();
 
                     gameCounter++;
                 }
@@ -262,7 +280,8 @@ namespace CreeperNetwork
                     //something else...
                     else if (packet[1] == CMD_CHAT)
                     {
-                        currentMessage = Encoding.ASCII.GetString(packet, 10, 14);
+                        int messageLength = BitConverter.ToInt32(packet, 6);
+                        currentMessage = Encoding.ASCII.GetString(packet, 10, messageLength);
                         awaySequenceNumber = BitConverter.ToInt32(packet, 2);
                         newMessage = true;
                         acknowledged = true;
@@ -595,10 +614,10 @@ namespace CreeperNetwork
             (encoding.GetBytes(gameIn[3])).CopyTo(packet, 11);
             hostGameName = gameIn[3];
 
-            //player name length NEED TO CHANGE
+            //player name length 
             (BitConverter.GetBytes(clientPlayerName.Length)).CopyTo(packet, 11 + hostGameName.Length);
 
-            //player name NEED TO CHANGE
+            //player name 
             (encoding.GetBytes(clientPlayerName)).CopyTo(packet, 11 + hostGameName.Length + 4);
             
             //who moves first? 1 I do, 0 you do
