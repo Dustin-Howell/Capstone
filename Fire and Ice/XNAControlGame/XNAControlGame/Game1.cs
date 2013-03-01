@@ -150,7 +150,7 @@ namespace XNAControlGame
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
 
             // Load the Tile surface.
-            Surface tile = new Surface(GraphicsDevice, 2, 108/CreeperBoard.TileRows, 108/CreeperBoard.TileRows, 2);
+            Surface tile = new Surface(GraphicsDevice, 2, 108 / CreeperBoard.TileRows, 108 / CreeperBoard.TileRows, 2);
 
             //Loads in the Textures
             _board = Content.Load<Texture2D>(Resources.Textures.GameBoard);
@@ -161,7 +161,6 @@ namespace XNAControlGame
             // Load a scene from a content file
             _scene = Content.Load<Scene>(Resources.Scenes.MainPlayScene);
 
-            
             //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
             boardHeight = _scene.Find<Surface>().Heightmap.Height;
@@ -192,11 +191,8 @@ namespace XNAControlGame
             {
                 Position tilePosition = CreeperUtility.NumberToPosition(tileNumber);
                 String tileName = 't' + tilePosition.Row.ToString() + 'x' + tilePosition.Column.ToString();
-                //tile.Position = new Vector2(startCoordinates.X + squareWidth * tilePosition.Column, startCoordinates.Y - squareHeight * tilePosition.Row);
-                tile.Position = new Vector3(startCoordinates.X + squareWidth * tilePosition.Column, 1, -(startCoordinates.Y - squareHeight * tilePosition.Row));
-                //tile.ZOrder = 1;
+                tile.Position = new Vector3(startCoordinates.X + squareWidth * tilePosition.Column, 2, startCoordinates.Y + squareHeight * tilePosition.Row);
                 tile.Name = tileName;
-                //tile.Texture = _blankTile;
                 BasicMaterial transparentTile = new BasicMaterial(GraphicsDevice);
                 transparentTile.Texture = _blankTile;
                 transparentTile.IsTransparent = true;
@@ -335,8 +331,23 @@ namespace XNAControlGame
             _scene.UpdatePhysicsAsync(gameTime.ElapsedGameTime);
             if (animation.Count != 0 && animation != null)
             {
+                BasicMaterial black = new BasicMaterial(GraphicsDevice);
+                black.DiffuseColor = new Vector3(0, 0, 0);
+                BasicMaterial white = new BasicMaterial(GraphicsDevice);
+                white.DiffuseColor = new Vector3(255, 255, 255);
+
                 foreach (Animation animate in animation)
                 {
+                    Position movingPeg = new Position(animate.endCoord.Row, animate.endCoord.Column);
+                    if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.White)
+                    {
+                        animate.peg.Material = white;
+                    }
+                    else if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.Black)
+                    {
+                        animate.peg.Material = black;
+                    }
+
                     animate.peg.Transform *= Matrix.CreateTranslation((animate.xDirection * (_board.Height / CreeperBoard.TileRows) / 50),
                             0, -(animate.yDirection * (_board.Width / CreeperBoard.TileRows) / 50));
 
@@ -456,6 +467,5 @@ namespace XNAControlGame
                 _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Material = blue;
             }
         }
-
     }
 }

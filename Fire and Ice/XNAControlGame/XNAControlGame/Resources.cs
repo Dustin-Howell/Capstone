@@ -25,8 +25,8 @@ namespace Resources
     {
         //Tiles
         public static String UncapturedTile { get { return "square"; } }
-        public static String WhiteTile { get { return "Assets/Fire Tile"; } }
-        public static String BlackTile { get { return "Assets/Ice Tile"; } }
+        public static String WhiteTile { get { return "Assets/Fire Tile Cropped"; } }
+        public static String BlackTile { get { return "Assets/Ice Tile Cropped"; } }
 
         //The Board
         public static String GameBoard { get { return "Assets/MainBoard"; } }
