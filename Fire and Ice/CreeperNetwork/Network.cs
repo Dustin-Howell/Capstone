@@ -21,7 +21,7 @@ namespace CreeperNetwork
         public const int CONNECTION_TIMEOUT = 1000;
 
         private const string BROADCAST_IP = "255.255.255.255";
-        private const int MAX_PACKET_SIZE = 256;
+        private const int MAX_PACKET_SIZE = 1024;
         private const byte PACKET_SIGNATURE = 0xC0;
         private const byte CMD_FIND_SERVER = 0x01;
         private const byte CMD_OFFER_GAME = 0x02;
