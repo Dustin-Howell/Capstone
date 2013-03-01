@@ -1,7 +1,7 @@
 ﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
     
     <SkyBox Texture="{ContentReference Textures/SkyCubeMap}" />
-    <FreeCamera Name="MainCamera" Speed="100" Position="106.6, 234.1, 235.78" Angle="1.14,0,0"/>
+    <FreeCamera Name="MainCamera" Speed="0" TurnSpeed="0" Position="106.6, 234.1, 235.78" Angle="1.14,0,0"/>
         
     <Surface Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
              PatchSegmentCount="2" Transform.Position="0, 0, 0" >
