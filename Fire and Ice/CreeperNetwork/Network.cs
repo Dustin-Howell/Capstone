@@ -576,7 +576,7 @@ namespace CreeperNetwork
         //note that the first element of gameIn is the ipAddress of the game
         private byte[] packet_JoinGame(string[] gameIn)
         {
-            byte[] packet = new byte[33];
+            byte[] packet = new byte[16 + Convert.ToInt32(gameIn[2]) + clientPlayerName.Length];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
 
             packet[0] = PACKET_SIGNATURE;
@@ -592,42 +592,17 @@ namespace CreeperNetwork
             (BitConverter.GetBytes(Convert.ToInt32(gameIn[2]))).CopyTo(packet, 7);
 
             //game name
-            packet[11] = 0;
-            packet[12] = 0;
-            packet[13] = 0;
-            packet[14] = 0;
-            packet[15] = 0;
-            packet[16] = 0;
-            packet[17] = 0;
-            packet[18] = 0;
-
             (encoding.GetBytes(gameIn[3])).CopyTo(packet, 11);
             hostGameName = gameIn[3];
 
             //player name length NEED TO CHANGE
-            packet[19] = 0;
-            packet[20] = 0;
-            packet[21] = 0;
-            packet[22] = 0;
-
-            (BitConverter.GetBytes(4)).CopyTo(packet, 19);
+            (BitConverter.GetBytes(clientPlayerName.Length)).CopyTo(packet, 11 + hostGameName.Length);
 
             //player name NEED TO CHANGE
-            packet[23] = 0;
-            packet[24] = 0;
-            packet[25] = 0;
-            packet[26] = 0;
-            packet[27] = 0;
-            packet[28] = 0;
-            packet[29] = 0;
-            packet[30] = 0;
-            packet[31] = 0;
-
-            (encoding.GetBytes("temp")).CopyTo(packet, 23);
-            clientPlayerName = "temp";
-
+            (encoding.GetBytes(clientPlayerName)).CopyTo(packet, 11 + hostGameName.Length + 4);
+            
             //who moves first? 1 I do, 0 you do
-            packet[32] = Convert.ToByte(!Convert.ToBoolean(Convert.ToByte(gameIn[6])));
+            packet[packet.Length - 1] = Convert.ToByte(!Convert.ToBoolean(Convert.ToByte(gameIn[6])));
 
             return packet;
         }
@@ -699,27 +674,8 @@ namespace CreeperNetwork
 
             (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
-            //message length
-            packet[6] = 0x00;
-            packet[7] = 0x00;
-            packet[8] = 0x00;
-            packet[9] = 0x00;
-
-            //message
-            packet[10] = 0x00;
-            packet[11] = 0x00;
-            packet[12] = 0x00;
-            packet[13] = 0x00;
-            packet[14] = 0x00;
-            packet[15] = 0x00;
-            packet[16] = 0x00;
-            packet[17] = 0x00;
-            packet[18] = 0x00;
-            packet[19] = 0x00;
-            packet[20] = 0x00;
-            packet[21] = 0x00;
-            packet[22] = 0x00;
-            packet[23] = 0x00;
+            //Message length
+            (BitConverter.GetBytes(clientPlayerName.Length)).CopyTo(packet, 6);
 
             (encoding.GetBytes(messageIn)).CopyTo(packet, 10);
 
