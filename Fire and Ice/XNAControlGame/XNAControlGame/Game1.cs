@@ -28,8 +28,9 @@ namespace XNAControlGame
         Scene _scene;
         Input _input;
 
-        Nine.Graphics.Primitives.Plane _ground;
-        
+        Nine.Graphics.ParticleEffects.ParticleEffect particleEffect;
+
+        bool _surroundObjects = false;
 
         //Used For Testing, Can Delete for the final project.
         SpriteFont _font;
@@ -44,6 +45,9 @@ namespace XNAControlGame
         Texture2D _whiteTile;
         Texture2D _blackTile;
         Texture2D _board;
+
+        Texture2D _fire;
+        Texture2D _ice;
 
         //Allows access to clicking on the board only when it's supposed to be accessed.
         private bool _iStillNeedToMakeAMove = false;
@@ -125,6 +129,7 @@ namespace XNAControlGame
             _instance._input = new Input();
             _instance._input.MouseDown += new EventHandler<Nine.MouseEventArgs>(_instance.Input_MouseDown);
 
+
             return _instance;
         }
 
@@ -148,6 +153,53 @@ namespace XNAControlGame
         {
             // Load the peg model
             Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
+
+
+           /* <ParticleEffect Transform.Position="10, 0, 10" Texture="{ContentReference ../Textures/smoke}" SoftParticleEnabled="True">
+        <!-- 
+            Create an instance of soft particle effect by the SoftParticleEnabled flag. When drawing 3D soft
+            particles, each pixel of the particle is compare against the current depth buffer to eliminate the
+            intersection artifact between the particle geometry and world geometry.
+        -->
+        <ParticleEffect.Emitter>
+            <!-- Use cylinder emitter to emulate a ring -->
+            <CylinderEmitter Emission="50" Radiate="True" Shell="True" Radius="5" Height="0"
+                             Duration="1.5 ~ 3" Speed="0.5 ~ 1" Size="2 ~ 3" Spread="{Degrees 15}" />
+        </ParticleEffect.Emitter>
+            
+        <SizeController EndSize ="4 ~ 5" />
+        <SpeedController EndSpeed ="0" />
+        <FadeController />
+    </ParticleEffect>*/
+
+            particleEffect = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
+
+            CylinderEmitter cylinderEmitter = new CylinderEmitter();
+            Nine.Range<float> range = new Nine.Range<float>();
+
+            cylinderEmitter.Emission = 50;
+            cylinderEmitter.Radiate = true;
+            cylinderEmitter.Shell = true;
+            cylinderEmitter.Radius = 5;
+            cylinderEmitter.Height = 0;
+
+            range.Min = 1.5f;
+            range.Max = 3f;
+            cylinderEmitter.Duration = range;
+
+            range.Min = 0.5f;
+            range.Max = 1f;
+            cylinderEmitter.Speed = range;
+
+            range.Min = 2f;
+            range.Max = 3f;
+            cylinderEmitter.Size = range;
+
+            particleEffect.Emitter = cylinderEmitter;
+            _fire = Content.Load<Texture2D>("Textures/fire");
+            _ice = Content.Load<Texture2D>("Textures/flake");
+
+
 
             // Load the Tile surface.
             Surface tile = new Surface(GraphicsDevice, 2, 108 / CreeperBoard.TileRows, 108 / CreeperBoard.TileRows, 2);
@@ -182,7 +234,7 @@ namespace XNAControlGame
                 String pegName = 'p' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 String iPegName = 'i' + pegPosition.Row.ToString() + 'x' + pegPosition.Column.ToString();
                 Vector3 pegCoordinates = new Vector3(startCoordinates.X + squareWidth * pegPosition.Column, 0, startCoordinates.Y + squareHeight * pegPosition.Row);
-                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial });
+                _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = pegName, Material = defaultMaterial  });
                 _scene.Add(new Nine.Graphics.Model(pegModel) { Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(pegCoordinates), Name = iPegName, Visible = false });
             }
             //Place a transparent sprite for tiles in every possible tile position.
@@ -210,6 +262,10 @@ namespace XNAControlGame
         /// </summary>
         private void Input_MouseDown(object sender, Nine.MouseEventArgs e)
         {
+            
+            _surroundObjects = !_surroundObjects;
+            
+
             //Create a ray fired from the point of click point.
             Ray pickRay = GetSelectionRay(new Vector2(e.X, e.Y));
             float maxDistance = float.MaxValue;
@@ -240,6 +296,21 @@ namespace XNAControlGame
                             && GameTracker.CurrentPlayer.PlayerType == PlayerType.Human)
                         {
                             _selectedPeg = currentPeg;
+                            particleEffect.Transform = Matrix.CreateTranslation( _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.X,
+                                _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.Y,
+                                _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.Z);
+                            if (!_scene.Contains(particleEffect))
+                            {
+                                if (GameTracker.CurrentPlayer.Color == CreeperColor.Black)
+                                {
+                                    particleEffect.Texture = _ice;
+                                }
+                                else
+                                {
+                                    particleEffect.Texture = _fire;
+                                }
+                                _scene.Add(particleEffect);
+                            }
                             _startPosition = new Position(Convert.ToInt32(currentPeg[1] - '0'), Convert.ToInt32(currentPeg[3] - '0'));
                             _secondClick = true;
                             if (GameTracker.Board.Pegs.At(pegLocation).Color == PlayerTurn)
@@ -292,6 +363,10 @@ namespace XNAControlGame
                     }
 
                     _selectedPeg = null;
+                    if (_scene.Contains(particleEffect))
+                    {
+                        _scene.Remove(particleEffect);
+                    }
                     _secondClick = false;
                     possible.Clear();
                 }
@@ -380,6 +455,12 @@ namespace XNAControlGame
             DrawBoard();
 
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
+
+            //if (_surroundObjects)
+            //{
+                //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
+            //}
+
             base.Draw(gameTime);
         }
 
