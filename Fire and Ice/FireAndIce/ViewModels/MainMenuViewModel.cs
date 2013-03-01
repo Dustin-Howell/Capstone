@@ -127,19 +127,62 @@ namespace FireAndIce.ViewModels
                 return _localAIGameMenu = _localAIGameMenu ?? new SlideOutPanelViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(CreeperColor.White), Title = "Fire"},
-                    new OptionButtonViewModel {ClickAction = () => StartLocalAIGame(CreeperColor.Black), Title = "Ice"},
+                    new OptionButtonViewModel {ClickAction = () => AddMenu(LocalEasyAIGameMenu), Title = "Novice"},
+                    new OptionButtonViewModel {ClickAction = () => AddMenu(LocalHardAIGameMenu), Title = "Expert"},
                 },
                     Background = AppModel.Resources["Primary1"] as SolidColorBrush,
-                    Title = "Choose a Side",
+                    Title = "Difficulty?",
                     MenuParent = LocalGameMenu,
                 };
             }
         }
 
-        private void StartLocalAIGame(CreeperColor playerColor)
+        private SlideOutPanelViewModel _localEasyAIGameMenu;
+        private SlideOutPanelViewModel LocalEasyAIGameMenu
         {
-            GameContainerViewModel gameContainer = (playerColor == CreeperColor.White) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human);
+            get
+            {
+                return _localEasyAIGameMenu = _localEasyAIGameMenu ?? new SlideOutPanelViewModel()
+                {
+                    Buttons = new BindableCollection<OptionButtonViewModel> {
+                    new OptionButtonViewModel {ClickAction = () => StartLocalEasyAIGame(CreeperColor.White), Title = "Fire"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalEasyAIGame(CreeperColor.Black), Title = "Ice"},
+                },
+                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
+                    Title = "Choose a Side",
+                    MenuParent = LocalAIGameMenu,
+                };
+            }
+        }
+
+        private void StartLocalEasyAIGame(CreeperColor playerColor)
+        {
+            GameContainerViewModel gameContainer = (playerColor == CreeperColor.White) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Easy) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Easy);
+
+            AppModel.AppViewModel.ActivateItem(gameContainer);
+        }
+
+        private SlideOutPanelViewModel _localHardAIGameMenu;
+        private SlideOutPanelViewModel LocalHardAIGameMenu
+        {
+            get
+            {
+                return _localHardAIGameMenu = _localHardAIGameMenu ?? new SlideOutPanelViewModel()
+                {
+                    Buttons = new BindableCollection<OptionButtonViewModel> {
+                    new OptionButtonViewModel {ClickAction = () => StartLocalHardAIGame(CreeperColor.White), Title = "Fire"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalHardAIGame(CreeperColor.Black), Title = "Ice"},
+                },
+                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
+                    Title = "Choose a Side",
+                    MenuParent = LocalAIGameMenu,
+                };
+            }
+        }
+
+        private void StartLocalHardAIGame(CreeperColor playerColor)
+        {
+            GameContainerViewModel gameContainer = (playerColor == CreeperColor.White) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Hard) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Hard);
 
             AppModel.AppViewModel.ActivateItem(gameContainer);
         }

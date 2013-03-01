@@ -7,6 +7,7 @@ using CreeperNetwork;
 using XNAControlGame;
 using System.ComponentModel;
 using System.IO;
+using CreeperAI;
 
 namespace CreeperCore
 {
@@ -47,7 +48,6 @@ namespace CreeperCore
             InitializeBackgroundWorkers();
 
             GameTracker.Board = new CreeperBoard();
-            _AI = new CreeperAI.CreeperAI(15, 84, 2,43,1000);
         }
 
         private void _xnaGame_UserMadeMove(object sender, MoveEventArgs e)
@@ -109,11 +109,22 @@ namespace CreeperCore
             XNAGame = Game1.GetInstance(handle, width, height);
         }
 
-        public void StartLocalGame(PlayerType player1Type, PlayerType player2Type)
+        public void StartLocalGame(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)
         {
             if (player1Type == PlayerType.Network || player2Type == PlayerType.Network)
             {
                 throw new ArgumentException("Cannot start a local game with a player type of network.");
+            }
+            if (player1Type == PlayerType.AI || player2Type == PlayerType.AI)
+            {
+                if (difficulty == AIDifficulty.Easy)
+                {
+                    _AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 2);
+                }
+                else
+                {
+                    _AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 5);
+                }
             }
 
             GameTracker.Player1 = new Player(player1Type, CreeperColor.White);

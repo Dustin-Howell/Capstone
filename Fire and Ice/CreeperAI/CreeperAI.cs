@@ -20,7 +20,8 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth = 5;
+        //TODO: Change this after the UIP
+        public int _MiniMaxDepth = 5;
 
         private double _territorialWeight;
         private double _materialWeight;
@@ -30,13 +31,14 @@ namespace CreeperAI
 
         private static Random _Random = new Random();
 
-        public CreeperAI(double territoryWeight, double materialWeight, double positionalWeight, double victoryPathWeight, double victoryWeight)
+        public CreeperAI(double territoryWeight, double materialWeight, double positionalWeight, double victoryPathWeight, double victoryWeight, int depth)
         {
             _territorialWeight = territoryWeight;
             _materialWeight = materialWeight;
             _positionalWeight = positionalWeight;
             _pathToVictoryWeight = victoryPathWeight;
             _victoryWeight = victoryWeight;
+            _MiniMaxDepth = depth;
         }
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)

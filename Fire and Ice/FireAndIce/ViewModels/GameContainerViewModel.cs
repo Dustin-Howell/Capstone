@@ -17,6 +17,7 @@ namespace FireAndIce.ViewModels
         private PlayerType _player1Type;
         private PlayerType _player2Type;
         private Network _network;
+        private AIDifficulty _aiDifficulty = AIDifficulty.Hard;
 
         //private SlideOutPanelViewModel _gameMenu;
         public SlideOutPanelViewModel GameMenu
@@ -44,6 +45,16 @@ namespace FireAndIce.ViewModels
             _network = network;
         }
 
+        public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)
+            : base()
+        {
+            AppModel.ResetCreeperCore();
+
+            _player1Type = player1Type;
+            _player2Type = player2Type;
+            _aiDifficulty = difficulty;
+        }
+
         protected override void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
@@ -54,7 +65,7 @@ namespace FireAndIce.ViewModels
 
             if (_network == null)
             {
-                AppModel.Core.StartLocalGame(_player1Type, _player2Type);
+                AppModel.Core.StartLocalGame(_player1Type, _player2Type, _aiDifficulty);
             }
             else
             {
