@@ -31,7 +31,7 @@ namespace CreeperAI
 
         private static Random _Random = new Random();
 
-        public CreeperAI(double territoryWeight, double materialWeight, double positionalWeight, double victoryPathWeight, double victoryWeight, int depth)
+        public CreeperAI(double territoryWeight, double materialWeight, double positionalWeight, double victoryPathWeight, double victoryWeight, int depth = 5)
         {
             _territorialWeight = territoryWeight;
             _materialWeight = materialWeight;
@@ -233,7 +233,7 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = _victoryWeight * depth * -1;
+                    score = _victoryWeight * depth * ((_MiniMaxDepth % 2 == 0)? 1 : -1);
                     break;
 
                 default:
