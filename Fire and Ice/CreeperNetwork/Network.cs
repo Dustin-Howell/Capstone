@@ -108,13 +108,14 @@ namespace CreeperNetwork
         public bool server_acceptClient(byte[] packetIn)
         {
             bool accepted = false;
+            int clientPlayerNameLength = BitConverter.ToInt32(packetIn, 11 + hostGameName.Length);
 
             //valid game..for now, just accept all.
             if (!serverFull)
             {
                 serverFull = true;
                 accepted = true;
-                clientPlayerName = BitConverter.ToString(packetIn, 23, 9);
+                clientPlayerName = BitConverter.ToString(packetIn, 11 + hostGameName.Length + 4, clientPlayerNameLength);
             }
 
             return accepted;
