@@ -6,7 +6,7 @@ using Creeper;
 
 namespace CreeperCore
 {
-    class GameOverEventArgs : EventArgs
+    public class GameOverEventArgs : EventArgs
     {
         public CreeperColor Winner { get; set; }
     }

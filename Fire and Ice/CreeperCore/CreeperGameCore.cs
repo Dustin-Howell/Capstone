@@ -82,7 +82,7 @@ namespace CreeperCore
 
                 GetNextMove();
             }
-            else
+            else if (_IsNetworkGame)
             {
                 if (_IsNetworkGame)
                     _network.disconnect();
