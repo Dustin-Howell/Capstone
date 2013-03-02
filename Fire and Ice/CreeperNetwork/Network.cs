@@ -454,6 +454,8 @@ namespace CreeperNetwork
                 {
                     connectionIssue = false;
 
+                    Console.WriteLine("Connection Reestablished.");
+
                     if (ConnectionIssue != null)
                     {
                         ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.RECONNECTED));
