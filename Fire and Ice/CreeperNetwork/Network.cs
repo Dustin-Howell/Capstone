@@ -200,7 +200,7 @@ namespace CreeperNetwork
                     games[gameCounter, 4] = BitConverter.ToInt32(packet, 11 + gameNameLength).ToString();
 
                     //Player Name
-                    games[gameCounter, 5] = Encoding.ASCII.GetString(packet, 11 + gameNameLength + 4, 11 + gameNameLength + 4 + playerNameLength);
+                    games[gameCounter, 5] = Encoding.ASCII.GetString(packet, 11 + gameNameLength + 4, playerNameLength);
                     
                     //Who moves first?
                     games[gameCounter, 6] = packet[packet.Length - 1].ToString();

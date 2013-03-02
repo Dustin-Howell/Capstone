@@ -22,7 +22,9 @@
             <!--Main Menu-->
                 <ContentControl VerticalAlignment="Stretch" x:Name="MainMenu" />
         </Border>
-        
+
+        <ContentControl x:Name="Popup" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" />
+
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch">
 
@@ -54,6 +56,5 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </Grid>
-
     </DockPanel>
 </UserControl>
