@@ -30,9 +30,10 @@
                 Grid.ColumnSpan="2"
                 Background="{StaticResource Complementary1}"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                >
-            <Label x:Name="GameOverText" />
+                VerticalAlignment="Stretch">
+            <Label x:Name="GameOverText" 
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
         </Border>
     </Grid>
     

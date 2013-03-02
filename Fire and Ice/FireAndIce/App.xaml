@@ -10,6 +10,7 @@
                     <local:AppBootStrapper x:Key="boostrapper" />
                 </ResourceDictionary>
                 <ResourceDictionary Source="Styles/Buttons.xaml" />
+                <ResourceDictionary Source="Styles/Labels.xaml" />
                 <ResourceDictionary Source="ColorSchemes/Default.xaml" />
                 <ResourceDictionary Source="Effects/Effects.xaml" />
             </ResourceDictionary.MergedDictionaries>
