@@ -227,9 +227,9 @@ namespace CreeperNetwork
         public void client_ackStartGame()
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
-            Boolean gameStarted = false;
+            Boolean commandReceived = false;
 
-            while (!gameStarted)
+            while (!commandReceived)
             {
                 packet = receivePacket_blocking();
 
@@ -237,13 +237,18 @@ namespace CreeperNetwork
                 {
                     awaySequenceNumber = BitConverter.ToInt32(packet, 2);
                     sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
-                    gameStarted = true;
+                    commandReceived = true;
                     acknowledged = true;
 
                     Console.WriteLine("GAME STARTED.");
                     gameRunning = true;
 
                     _keepAliveWorker.RunWorkerAsync();
+                }
+                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
+                {
+                    Console.WriteLine("DISCONNECTED BY SERVER.");
+                    commandReceived = true;
                 }
             }
         }
@@ -326,6 +331,10 @@ namespace CreeperNetwork
 
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                         }
+                    }
+                    else if (packet[1] == CMD_JOIN_GAME)
+                    {
+                        sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                     }
 
                 }
