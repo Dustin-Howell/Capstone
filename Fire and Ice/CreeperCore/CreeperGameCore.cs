@@ -82,9 +82,12 @@ namespace CreeperCore
 
                 GetNextMove();
             }
-            else if (_IsNetworkGame)
+            else
             {
-                _network.disconnect();
+                if (_IsNetworkGame)
+                    _network.disconnect();
+
+                GameOver(this, new GameOverEventArgs() { Winner = GameTracker.CurrentPlayer.Color });
             }
         }
 
