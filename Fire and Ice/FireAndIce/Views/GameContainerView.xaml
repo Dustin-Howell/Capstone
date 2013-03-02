@@ -7,15 +7,31 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-            <!--<ContentControl x:Name="GameMenu"  
-                            VerticalAlignment="Stretch" 
-                            HorizontalAlignment="Stretch"
-                            Grid.Column="0"/>-->
-        <Button VerticalAlignment="Center" x:Name="ReturnToMainMenu">Quit</Button>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="100" />
+        </Grid.RowDefinitions>
+        <Border Background="{StaticResource Primary1}"
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Panel.ZIndex="2">
+            <Button VerticalAlignment="Bottom"
+                HorizontalAlignment="Stretch"
+                x:Name="ReturnToMainMenu">
+                Quit
+            </Button>
+        </Border>
         <xna:XNAUserControl x:Name="XNAControl"
-                            Grid.Column="1"
-                            Height="600"
-                            Width="800"/>
+                            Grid.Row="0"
+                            Grid.Column="1"/>
+        <Border Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Background="{StaticResource Complementary1}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                />
     </Grid>
     
 </UserControl>
