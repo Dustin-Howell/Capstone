@@ -31,7 +31,9 @@
                 Background="{StaticResource Complementary1}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                />
+                >
+            <Label x:Name="GameOverText" />
+        </Border>
     </Grid>
     
 </UserControl>

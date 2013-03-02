@@ -36,23 +36,40 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        private String _gameOverText;
+        public String GameOverText
+        {
+            get { return _gameOverText ?? ""; }
+            set
+            {
+                _gameOverText = value;
+                NotifyOfPropertyChange(() => GameOverText);
+            }
+        }
+
         public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, Network network = null) : base()
         {
-            AppModel.ResetCreeperCore();
-
-            _player1Type = player1Type;
-            _player2Type = player2Type;
+            Init(player1Type, player2Type);
             _network = network;
         }
 
         public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)
             : base()
         {
+            Init(player1Type, player2Type);
+            _aiDifficulty = difficulty;
+        }
+
+        private void Init(PlayerType player1Type, PlayerType player2Type)
+        {
             AppModel.ResetCreeperCore();
+            AppModel.Core.GameOver += new EventHandler<GameOverEventArgs>(
+                (s,e) => 
+                    GameOverText = String.Format("{0} wins!", e.Winner.ToString())
+                    );
 
             _player1Type = player1Type;
             _player2Type = player2Type;
-            _aiDifficulty = difficulty;
         }
 
         protected override void OnViewLoaded(object view)
