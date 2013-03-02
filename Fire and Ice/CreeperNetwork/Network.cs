@@ -19,6 +19,7 @@ namespace CreeperNetwork
         public const int ACKNOWLEDGEMENT_TIMER = 100;
         public const int PACKET_LOSS = 1000;
         public const int CONNECTION_TIMEOUT = 1000;
+        public const int UNPLUGGED_INTERVAL = 100;
 
         private const string BROADCAST_IP = "255.255.255.255";
         private const int MAX_PACKET_SIZE = 1024;
@@ -54,6 +55,7 @@ namespace CreeperNetwork
         private Move currentMove;
         private bool newMove = false;
         private bool connectionIssue = false;
+        private bool cableUnplugged = false;
 
         private byte[] lastCommand;
 
@@ -73,6 +75,8 @@ namespace CreeperNetwork
 
             _keepAliveWorker = new BackgroundWorker();
             _keepAliveWorker.DoWork += new DoWorkEventHandler((s, e) => keepAlive());
+
+            checkUnpluggedNetwork();
         }
 
         //SERVER functions
@@ -398,12 +402,47 @@ namespace CreeperNetwork
 
         //Utility Functions
 
-        public bool isNetworkConnected()
+        public void checkUnpluggedNetwork()
+        {
+            Timer checkTimer = new Timer();
+            checkTimer.Elapsed += new ElapsedEventHandler(checkUnpluggedNetworkOnTime);
+            checkTimer.Interval = UNPLUGGED_INTERVAL;
+            checkTimer.Enabled = true;
+            checkTimer.AutoReset = true;
+        }
+
+        //BACKGROUND functions
+
+        private bool isNetworkConnected()
         {
             return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
         }
 
-        //BACKGROUND functions
+        private void checkUnpluggedNetworkOnTime(object source, ElapsedEventArgs e)
+        {
+            if (cableUnplugged && isNetworkConnected())
+            {
+                cableUnplugged = false;
+
+                if (ConnectionIssue != null)
+                {
+                    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_RECONNECTED));
+                }
+
+                Console.WriteLine("Cable reconnected. Connection OK.");
+            }
+            else if (!isNetworkConnected())
+            {
+                if (ConnectionIssue != null)
+                {
+                    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED));
+                }
+
+                cableUnplugged = true;
+
+                Console.WriteLine("A network cable is unplugged.");
+            }
+        }
 
         private void keepAlive()
         {
