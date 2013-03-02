@@ -441,8 +441,6 @@ namespace CreeperNetwork
                         stopwatch.Restart();
                     }
 
-                    awaySequenceNumber = BitConverter.ToInt32(packet, 2);
-
                     if (stopwatch.ElapsedMilliseconds > PACKET_LOSS)
                     {
                         sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
