@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Creeper
 {
-    public enum CreeperColor { White, Black, Empty, Invalid }
+    public enum CreeperColor { Fire, Ice, Empty, Invalid }
     public enum CardinalDirection { North, South, East, West, Northwest, Northeast, Southwest, Southeast }
     public enum Status { ValidMove, InvalidMove, GameOver }
     public enum PieceType { Peg, Tile }
@@ -72,7 +72,7 @@ namespace Creeper
             }
 
 
-            CreeperColor color = CreeperColor.White;
+            CreeperColor color = CreeperColor.Fire;
             foreach (Piece peg in Pegs.Where(x => x.Position == _NorthBlackPegCorner
                 || x.Position == _NorthWhitePegCorner
                 || x.Position == _SouthBlackPegCorner
@@ -84,7 +84,7 @@ namespace Creeper
                 {
                     if (IsValidPosition(peg.Position.AtDirection(direction), PieceType.Peg))
                     {
-                        color = (peg.Position == _NorthBlackPegCorner || peg.Position == _SouthBlackPegCorner) ? CreeperColor.Black : CreeperColor.White;
+                        color = (peg.Position == _NorthBlackPegCorner || peg.Position == _SouthBlackPegCorner) ? CreeperColor.Ice : CreeperColor.Fire;
 
                         Pegs.At(peg.Position.AtDirection(direction)).Color = color;
                         Pegs.At(peg.Position.AtDirection(direction).AtDirection(direction)).Color = color;
@@ -200,8 +200,8 @@ namespace Creeper
             Stack<Piece> stack = new Stack<Piece>();
             HashSet<Piece> foundTiles = new HashSet<Piece>();
             HashSet<Piece> endTiles = new HashSet<Piece>();
-            Position start = (playerTurn == CreeperColor.White) ? _WhiteStart : _BlackStart;
-            Position end = (playerTurn == CreeperColor.White) ? _WhiteEnd : _BlackEnd;
+            Position start = (playerTurn == CreeperColor.Fire) ? _WhiteStart : _BlackStart;
+            Position end = (playerTurn == CreeperColor.Fire) ? _WhiteEnd : _BlackEnd;
 
             endTiles.UnionWith(Tiles.At(end).GetNeighbors(this).Where(x => x.Color == playerTurn));
 
@@ -340,7 +340,7 @@ namespace Creeper
                 {
                     switch (peg.Color)
                     {
-                        case CreeperColor.Black:
+                        case CreeperColor.Ice:
                             Console.Write("B");
                             break;
                         case CreeperColor.Empty:
@@ -349,7 +349,7 @@ namespace Creeper
                         case CreeperColor.Invalid:
                             Console.Write("I");
                             break;
-                        case CreeperColor.White:
+                        case CreeperColor.Fire:
                             Console.Write("W");
                             break;
                     }
@@ -368,10 +368,10 @@ namespace Creeper
                         Console.Write("|");
                         switch (tile.Color)
                         {
-                            case CreeperColor.White:
+                            case CreeperColor.Fire:
                                 Console.Write("O");
                                 break;
-                            case CreeperColor.Black:
+                            case CreeperColor.Ice:
                                 Console.Write("X");
                                 break;
                             case CreeperColor.Invalid:
@@ -387,11 +387,11 @@ namespace Creeper
                 Console.Write("\n");
             }
 
-            Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.White, PieceType.Peg).Count()));
-            Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Black, PieceType.Peg).Count()));
+            Console.WriteLine(String.Format("White Pegs: {0}", WhereTeam(CreeperColor.Fire, PieceType.Peg).Count()));
+            Console.WriteLine(String.Format("Black Pegs: {0}", WhereTeam(CreeperColor.Ice, PieceType.Peg).Count()));
             Console.WriteLine();
-            Console.WriteLine(String.Format("White Tiles: {0}", WhereTeam(CreeperColor.White, PieceType.Tile).Count()));
-            Console.WriteLine(String.Format("Black Tiles: {0}", WhereTeam(CreeperColor.Black, PieceType.Tile).Count()));
+            Console.WriteLine(String.Format("White Tiles: {0}", WhereTeam(CreeperColor.Fire, PieceType.Tile).Count()));
+            Console.WriteLine(String.Format("Black Tiles: {0}", WhereTeam(CreeperColor.Ice, PieceType.Tile).Count()));
             Console.WriteLine();
             if (pause)
             {
@@ -442,11 +442,11 @@ namespace Creeper
                             column++;
                             break;
                         case 'B':
-                            Pegs.At(new Position(row, column)).Color = CreeperColor.Black;
+                            Pegs.At(new Position(row, column)).Color = CreeperColor.Ice;
                             column++;
                             break;
                         case 'W':
-                            Pegs.At(new Position(row, column)).Color = CreeperColor.White;
+                            Pegs.At(new Position(row, column)).Color = CreeperColor.Fire;
                             column++;
                             break;
                         case 'I':
@@ -471,11 +471,11 @@ namespace Creeper
                             column++;
                             break;
                         case 'X':
-                            Tiles.At(new Position(row, column)).Color = CreeperColor.Black;
+                            Tiles.At(new Position(row, column)).Color = CreeperColor.Ice;
                             column++;
                             break;
                         case 'O':
-                            Tiles.At(new Position(row, column)).Color = CreeperColor.White;
+                            Tiles.At(new Position(row, column)).Color = CreeperColor.Fire;
                             column++;
                             break;
                         default:

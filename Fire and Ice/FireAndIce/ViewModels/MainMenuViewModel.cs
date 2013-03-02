@@ -160,8 +160,8 @@ namespace FireAndIce.ViewModels
                 return _localEasyAIGameMenu = _localEasyAIGameMenu ?? new SlideOutPanelViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => StartLocalEasyAIGame(CreeperColor.White), Title = "Fire"},
-                    new OptionButtonViewModel {ClickAction = () => StartLocalEasyAIGame(CreeperColor.Black), Title = "Ice"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalEasyAIGame(CreeperColor.Fire), Title = "Fire"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalEasyAIGame(CreeperColor.Ice), Title = "Ice"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Choose a Side",
@@ -172,7 +172,7 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalEasyAIGame(CreeperColor playerColor)
         {
-            GameContainerViewModel gameContainer = (playerColor == CreeperColor.White) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Easy) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Easy);
+            GameContainerViewModel gameContainer = (playerColor == CreeperColor.Fire) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Easy) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Easy);
 
             AppModel.AppViewModel.ActivateItem(gameContainer);
         }
@@ -185,8 +185,8 @@ namespace FireAndIce.ViewModels
                 return _localHardAIGameMenu = _localHardAIGameMenu ?? new SlideOutPanelViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => StartLocalHardAIGame(CreeperColor.White), Title = "Fire"},
-                    new OptionButtonViewModel {ClickAction = () => StartLocalHardAIGame(CreeperColor.Black), Title = "Ice"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalHardAIGame(CreeperColor.Fire), Title = "Fire"},
+                    new OptionButtonViewModel {ClickAction = () => StartLocalHardAIGame(CreeperColor.Ice), Title = "Ice"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Choose a Side",
@@ -197,7 +197,7 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalHardAIGame(CreeperColor playerColor)
         {
-            GameContainerViewModel gameContainer = (playerColor == CreeperColor.White) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Hard) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Hard);
+            GameContainerViewModel gameContainer = (playerColor == CreeperColor.Fire) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Hard) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Hard);
 
             AppModel.AppViewModel.ActivateItem(gameContainer);
         }

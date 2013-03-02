@@ -42,6 +42,7 @@ namespace CreeperCore
         private BackgroundWorker _networkPlayGame;
         private CreeperBoard _board;
         private bool _IsNetworkGame { get { return GameTracker.Player1.PlayerType == PlayerType.Network || GameTracker.Player2.PlayerType == PlayerType.Network; } }
+        public event EventHandler<GameOverEventArgs> GameOver;
 
         public CreeperGameCore()
         {
@@ -127,8 +128,8 @@ namespace CreeperCore
                 }
             }
 
-            GameTracker.Player1 = new Player(player1Type, CreeperColor.White);
-            GameTracker.Player2 = new Player(player2Type, CreeperColor.Black);
+            GameTracker.Player1 = new Player(player1Type, CreeperColor.Fire);
+            GameTracker.Player2 = new Player(player2Type, CreeperColor.Ice);
             GameTracker.CurrentPlayer = GameTracker.Player1;
             GetNextMove();
         }
@@ -146,8 +147,8 @@ namespace CreeperCore
             _networkPlayGame = new BackgroundWorker();
             _networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => _network.playGame());
 
-            GameTracker.Player1 = new Player(player1Type, CreeperColor.White);
-            GameTracker.Player2 = new Player(player2Type, CreeperColor.Black);
+            GameTracker.Player1 = new Player(player1Type, CreeperColor.Fire);
+            GameTracker.Player2 = new Player(player2Type, CreeperColor.Ice);
             GameTracker.CurrentPlayer = GameTracker.Player1;
             GetNextMove();
 

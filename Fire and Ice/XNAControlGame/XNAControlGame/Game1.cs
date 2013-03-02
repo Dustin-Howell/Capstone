@@ -368,7 +368,7 @@ namespace XNAControlGame
                                 _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.Y,
                                 _scene.FindName<Nine.Graphics.Model>(_selectedPeg).Transform.Translation.Z);
 
-                            if (GameTracker.CurrentPlayer.Color == CreeperColor.Black)
+                            if (GameTracker.CurrentPlayer.Color == CreeperColor.Ice)
                             {
                                 particleEffect.Texture = _iceHighlight;
                             }
@@ -488,11 +488,11 @@ namespace XNAControlGame
                 foreach (Animation animate in animation)
                 {
                     Position movingPeg = new Position(animate.endCoord.Row, animate.endCoord.Column);
-                    if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.White)
+                    if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.Fire)
                     {
                         animate.peg.Material = red;
                     }
-                    else if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.Black)
+                    else if (GameTracker.Board.Pegs.At(movingPeg).Color == CreeperColor.Ice)
                     {
                         animate.peg.Material = blue;
                     }
@@ -561,12 +561,12 @@ namespace XNAControlGame
                     {
                         location = 'p' + r.ToString() + 'x' + c.ToString();
 
-                        if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.White)
+                        if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Fire)
                         {
                             _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
                             _scene.FindName<Nine.Graphics.Model>(location).Material = red;
                         }
-                        else if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Black)
+                        else if (GameTracker.Board.Pegs.At(new Position(r, c)).Color == CreeperColor.Ice)
                         {
                             _scene.FindName<Nine.Graphics.Model>(location).Visible = true;
                             _scene.FindName<Nine.Graphics.Model>(location).Material = blue;
@@ -598,11 +598,11 @@ namespace XNAControlGame
                     {
                         location = 't' + r.ToString() + 'x' + c.ToString();
 
-                        if (GameTracker.Board.Tiles.At(new Position(r, c)).Color == CreeperColor.White)
+                        if (GameTracker.Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Fire)
                         {
                             _scene.FindName<Surface>(location).Material.Texture = _whiteTile;
                         }
-                        else if (GameTracker.Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Black)
+                        else if (GameTracker.Board.Tiles.At(new Position(r, c)).Color == CreeperColor.Ice)
                         {
                             _scene.FindName<Surface>(location).Material.Texture = _blackTile;
                         }

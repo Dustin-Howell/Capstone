@@ -35,20 +35,20 @@ namespace Creeper
 
         public static CreeperColor Opposite(this CreeperColor color)
         {
-            if (color != CreeperColor.Black && color != CreeperColor.White)
+            if (color != CreeperColor.Ice && color != CreeperColor.Fire)
                 throw new ArgumentOutOfRangeException("Argument must be either Black or White to have an opposite color.");
 
-            return (color == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+            return (color == CreeperColor.Fire) ? CreeperColor.Ice : CreeperColor.Fire;
         }
 
         public static bool IsWhite(this CreeperColor color)
         {
-            return color == CreeperColor.White;
+            return color == CreeperColor.Fire;
         }
 
         public static bool IsBlack(this CreeperColor color)
         {
-            return color == CreeperColor.Black;
+            return color == CreeperColor.Ice;
         }
 
         public static bool IsEmpty(this CreeperColor color)
@@ -63,7 +63,7 @@ namespace Creeper
 
         public static bool IsTeamColor(this CreeperColor color)
         {
-            return color == CreeperColor.Black || color == CreeperColor.White;
+            return color == CreeperColor.Ice || color == CreeperColor.Fire;
         }
 
         static public IEnumerable<Move> PossibleMoves(this Piece peg, CreeperBoard board)
@@ -104,7 +104,7 @@ namespace Creeper
                         || direction == CardinalDirection.West
                         )
                         && (board.IsValidPosition(destinationPosition, PieceType.Peg))
-                        && (pegs.At(destinationPosition).Color == ((peg.Color == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White))
+                        && (pegs.At(destinationPosition).Color == ((peg.Color == CreeperColor.Fire) ? CreeperColor.Ice : CreeperColor.Fire))
                     )
                 {
                     destinationPosition = destinationPosition.AtDirection(direction);

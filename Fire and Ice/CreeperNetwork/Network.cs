@@ -248,7 +248,7 @@ namespace CreeperNetwork
         public event EventHandler<MoveEventArgs> MoveMade;
         public event EventHandler<ConnectionEventArgs> ConnectionIssue;
         public event EventHandler<ChatEventArgs> ChatMade;
-        public event EventHandler<EndGameEventArgs> EndGame;
+        public event EventHandler<EndGameEventArgs> NetworkGameOver;
 
         //Game Functions
 
@@ -311,12 +311,12 @@ namespace CreeperNetwork
                         }
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
-                            if (EndGame != null)
+                            if (NetworkGameOver != null)
                             {
                                 if(packet[6] == MOVETYPE_FORFEIT)
-                                    EndGame(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
+                                    NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
                                 else if(packet[6] == MOVETYPE_ILLEGAL)
-                                    EndGame(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
+                                    NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
                             }
 
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());

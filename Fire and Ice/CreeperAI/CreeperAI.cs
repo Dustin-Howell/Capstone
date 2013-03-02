@@ -279,7 +279,7 @@ namespace CreeperAI
         {
             double score = 0d;
 
-            if (turn == CreeperColor.White)
+            if (turn == CreeperColor.Fire)
             {
                 foreach (AIBoardNode peg in board.WhitePegs)
                 {
@@ -305,8 +305,8 @@ namespace CreeperAI
             if (board.IsFlipMove(currentMove))
             {
                 AIBoardNode flippedTile = board.GetFlippedTileCopy(currentMove);
-                AIBoardNode[] columnHead = (turn == CreeperColor.White) ? board.ColumnHeadWhite : board.ColumnHeadWhite;
-                AIBoardNode[] rowHead = (turn == CreeperColor.White) ? board.RowHeadWhite : board.RowHeadWhite;
+                AIBoardNode[] columnHead = (turn == CreeperColor.Fire) ? board.ColumnHeadWhite : board.ColumnHeadWhite;
+                AIBoardNode[] rowHead = (turn == CreeperColor.Fire) ? board.RowHeadWhite : board.RowHeadWhite;
 
                 //If we are null in this row, we want to add a new tile here
                 if (rowHead[flippedTile.Row] == null)

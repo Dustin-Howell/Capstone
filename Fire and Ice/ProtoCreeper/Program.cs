@@ -23,9 +23,9 @@ namespace ProtoCreeper
                 Console.WriteLine("SideMove Test failed");
             }*/
 
-            board.Move(new Move(new Position(4,0),new Position(3,0),CreeperColor.Black));
+            board.Move(new Move(new Position(4,0),new Position(3,0),CreeperColor.Ice));
             //board.Move(new Move(new Position(2, 0), new Position(4, 0), CreeperColor.White));
-            if (board.IsValidMove(new Move(new Position(2,0), new Position(4,0), CreeperColor.White)))
+            if (board.IsValidMove(new Move(new Position(2,0), new Position(4,0), CreeperColor.Fire)))
             {
                 Console.WriteLine("Jump Test works!");
             }
@@ -42,13 +42,13 @@ namespace ProtoCreeper
             bool pauseAfterPrint = false;
 
             bool gameOver = false;
-            CreeperColor turn = CreeperColor.Black;
+            CreeperColor turn = CreeperColor.Ice;
 
             while (!board.IsFinished(turn)
-                && board.Pegs.Any(x => x.Color == CreeperColor.White)
-                && board.Pegs.Any(x => x.Color == CreeperColor.Black))
+                && board.Pegs.Any(x => x.Color == CreeperColor.Fire)
+                && board.Pegs.Any(x => x.Color == CreeperColor.Ice))
             {
-                turn = (turn == CreeperColor.White) ? CreeperColor.Black : CreeperColor.White;
+                turn = (turn == CreeperColor.Fire) ? CreeperColor.Ice : CreeperColor.Fire;
 
                 board.Move(creeperAI.GetMove(board, turn));
                 board.PrintToConsole(pauseAfterPrint);
@@ -68,7 +68,7 @@ namespace ProtoCreeper
             {
                 startPosition = new Position(i, i + 1);
                 endPosition = new Position(i + 1, i + 2);
-                move = new Move(startPosition, endPosition, CreeperColor.White);
+                move = new Move(startPosition, endPosition, CreeperColor.Fire);
                 board.Move(move);
                 board.PrintToConsole(pausePrint);
             }
@@ -76,25 +76,25 @@ namespace ProtoCreeper
             {
                 startPosition = new Position(i, i + 2);
                 endPosition = new Position(i + 1, i + 3);
-                move = new Move(startPosition, endPosition, CreeperColor.White);
+                move = new Move(startPosition, endPosition, CreeperColor.Fire);
                 board.Move(move);
                 board.PrintToConsole(pausePrint);
             }
 
             startPosition = new Position(4, 6);
             endPosition = new Position(5, 5);
-            move = new Move(startPosition, endPosition, CreeperColor.White);
+            move = new Move(startPosition, endPosition, CreeperColor.Fire);
             board.Move(move);
             board.PrintToConsole(pausePrint);
 
             startPosition = new Position(4, 5);
             endPosition = new Position(5, 4);
-            move = new Move(startPosition, endPosition, CreeperColor.White);
+            move = new Move(startPosition, endPosition, CreeperColor.Fire);
             board.Move(move);
             board.PrintToConsole(pausePrint);
 
 
-            if(board.GetGameState(CreeperColor.White) == CreeperGameState.Complete)
+            if(board.GetGameState(CreeperColor.Fire) == CreeperGameState.Complete)
             {
                 Console.WriteLine("White wins!");
             }

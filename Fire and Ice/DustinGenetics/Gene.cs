@@ -82,7 +82,7 @@ namespace DustinGenetics
             try
             {
                 int moveCount = 0;
-                CreeperColor turn = CreeperColor.Black;
+                CreeperColor turn = CreeperColor.Ice;
                 CreeperBoard board = new CreeperBoard();
                 CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PositionalWeight, PathToVictoryWeight, VictoryWeight);
                 CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PositionalWeight, opponent.PathToVictoryWeight, opponent.VictoryWeight);
@@ -97,7 +97,7 @@ namespace DustinGenetics
                     }
                     turn = turn.Opposite();
 
-                    if (turn == CreeperColor.White)
+                    if (turn == CreeperColor.Fire)
                     {
                         board.Move(thisAI.GetMove(board, turn));
                     }
@@ -107,7 +107,7 @@ namespace DustinGenetics
                     }
                 }
 
-                return turn == CreeperColor.White && board.GetGameState(turn) == CreeperGameState.Complete;
+                return turn == CreeperColor.Fire && board.GetGameState(turn) == CreeperGameState.Complete;
             }
             catch (Exception)
             {
