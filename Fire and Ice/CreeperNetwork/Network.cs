@@ -19,7 +19,7 @@ namespace CreeperNetwork
         public const int ACKNOWLEDGEMENT_TIMER = 100;
         public const int PACKET_LOSS = 1000;
         public const int CONNECTION_TIMEOUT = 1000;
-        public const int UNPLUGGED_INTERVAL = 100;
+        public const int UNPLUGGED_INTERVAL = 1000;
 
         private const string BROADCAST_IP = "255.255.255.255";
         private const int MAX_PACKET_SIZE = 1024;
@@ -76,6 +76,7 @@ namespace CreeperNetwork
             _keepAliveWorker = new BackgroundWorker();
             _keepAliveWorker.DoWork += new DoWorkEventHandler((s, e) => keepAlive());
 
+            //This should be here, I think, actually. 
             checkUnpluggedNetwork();
         }
 
