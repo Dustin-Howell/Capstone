@@ -94,6 +94,8 @@ namespace FireAndIce.ViewModels
                 {
                     button.IsOptionChecked = false;
                 }
+
+                Popup = null;
             }
         }
 

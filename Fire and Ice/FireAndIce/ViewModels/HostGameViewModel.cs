@@ -21,7 +21,7 @@ namespace FireAndIce.ViewModels
         {
             get
             {
-                return _gameName;
+                return _gameName ?? "";
             }
             set
             {
@@ -38,7 +38,7 @@ namespace FireAndIce.ViewModels
         {
             get
             {
-                return _playerName;
+                return _playerName ?? "";
             }
             set
             {

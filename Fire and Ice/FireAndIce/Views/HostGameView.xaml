@@ -2,11 +2,16 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
-    <StackPanel>
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             Background="{StaticResource Primary1}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+
         <TextBlock
             Grid.Row="0"
-            Grid.Column="0"
             Foreground="White"
             TextWrapping="NoWrap"
             FontSize="20"
@@ -14,9 +19,14 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             x:Name="Title" />
-        
-        <TextBox x:Name="GameName" />
-        <TextBox x:Name="PlayerName" />
-        <Button x:Name="HostGameClick">Start</Button>
-    </StackPanel>
+        <StackPanel Grid.Row="1">
+            <TextBox x:Name="GameName"
+                     FontSize="16"
+                     FontFamily="pack://application:,,,/Fonts/#Holy Empire" />
+            <TextBox x:Name="PlayerName"
+                     FontSize="16"
+                     FontFamily="pack://application:,,,/Fonts/#Holy Empire" />
+            <Button x:Name="HostGameClick">Start</Button>
+        </StackPanel>
+    </Grid>
 </UserControl>

@@ -23,7 +23,7 @@
                 <ContentControl VerticalAlignment="Stretch" x:Name="MainMenu" />
         </Border>
 
-        <ContentControl x:Name="Popup" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" />
+        <ContentControl x:Name="Popup" HorizontalAlignment="Right" VerticalAlignment="Stretch" DockPanel.Dock="Right" />
 
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch">

@@ -87,6 +87,7 @@ namespace FireAndIce.ViewModels
             {
                 _foundGames = value;
                 NotifyOfPropertyChange(() => FoundGames);
+                NotifyOfPropertyChange(() => HasFoundGames);
             }
         }
 
@@ -105,10 +106,17 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        public bool HasFoundGames
+        {
+            get
+            {
+                return FoundGames != null && FoundGames.Any();
+            }
+        }
+
         public void RefreshFoundGames()
         {
             BackgroundWorker findGamesWorker = new BackgroundWorker();
-            
 
            //Moved to class-wide variable. 
            //_network = new Network();
