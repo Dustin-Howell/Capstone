@@ -34,7 +34,8 @@ namespace FireAndIce.ViewModels
 
     public class FindGameViewModel : PropertyChangedBase
     {
-        private Network _network = new Network();
+        private Network _network;
+        private Network Network { get { return _network ?? new Network(); } }
         private List<NetworkGameInfo> _gamesData;
 
         // Title of menu screen
@@ -122,7 +123,7 @@ namespace FireAndIce.ViewModels
            //_network = new Network();
 
             string[,] gamesFound = new string[256, 7];
-            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = _network.client_findGames(PlayerName));
+            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = Network.client_findGames(PlayerName));
             
 
             findGamesWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
@@ -165,12 +166,12 @@ namespace FireAndIce.ViewModels
 
         public void FindGameClick()
         {
-            _network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
+            Network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
             //_network.client_ackStartGame();
             //Need to ack start game
             BackgroundWorker startGameWorker = new BackgroundWorker();
-            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => _network.client_ackStartGame());
-            startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) => AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Network, PlayerType.Human, _network)));
+            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => Network.client_ackStartGame());
+            startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) => AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Network, PlayerType.Human, Network)));
             startGameWorker.RunWorkerAsync();
             
         }
