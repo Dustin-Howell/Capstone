@@ -23,12 +23,6 @@
                 <ContentControl VerticalAlignment="Stretch" x:Name="MainMenu" />
         </Border>
 
-        <!--Popup Menu-->
-        <ContentControl x:Name="Popup"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Stretch"
-                        DockPanel.Dock="Right" />
-
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch">
 
@@ -43,22 +37,32 @@
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center"/>
             </Border>
-            
-            <ItemsControl x:Name="Menus"
-                          VerticalAlignment="Stretch"
-                          HorizontalAlignment="Left">
-                <ItemsControl.Resources>
-                    <Style TargetType="{x:Type local:ToggleButtonMenuView}">
-                        <Setter Property="Margin" Value="5 0 0 0" />
-                    </Style>
-                </ItemsControl.Resources>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal">
-                        </StackPanel>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+
+            <DockPanel>
+                <!--Cascading Menus-->
+                <ItemsControl x:Name="Menus"
+                              DockPanel.Dock="Left"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Left">
+                    <ItemsControl.Resources>
+                        <Style TargetType="{x:Type local:ToggleButtonMenuView}">
+                            <Setter Property="Margin" Value="5 0 0 0" />
+                        </Style>
+                    </ItemsControl.Resources>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal">
+                            </StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <!--Popup Menu-->
+                <ContentControl x:Name="Popup"
+                                DockPanel.Dock="Right"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Stretch" />
+            </DockPanel>
         </Grid>
     </DockPanel>
 </UserControl>
