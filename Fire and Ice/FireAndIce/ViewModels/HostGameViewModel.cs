@@ -11,6 +11,9 @@ namespace FireAndIce.ViewModels
 {
     public class HostGameViewModel : PropertyChangedBase
     {
+        private BackgroundWorker _hostGameWorker;
+        BackgroundWorker _connectServerWorker;
+
         // Title of menu screen
         public string Title { get; set; }
         
@@ -50,6 +53,7 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        private object _canHostGameLock = new object();
         private bool _canHostGame = true;
         public bool CanHostGame
         {
@@ -59,29 +63,46 @@ namespace FireAndIce.ViewModels
             }
             set
             {
-                _canHostGame = value;
-                NotifyOfPropertyChange(() => CanHostGame);
+                lock (_canHostGameLock)
+                {
+                    _canHostGame = value;
+                    NotifyOfPropertyChange(() => CanHostGame);
+                }
             }
         }
 
         public void HostGame()
         {
-            BackgroundWorker hostGameWorker = new BackgroundWorker();
-            BackgroundWorker connectServerWorker = new BackgroundWorker();
+            _hostGameWorker = new BackgroundWorker() { WorkerSupportsCancellation = true };
+            _connectServerWorker = new BackgroundWorker();
 
-            Network network = new Network();
-
-            hostGameWorker.DoWork += new DoWorkEventHandler((s, e) => network.server_hostGame(GameName, PlayerName));
-            connectServerWorker.DoWork += new DoWorkEventHandler((s, e) => network.server_startGame());
-
-            hostGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) => connectServerWorker.RunWorkerAsync());
-            connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
+            _hostGameWorker.DoWork += new DoWorkEventHandler((s, e) =>
                 {
-                    AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Network, network));
+                    AppModel.Network.server_hostGame(GameName, PlayerName);
+                });
+
+            _connectServerWorker.DoWork += new DoWorkEventHandler((s, e) => AppModel.Network.server_startGame());
+
+            _hostGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
+                {
+                    if (e.Cancelled)
+                    {
+                        CanHostGame = true;
+                    }
+                    else
+                    {
+                        _connectServerWorker.RunWorkerAsync();
+                    }
+                });
+
+            _connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
+                {
+                    AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Network, AppModel.Network));
                 });
 
             CanHostGame = false;
-            hostGameWorker.RunWorkerAsync();
+
+            _hostGameWorker.RunWorkerAsync();
         }
     }
 }

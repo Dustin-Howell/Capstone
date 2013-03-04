@@ -34,8 +34,6 @@ namespace FireAndIce.ViewModels
 
     public class FindGameViewModel : PropertyChangedBase
     {
-        private Network _network;
-        private Network Network { get { return _network ?? new Network(); } }
         private List<NetworkGameInfo> _gamesData;
 
         // Title of menu screen
@@ -119,18 +117,12 @@ namespace FireAndIce.ViewModels
         {
             BackgroundWorker findGamesWorker = new BackgroundWorker();
 
-           //Moved to class-wide variable. 
-           //_network = new Network();
-
             string[,] gamesFound = new string[256, 7];
-            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = Network.client_findGames(PlayerName));
+            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = AppModel.Network.client_findGames(PlayerName));
             
 
             findGamesWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
             {
-                //string[] gameToJoin = new string[7];
-                //Choose first game -- will crash if run in wrong order.
-
                 BindableCollection<string> games = new BindableCollection<string>();
                 List<NetworkGameInfo> gamesData = new List<NetworkGameInfo>();
                 for (int i = 0; i < gamesFound.Length && gamesFound[i, 0] != null; i++)
@@ -148,9 +140,6 @@ namespace FireAndIce.ViewModels
 
                 FoundGames = games;
                 _gamesData = gamesData;
-
-                //_network.client_joinGame(gameToJoin);
-                //startGameWorker.RunWorkerAsync();
             });
 
             findGamesWorker.RunWorkerAsync();
@@ -166,12 +155,11 @@ namespace FireAndIce.ViewModels
 
         public void FindGameClick()
         {
-            Network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
-            //_network.client_ackStartGame();
-            //Need to ack start game
+            AppModel.Network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
             BackgroundWorker startGameWorker = new BackgroundWorker();
-            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => Network.client_ackStartGame());
-            startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) => AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Network, PlayerType.Human, Network)));
+
+            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => AppModel.Network.client_ackStartGame());
+            startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) => AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Network, PlayerType.Human, AppModel.Network)));
             startGameWorker.RunWorkerAsync();
             
         }
