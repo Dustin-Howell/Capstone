@@ -61,7 +61,8 @@
                 <ContentControl x:Name="Popup"
                                 DockPanel.Dock="Right"
                                 HorizontalAlignment="Right"
-                                VerticalAlignment="Stretch" />
+                                VerticalAlignment="Stretch"
+                                Effect="{StaticResource DropShadowLeft}"/>
             </DockPanel>
         </Grid>
     </DockPanel>

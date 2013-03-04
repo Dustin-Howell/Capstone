@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:f="clr-namespace:FireAndIce.Views">
 
-    <DropShadowEffect x:Key="DropShadow" Opacity=".8"/>
+    <DropShadowEffect x:Key="DropShadow" Opacity=".8" />
+    <DropShadowEffect x:Key="DropShadowLeft" Opacity=".8" Direction="225" />
 
     <Style x:Key="SlidingMenu" TargetType="{x:Type UserControl}">
         <Setter Property="RenderTransform">
