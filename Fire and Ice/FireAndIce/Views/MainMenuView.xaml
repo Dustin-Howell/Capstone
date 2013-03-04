@@ -23,7 +23,11 @@
                 <ContentControl VerticalAlignment="Stretch" x:Name="MainMenu" />
         </Border>
 
-        <ContentControl x:Name="Popup" HorizontalAlignment="Right" VerticalAlignment="Stretch" DockPanel.Dock="Right" />
+        <!--Popup Menu-->
+        <ContentControl x:Name="Popup"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Stretch"
+                        DockPanel.Dock="Right" />
 
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch">
@@ -44,7 +48,7 @@
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Left">
                 <ItemsControl.Resources>
-                    <Style TargetType="{x:Type local:SlideOutPanelView}">
+                    <Style TargetType="{x:Type local:ToggleButtonMenuView}">
                         <Setter Property="Margin" Value="5 0 0 0" />
                     </Style>
                 </ItemsControl.Resources>

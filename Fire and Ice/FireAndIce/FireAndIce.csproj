@@ -72,11 +72,8 @@
     <Compile Include="ViewModels\HostGameViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
-    <Compile Include="ViewModels\SlideOutPanelViewModel.cs" />
-    <Compile Include="Views\SlideOutPanelView.xaml.cs">
-      <DependentUpon>SlideOutPanelView.xaml</DependentUpon>
-      <Generator>MSBuild:Compile</Generator>
-    </Compile>
+    <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
+    <Compile Include="Views\SlideOutControl.cs" />
     <Page Include="ColorSchemes\Default.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,7 +126,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SlideOutPanelView.xaml">
+    <Page Include="Views\ToggleButtonMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -15,8 +15,8 @@ namespace FireAndIce.ViewModels
 {
     public class MainMenuViewModel : Screen
     {    
-        private BindableCollection<SlideOutPanelViewModel> _menus;
-        public BindableCollection<SlideOutPanelViewModel> Menus
+        private BindableCollection<ToggleButtonMenuViewModel> _menus;
+        public BindableCollection<ToggleButtonMenuViewModel> Menus
         {
             get
             {
@@ -46,7 +46,7 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        public SlideOutPanelViewModel MainMenu { get; set; }
+        public ToggleButtonMenuViewModel MainMenu { get; set; }
 
         private PropertyChangedBase _popup;
         public PropertyChangedBase Popup
@@ -62,7 +62,7 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        public void AddMenu(SlideOutPanelViewModel panel)
+        public void AddMenu(ToggleButtonMenuViewModel panel)
         {
             if (!Menus.Contains(panel))
             {
@@ -74,9 +74,9 @@ namespace FireAndIce.ViewModels
                 }
                 else
                 {
-                    BindableCollection<SlideOutPanelViewModel> newMenus = new BindableCollection<SlideOutPanelViewModel>(Menus);
+                    BindableCollection<ToggleButtonMenuViewModel> newMenus = new BindableCollection<ToggleButtonMenuViewModel>(Menus);
                     bool foundParent = false;
-                    foreach (SlideOutPanelViewModel menu in newMenus)
+                    foreach (ToggleButtonMenuViewModel menu in newMenus)
                     {
                         if ((foundParent |= menu == panel.MenuParent) && menu != panel.MenuParent)
                         {
@@ -99,12 +99,12 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private SlideOutPanelViewModel _newGameMenu;
-        private SlideOutPanelViewModel NewGameMenu
+        private ToggleButtonMenuViewModel _newGameMenu;
+        private ToggleButtonMenuViewModel NewGameMenu
         {
             get
             {
-                return _newGameMenu = _newGameMenu ?? new SlideOutPanelViewModel()
+                return _newGameMenu = _newGameMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel>
                     {
@@ -118,12 +118,12 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private SlideOutPanelViewModel _localGameMenu;
-        private SlideOutPanelViewModel LocalGameMenu
+        private ToggleButtonMenuViewModel _localGameMenu;
+        private ToggleButtonMenuViewModel LocalGameMenu
         {
             get
             {
-                return _localGameMenu = _localGameMenu ?? new SlideOutPanelViewModel()
+                return _localGameMenu = _localGameMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
@@ -136,12 +136,12 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private SlideOutPanelViewModel _localAIGameMenu;
-        private SlideOutPanelViewModel LocalAIGameMenu
+        private ToggleButtonMenuViewModel _localAIGameMenu;
+        private ToggleButtonMenuViewModel LocalAIGameMenu
         {
             get
             {
-                return _localAIGameMenu = _localAIGameMenu ?? new SlideOutPanelViewModel()
+                return _localAIGameMenu = _localAIGameMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => AddMenu(LocalEasyAIGameMenu), Title = "Novice"},
@@ -154,12 +154,12 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private SlideOutPanelViewModel _localEasyAIGameMenu;
-        private SlideOutPanelViewModel LocalEasyAIGameMenu
+        private ToggleButtonMenuViewModel _localEasyAIGameMenu;
+        private ToggleButtonMenuViewModel LocalEasyAIGameMenu
         {
             get
             {
-                return _localEasyAIGameMenu = _localEasyAIGameMenu ?? new SlideOutPanelViewModel()
+                return _localEasyAIGameMenu = _localEasyAIGameMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => StartLocalEasyAIGame(CreeperColor.Fire), Title = "Fire"},
@@ -179,12 +179,12 @@ namespace FireAndIce.ViewModels
             AppModel.AppViewModel.ActivateItem(gameContainer);
         }
 
-        private SlideOutPanelViewModel _localHardAIGameMenu;
-        private SlideOutPanelViewModel LocalHardAIGameMenu
+        private ToggleButtonMenuViewModel _localHardAIGameMenu;
+        private ToggleButtonMenuViewModel LocalHardAIGameMenu
         {
             get
             {
-                return _localHardAIGameMenu = _localHardAIGameMenu ?? new SlideOutPanelViewModel()
+                return _localHardAIGameMenu = _localHardAIGameMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => StartLocalHardAIGame(CreeperColor.Fire), Title = "Fire"},
@@ -209,12 +209,12 @@ namespace FireAndIce.ViewModels
             AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Human));
         }
 
-        private SlideOutPanelViewModel _networkGameMenu;
-        private SlideOutPanelViewModel NetworkGameMenu
+        private ToggleButtonMenuViewModel _networkGameMenu;
+        private ToggleButtonMenuViewModel NetworkGameMenu
         {
             get
             {
-                return _networkGameMenu = _networkGameMenu ?? new SlideOutPanelViewModel()
+                return _networkGameMenu = _networkGameMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { HostNetworkGame(); }, Title = "Create Game"},
@@ -237,12 +237,12 @@ namespace FireAndIce.ViewModels
             Popup = new FindGameViewModel() { Title = "Find a game." };
         }
 
-        private SlideOutPanelViewModel _helpMenu;
-        private SlideOutPanelViewModel HelpMenu
+        private ToggleButtonMenuViewModel _helpMenu;
+        private ToggleButtonMenuViewModel HelpMenu
         {
             get
             {
-                return _helpMenu = _helpMenu ?? new SlideOutPanelViewModel()
+                return _helpMenu = _helpMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Instructions"},
@@ -256,12 +256,12 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private SlideOutPanelViewModel _highScoresMenu;
-        private SlideOutPanelViewModel HighScoresMenu
+        private ToggleButtonMenuViewModel _highScoresMenu;
+        private ToggleButtonMenuViewModel HighScoresMenu
         {
             get
             {
-                return _highScoresMenu = _highScoresMenu ?? new SlideOutPanelViewModel()
+                return _highScoresMenu = _highScoresMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Super"},
@@ -275,12 +275,12 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private SlideOutPanelViewModel _settingsMenu;
-        private SlideOutPanelViewModel SettingsMenu
+        private ToggleButtonMenuViewModel _settingsMenu;
+        private ToggleButtonMenuViewModel SettingsMenu
         {
             get
             {
-                return _settingsMenu = _settingsMenu ?? new SlideOutPanelViewModel()
+                return _settingsMenu = _settingsMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Toggle"},
@@ -295,12 +295,12 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private SlideOutPanelViewModel _creditsMenu;
-        private SlideOutPanelViewModel CreditsMenu
+        private ToggleButtonMenuViewModel _creditsMenu;
+        private ToggleButtonMenuViewModel CreditsMenu
         {
             get
             {
-                return _creditsMenu = _creditsMenu ?? new SlideOutPanelViewModel()
+                return _creditsMenu = _creditsMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => new object(), Title = "Joshua Griffith"},
@@ -318,8 +318,8 @@ namespace FireAndIce.ViewModels
 
         public MainMenuViewModel()
         {
-            Menus = new BindableCollection<SlideOutPanelViewModel>();
-            MainMenu = new SlideOutPanelViewModel() {
+            Menus = new BindableCollection<ToggleButtonMenuViewModel>();
+            MainMenu = new ToggleButtonMenuViewModel() {
                 Buttons  = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel { ClickAction = () => AddMenu(NewGameMenu), Title = "New Game" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(HelpMenu), Title = "Help" },

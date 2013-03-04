@@ -12,9 +12,9 @@ using System.Windows;
 
 namespace FireAndIce.ViewModels
 {
-    public class SlideOutPanelViewModel : Screen
+    public class ToggleButtonMenuViewModel : Screen
     {
-        public SlideOutPanelViewModel MenuParent { get; set; }
+        public ToggleButtonMenuViewModel MenuParent { get; set; }
 
         private string _title;
         public string Title
@@ -79,7 +79,7 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        public SlideOutPanelViewModel() : base()
+        public ToggleButtonMenuViewModel() : base()
         {
             ControlIsVisible = false;
         }

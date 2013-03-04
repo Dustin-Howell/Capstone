@@ -20,11 +20,11 @@ namespace FireAndIce.ViewModels
         private AIDifficulty _aiDifficulty = AIDifficulty.Hard;
 
         //private SlideOutPanelViewModel _gameMenu;
-        public SlideOutPanelViewModel GameMenu
+        public ToggleButtonMenuViewModel GameMenu
         {
             get
             {
-                return new SlideOutPanelViewModel()
+                return new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel>()
                         {
