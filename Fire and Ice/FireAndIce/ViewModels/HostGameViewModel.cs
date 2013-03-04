@@ -50,7 +50,21 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        public void HostGameClick()
+        private bool _canHostGame = true;
+        public bool CanHostGame
+        {
+            get
+            {
+                return _canHostGame;
+            }
+            set
+            {
+                _canHostGame = value;
+                NotifyOfPropertyChange(() => CanHostGame);
+            }
+        }
+
+        public void HostGame()
         {
             BackgroundWorker hostGameWorker = new BackgroundWorker();
             BackgroundWorker connectServerWorker = new BackgroundWorker();
@@ -66,6 +80,7 @@ namespace FireAndIce.ViewModels
                     AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Network, network));
                 });
 
+            CanHostGame = false;
             hostGameWorker.RunWorkerAsync();
         }
     }
