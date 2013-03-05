@@ -1,0 +1,14 @@
+﻿<f:SlideOutControl x:Class="FireAndIce.Views.InstructionsView"
+                 xmlns:f="clr-namespace:FireAndIce.Views"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                Background="{StaticResource Primary1}" Margin="50">
+        <Label Name="Title" HorizontalAlignment="Center"/>
+        <TextBlock Name="HelpText" TextWrapping="Wrap" Foreground="White" Margin="20"/>
+    </StackPanel>
+</f:SlideOutControl>

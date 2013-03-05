@@ -245,7 +245,7 @@ namespace FireAndIce.ViewModels
                 return _helpMenu = _helpMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Instructions"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new InstructionsViewModel() {Title = "Instructions"}; }, Title = "Instructions"},
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Practice"},
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Guided Tour"},
                 },

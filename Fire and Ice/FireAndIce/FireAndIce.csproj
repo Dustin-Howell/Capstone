@@ -70,6 +70,7 @@
     <Compile Include="ViewModels\FindGameViewModel.cs" />
     <Compile Include="ViewModels\GameContainerViewModel.cs" />
     <Compile Include="ViewModels\HostGameViewModel.cs" />
+    <Compile Include="ViewModels\InstructionsViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
     <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
@@ -115,6 +116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HostGameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstructionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
