@@ -74,6 +74,7 @@
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
     <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
+    <Compile Include="Views\AirspacePopup.cs" />
     <Compile Include="Views\SlideOutControl.cs" />
     <Page Include="ColorSchemes\Default.xaml">
       <SubType>Designer</SubType>
