@@ -1,7 +1,8 @@
 ﻿<UserControl x:Class="FireAndIce.Views.GameContainerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:xna="clr-namespace:XNAControl;assembly=XNAControl">
+             xmlns:xna="clr-namespace:XNAControl;assembly=XNAControl"
+             xmlns:local="clr-namespace:FireAndIce.Views">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -23,6 +24,19 @@
                 Quit
             </Button>
         </Border>
+        <local:AirspacePopup PlacementTarget="{Binding ElementName=XNAControl}"
+                             FollowPlacementTarget="True"
+                             AllowOutsideScreenPlacement="True"
+                             ParentWindow="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                             IsOpen="True"
+                             AllowsTransparency="True"
+                             Placement="Center"
+                             Width="{Binding ElementName=XNAControl, Path=ActualWidth}"
+                             Height="{Binding ElementName=XNAControl, Path=ActualHeight}">
+
+            <!--Place bits of game overlay UI in here-->
+
+        </local:AirspacePopup>
         <xna:XNAUserControl x:Name="XNAControl"
                             Grid.Row="0"
                             Grid.Column="1"/>
