@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Timers;
 using Creeper;
 using System.ComponentModel;
+using Caliburn.Micro;
 
 namespace CreeperNetwork
 {
@@ -68,9 +69,12 @@ namespace CreeperNetwork
          
         //Class variables
         private static int instanceCount = 0;
+        private IEventAggregator _eventAggregator;
 
-        public Network()
+        public Network(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
             if (++instanceCount > 1) throw new InvalidOperationException();
 
             _keepAliveWorker = new BackgroundWorker();
@@ -255,10 +259,11 @@ namespace CreeperNetwork
 
         //Events
 
-        public event EventHandler<MoveEventArgs> MoveMade;
-        public event EventHandler<ConnectionEventArgs> ConnectionIssue;
-        public event EventHandler<ChatEventArgs> ChatMade;
-        public event EventHandler<EndGameEventArgs> NetworkGameOver;
+        //Convert to EventAggregator events
+        //public event EventHandler<MoveResponseMessage> MoveMade;
+        //public event EventHandler<ConnectionEventArgs> ConnectionIssue;
+        //public event EventHandler<ChatEventArgs> ChatMade;
+        //public event EventHandler<EndGameEventArgs> NetworkGameOver;
 
         //Game Functions
 
@@ -298,10 +303,10 @@ namespace CreeperNetwork
                         acknowledged = true;
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
 
-                        if (ChatMade != null)
-                        {
-                            ChatMade(this, new ChatEventArgs(currentMessage));
-                        }
+                        //if (ChatMade != null)
+                        //{
+                        //    ChatMade(this, new ChatEventArgs(currentMessage));
+                        //}
                     }
                     else if (packet[1] == CMD_MAKE_MOVE)
                     {
@@ -314,20 +319,20 @@ namespace CreeperNetwork
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
                             //newMove = true;
 
-                            if (MoveMade != null)
-                            {
-                                MoveMade(this, new MoveEventArgs(currentMove));
-                            }
+                            //if (MoveMade != null)
+                            //{
+                            //    MoveMade(this, new MoveResponseMessage(currentMove));
+                            //}
                         }
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
-                            if (NetworkGameOver != null)
-                            {
-                                if(packet[6] == MOVETYPE_FORFEIT)
-                                    NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
-                                else if(packet[6] == MOVETYPE_ILLEGAL)
-                                    NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
-                            }
+                            //if (NetworkGameOver != null)
+                            //{
+                            //    if(packet[6] == MOVETYPE_FORFEIT)
+                            //        NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
+                            //    else if(packet[6] == MOVETYPE_ILLEGAL)
+                            //        NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
+                            //}
 
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                         }
@@ -434,19 +439,19 @@ namespace CreeperNetwork
             {
                 cableUnplugged = false;
 
-                if (ConnectionIssue != null)
-                {
-                    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_RECONNECTED));
-                }
+                //if (ConnectionIssue != null)
+                //{
+                //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_RECONNECTED));
+                //}
 
                 Console.WriteLine("Cable reconnected. Connection OK.");
             }
             else if (!isNetworkConnected())
             {
-                if (ConnectionIssue != null)
-                {
-                    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED));
-                }
+                //if (ConnectionIssue != null)
+                //{
+                //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED));
+                //}
 
                 cableUnplugged = true;
 
@@ -476,10 +481,10 @@ namespace CreeperNetwork
                 {
                     Console.WriteLine("Lost connection. Attemping reconnect.");
 
-                    if (ConnectionIssue != null)
-                    {
-                        ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
-                    }
+                    //if (ConnectionIssue != null)
+                    //{
+                    //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
+                    //}
 
                     connectionIssue = true;
                 }
@@ -503,10 +508,10 @@ namespace CreeperNetwork
 
                     Console.WriteLine("Connection Reestablished.");
 
-                    if (ConnectionIssue != null)
-                    {
-                        ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.RECONNECTED));
-                    }
+                    //if (ConnectionIssue != null)
+                    //{
+                    //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.RECONNECTED));
+                    //}
                 }
             }
         }

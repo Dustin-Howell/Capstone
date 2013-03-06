@@ -42,6 +42,7 @@
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity">
@@ -180,6 +181,10 @@
     <ProjectReference Include="..\CreeperCore\CreeperCore.csproj">
       <Project>{1F579A95-D709-4BE7-B5DE-438A59016AC4}</Project>
       <Name>CreeperCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CreeperMessages\CreeperMessages.csproj">
+      <Project>{DE287076-3CCC-49D1-946D-76F45EC2FC61}</Project>
+      <Name>CreeperMessages</Name>
     </ProjectReference>
     <ProjectReference Include="..\CreeperNetwork\CreeperNetwork.csproj">
       <Project>{0FCE3293-C97E-4A99-95C7-2D592B7F949D}</Project>

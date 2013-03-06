@@ -6,26 +6,53 @@ using CreeperCore;
 using FireAndIce.ViewModels;
 using System.Windows;
 using CreeperNetwork;
+using Caliburn.Micro;
+using XNAControlGame;
+using Creeper;
 
 namespace FireAndIce
 {
     public static class AppModel
     {
+
         static AppModel()
         {
         }
 
-        public static CreeperGameCore Core { get; private set; }
+        private static GameTracker _gameTracker;
+        public static GameTracker GameTracker { get { return _gameTracker = _gameTracker ?? new GameTracker(EventAggregator); } }
+
+        private static EventAggregator _eventAggregator;
+        public static EventAggregator EventAggregator { get { return _eventAggregator = _eventAggregator ?? new EventAggregator(); } }
+
+        private static CreeperGameCore _core;
+        public static CreeperGameCore Core
+        {
+            get { return _core = _core ?? new CreeperGameCore(EventAggregator); }
+        }
         public static AppViewModel AppViewModel { get; set; }
 
         private static Network _network;
-        public static Network Network { get { return _network = _network ?? new Network(); } }
+        public static Network Network { get { return _network = _network ?? new Network(EventAggregator); } }
 
-        public static ResourceDictionary Resources { get { return new ResourceDictionary() { Source = new Uri(@"..\Resources.xaml", UriKind.Relative) }; } }
-
-        internal static void ResetCreeperCore()
+        private static Game1 _game;
+        public static Game1 Game
         {
-            Core = new CreeperGameCore();
+            get
+            {
+                //This condition may grow
+                if (AppViewModel != null)
+                {
+                    return _game = _game ?? new Game1(new IntPtr(0), 0, 0, EventAggregator);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
+
+        private static ResourceDictionary _resources;
+        public static ResourceDictionary Resources { get { return _resources = _resources ?? new ResourceDictionary() { Source = new Uri(@"..\Resources.xaml", UriKind.Relative) }; } }
     }
 }

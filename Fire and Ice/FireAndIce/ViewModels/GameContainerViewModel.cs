@@ -9,10 +9,11 @@ using FireAndIce.Views;
 using CreeperNetwork;
 using System.Windows.Media;
 using Creeper;
+using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen
+    class GameContainerViewModel : Screen, IHandle<GameOverMessage>
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
@@ -62,11 +63,7 @@ namespace FireAndIce.ViewModels
 
         private void Init(PlayerType player1Type, PlayerType player2Type)
         {
-            AppModel.ResetCreeperCore();
-            AppModel.Core.GameOver += new EventHandler<GameOverEventArgs>(
-                (s,e) => 
-                    GameOverText = String.Format("{0} wins!", e.Winner.ToString())
-                    );
+            AppModel.EventAggregator.Subscribe(this);
 
             _player1Type = player1Type;
             _player2Type = player2Type;
@@ -93,6 +90,11 @@ namespace FireAndIce.ViewModels
         public void ReturnToMainMenu()
         {
             AppModel.AppViewModel.ActivateItem(new MainMenuViewModel());
+        }
+
+        public void Handle(GameOverMessage message)
+        {
+            GameOverText = String.Format("{0} wins!", message.Winner.ToString());
         }
     }
 }

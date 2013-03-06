@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Creeper;
 
-namespace Creeper
+namespace CreeperMessages
 {
-    public class MoveEventArgs : EventArgs
+    public class MoveResponseMessage
     {
         public Move Move { get; set; }
 
-        public MoveEventArgs(Move move)
+        public MoveResponseMessage(Move move)
         {
             Move = move;
         }

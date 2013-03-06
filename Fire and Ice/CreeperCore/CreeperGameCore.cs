@@ -8,10 +8,12 @@ using XNAControlGame;
 using System.ComponentModel;
 using System.IO;
 using CreeperAI;
+using Caliburn.Micro;
+using CreeperMessages;
 
 namespace CreeperCore
 {
-    public class CreeperGameCore
+    public class CreeperGameCore : IHandle<MoveResponseMessage>
     {
         public Game1 XNAGame
         {
@@ -21,37 +23,30 @@ namespace CreeperCore
             }
             set
             {
-                if (_xnaGame != null)
-                {
-                    _xnaGame.UserMadeMove -= new EventHandler<MoveEventArgs>(_xnaGame_UserMadeMove);
-                }
-
                 _xnaGame = value;
-
-                if (_xnaGame != null)
-                {
-                    _xnaGame.UserMadeMove += new EventHandler<MoveEventArgs>(_xnaGame_UserMadeMove);
-                }
             }
         }
 
         private Game1 _xnaGame;
         private CreeperAI.CreeperAI _AI;
         private Network _network;
+        private IEventAggregator _eventAggregator;
         private BackgroundWorker _getAIMoveWorker;
         private BackgroundWorker _networkPlayGame;
         private CreeperBoard _board;
         private bool _IsNetworkGame { get { return GameTracker.Player1.PlayerType == PlayerType.Network || GameTracker.Player2.PlayerType == PlayerType.Network; } }
-        public event EventHandler<GameOverEventArgs> GameOver;
+        //public event EventHandler<GameOverMessage> GameOver;
 
-        public CreeperGameCore()
+        public CreeperGameCore(IEventAggregator eventAggregator)
         {
             InitializeBackgroundWorkers();
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Publish(new GameOverMessage());
 
             GameTracker.Board = new CreeperBoard();
         }
 
-        private void _xnaGame_UserMadeMove(object sender, MoveEventArgs e)
+        private void _xnaGame_UserMadeMove(object sender, MoveResponseMessage e)
         {
             if (e.Move.PlayerColor == GameTracker.CurrentPlayer.Color
                 && GameTracker.CurrentPlayer.PlayerType == PlayerType.Human)
@@ -60,7 +55,7 @@ namespace CreeperCore
             }
         }
 
-        void _network_MoveMade(object sender, MoveEventArgs e)
+        void _network_MoveMade(object sender, MoveResponseMessage e)
         {
             e.Move.PlayerColor = GameTracker.CurrentPlayer.Color;
             MakeMove(e.Move);
@@ -69,7 +64,6 @@ namespace CreeperCore
         private void MakeMove(Move move)
         {
             GameTracker.Board.Move(move);
-            XNAGame.OnMoveMade(move);
 
             if (GameTracker.OpponentPlayer.PlayerType == PlayerType.Network)
             {
@@ -86,8 +80,9 @@ namespace CreeperCore
             {
                 if (_IsNetworkGame)
                     _network.disconnect();
-
-                GameOver(this, new GameOverEventArgs() { Winner = GameTracker.CurrentPlayer.Color });
+                
+                //eventAggregator
+                _eventAggregator.Publish(new GameOverMessage() { Winner = GameTracker.CurrentPlayer.Color, });                
             }
         }
 
@@ -110,7 +105,7 @@ namespace CreeperCore
 
         public void InitializeGameGUI(IntPtr handle, int width, int height)
         {
-            XNAGame = Game1.GetInstance(handle, width, height);
+            //XNAGame = AppModel
         }
 
         public void StartLocalGame(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)
@@ -145,7 +140,7 @@ namespace CreeperCore
             }
 
             _network = network;
-            _network.MoveMade += new EventHandler<MoveEventArgs>(_network_MoveMade);
+            //_network.MoveMade += new EventHandler<MoveResponseMessage>(_network_MoveMade);
 
             _networkPlayGame = new BackgroundWorker();
             _networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => _network.playGame());
@@ -172,6 +167,11 @@ namespace CreeperCore
                     //Wait for move from Network
                     break;
             }
+        }
+
+        public void Handle(MoveResponseMessage message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

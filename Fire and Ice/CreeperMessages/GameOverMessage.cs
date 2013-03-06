@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Creeper;
 
-namespace CreeperCore
+namespace CreeperMessages
 {
-    public class GameOverEventArgs : EventArgs
+    public class GameOverMessage
     {
         public CreeperColor Winner { get; set; }
     }

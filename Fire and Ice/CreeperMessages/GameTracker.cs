@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Caliburn.Micro;
+using CreeperMessages;
 
 namespace Creeper
 {
-    public static class GameTracker
+    public class GameTracker : IHandle<MoveResponseMessage>
     {
+        private EventAggregator _eventAggregator;
+
+        public GameTracker(EventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
+        }
         public static Player Player1 { get; set; }
         public static Player Player2 { get; set; }
         public static Player CurrentPlayer { get; set; }
@@ -18,5 +27,10 @@ namespace Creeper
             }
         }
         public static CreeperBoard Board { get; set; }
+
+        public void Handle(MoveResponseMessage message)
+        {
+            
+        }
     }
 }

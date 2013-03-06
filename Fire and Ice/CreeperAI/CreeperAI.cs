@@ -8,10 +8,12 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Concurrent;
+using Caliburn.Micro;
+using CreeperMessages;
 
 namespace CreeperAI
 {
-    public class CreeperAI
+    public class CreeperAI : IHandle<MoveRequestMessage>
     {
         //debug variables\\
         private bool _reportTime = false;
@@ -354,6 +356,11 @@ namespace CreeperAI
             }
 
             return score;
+        }
+
+        public void Handle(MoveRequestMessage message)
+        {
+            
         }
     }
 }
