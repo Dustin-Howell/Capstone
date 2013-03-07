@@ -15,7 +15,7 @@ namespace CreeperCore
 {
     public class CreeperGameCore : IHandle<MoveResponseMessage>
     {
-        public Game1 XNAGame
+        public XNAControl.XNAControlGame XNAGame
         {
             get
             {
@@ -27,7 +27,7 @@ namespace CreeperCore
             }
         }
 
-        private Game1 _xnaGame;
+        private XNAControl.XNAControlGame _xnaGame;
         private CreeperAI.CreeperAI _AI;
         private Network _network;
         private IEventAggregator _eventAggregator;
@@ -38,6 +38,7 @@ namespace CreeperCore
         public CreeperGameCore(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
 
             GameTracker.Board = new CreeperBoard();
         }
@@ -45,7 +46,7 @@ namespace CreeperCore
         public void InitializeGameGUI(IntPtr handle, int width, int height)
         {
             //TODO: Figure this out
-            XNAGame = new Game1(handle, width, height, _eventAggregator);
+            XNAGame = new YeOldeGame1(handle, width, height, _eventAggregator);
         }
 
         public void StartLocalGame(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)
@@ -68,10 +69,7 @@ namespace CreeperCore
                 };
             }
 
-            GameTracker.Player1 = new Player(player1Type, CreeperColor.Fire);
-            GameTracker.Player2 = new Player(player2Type, CreeperColor.Ice);
-            GameTracker.CurrentPlayer = GameTracker.Player1;
-            GetNextMove();
+            StartGame(player1Type, player2Type);
         }
 
         public void StartNetworkGame(PlayerType player1Type, PlayerType player2Type, Network network)
@@ -86,12 +84,17 @@ namespace CreeperCore
             _networkPlayGame = new BackgroundWorker();
             _networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => _network.playGame());
 
+            StartGame(player1Type, player2Type);
+
+            _networkPlayGame.RunWorkerAsync();
+        }
+
+        private void StartGame(PlayerType player1Type, PlayerType player2Type)
+        {
             GameTracker.Player1 = new Player(player1Type, CreeperColor.Fire);
             GameTracker.Player2 = new Player(player2Type, CreeperColor.Ice);
             GameTracker.CurrentPlayer = GameTracker.Player1;
             GetNextMove();
-
-            _networkPlayGame.RunWorkerAsync();
         }
 
         private void GetNextMove()
