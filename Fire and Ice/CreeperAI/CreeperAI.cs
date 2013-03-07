@@ -41,19 +41,9 @@ namespace CreeperAI
         {
             _MiniMaxDepth = (Difficulty == AIDifficulty.Hard) ? 5 : 3;
             _eventAggregator = eventAggregator;
+            _getMoveWorker = new BackgroundWorker();
             _getMoveWorker.DoWork += new DoWorkEventHandler(_getMoveWorker_DoWork);
             _getMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getMoveWorker_RunWorkerCompleted);
-        }
-
-        void _getMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            MoveResponseMessage response = new MoveResponseMessage(((Move)e.Result), PlayerType.AI);
-            _eventAggregator.Publish(response);
-        }
-
-        void _getMoveWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            e.Result = GetMove(GameTracker.Board, (CreeperColor)e.Argument);
         }
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
@@ -375,6 +365,17 @@ namespace CreeperAI
         {
             if (message.Responder == PlayerType.AI)
                 _getMoveWorker.RunWorkerAsync(message.Color);
+        }
+
+        void _getMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MoveResponseMessage response = new MoveResponseMessage(((Move)e.Result), PlayerType.AI);
+            _eventAggregator.Publish(response);
+        }
+
+        void _getMoveWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            e.Result = GetMove(GameTracker.Board, (CreeperColor)e.Argument);
         }
     }
 }
