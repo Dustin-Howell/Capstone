@@ -6,9 +6,6 @@ using System.Linq.Expressions;
 
 namespace Creeper
 {
-    /// <summary>
-    /// TODO: Get this out of here
-    /// </summary>
     public enum AIDifficulty { Easy, Hard }
 
     public static class CreeperUtility

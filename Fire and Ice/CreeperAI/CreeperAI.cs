@@ -22,7 +22,6 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        //TODO: Change this after the UIP
         public int _MiniMaxDepth = 5;
 
         public double TerritorialWeight { get; set; }

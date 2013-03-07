@@ -14,8 +14,7 @@
                 <ResourceDictionary Source="ColorSchemes/Default.xaml" />
                 <ResourceDictionary Source="Effects/Effects.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!--TODO: Move this somewhere else.-->
+            
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
         </ResourceDictionary>
