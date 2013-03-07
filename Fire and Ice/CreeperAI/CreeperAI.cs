@@ -47,7 +47,7 @@ namespace CreeperAI
 
         void _getMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MoveResponseMessage response = new MoveResponseMessage(((Move)e.Result));
+            MoveResponseMessage response = new MoveResponseMessage(((Move)e.Result), PlayerType.AI);
             _eventAggregator.Publish(response);
         }
 

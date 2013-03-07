@@ -12,7 +12,7 @@ using CreeperMessages;
 
 namespace CreeperNetwork
 {
-    public class Network
+    public class Network : IHandle<GameOverMessage>, IHandle<MoveRequestMessage>, IHandle<MoveResponseMessage>
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
@@ -319,7 +319,7 @@ namespace CreeperNetwork
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
                             //newMove = true;
                             
-                            _eventAggregator.Publish(new MoveResponseMessage(currentMove));
+                            _eventAggregator.Publish(new MoveResponseMessage(currentMove, PlayerType.Network));
                         }
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
@@ -771,6 +771,24 @@ namespace CreeperNetwork
             // Console.WriteLine("ACK.");
 
             return packet;
+        }
+
+        public void Handle(GameOverMessage message)
+        {
+            disconnect();
+        }
+
+        public void Handle(MoveRequestMessage message)
+        {
+            //wait for move from opponent
+        }
+
+        public void Handle(MoveResponseMessage message)
+        {
+            if (message.PlayerType != PlayerType.Network)
+            {
+                move(message.Move);
+            }
         }
     }
 
