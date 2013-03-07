@@ -10,6 +10,7 @@ using System.Threading;
 using System.Collections.Concurrent;
 using Caliburn.Micro;
 using CreeperMessages;
+using System.ComponentModel;
 
 namespace CreeperAI
 {
@@ -33,9 +34,26 @@ namespace CreeperAI
 
         private static Random _Random = new Random();
 
-        public CreeperAI()
+        private IEventAggregator _eventAggregator;
+        private BackgroundWorker _getMoveWorker;
+
+        public CreeperAI(IEventAggregator eventAggregator)
         {
             _MiniMaxDepth = (Difficulty == AIDifficulty.Hard) ? 5 : 3;
+            _eventAggregator = eventAggregator;
+            _getMoveWorker.DoWork += new DoWorkEventHandler(_getMoveWorker_DoWork);
+            _getMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getMoveWorker_RunWorkerCompleted);
+        }
+
+        void _getMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MoveResponseMessage response = new MoveResponseMessage(((Move)e.Result));
+            _eventAggregator.Publish(response);
+        }
+
+        void _getMoveWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            e.Result = GetMove(GameTracker.Board, (CreeperColor)e.Argument);
         }
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
@@ -355,7 +373,8 @@ namespace CreeperAI
 
         public void Handle(MoveRequestMessage message)
         {
-            
+            if (message.Responder == PlayerType.AI)
+                _getMoveWorker.RunWorkerAsync(message.Color);
         }
     }
 }

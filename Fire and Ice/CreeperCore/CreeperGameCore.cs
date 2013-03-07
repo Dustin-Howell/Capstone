@@ -33,78 +33,20 @@ namespace CreeperCore
         private IEventAggregator _eventAggregator;
         private BackgroundWorker _getAIMoveWorker;
         private BackgroundWorker _networkPlayGame;
-        private CreeperBoard _board;
         private bool _IsNetworkGame { get { return GameTracker.Player1.PlayerType == PlayerType.Network || GameTracker.Player2.PlayerType == PlayerType.Network; } }
-        //public event EventHandler<GameOverMessage> GameOver;
+        
 
         public CreeperGameCore(IEventAggregator eventAggregator)
         {
-            InitializeBackgroundWorkers();
             _eventAggregator = eventAggregator;
             _eventAggregator.Publish(new GameOverMessage());
 
             GameTracker.Board = new CreeperBoard();
         }
 
-        private void _xnaGame_UserMadeMove(object sender, MoveResponseMessage e)
-        {
-            if (e.Move.PlayerColor == GameTracker.CurrentPlayer.Color
-                && GameTracker.CurrentPlayer.PlayerType == PlayerType.Human)
-            {
-                MakeMove(e.Move);
-            }
-        }
-
-        void _network_MoveMade(object sender, MoveResponseMessage e)
-        {
-            e.Move.PlayerColor = GameTracker.CurrentPlayer.Color;
-            MakeMove(e.Move);
-        }
-
-        private void MakeMove(Move move)
-        {
-            GameTracker.Board.Move(move);
-
-            if (GameTracker.OpponentPlayer.PlayerType == PlayerType.Network)
-            {
-                _network.move(move);
-            }
-
-            if (!GameTracker.Board.IsFinished(move.PlayerColor))
-            {
-                GameTracker.CurrentPlayer = GameTracker.OpponentPlayer;
-
-                GetNextMove();
-            }
-            else
-            {
-                if (_IsNetworkGame)
-                    _network.disconnect();
-                
-                //eventAggregator
-                _eventAggregator.Publish(new GameOverMessage() { Winner = GameTracker.CurrentPlayer.Color, });                
-            }
-        }
-
-        private void InitializeBackgroundWorkers()
-        {
-            _getAIMoveWorker = new BackgroundWorker();
-            _getAIMoveWorker.DoWork += new DoWorkEventHandler(_getAIMoveWorker_DoWork);
-            _getAIMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getAIMoveWorker_RunWorkerCompleted);
-        }
-
-        void _getAIMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            MakeMove(e.Result as Move);
-        }
-
-        void _getAIMoveWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            e.Result = _AI.GetMove(GameTracker.Board, GameTracker.CurrentPlayer.Color);
-        }
-
         public void InitializeGameGUI(IntPtr handle, int width, int height)
         {
+            //TODO: Figure this out
             //XNAGame = AppModel
         }
 
@@ -116,7 +58,8 @@ namespace CreeperCore
             }
             if (player1Type == PlayerType.AI || player2Type == PlayerType.AI)
             {
-                _AI = new CreeperAI.CreeperAI()
+                //TODO: Think this through more thoroughly later
+                _AI = new CreeperAI.CreeperAI(_eventAggregator)
                 {
                     TerritorialWeight = 15d,
                     MaterialWeight = 84d,
@@ -141,7 +84,6 @@ namespace CreeperCore
             }
 
             _network = network;
-            //_network.MoveMade += new EventHandler<MoveResponseMessage>(_network_MoveMade);
 
             _networkPlayGame = new BackgroundWorker();
             _networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => _network.playGame());
@@ -156,23 +98,28 @@ namespace CreeperCore
 
         private void GetNextMove()
         {
-            switch (GameTracker.CurrentPlayer.PlayerType)
-            {
-                case PlayerType.AI:
-                    _getAIMoveWorker.RunWorkerAsync();
-                    break;
-                case PlayerType.Human:
-                    //Wait for move from XNA
-                    break;
-                case PlayerType.Network:
-                    //Wait for move from Network
-                    break;
-            }
+            _eventAggregator.Publish(
+                new MoveRequestMessage() 
+            { 
+                Responder = GameTracker.CurrentPlayer.PlayerType, 
+                Color = GameTracker.CurrentPlayer.Color, 
+            });
         }
 
         public void Handle(MoveResponseMessage message)
         {
-            throw new NotImplementedException();
+            GameTracker.Board.Move(message.Move);
+
+            if (!GameTracker.Board.IsFinished(message.Move.PlayerColor))
+            {
+                GameTracker.CurrentPlayer = GameTracker.OpponentPlayer;
+
+                GetNextMove();
+            }
+            else
+            {
+                _eventAggregator.Publish(new GameOverMessage() { Winner = GameTracker.CurrentPlayer.Color, });
+            }
         }
     }
 }
