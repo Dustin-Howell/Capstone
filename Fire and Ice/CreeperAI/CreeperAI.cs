@@ -77,6 +77,7 @@ namespace CreeperAI
             return bestMove;
         }
 
+        #region AlphaBeta
         Move GetAlphaBetaNegaMaxMove(AICreeperBoard board)
         {
             Move bestMove = new Move();
@@ -230,7 +231,9 @@ namespace CreeperAI
                 return beta;
             }
         }
+        #endregion
 
+        #region BoardScoring
         private double ScoreBoard(AICreeperBoard board, CreeperColor turnColor, int depth)
         {
             double score = 0.0;
@@ -360,7 +363,9 @@ namespace CreeperAI
 
             return score;
         }
+        #endregion
 
+        #region Event Stuff
         public void Handle(MoveRequestMessage message)
         {
             if (message.Responder == PlayerType.AI)
@@ -377,5 +382,6 @@ namespace CreeperAI
         {
             e.Result = GetMove(GameTracker.Board, (CreeperColor)e.Argument);
         }
+        #endregion
     }
 }
