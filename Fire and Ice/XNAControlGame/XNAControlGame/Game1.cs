@@ -24,6 +24,8 @@ namespace XNAControlGame
     public class Game1 : XNAControl.XNAControlGame, IDisposable, IHandle<MoveRequestMessage>, IHandle<MoveResponseMessage>
     {
         private IEventAggregator _eventAggregator;
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _spriteFont;
 
         private bool _humanMovePending = false;
 
@@ -36,10 +38,12 @@ namespace XNAControlGame
         protected override void Initialize()
         {
             base.Initialize();
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         protected override void LoadContent()
         {
+            _spriteFont = Content.Load<SpriteFont>("defaultFont");
             base.LoadContent();
         }
 
@@ -50,6 +54,9 @@ namespace XNAControlGame
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_spriteFont, "Hello", new Vector2(100, 100), Color.White);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
 

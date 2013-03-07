@@ -38,7 +38,6 @@ namespace CreeperCore
         public CreeperGameCore(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
-            _eventAggregator.Publish(new GameOverMessage());
 
             GameTracker.Board = new CreeperBoard();
         }
@@ -46,7 +45,7 @@ namespace CreeperCore
         public void InitializeGameGUI(IntPtr handle, int width, int height)
         {
             //TODO: Figure this out
-            //XNAGame = AppModel
+            XNAGame = new Game1(handle, width, height, _eventAggregator);
         }
 
         public void StartLocalGame(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)
