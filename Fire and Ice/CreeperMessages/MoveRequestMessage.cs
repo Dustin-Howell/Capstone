@@ -9,5 +9,6 @@ namespace CreeperMessages
     public class MoveRequestMessage
     {
         public PlayerType Responder { get; set; }
+        public CreeperColor Color { get; set; }
     }
 }
