@@ -8,6 +8,7 @@ using System.Timers;
 using Creeper;
 using System.ComponentModel;
 using Caliburn.Micro;
+using CreeperMessages;
 
 namespace CreeperNetwork
 {
@@ -303,10 +304,9 @@ namespace CreeperNetwork
                         acknowledged = true;
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
 
-                        //if (ChatMade != null)
-                        //{
-                        //    ChatMade(this, new ChatEventArgs(currentMessage));
-                        //}
+                        _eventAggregator.Publish(new ChatMessage(currentMessage));
+                        
+
                     }
                     else if (packet[1] == CMD_MAKE_MOVE)
                     {
@@ -318,21 +318,17 @@ namespace CreeperNetwork
                         {
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
                             //newMove = true;
-
-                            //if (MoveMade != null)
-                            //{
-                            //    MoveMade(this, new MoveResponseMessage(currentMove));
-                            //}
+                            
+                            _eventAggregator.Publish(new MoveResponseMessage(currentMove));
                         }
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
-                            //if (NetworkGameOver != null)
-                            //{
-                            //    if(packet[6] == MOVETYPE_FORFEIT)
-                            //        NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
-                            //    else if(packet[6] == MOVETYPE_ILLEGAL)
-                            //        NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
-                            //}
+                            if (packet[6] == MOVETYPE_FORFEIT)
+                                _eventAggregator.Publish(new NetworkGameOverMessage(END_GAME_TYPE.FORFEIT));
+                                //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
+                            else if (packet[6] == MOVETYPE_ILLEGAL)
+                                _eventAggregator.Publish(new NetworkGameOverMessage(END_GAME_TYPE.ILLEGAL_MOVE));
+                                //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
 
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                         }
@@ -443,6 +439,7 @@ namespace CreeperNetwork
                 //{
                 //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_RECONNECTED));
                 //}
+                _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.CABLE_RECONNECTED));
 
                 Console.WriteLine("Cable reconnected. Connection OK.");
             }
@@ -452,6 +449,7 @@ namespace CreeperNetwork
                 //{
                 //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED));
                 //}
+                _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED));
 
                 cableUnplugged = true;
 
@@ -485,6 +483,7 @@ namespace CreeperNetwork
                     //{
                     //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
                     //}
+                    _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
 
                     connectionIssue = true;
                 }
@@ -512,6 +511,7 @@ namespace CreeperNetwork
                     //{
                     //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.RECONNECTED));
                     //}
+                    _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.RECONNECTED));
                 }
             }
         }

@@ -52,10 +52,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatMessage.cs" />
+    <Compile Include="ConnectionStatusMessage.cs" />
     <Compile Include="GameOverMessage.cs" />
     <Compile Include="GameTracker.cs" />
     <Compile Include="MoveRequestMessage.cs" />
     <Compile Include="MoveResponseMessage.cs" />
+    <Compile Include="NetworkGameOverMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CreeperNetwork
+namespace CreeperMessages
 {
     public enum CONNECTION_ERROR_TYPE
     {
@@ -13,13 +13,13 @@ namespace CreeperNetwork
         CABLE_RECONNECTED
     }
 
-    public class ConnectionEventArgs : EventArgs
+    public class ConnectionStatusMessage
     {
-        public CONNECTION_ERROR_TYPE ERROR_TYPE { get; set; }
+        public CONNECTION_ERROR_TYPE ErrorType { get; private set; }
 
-        public ConnectionEventArgs(CONNECTION_ERROR_TYPE errorTypeIn)
+        public ConnectionStatusMessage(CONNECTION_ERROR_TYPE errorType)
         {
-            ERROR_TYPE = errorTypeIn;
+            ErrorType = errorType;
         }
     }
 }
