@@ -25,22 +25,18 @@ namespace CreeperAI
         //TODO: Change this after the UIP
         public int _MiniMaxDepth = 5;
 
-        private double _territorialWeight;
-        private double _materialWeight;
-        private double _positionalWeight;
-        private double _pathToVictoryWeight;
-        private double _victoryWeight;
+        public double TerritorialWeight { get; set; }
+        public double MaterialWeight { get; set; }
+        public double PositionalWeight { get; set; }
+        public double PathHueristicWeight { get; set; }
+        public double VictoryWeight { get; set; }
+        public AIDifficulty Difficulty { get; set; }
 
         private static Random _Random = new Random();
 
-        public CreeperAI(double territoryWeight, double materialWeight, double positionalWeight, double victoryPathWeight, double victoryWeight, int depth = 5)
+        public CreeperAI()
         {
-            _territorialWeight = territoryWeight;
-            _materialWeight = materialWeight;
-            _positionalWeight = positionalWeight;
-            _pathToVictoryWeight = victoryPathWeight;
-            _victoryWeight = victoryWeight;
-            _MiniMaxDepth = depth;
+            _MiniMaxDepth = (Difficulty == AIDifficulty.Hard) ? 5 : 3;
         }
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
@@ -235,13 +231,13 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = _victoryWeight * depth * ((_MiniMaxDepth % 2 == 0)? 1 : -1);
+                    score = VictoryWeight * depth * ((_MiniMaxDepth % 2 == 0)? 1 : -1);
                     break;
 
                 default:
-                    score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
-                    score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
-                    score += (ScoreBoardPositional(board, turnColor) * _positionalWeight);
+                    score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
+                    score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
+                    score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
                     score += ScoreBoardVictory(board, turnColor);
                     break;
             }
@@ -314,21 +310,21 @@ namespace CreeperAI
                 if (rowHead[flippedTile.Row] == null)
                 {
                     //so we add to the score
-                    score += _pathToVictoryWeight;
+                    score += PathHueristicWeight;
 
                     //if the tile above us is our color
                     if (flippedTile.Row - 1 >= 0
                         && board.TileBoard[flippedTile.Row - 1, flippedTile.Column].Color == turn)
                     {
                         //bonus points for an adjacency when moving to a null row
-                        score += _pathToVictoryWeight;
+                        score += PathHueristicWeight;
                     }
                     //and if the row below us is our color
                     if (flippedTile.Row + 1 <= CreeperBoard.TileRows - 1
                         && board.TileBoard[flippedTile.Row + 1, flippedTile.Column].Color == turn)
                     {
                         //more bonus points
-                        score += _pathToVictoryWeight;
+                        score += PathHueristicWeight;
                     }
                 }
 
@@ -336,21 +332,21 @@ namespace CreeperAI
                 if (columnHead[flippedTile.Column] == null)
                 {
                     //that's good--we want to be filling in columns with no pieces
-                    score += _pathToVictoryWeight;
+                    score += PathHueristicWeight;
 
                     //and if the column to our left has someone there
                     if (flippedTile.Column - 1 >= 0
                         && board.TileBoard[flippedTile.Row, flippedTile.Column - 1].Color == turn)
                     {
                         //great, another connection
-                        score += _pathToVictoryWeight;
+                        score += PathHueristicWeight;
                     }
                     //and if the column to our right does as well
                     if (flippedTile.Column + 1 <= CreeperBoard.TileRows - 1
                         && board.TileBoard[flippedTile.Row, flippedTile.Column + 1].Color == turn)
                     {
                         //even better
-                        score += _pathToVictoryWeight;
+                        score += PathHueristicWeight;
                     }
                 }
             }

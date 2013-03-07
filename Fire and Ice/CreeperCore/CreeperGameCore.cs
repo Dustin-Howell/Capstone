@@ -116,14 +116,15 @@ namespace CreeperCore
             }
             if (player1Type == PlayerType.AI || player2Type == PlayerType.AI)
             {
-                if (difficulty == AIDifficulty.Easy)
+                _AI = new CreeperAI.CreeperAI()
                 {
-                    _AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 2);
-                }
-                else
-                {
-                    _AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 5);
-                }
+                    TerritorialWeight = 15d,
+                    MaterialWeight = 84d,
+                    PositionalWeight = 2d,
+                    PathHueristicWeight = 43d,
+                    VictoryWeight = 100000,
+                    Difficulty = difficulty,
+                };
             }
 
             GameTracker.Player1 = new Player(player1Type, CreeperColor.Fire);
