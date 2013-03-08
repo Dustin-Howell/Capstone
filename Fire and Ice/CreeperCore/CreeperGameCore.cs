@@ -34,7 +34,6 @@ namespace CreeperCore
         private BackgroundWorker _networkPlayGame;
         private bool _IsNetworkGame { get { return GameTracker.Player1.PlayerType == PlayerType.Network || GameTracker.Player2.PlayerType == PlayerType.Network; } }
         
-
         public CreeperGameCore(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
@@ -46,7 +45,8 @@ namespace CreeperCore
         public void InitializeGameGUI(IntPtr handle, int width, int height)
         {
             //TODO: Figure this out
-            XNAGame = new YeOldeGame1(handle, width, height, _eventAggregator);
+            //XNAGame = new YeOldeGame1(handle, width, height, _eventAggregator);
+            XNAGame = new Game1(handle, width, height, _eventAggregator);
         }
 
         public void StartLocalGame(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)

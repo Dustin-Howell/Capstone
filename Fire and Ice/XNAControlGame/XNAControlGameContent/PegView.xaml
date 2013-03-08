@@ -1,0 +1,17 @@
+﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:nine="clr-namespace:Nine.Graphics.ParticleEffects;assembly=Nine.Graphics">
+    <Model Name="Dude" Source="{ContentReference ./Model/sphere}" Transform.Scale="2.5, 2.5, 2.5" Transform.Position="50,50,0">
+        <ModelAttachment>
+            <ParticleEffect Name="Fire" Texture="{ContentReference ./Textures/fire}">
+                <ParticleEffect.Emitter>
+                    <PointEmitter Emission="50" Duration="0.5 ~ 1" Speed="0" Size="50 ~ 100" />
+                </ParticleEffect.Emitter>
+
+                <SizeController EndSize ="4 ~ 5" />
+                <SpeedController EndSpeed ="0" />
+                <FadeController />
+            </ParticleEffect>
+        </ModelAttachment>
+    </Model>
+</Group>

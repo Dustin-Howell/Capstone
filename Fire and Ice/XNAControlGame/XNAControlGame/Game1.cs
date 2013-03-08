@@ -26,6 +26,7 @@ namespace XNAControlGame
         private IEventAggregator _eventAggregator;
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
+        private Scene _scene;
 
         private bool _humanMovePending = false;
 
@@ -44,6 +45,8 @@ namespace XNAControlGame
         protected override void LoadContent()
         {
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
+            _scene = Content.Load<Scene>("Scene1");
+            _scene.Add(Content.Load<Group>("PegView"));
             base.LoadContent();
         }
 
@@ -57,6 +60,7 @@ namespace XNAControlGame
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_spriteFont, "Hello", new Vector2(100, 100), Color.White);
             _spriteBatch.End();
+            _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             base.Draw(gameTime);
         }
 
