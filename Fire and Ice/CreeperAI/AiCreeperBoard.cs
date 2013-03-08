@@ -13,6 +13,8 @@ namespace CreeperAI
     // Nodes have reference to neighbor nodes
     public class AICreeperBoard
     {
+        //public AIHash Hash {get; private set;}
+
         public AIBoardNode[ , ] TileBoard { get; private set; }
         public AIBoardNode[ , ] PegBoard { get; private set; }
         public AIBoardNode[] RowHeadBlack { get; private set; }
@@ -22,6 +24,7 @@ namespace CreeperAI
 
         Stack<CreeperColor> TileHistory { get; set; }
         Stack<Move> MoveHistory { get; set; }
+        //also, eliminate gameStateHistory in favor of singleton-esque gameState evaluation
         Stack<CreeperGameState> GameStateHistory { get; set; }
 
         public HashSet<AIBoardNode> BlackPegs { get; private set; }
@@ -106,6 +109,8 @@ namespace CreeperAI
                     }
                 }
             }
+
+            //Hash = new AIHash(this);
         }
 
         public int TeamCount(CreeperColor turn, PieceType type)

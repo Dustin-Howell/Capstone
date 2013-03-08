@@ -24,6 +24,7 @@ namespace CreeperAI
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
         public int _MiniMaxDepth = 5;
+        //private Dictionary<AIHash, double> _scoredBoards;
 
         public double TerritorialWeight { get; set; }
         public double MaterialWeight { get; set; }
@@ -238,6 +239,10 @@ namespace CreeperAI
         {
             double score = 0.0;
 
+            //if (ScoredBoards.TryGetValue(board.Hash, out score));
+
+            //else
+            //{
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
@@ -251,6 +256,7 @@ namespace CreeperAI
                     score += ScoreBoardVictory(board, turnColor);
                     break;
             }
+            //}
 
             return score;
         }
