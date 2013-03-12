@@ -541,7 +541,7 @@ namespace CreeperAI
             return possibleMoves;
         }
 
-        private IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node, CreeperColor color)
+        public IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node, CreeperColor color)
         {
             foreach (Position neighborPosition in new[]{
                 new Position(node.Row - 1, node.Column),
@@ -574,8 +574,8 @@ namespace CreeperAI
             Position end = (playerTurn == CreeperColor.Fire) ? _WhiteEnd : _BlackEnd;
             AIBoardNode winTile1 = TileBoard[end.Row - 1, end.Column];
             AIBoardNode winTile2 = TileBoard[end.Row, IsValidPosition(end.Row, end.Column - 1, PieceType.Tile)? end.Column - 1: end.Column + 1];
-            endTiles.Add(winTile1);
-            endTiles.Add(winTile2);
+            if (winTile1.Color == playerTurn) endTiles.Add(winTile1);
+            if (winTile2.Color == playerTurn) endTiles.Add(winTile2);
 
             if (!endTiles.Any())
             {
@@ -691,6 +691,11 @@ namespace CreeperAI
             }
 
             return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

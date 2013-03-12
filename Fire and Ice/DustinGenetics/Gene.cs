@@ -14,8 +14,11 @@ namespace DustinGenetics
         public double MaterialWeight { get; set; }
         public double TerritorialWeight { get; set; }
         public double PositionalWeight { get; set; }
+        private double CentralRelativeWeight { get; set; }
+        private double LinearWeight { get; set; }
         public double PathToVictoryWeight { get; set; }
         public double VictoryWeight { get; set; }
+        public double PowerWeight { get; set; }
 
         public int Wins { get; set; }
         public int Losses { get; set; }
@@ -30,10 +33,13 @@ namespace DustinGenetics
 
         public Gene()
         {
-            MaterialWeight = _Random.Next(-100, 100);
+            MaterialWeight = _Random.Next(0, 100);
             TerritorialWeight = _Random.Next(-100, 100);
             PositionalWeight = _Random.Next(-100, 100);
+            CentralRelativeWeight = _Random.Next(-100, 100);
+            LinearWeight = _Random.Next(-100, 100);
             PathToVictoryWeight = _Random.Next(-100, 100);
+            PowerWeight = _Random.NextDouble() * 4;
             VictoryWeight = _Random.Next(100, 1000);
         }
 
@@ -42,16 +48,22 @@ namespace DustinGenetics
             MaterialWeight = gene.MaterialWeight;
             TerritorialWeight = gene.TerritorialWeight;
             PositionalWeight = gene.PositionalWeight;
+            CentralRelativeWeight = gene.CentralRelativeWeight;
+            LinearWeight = gene.LinearWeight;
             PathToVictoryWeight = gene.PathToVictoryWeight;
+            PowerWeight = gene.PowerWeight;
             VictoryWeight = gene.VictoryWeight;
         }
 
-        public Gene(double materialWeight, double territorialWeight, double positionalWeight, double pathToVictoryWeight, double victoryWeight)
+        public Gene(double materialWeight, double territorialWeight, double positionalWeight, double centralRelativeWieght, double linearWeight, double pathToVictoryWeight, double powerWeight, double victoryWeight)
         {
             MaterialWeight = materialWeight;
             TerritorialWeight = territorialWeight;
             PositionalWeight = positionalWeight;
+            CentralRelativeWeight = centralRelativeWieght;
+            LinearWeight = linearWeight;
             PathToVictoryWeight = pathToVictoryWeight;
+            PowerWeight = powerWeight;
             VictoryWeight = victoryWeight;
         }
 
@@ -60,10 +72,13 @@ namespace DustinGenetics
             double material = _Random.Next() % 2 == 0 ? gene.MaterialWeight : MaterialWeight;
             double territory = _Random.Next() % 2 == 0 ? gene.TerritorialWeight : TerritorialWeight;
             double position = _Random.Next() % 2 == 0 ? gene.PositionalWeight : PositionalWeight;
+            double central = _Random.Next() % 2 == 0 ? gene.CentralRelativeWeight : CentralRelativeWeight;
+            double linear = _Random.Next() % 2 == 0 ? gene.LinearWeight : LinearWeight;
             double path = _Random.Next() % 2 == 0 ? gene.PathToVictoryWeight : PathToVictoryWeight;
+            double powerWeight = _Random.Next() % 2 == 0 ? gene.PowerWeight : PowerWeight;
             double victory = _Random.Next() % 2 == 0 ? gene.VictoryWeight : VictoryWeight;
 
-            return new Gene(material, territory, position, path, victory);
+            return new Gene(material, territory, position, central, linear, path, powerWeight, victory);
         }
 
         public Gene Mutate()
@@ -71,10 +86,13 @@ namespace DustinGenetics
             double material = _Random.Next() % 2 == 0 ? MaterialWeight + _Random.Next() % 5 : MaterialWeight - _Random.Next() % 5;
             double territory = _Random.Next() % 2 == 0 ? TerritorialWeight + _Random.Next() % 5 : TerritorialWeight - _Random.Next() % 5;
             double position = _Random.Next() % 2 == 0 ? PositionalWeight + _Random.Next() % 5 : PositionalWeight - _Random.Next() % 5;
+            double central = _Random.Next() % 2 == 0 ? CentralRelativeWeight + _Random.Next() % 5 : CentralRelativeWeight - _Random.Next() % 5;
+            double linear = _Random.Next() % 2 == 0 ? LinearWeight + _Random.Next() % 5 : LinearWeight - _Random.Next() % 5;
             double path = _Random.Next() % 2 == 0 ? PathToVictoryWeight + _Random.Next() % 5 : PathToVictoryWeight - _Random.Next() % 5;
+            double powerWeight = ((PowerWeight * 25) + _Random.Next(-5, 5)) / 100;
             double victory = _Random.Next() % 2 == 0 ? VictoryWeight + _Random.Next() % 5 : VictoryWeight - _Random.Next() % 5;
 
-            return new Gene(material, territory, position, path, victory);
+            return new Gene(material, territory, position, central, linear, path, powerWeight, victory);
         }
 
         public bool Defeats(Gene opponent)
@@ -84,13 +102,13 @@ namespace DustinGenetics
                 int moveCount = 0;
                 CreeperColor turn = CreeperColor.Ice;
                 CreeperBoard board = new CreeperBoard();
-                CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PositionalWeight, PathToVictoryWeight, VictoryWeight);
-                CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PositionalWeight, opponent.PathToVictoryWeight, opponent.VictoryWeight);
+                CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PositionalWeight, CentralRelativeWeight, LinearWeight, PathToVictoryWeight, PowerWeight, VictoryWeight);
+                CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PositionalWeight, opponent.CentralRelativeWeight, opponent.LinearWeight, opponent.PathToVictoryWeight, opponent.PowerWeight, opponent.VictoryWeight);
 
                 while (!board.IsFinished(turn))
                 {
                     moveCount++;
-                    if (moveCount > 70)
+                    if (moveCount > 140)
                     {
                         Console.WriteLine("Move Loop");
                         return false;
@@ -118,7 +136,7 @@ namespace DustinGenetics
 
         public void Print()
         {
-            Console.Write("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}\n\n", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
+            Console.Write("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}\nLinear: {5}\nCentralRelative: {6}\nPower: {7}\n\n", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight, LinearWeight, CentralRelativeWeight, PowerWeight);
         }
 
         public void WriteToFile(string path)
@@ -128,7 +146,10 @@ namespace DustinGenetics
                 writer.WriteLine("Material   : {0}", MaterialWeight);
                 writer.WriteLine("Territorial: {0}", TerritorialWeight);
                 writer.WriteLine("Positional : {0}", PositionalWeight);
+                writer.WriteLine("Central    : {0}", CentralRelativeWeight);
+                writer.WriteLine("Linear     : {0}", LinearWeight);
                 writer.WriteLine("Path       : {0}", PathToVictoryWeight);
+                writer.WriteLine("Power      : {0}", PowerWeight);
                 writer.WriteLine("Victory    : {0}", VictoryWeight);
                 writer.WriteLine("Win        : {0}%", WinPercentage * 100);
                 writer.WriteLine();

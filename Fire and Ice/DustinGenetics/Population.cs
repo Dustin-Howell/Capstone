@@ -49,6 +49,7 @@ namespace DustinGenetics
             {
                 Gene gene = GenePool[i];
                 Console.WriteLine("Analyzing Gene {0}", GenePool.IndexOf(gene));
+                gene.Print();
 
                 for (int j = 0; j < GenePool.Count; j++)
                 {
@@ -81,7 +82,7 @@ namespace DustinGenetics
         public Gene GetBestGene()
         {
             Gene bestGene = new Gene();
-            List<Gene> VictoryGenes = new List<Gene>();
+            List<Gene> victoryGenes = new List<Gene>();
 
             int roundNumber = 0;
             while (GenePool.Count > 1)
@@ -89,15 +90,15 @@ namespace DustinGenetics
                 Console.WriteLine("Round {0}", roundNumber++);
                 Console.WriteLine("Gene Pool Size: {0}\n", GenePool.Count);
 
-                VictoryGenes = GetTopHalf();
+                victoryGenes = GetTopHalf();
 
-                if (VictoryGenes.Any())
+                if (victoryGenes.Any())
                 {
-                    bestGene = VictoryGenes.First();
+                    bestGene = victoryGenes.First();
                 }
 
-                GenePool = VictoryGenes;
-                VictoryGenes = new List<Gene>();
+                GenePool = victoryGenes;
+                victoryGenes = new List<Gene>();
             }
 
             return bestGene;

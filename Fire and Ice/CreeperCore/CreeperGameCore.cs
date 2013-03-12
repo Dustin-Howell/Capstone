@@ -8,6 +8,7 @@ using XNAControlGame;
 using System.ComponentModel;
 using System.IO;
 using CreeperAI;
+using System.Collections;
 
 namespace CreeperCore
 {
@@ -123,11 +124,12 @@ namespace CreeperCore
             {
                 if (difficulty == AIDifficulty.Easy)
                 {
-                    _AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 2);
+                    //_AI = new CreeperAI.CreeperAI(92, 62, -39, -46, 86, 14, 983, 2);
                 }
                 else
                 {
-                    _AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 5);
+                    //_AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 5);
+                    _AI = new CreeperAI.CreeperAI(92, 62, -39, -46, 86, 1, 1, 983, 2);
                 }
             }
 

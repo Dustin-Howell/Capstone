@@ -21,22 +21,29 @@ namespace CreeperAI
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
         //TODO: Change this after the UIP
-        public int _MiniMaxDepth = 5;
+        public int _MiniMaxDepth;
 
         private double _territorialWeight;
         private double _materialWeight;
-        private double _positionalWeight;
+        private double _centralWeight;
+        private double _centralRelativeWeight;
+        private double _linearWeight;
         private double _pathToVictoryWeight;
+        private double _powerWeight;
         private double _victoryWeight;
 
         private static Random _Random = new Random();
 
-        public CreeperAI(double territoryWeight, double materialWeight, double positionalWeight, double victoryPathWeight, double victoryWeight, int depth = 5)
+
+        public CreeperAI(double territoryWeight, double materialWeight, double centralWeight, double centralRelativeWeight, double linearWeight, double victoryPathWeight, double powerWeight, double victoryWeight, int depth = 3)
         {
             _territorialWeight = territoryWeight;
             _materialWeight = materialWeight;
-            _positionalWeight = positionalWeight;
+            _centralWeight = centralWeight;
+            _centralRelativeWeight = centralRelativeWeight;
+            _linearWeight = linearWeight;
             _pathToVictoryWeight = victoryPathWeight;
+            _powerWeight = powerWeight;
             _victoryWeight = victoryWeight;
             _MiniMaxDepth = depth;
         }
@@ -95,7 +102,7 @@ namespace CreeperAI
                     bestMove = moves[i];
                 }
             }
-
+            Console.WriteLine("Best score found: {0}", alpha);
             return bestMove;
         }
 
@@ -226,6 +233,13 @@ namespace CreeperAI
             }
         }
 
+
+
+
+
+
+        // Scoring stuff:
+
         private double ScoreBoard(AICreeperBoard board, CreeperColor turnColor, int depth)
         {
             double score = 0.0;
@@ -237,10 +251,14 @@ namespace CreeperAI
                     break;
 
                 default:
-                    score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
-                    score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
-                    score += (ScoreBoardPositional(board, turnColor) * _positionalWeight);
-                    score += ScoreBoardVictory(board, turnColor);
+                    //score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
+                    //score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
+                    //score += (ScoreBoardCentralPegs(board, turnColor) * _centralWeight);
+                    //score += (ScoreBoardCentralPegsRelative(board, turnColor) * _centralRelativeWeight);
+                    //score += (ScoreBoardLinearPegs(board, turnColor) * _linearWeight);
+                    double shortestDistance = ScoreBoardShortestDistance(board, turnColor);
+                    //score +=  shortestDistance * _pathToVictoryWeight;
+                    score += Math.Pow(shortestDistance, _powerWeight) * _pathToVictoryWeight;
                     break;
             }
 
@@ -258,7 +276,7 @@ namespace CreeperAI
                 opponentTeamCount = 1;
             }
 
-            return myTeamCount / opponentTeamCount;
+            return myTeamCount / opponentTeamCount - 1;
         }
 
         private double ScoreBoardMaterial(AICreeperBoard board, CreeperColor turn)
@@ -272,29 +290,112 @@ namespace CreeperAI
                 opponentTeamCount = 1;
             }
 
-            return myTeamCount / opponentTeamCount;
+            return myTeamCount / opponentTeamCount - 1;
         }
         
-        private double ScoreBoardPositional(AICreeperBoard board, CreeperColor turn)
+        // This scores based on how close the pegs are to the center of the board.
+        private double ScoreBoardCentralPegs(AICreeperBoard board, CreeperColor turn)
         {
             double score = 0d;
+            double pegCount = turn.IsBlack() ? board.BlackPegs.Count : board.WhitePegs.Count;
 
             if (turn == CreeperColor.Fire)
             {
                 foreach (AIBoardNode peg in board.WhitePegs)
                 {
-                    score += 2 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                    score += Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
                 }
             }
             else
             {
                 foreach (AIBoardNode peg in board.BlackPegs)
                 {
-                    score += 2 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                    score += Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
                 }
             }
 
-            return score;
+            return (8.485 - (score / pegCount)) / 8.485;
+        }
+
+        // This scores our pegs based on how close our pegs are to the line between our goals.
+        private double ScoreBoardLinearPegs(AICreeperBoard board, CreeperColor turn)
+        {
+            double score = 0.0;
+            double pegCount = turn.IsBlack() ? board.BlackPegs.Count : board.WhitePegs.Count;
+
+            foreach (AIBoardNode peg in turn.IsBlack() ? board.BlackPegs : board.WhitePegs)
+            {
+                score += (turn.IsBlack() ? Math.Abs( peg.Row + peg.Column - 6 ) : Math.Abs( peg.Row - peg.Column));
+            }
+
+            return (6 - (score / pegCount)) / 6;
+        }
+
+        private double ScoreBoardCentralPegsRelative(AICreeperBoard board, CreeperColor turn)
+        {
+            return ScoreBoardCentralPegs(board, turn) / ScoreBoardCentralPegs(board, turn.Opposite()) - 1;
+        }
+
+        private double ScoreBoardShortestDistance(AICreeperBoard board, CreeperColor turn)
+        {
+            Position start = turn.IsBlack() ? AICreeperBoard._BlackStart : AICreeperBoard._WhiteStart;
+            Position end = turn.IsBlack() ? AICreeperBoard._BlackEnd : AICreeperBoard._WhiteEnd;
+            HashSet<AIBoardNode> startTiles = new HashSet<AIBoardNode>();
+            startTiles.Add(board.TileBoard[start.Row, start.Column]);
+            HashSet<AIBoardNode> endTiles = new HashSet<AIBoardNode>();
+            endTiles.Add(board.TileBoard[end.Row, end.Column]);
+            Stack<AIBoardNode> stack = new Stack<AIBoardNode>();
+
+            stack.Push(board.TileBoard[start.Row, start.Column]);
+            do
+            {
+                AIBoardNode currentTile = stack.Pop();
+
+                IEnumerable<AIBoardNode>  neighbors = board.GetNeighbors(currentTile, turn);
+                foreach (AIBoardNode neighbor in neighbors)
+                {
+                    if (!startTiles.Contains(neighbor))
+                    {
+                        stack.Push(neighbor);
+                    }
+                }
+
+                startTiles.UnionWith(neighbors);
+            }
+            while (stack.Any());
+
+            double shortestDistance = DistanceBetweenTiles(board.TileBoard[start.Row, start.Column], board.TileBoard[end.Row, end.Column]);
+
+            stack.Push(board.TileBoard[end.Row, end.Column]);
+            do
+            {
+                AIBoardNode currentTile = stack.Pop();
+
+                //Here is where we calculate the distances...
+                foreach (AIBoardNode tile in startTiles)
+                {
+                    shortestDistance = Math.Min(shortestDistance, DistanceBetweenTiles(currentTile, tile));
+                }
+
+                IEnumerable<AIBoardNode> neighbors = board.GetNeighbors(currentTile, turn);
+                foreach (AIBoardNode neighbor in neighbors)
+                {
+                    if (!endTiles.Contains(neighbor))
+                    {
+                        stack.Push(neighbor);
+                    }
+                }
+
+                endTiles.UnionWith(neighbors);
+            }
+            while (stack.Any());
+
+            return 1 - shortestDistance / 10;
+        }
+
+        private double DistanceBetweenTiles(AIBoardNode tile1, AIBoardNode tile2)
+        {
+            return Math.Abs(tile1.Row - tile2.Row) + Math.Abs(tile1.Column - tile2.Column);
         }
 
         private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn)
@@ -352,6 +453,19 @@ namespace CreeperAI
                     }
                 }
             }
+
+            return score;
+        }
+
+        double ScoreBoardPathSearch(AICreeperBoard board, CreeperColor turn)
+        {
+            double score = 0.0;
+
+            HashSet<Position> startTiles = new HashSet<Position>();
+            HashSet<Position> endTiles = new HashSet<Position>();
+
+            Position start = (turn == CreeperColor.Fire) ? AICreeperBoard._WhiteStart : AICreeperBoard._BlackStart;
+            Position end = (turn == CreeperColor.Fire) ? AICreeperBoard._WhiteEnd : AICreeperBoard._BlackEnd;
 
             return score;
         }

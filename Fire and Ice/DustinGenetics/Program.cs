@@ -7,8 +7,8 @@ namespace DustinGenetics
 {
     class Program
     {
-        public static string LogPath = @"C:\Users\Dustin\Dropbox\Capstone\Genetics\bestGenes.log";
-        public static Gene SeedGene = new Gene(-19, 75, -71, 86, 104);
+        public static string LogPath = @"C:\bestGenes.log";
+        public static Gene SeedGene = new Gene(-19, 75, -71, 80, 80, 86, 2, 104);
         public static bool UseSeed = false;
 
         static void Main(string[] args)
