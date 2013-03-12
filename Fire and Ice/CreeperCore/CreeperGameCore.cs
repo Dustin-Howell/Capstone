@@ -129,7 +129,8 @@ namespace CreeperCore
                 else
                 {
                     //_AI = new CreeperAI.CreeperAI(15, 84, 2, 43, 100, 5);
-                    _AI = new CreeperAI.CreeperAI(92, 62, -39, -46, 86, 1, 1, 983, 2);
+                    //_AI = new CreeperAI.CreeperAI(92, 62, -39, -46, 86, 100, 100, 983, 3);
+                    _AI = new CreeperAI.CreeperAI(80, 80, 20, 20, 20, 100, -1, -1, 5);
                 }
             }
 

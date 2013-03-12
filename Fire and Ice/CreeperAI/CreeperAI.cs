@@ -83,7 +83,6 @@ namespace CreeperAI
         {
             Move bestMove = new Move();
 
-            double best = Double.NegativeInfinity;
             double alpha = Double.NegativeInfinity;
             double beta = Double.PositiveInfinity;
 
@@ -93,16 +92,16 @@ namespace CreeperAI
             {
                 // Evaluate child node
                 board.PushMove(moves[i]);
-                double score = -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -Math.Max(alpha, best), _MiniMaxDepth - 1);
+                double score = ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
                 board.PopMove();
 
-                if (score > best)
+                if (score > alpha)
                 {
-                    best = score;
+                    alpha = score;
                     bestMove = moves[i];
                 }
             }
-            Console.WriteLine("Best score found: {0}", alpha);
+
             return bestMove;
         }
 
@@ -149,11 +148,8 @@ namespace CreeperAI
             if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
-                return ScoreBoard(board, turnColor, depth);
+                return ScoreBoard(board, turnColor.Opposite(), depth);
             }
-
-            // Initialize the best score
-            double best = Double.NegativeInfinity;
 
             // Enumerate the children of the current node
             Move[] moves = board.AllPossibleMoves(turnColor);
@@ -161,15 +157,15 @@ namespace CreeperAI
             {
                 // Evaluate child node:
                 board.PushMove(moves[i]);
-                best = Math.Max(best, -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -Math.Max(alpha, best), depth - 1));
+                alpha = -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -alpha, depth - 1);
                 board.PopMove();
 
                 // Prune if the current best score crosses beta
-                if (best >= beta)
-                    return best;
+                if (alpha >= beta)
+                    return alpha;
             }
 
-            return best;
+            return alpha;
         }
 
         private double ScoreAlphaBetaMiniMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
@@ -247,17 +243,16 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = _victoryWeight * depth * ((_MiniMaxDepth % 2 == 0)? 1 : -1);
+                    score = double.PositiveInfinity;//_victoryWeight * depth * ((_MiniMaxDepth % 2 == 0)? 1 : -1);
                     break;
 
                 default:
-                    //score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
-                    //score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
-                    //score += (ScoreBoardCentralPegs(board, turnColor) * _centralWeight);
-                    //score += (ScoreBoardCentralPegsRelative(board, turnColor) * _centralRelativeWeight);
-                    //score += (ScoreBoardLinearPegs(board, turnColor) * _linearWeight);
+                    score += (ScoreBoardTerritorial(board, turnColor) * _territorialWeight);
+                    score += (ScoreBoardMaterial(board, turnColor) * _materialWeight);
+                    score += (ScoreBoardCentralPegs(board, turnColor) * _centralWeight);
+                    score += (ScoreBoardCentralPegsRelative(board, turnColor) * _centralRelativeWeight);
+                    score += (ScoreBoardLinearPegs(board, turnColor) * _linearWeight);
                     double shortestDistance = ScoreBoardShortestDistance(board, turnColor);
-                    //score +=  shortestDistance * _pathToVictoryWeight;
                     score += Math.Pow(shortestDistance, _powerWeight) * _pathToVictoryWeight;
                     break;
             }
@@ -333,7 +328,7 @@ namespace CreeperAI
 
         private double ScoreBoardCentralPegsRelative(AICreeperBoard board, CreeperColor turn)
         {
-            return ScoreBoardCentralPegs(board, turn) / ScoreBoardCentralPegs(board, turn.Opposite()) - 1;
+            return ScoreBoardCentralPegs(board, turn.Opposite()) / ScoreBoardCentralPegs(board, turn) - 1;
         }
 
         private double ScoreBoardShortestDistance(AICreeperBoard board, CreeperColor turn)

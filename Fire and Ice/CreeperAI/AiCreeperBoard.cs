@@ -514,14 +514,14 @@ namespace CreeperAI
 
                 Move[] movesForPeg = new Move[]
                     {
-                        new Move(startPosition, new Position(peg.Row + 1, peg.Column), color),
-                        new Move(startPosition, new Position(peg.Row - 1, peg.Column), color),
-                        new Move(startPosition, new Position(peg.Row, peg.Column + 1), color),
-                        new Move(startPosition, new Position(peg.Row, peg.Column - 1), color),
                         new Move(startPosition, new Position(peg.Row + 1, peg.Column + 1), color),
                         new Move(startPosition, new Position(peg.Row + 1, peg.Column - 1), color),
                         new Move(startPosition, new Position(peg.Row - 1, peg.Column + 1), color),
                         new Move(startPosition, new Position(peg.Row - 1, peg.Column - 1), color),
+                        new Move(startPosition, new Position(peg.Row + 1, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row - 1, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column + 1), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column - 1), color),
                         new Move(startPosition, new Position(peg.Row + 2, peg.Column), color),
                         new Move(startPosition, new Position(peg.Row - 2, peg.Column), color),
                         new Move(startPosition, new Position(peg.Row, peg.Column + 2), color),

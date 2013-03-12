@@ -14,7 +14,7 @@ namespace DustinGenetics
         static void Main(string[] args)
         {
             Random random = new Random();
-            int populationSize = 12;
+            int populationSize = 20;
             int rounds = 3;
             Population population = (UseSeed)? new Population(populationSize, SeedGene) : new Population(populationSize);
             List<Gene> genePool;

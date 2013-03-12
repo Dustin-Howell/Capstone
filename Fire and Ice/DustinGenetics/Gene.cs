@@ -34,12 +34,12 @@ namespace DustinGenetics
         public Gene()
         {
             MaterialWeight = _Random.Next(0, 100);
-            TerritorialWeight = _Random.Next(-100, 100);
+            TerritorialWeight = _Random.Next(0, 100);
             PositionalWeight = _Random.Next(-100, 100);
             CentralRelativeWeight = _Random.Next(-100, 100);
             LinearWeight = _Random.Next(-100, 100);
-            PathToVictoryWeight = _Random.Next(-100, 100);
-            PowerWeight = _Random.NextDouble() * 4;
+            PathToVictoryWeight = _Random.Next(50, 150);
+            PowerWeight = _Random.NextDouble() * 2;
             VictoryWeight = _Random.Next(100, 1000);
         }
 
@@ -83,14 +83,14 @@ namespace DustinGenetics
 
         public Gene Mutate()
         {
-            double material = _Random.Next() % 2 == 0 ? MaterialWeight + _Random.Next() % 5 : MaterialWeight - _Random.Next() % 5;
-            double territory = _Random.Next() % 2 == 0 ? TerritorialWeight + _Random.Next() % 5 : TerritorialWeight - _Random.Next() % 5;
-            double position = _Random.Next() % 2 == 0 ? PositionalWeight + _Random.Next() % 5 : PositionalWeight - _Random.Next() % 5;
-            double central = _Random.Next() % 2 == 0 ? CentralRelativeWeight + _Random.Next() % 5 : CentralRelativeWeight - _Random.Next() % 5;
-            double linear = _Random.Next() % 2 == 0 ? LinearWeight + _Random.Next() % 5 : LinearWeight - _Random.Next() % 5;
-            double path = _Random.Next() % 2 == 0 ? PathToVictoryWeight + _Random.Next() % 5 : PathToVictoryWeight - _Random.Next() % 5;
-            double powerWeight = ((PowerWeight * 25) + _Random.Next(-5, 5)) / 100;
-            double victory = _Random.Next() % 2 == 0 ? VictoryWeight + _Random.Next() % 5 : VictoryWeight - _Random.Next() % 5;
+            double material = _Random.Next() % 2 == 0 ? MaterialWeight + _Random.Next() % 15 : MaterialWeight - _Random.Next() % 15;
+            double territory = _Random.Next() % 2 == 0 ? TerritorialWeight + _Random.Next() % 15 : TerritorialWeight - _Random.Next() % 15;
+            double position = _Random.Next() % 2 == 0 ? PositionalWeight + _Random.Next() % 15 : PositionalWeight - _Random.Next() % 15;
+            double central = _Random.Next() % 2 == 0 ? CentralRelativeWeight + _Random.Next() % 15 : CentralRelativeWeight - _Random.Next() % 15;
+            double linear = _Random.Next() % 2 == 0 ? LinearWeight + _Random.Next() % 15 : LinearWeight - _Random.Next() % 15;
+            double path = _Random.Next() % 2 == 0 ? PathToVictoryWeight + _Random.Next() % 15 : PathToVictoryWeight - _Random.Next() % 15;
+            double powerWeight = ((PowerWeight * 50) + _Random.Next(-15, 15)) / 100;
+            double victory = _Random.Next() % 2 == 0 ? VictoryWeight + _Random.Next() % 15 : VictoryWeight - _Random.Next() % 15;
 
             return new Gene(material, territory, position, central, linear, path, powerWeight, victory);
         }
