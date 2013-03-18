@@ -256,6 +256,8 @@ namespace CreeperAI
                     score += ScoreBoardVictory(board, turnColor);
                     break;
             }
+
+            //ScoreBoards[board] = score;
             //}
 
             return score;
