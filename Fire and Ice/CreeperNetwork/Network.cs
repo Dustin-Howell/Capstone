@@ -268,7 +268,18 @@ namespace CreeperNetwork
 
         //Game Functions
 
-        public void playGame()
+        public void runGame()
+        {
+            BackgroundWorker networkPlayGame;
+
+            networkPlayGame = new BackgroundWorker();
+            networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => playGame());
+
+            networkPlayGame.RunWorkerAsync();
+        }
+
+        //private now...
+        private void playGame()
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
 

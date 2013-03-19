@@ -81,12 +81,9 @@ namespace CreeperCore
 
             _network = network;
 
-            _networkPlayGame = new BackgroundWorker();
-            _networkPlayGame.DoWork += new DoWorkEventHandler((s, e) => _network.playGame());
-
             StartGame(player1Type, player2Type);
 
-            _networkPlayGame.RunWorkerAsync();
+            _network.runGame();
         }
 
         private void StartGame(PlayerType player1Type, PlayerType player2Type)
