@@ -42,6 +42,7 @@ namespace CreeperNetwork
         //Network Variables
         private bool isServer = false;
         private bool serverFull = false;
+        private bool hostGame = false;
         private Timer broadcastTimer = new Timer();
         private UdpClient listener = new UdpClient(SERVER_PORT);
         private UdpClient listenerAlt = new UdpClient(ALT_SERVER_PORT);
@@ -113,8 +114,10 @@ namespace CreeperNetwork
 
             byte[] packet = new byte[MAX_PACKET_SIZE];
 
+            hostGame = true;
+
             //okay, now what if someone wants to join?.
-            while (!serverFull)
+            while (!serverFull  && hostGame)
             {
                 packet = receivePacket_blocking();
 
@@ -130,6 +133,11 @@ namespace CreeperNetwork
                     }
                 }
             }
+        }
+
+        public void quitHostGame()
+        {
+            hostGame = false;
         }
 
         /**********************************************************

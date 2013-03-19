@@ -64,6 +64,10 @@ namespace FireAndIce.ViewModels
 
         public void AddMenu(ToggleButtonMenuViewModel panel)
         {
+            // Temporary workaround?
+            if (AppModel.Network != null)
+                AppModel.Network.quitHostGame();
+
             if (!Menus.Contains(panel))
             {
                 if (panel.MenuParent == MainMenu)
