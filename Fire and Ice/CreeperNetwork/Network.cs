@@ -72,6 +72,14 @@ namespace CreeperNetwork
         private static int instanceCount = 0;
         private IEventAggregator _eventAggregator;
 
+        /**********************************************************
+         * Constructor: Network
+         * Parameters:  eventAggregator -- allows us to check how 
+         *              many instances of the game have been made
+         * Description: Constructor for Network class -- starts 
+         *              the keep alive functionality and unplugged 
+         *              network cable functionality
+         *********************************************************/
         public Network(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
@@ -85,8 +93,18 @@ namespace CreeperNetwork
             checkUnpluggedNetwork();
         }
 
-        //SERVER functions
+        //###############################################################
+        //#PUBLIC SERVER FUNCTIONS                                      #
+        //###############################################################
 
+       /**********************************************************
+        * Function:    server_hostGame
+        * Parameters:  gameNameIn - name of the hosted game
+        *              playerNameIn - name of the host player
+        * Description: Hosts a game on the server -- continually
+        *              looks for checking if someone is looking 
+        *              for servers or trying to join the server
+        *********************************************************/
         public void server_hostGame(string gameNameIn, string playerNameIn)
         {
             isServer = true;
@@ -95,8 +113,7 @@ namespace CreeperNetwork
 
             byte[] packet = new byte[MAX_PACKET_SIZE];
 
-            //okay, now what if someone wants to join?
-            //uh...while...
+            //okay, now what if someone wants to join?.
             while (!serverFull)
             {
                 packet = receivePacket_blocking();
@@ -115,6 +132,15 @@ namespace CreeperNetwork
             }
         }
 
+        /**********************************************************
+         * Function:    server_acceptClient
+         * Parameters:  packetIn -- the join game packet
+         * Returns:     Whether the server accepted the client
+         *              or not
+         * Description: Checks whether a client is valid and 
+         *              determines whether they're accepted or
+         *              not
+         *********************************************************/
         public bool server_acceptClient(byte[] packetIn)
         {
             bool accepted = false;
@@ -131,6 +157,12 @@ namespace CreeperNetwork
             return accepted;
         }
 
+        /**********************************************************
+         * Function:    server_startGame
+         * Description: Starts the game on the server -- at 
+         *              this point, the game is playable. Waits 
+         *              for client to acknowledge. 
+         *********************************************************/
         public void server_startGame()
         {
             sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
@@ -167,8 +199,16 @@ namespace CreeperNetwork
             }
         }
 
-        //client functions
+        //###############################################################
+        //#PUBLIC CLIENT FUNCTIONS                                      #
+        //###############################################################
 
+        /**********************************************************
+         * Function:    client_findGames
+         * Parameters:  clientNameIn -- name of the client player
+         * Returns:     A list of the games found
+         * Description: Finds all games currently on the network
+         *********************************************************/
         public string[,] client_findGames(string clientNameIn)
         {
             string[,] games = new string[256, 7];
@@ -224,11 +264,21 @@ namespace CreeperNetwork
             return games;
         }
 
+        /**********************************************************
+         * Function:    client_joinGame
+         * Parameters:  gameIn -- the game to join
+         * Description: Joins a game on a server
+         *********************************************************/
         public void client_joinGame(string[] gameIn)
         {
             sendPacket(packet_JoinGame(gameIn), gameIn[0]);
         }
 
+        /**********************************************************
+         * Function:    client_ackStartGame
+         * Description: Starts a game on the client by 
+         *              acknowledging the server
+         *********************************************************/
         public void client_ackStartGame()
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
@@ -258,16 +308,15 @@ namespace CreeperNetwork
             }
         }
 
-        //Events
+        //###############################################################
+        //#PUBLIC GAME FUNCTIONS                                        #
+        //###############################################################
 
-        //Convert to EventAggregator events
-        //public event EventHandler<MoveResponseMessage> MoveMade;
-        //public event EventHandler<ConnectionEventArgs> ConnectionIssue;
-        //public event EventHandler<ChatEventArgs> ChatMade;
-        //public event EventHandler<EndGameEventArgs> NetworkGameOver;
-
-        //Game Functions
-
+        /**********************************************************
+         * Function:    runGame
+         * Description: Runs the playable portion of the game 
+         *              on a separate threading. 
+         *********************************************************/
         public void runGame()
         {
             BackgroundWorker networkPlayGame;
@@ -278,7 +327,103 @@ namespace CreeperNetwork
             networkPlayGame.RunWorkerAsync();
         }
 
-        //private now...
+        /**********************************************************
+         * Function:    disconnect
+         * Description: closes the network game
+         *********************************************************/
+        public void disconnect()
+        {
+            sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+            listener.Close();
+            listenerAlt.Close();
+            sender.Close();
+        }
+
+        /**********************************************************
+         * Function:    chat
+         * Parameters:  messageIn -- the message to send
+         * Description: Sends a chat message to the other player
+         *********************************************************/
+        public void chat(string messageIn)
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                sendPacket(packet_Chat(messageIn), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        /**********************************************************
+         * Function:    chat
+         * Parameters:  moveIn -- the move to send
+         * Description: Sends a move to the other player
+         *********************************************************/
+        public void move(Move moveIn)
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                Console.WriteLine("Move Sent.");
+                sendPacket(packet_MakeMove(moveIn, MOVETYPE_MOVE), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        /**********************************************************
+         * Function:    forfeit
+         * Description: forfeits the network game
+         *********************************************************/
+        public void forfeit()
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty), 
+                    MOVETYPE_FORFEIT), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        /**********************************************************
+         * Function:    illegalMove
+         * Description: Stops the network game because of an 
+         *              illegal move
+         *********************************************************/
+        public void illegalMove()
+        {
+            if (lastReceivedHomeSeqNum == homeSequenceNumber)
+            {
+                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty),
+                    MOVETYPE_ILLEGAL), ipOfLastPacket.Address.ToString());
+                acknowledged = false;
+            }
+        }
+
+        //###############################################################
+        //#UTILITY FUNCTIONS                                            #
+        //###############################################################
+
+        /**********************************************************
+         * Function:    checkUnpluggedNetwork
+         * Description: Checks if the network cable is unplugged
+         *********************************************************/
+        public void checkUnpluggedNetwork()
+        {
+            Timer checkTimer = new Timer();
+            checkTimer.Elapsed += new ElapsedEventHandler(checkUnpluggedNetworkOnTime);
+            checkTimer.Interval = UNPLUGGED_INTERVAL;
+            checkTimer.Enabled = true;
+            checkTimer.AutoReset = true;
+        }
+
+        //###############################################################
+        //#PRIVATE BACKGROUND FUNCTIONS                                 #
+        //###############################################################
+
+        /**********************************************************
+         * Function:    playGame
+         * Description: the game loop for the network portion of
+         *              the game. Listens for all the packets
+         *              and responds appropriately
+         *********************************************************/
         private void playGame()
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
@@ -316,7 +461,7 @@ namespace CreeperNetwork
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
 
                         _eventAggregator.Publish(new ChatMessage(currentMessage));
-                        
+
 
                     }
                     else if (packet[1] == CMD_MAKE_MOVE)
@@ -329,17 +474,17 @@ namespace CreeperNetwork
                         {
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
                             //newMove = true;
-                            
+
                             _eventAggregator.Publish(new MoveResponseMessage(currentMove, PlayerType.Network));
                         }
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
                             if (packet[6] == MOVETYPE_FORFEIT)
                                 _eventAggregator.Publish(new NetworkGameOverMessage(END_GAME_TYPE.FORFEIT));
-                                //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
+                            //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
                             else if (packet[6] == MOVETYPE_ILLEGAL)
                                 _eventAggregator.Publish(new NetworkGameOverMessage(END_GAME_TYPE.ILLEGAL_MOVE));
-                                //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
+                            //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
 
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                         }
@@ -353,93 +498,22 @@ namespace CreeperNetwork
             }
         }
 
-        public void disconnect()
-        {
-            sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
-            listener.Close();
-            listenerAlt.Close();
-            sender.Close();
-        }
-
-        public void chat(string messageIn)
-        {
-            if (lastReceivedHomeSeqNum == homeSequenceNumber)
-            {
-                sendPacket(packet_Chat(messageIn), ipOfLastPacket.Address.ToString());
-                acknowledged = false;
-            }
-        }
-
-        public void move(Move moveIn)
-        {
-            if (lastReceivedHomeSeqNum == homeSequenceNumber)
-            {
-                Console.WriteLine("Move Sent.");
-                sendPacket(packet_MakeMove(moveIn, MOVETYPE_MOVE), ipOfLastPacket.Address.ToString());
-                acknowledged = false;
-            }
-        }
-
-        public void forfeit()
-        {
-            if (lastReceivedHomeSeqNum == homeSequenceNumber)
-            {
-                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty), 
-                    MOVETYPE_FORFEIT), ipOfLastPacket.Address.ToString());
-                acknowledged = false;
-            }
-        }
-
-        public void illegalMove()
-        {
-            if (lastReceivedHomeSeqNum == homeSequenceNumber)
-            {
-                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty),
-                    MOVETYPE_ILLEGAL), ipOfLastPacket.Address.ToString());
-                acknowledged = false;
-            }
-        }
-
-        public string getChatMessage()
-        {
-            newMessage = false;
-            return currentMessage;
-        }
-
-        public bool newMessageAvailable()
-        {
-            return newMessage;
-        }
-
-        public Move getNextMove()
-        {
-            newMove = false;
-            return currentMove;
-        }
-
-        public bool newMoveAvailable()
-        {
-            return newMove;
-        }
-
-        //Utility Functions
-
-        public void checkUnpluggedNetwork()
-        {
-            Timer checkTimer = new Timer();
-            checkTimer.Elapsed += new ElapsedEventHandler(checkUnpluggedNetworkOnTime);
-            checkTimer.Interval = UNPLUGGED_INTERVAL;
-            checkTimer.Enabled = true;
-            checkTimer.AutoReset = true;
-        }
-
-        //BACKGROUND functions
-
+        /**********************************************************
+         * Function:    isNetworkConnected
+         * Returns:     Whether or not there is a network available
+         * Description: Checks if a network is available or not
+         *********************************************************/
         private bool isNetworkConnected()
         {
             return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
         }
 
+        /**********************************************************
+         * Function:    checkUnpluggedNetworkOnTime
+         * Parameters:  source -- the source object
+         *              e      -- the source event
+         * Description: Checks if the network cable is unplugged
+         *********************************************************/
         private void checkUnpluggedNetworkOnTime(object source, ElapsedEventArgs e)
         {
             if (cableUnplugged && isNetworkConnected())
@@ -468,6 +542,10 @@ namespace CreeperNetwork
             }
         }
 
+        /**********************************************************
+         * Function:    keepAlive
+         * Description: Keeps the network connection open
+         *********************************************************/
         private void keepAlive()
         {
             Timer ackTimer = new Timer();
@@ -527,11 +605,24 @@ namespace CreeperNetwork
             }
         }
 
+        /**********************************************************
+         * Function:    sendAckOnTime
+         * Parameters:  source -- the source object
+         *              e -- the source event
+         * Description: Sends an acknowledgement to the other 
+         *              player machine
+         *********************************************************/
         private void sendAckOnTime(object source, ElapsedEventArgs e)
         {
             sendPacket_altPort(packet_Ack(), ipOfLastPacket.Address.ToString());
         }
 
+        /**********************************************************
+         * Function:    receivePacket_blocking
+         * Returns:     The packet received
+         * Description: Waits for a packet -- blocks all other
+         *              processes on thread
+         *********************************************************/
         private byte[] receivePacket_blocking()
         {
             byte[] data = new byte[256];
@@ -544,6 +635,13 @@ namespace CreeperNetwork
             return data;
         }
 
+        /**********************************************************
+         * Function:    receivePacket_blockWithTimeout
+         * Returns:     The packet received
+         * Description: Waits for the packet -- blocks all 
+         *              other processes on thread. Exits on
+         *              timeout
+         *********************************************************/
         private byte[] receivePacket_blockWithTimeout()
         {
             byte[] data = new byte[256];
@@ -564,6 +662,13 @@ namespace CreeperNetwork
             return data;
         }
 
+        /**********************************************************
+         * Function:    receivePacket_blockWithTimeout_altPort
+         * Returns:     the packet received
+         * Description: Waits for the packet on alternate port
+         *              -- blocks all other processes on thread.
+         *              Exits on timeout.
+         *********************************************************/
         private byte[] receivePacket_blockWithTimeout_altPort()
         {
             byte[] data = new byte[256];
@@ -584,38 +689,50 @@ namespace CreeperNetwork
             return data;
         }
 
-        /******************************
-         * Function: sendPacket
-         * Description: Sends a packet 
-         * destination ip and port
-         *****************************/
+        /**********************************************************
+         * Function:    sendPacket
+         * Parameters:  packetIn -- the packet to send
+         *              ipAddressIn -- the destination IP
+         * Description: Sends a packet to destination IP
+         *********************************************************/
         private void sendPacket(byte[] packetIn, String ipAddressIn)
         {
             sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
         }
 
+        /**********************************************************
+         * Function:    sendPacket_altPort
+         * Parameters:  packetIn -- the packet to send
+         *              ipAddressIn -- the destination IP
+         * Description: Sends a packet to destination IP on 
+         *              alternate port
+         *********************************************************/
         private void sendPacket_altPort(byte[] packetIn, String ipAddressIn)
         {
             sender.Send(packetIn, packetIn.Length, ipAddressIn, ALT_SERVER_PORT);
         }
 
-        /******************************
-         * Function: broadcastPacket
-         * Description: broadcasts
-         * a packet to all devices
-         * on the network
-         *****************************/
+        /**********************************************************
+         * Function:    broadcastPacket
+         * Parameters:  packetIn -- packet to broadcast
+         * Description: Broadcasts a packet to all devices on 
+         *              the network
+         *********************************************************/
         private void broadcastPacket(byte[] packetIn)
         {
             sendPacket(packetIn, BROADCAST_IP);
         }
 
-        //TIME TRIGGERED BACKGROUND functions
+        //###############################################################
+        //#PACKET FUNCTIONS                                             #
+        //###############################################################
 
-
-
-        //PACKETS
-
+        /******************************
+        * Function: packet_OfferGame
+        * Description: Constructs the 
+        * packet for the OfferGame
+        * packet
+        ******************************/
         private byte[] packet_OfferGame()
         {
             byte[] packet = new byte[16 + hostGameName.Length + hostPlayerName.Length];
@@ -646,6 +763,12 @@ namespace CreeperNetwork
             return packet;
         }
 
+        /******************************
+        * Function: packet_FindServers
+        * Description: Constructs the 
+        * packet for the FindServers
+        * packet
+        ******************************/
         private byte[] packet_FindServers()
         {
             byte[] packet = new byte[6];
@@ -658,7 +781,12 @@ namespace CreeperNetwork
             return packet;
         }
 
-        //note that the first element of gameIn is the ipAddress of the game
+        /******************************
+        * Function: packet_JoinGame
+        * Description: Constructs the 
+        * packet for the JoinGame
+        * packet
+        ******************************/
         private byte[] packet_JoinGame(string[] gameIn)
         {
             byte[] packet = new byte[16 + Convert.ToInt32(gameIn[2]) + clientPlayerName.Length];
@@ -692,6 +820,12 @@ namespace CreeperNetwork
             return packet;
         }
 
+        /******************************
+        * Function: packet_StartGame
+        * Description: Constructs the 
+        * packet for the StartGame
+        * packet
+        ******************************/
         private byte[] packet_StartGame()
         {
             byte[] packet = new byte[6];
@@ -708,6 +842,12 @@ namespace CreeperNetwork
             return packet;
         }
 
+        /******************************
+        * Function: packet_Disconnect
+        * Description: Constructs the 
+        * packet for the 
+        * Disconnect packet
+        ******************************/
         private byte[] packet_Disconnect()
         {
             byte[] packet = new byte[6];
@@ -720,6 +860,12 @@ namespace CreeperNetwork
             return packet;
         }
 
+        /******************************
+        * Function: packet_MakeMove
+        * Description: Constructs the 
+        * packet for the MakeMove
+        * packet
+        ******************************/
         private byte[] packet_MakeMove(Move moveIn, byte moveTypeIn)
         {
             byte[] packet = new byte[11];
@@ -747,6 +893,11 @@ namespace CreeperNetwork
             return packet;
         }
 
+        /******************************
+        * Function: packet_Chat
+        * Description: Constructs the 
+        * packet for the Chat packet
+        ******************************/
         private byte[] packet_Chat(string messageIn)
         {
             byte[] packet = new byte[24];
@@ -769,6 +920,12 @@ namespace CreeperNetwork
             return packet;
         }
 
+        /******************************
+        * Function: packet_Ack
+        * Description: Constructs the 
+        * packet for the 
+        * Acknowledgement packet
+        ******************************/
         private byte[] packet_Ack()
         {
             byte[] packet = new byte[10];
@@ -784,16 +941,34 @@ namespace CreeperNetwork
             return packet;
         }
 
+        /******************************
+        * Function: Handle
+        * Overloaded: GameOverMessage
+        * Description: Handles
+        * GameOver messages
+        ******************************/
         public void Handle(GameOverMessage message)
         {
             disconnect();
         }
 
+        /******************************
+        * Function: Handle
+        * Overloaded: GameOverMessage
+        * Description: Handles
+        * MoveRequest messages
+        ******************************/
         public void Handle(MoveRequestMessage message)
         {
             //wait for move from opponent
         }
 
+        /******************************
+        * Function: Handle
+        * Overloaded: GameOverMessage
+        * Description: Handles
+        * MoveResponse messages
+        ******************************/
         public void Handle(MoveResponseMessage message)
         {
             if (message.PlayerType != PlayerType.Network)
@@ -802,10 +977,49 @@ namespace CreeperNetwork
             }
         }
     }
-
-    class UdpState
-    {
-        public IPEndPoint ip;
-        public UdpClient client;
-    }
 }
+
+
+
+//Unused old functions
+
+/******************************
+* Class: UdpState
+* Description: Necessary for 
+* 
+*******************************/
+//class UdpState
+// {
+//     public IPEndPoint ip;
+//      public UdpClient client;
+//  }
+
+//public string getChatMessage()
+//{
+//     newMessage = false;
+//      return currentMessage;
+//   }
+
+//    public bool newMessageAvailable()
+//     {
+//         return newMessage;
+//     }
+
+//  public Move getNextMove()
+//   {
+//       newMove = false;
+//       return currentMove;
+//    }
+
+//  public bool newMoveAvailable()
+// {
+//     return newMove;
+//  }
+
+//Events
+
+//Convert to EventAggregator events
+//public event EventHandler<MoveResponseMessage> MoveMade;
+//public event EventHandler<ConnectionEventArgs> ConnectionIssue;
+//public event EventHandler<ChatEventArgs> ChatMade;
+//public event EventHandler<EndGameEventArgs> NetworkGameOver;

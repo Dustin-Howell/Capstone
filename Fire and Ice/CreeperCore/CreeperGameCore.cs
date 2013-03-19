@@ -31,7 +31,6 @@ namespace CreeperCore
         private CreeperAI.CreeperAI _AI;
         private Network _network;
         private IEventAggregator _eventAggregator;
-        private BackgroundWorker _networkPlayGame;
         private bool _IsNetworkGame { get { return GameTracker.Player1.PlayerType == PlayerType.Network || GameTracker.Player2.PlayerType == PlayerType.Network; } }
         
         public CreeperGameCore(IEventAggregator eventAggregator)
