@@ -334,6 +334,7 @@ namespace CreeperNetwork
         public void disconnect()
         {
             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+            gameRunning = false;
             listener.Close();
             listenerAlt.Close();
             sender.Close();
