@@ -89,7 +89,7 @@ namespace CreeperNetwork
             _keepAliveWorker = new BackgroundWorker();
             _keepAliveWorker.DoWork += new DoWorkEventHandler((s, e) => keepAlive());
 
-            //This should be here, I think, actually. 
+            //This should be here -- if any problems checking unplugged cable, this is source
             checkUnpluggedNetwork();
         }
 
