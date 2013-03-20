@@ -99,7 +99,7 @@ namespace CreeperAI
             {
                 // Evaluate child node
                 board.PushMove(moves[i]);
-                double score = ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
+                double score = -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
                 board.PopMove();
 
                 if (score > alpha)
@@ -120,7 +120,8 @@ namespace CreeperAI
             if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
-                return ScoreBoard(board, turnColor.Opposite(), depth);
+                return ScoreBoard(board, _turnColor, depth)
+                    * ((turnColor == _turnColor) ? 1 : -1);
             }
 
             // Enumerate the children of the current node
