@@ -18,6 +18,12 @@ namespace Creeper
             Row = row;
         }
 
+        public Position(Position position)
+        {
+            Column = position.Column;
+            Row = position.Row;
+        }
+
         public bool Equals(Position position)
         {
             return (Column == position.Column && Row == position.Row);
