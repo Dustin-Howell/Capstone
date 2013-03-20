@@ -130,12 +130,15 @@ namespace CreeperAI
             {
                 // Evaluate child node:
                 board.PushMove(moves[i]);
-                alpha = Math.Max(alpha, -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -alpha, depth - 1));
+                //alpha = Math.Max(alpha, -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -alpha, depth - 1));
+                double score = -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -alpha, depth - 1);
                 board.PopMove();
 
                 // Prune if the current best score crosses beta
-                if (alpha >= beta)
-                    return alpha;
+                if (score >= beta)
+                    return score;
+                if (score >= alpha)
+                    alpha = score;
             }
 
             return alpha;
