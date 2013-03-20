@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Creeper;
 using System.IO;
+using System.Reflection;
 
 namespace DustinGenetics
 {
@@ -11,11 +12,7 @@ namespace DustinGenetics
     {
         public static Random _Random = new Random();
 
-        public double MaterialWeight { get; set; }
-        public double TerritorialWeight { get; set; }
-        public double PositionalWeight { get; set; }
-        public double PathToVictoryWeight { get; set; }
-        public double VictoryWeight { get; set; }
+        private Dictionary<String, double> _weights;
 
         public int Wins { get; set; }
         public int Losses { get; set; }
@@ -30,51 +27,45 @@ namespace DustinGenetics
 
         public Gene()
         {
-            MaterialWeight = _Random.Next(-100, 100);
-            TerritorialWeight = _Random.Next(-100, 100);
-            PositionalWeight = _Random.Next(-100, 100);
-            PathToVictoryWeight = _Random.Next(-100, 100);
-            VictoryWeight = _Random.Next(100, 1000);
+            _weights = new Dictionary<string, double>();
+            Type T = typeof(CreeperAI.CreeperAI);
+            foreach (String property in T.GetProperties().Where(x => x.Name.Contains("Weight")).Select(x => x.Name))
+            {
+                _weights[property] = _Random.Next(-100, 100);
+            }
         }
 
         public Gene(Gene gene)
         {
-            MaterialWeight = gene.MaterialWeight;
-            TerritorialWeight = gene.TerritorialWeight;
-            PositionalWeight = gene.PositionalWeight;
-            PathToVictoryWeight = gene.PathToVictoryWeight;
-            VictoryWeight = gene.VictoryWeight;
+            foreach (String key in _weights.Keys)
+            {
+                _weights[key] = gene._weights[key];
+            }
         }
 
-        public Gene(double materialWeight, double territorialWeight, double positionalWeight, double pathToVictoryWeight, double victoryWeight)
+        public Gene(Dictionary<String, double> weights)
         {
-            MaterialWeight = materialWeight;
-            TerritorialWeight = territorialWeight;
-            PositionalWeight = positionalWeight;
-            PathToVictoryWeight = pathToVictoryWeight;
-            VictoryWeight = victoryWeight;
+            _weights = new Dictionary<string,double>(weights);
         }
 
         public Gene CrossWith(Gene gene)
         {
-            double material = _Random.Next() % 2 == 0 ? gene.MaterialWeight : MaterialWeight;
-            double territory = _Random.Next() % 2 == 0 ? gene.TerritorialWeight : TerritorialWeight;
-            double position = _Random.Next() % 2 == 0 ? gene.PositionalWeight : PositionalWeight;
-            double path = _Random.Next() % 2 == 0 ? gene.PathToVictoryWeight : PathToVictoryWeight;
-            double victory = _Random.Next() % 2 == 0 ? gene.VictoryWeight : VictoryWeight;
+            foreach (String key in _weights.Keys)
+            {
+                _weights[key] = _Random.Next() % 2 == 0 ? gene._weights[key] : _weights[key];
+            }
 
-            return new Gene(material, territory, position, path, victory);
+            return new Gene(_weights);
         }
 
         public Gene Mutate()
         {
-            double material = _Random.Next() % 2 == 0 ? MaterialWeight + _Random.Next() % 5 : MaterialWeight - _Random.Next() % 5;
-            double territory = _Random.Next() % 2 == 0 ? TerritorialWeight + _Random.Next() % 5 : TerritorialWeight - _Random.Next() % 5;
-            double position = _Random.Next() % 2 == 0 ? PositionalWeight + _Random.Next() % 5 : PositionalWeight - _Random.Next() % 5;
-            double path = _Random.Next() % 2 == 0 ? PathToVictoryWeight + _Random.Next() % 5 : PathToVictoryWeight - _Random.Next() % 5;
-            double victory = _Random.Next() % 2 == 0 ? VictoryWeight + _Random.Next() % 5 : VictoryWeight - _Random.Next() % 5;
+            foreach (String key in _weights.Keys)
+            {
+                _weights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.Next() % 5 : _weights[key] - _Random.Next() % 5;
+            }
 
-            return new Gene(material, territory, position, path, victory);
+            return new Gene(_weights);
         }
 
         public bool Defeats(Gene opponent)
@@ -84,8 +75,8 @@ namespace DustinGenetics
                 int moveCount = 0;
                 CreeperColor turn = CreeperColor.Ice;
                 CreeperBoard board = new CreeperBoard();
-                CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(TerritorialWeight, MaterialWeight, PositionalWeight, PathToVictoryWeight, VictoryWeight);
-                CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent.TerritorialWeight, opponent.MaterialWeight, opponent.PositionalWeight, opponent.PathToVictoryWeight, opponent.VictoryWeight);
+                CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(_weights);
+                CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent._weights);
 
                 while (!board.IsFinished(turn))
                 {
@@ -118,19 +109,21 @@ namespace DustinGenetics
 
         public void Print()
         {
-            Console.Write("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}\n\n", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
+            //Console.Write("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}\n\n", MaterialWeight, TerritorialWeight, PathToVictoryWeight, VictoryWeight, PositionalWeight);
+            foreach (String key in _weights.Keys)
+            {
+                Console.WriteLine("{0}: {1}", key, _weights[key]);
+            }
         }
 
         public void WriteToFile(string path)
         {
             using (StreamWriter writer = new StreamWriter(path, true))
             {
-                writer.WriteLine("Material   : {0}", MaterialWeight);
-                writer.WriteLine("Territorial: {0}", TerritorialWeight);
-                writer.WriteLine("Positional : {0}", PositionalWeight);
-                writer.WriteLine("Path       : {0}", PathToVictoryWeight);
-                writer.WriteLine("Victory    : {0}", VictoryWeight);
-                writer.WriteLine("Win        : {0}%", WinPercentage * 100);
+                foreach (String key in _weights.Keys)
+                {
+                    writer.WriteLine("{0}: {1}", key, _weights[key]);
+                }
                 writer.WriteLine();
             }
         }

@@ -8,7 +8,16 @@ namespace DustinGenetics
     class Program
     {
         public static string LogPath = @"C:\Users\Dustin\Dropbox\Capstone\Genetics\bestGenes.log";
-        public static Gene SeedGene = new Gene(-19, 75, -71, 86, 104);
+        
+        public static Gene SeedGene = new Gene(new Dictionary<String, double>()
+        {
+            {"TerritorialWeight", 19},
+            {"MaterialWeight", 75},
+            {"PositionalWeight", -71},
+            {"ShortestDistanceWeight", 86},
+            {"VictoryWeight", 104},
+        });
+
         public static bool UseSeed = false;
 
         static void Main(string[] args)

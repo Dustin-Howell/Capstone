@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using Caliburn.Micro;
 using CreeperMessages;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace CreeperAI
 {
@@ -45,6 +46,19 @@ namespace CreeperAI
             _getMoveWorker = new BackgroundWorker();
             _getMoveWorker.DoWork += new DoWorkEventHandler(_getMoveWorker_DoWork);
             _getMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getMoveWorker_RunWorkerCompleted);
+        }
+
+        public CreeperAI(Dictionary<String, double> weights)
+        {
+            _MiniMaxDepth = 3;
+            foreach (String key in weights.Keys)
+            {
+                PropertyInfo property = this.GetType().GetProperty(key);
+                if (property != null)
+                {
+                    property.SetValue(this, weights[key], null);
+                }
+            }
         }
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)

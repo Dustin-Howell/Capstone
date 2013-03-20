@@ -103,23 +103,5 @@ namespace DustinGenetics
             return bestGene;
         }
 
-        public void WriteToFile(string path)
-        {
-            using (StreamWriter writer = new StreamWriter(path, false))
-            {
-                foreach (Gene gene in GenePool)
-                {
-                    writer.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", gene.MaterialWeight, gene.TerritorialWeight, gene.PathToVictoryWeight, gene.VictoryWeight, gene.PositionalWeight);
-                }
-            }
-        }
-
-        public void PrintToConsole()
-        {
-            foreach (Gene gene in GenePool)
-            {
-                Console.WriteLine("Material: {0}\nTerritorial: {1}\nPath: {2}\nVictory: {3}\nPositional: {4}", gene.MaterialWeight, gene.TerritorialWeight, gene.PathToVictoryWeight, gene.VictoryWeight, gene.PositionalWeight);
-            }
-        }
     }
 }
