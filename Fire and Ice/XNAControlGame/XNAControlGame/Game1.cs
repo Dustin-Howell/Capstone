@@ -140,6 +140,7 @@ namespace XNAControlGame
             _icePegs = new List<Nine.Graphics.Model>();
 
             base.LoadContent();
+
             LoadViewModels();
         }
 
