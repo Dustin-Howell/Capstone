@@ -59,7 +59,7 @@ namespace FireAndIce.ViewModels
         private BindableCollection<String> _chatMessages;
         public BindableCollection<String> ChatMessages
         {
-            get { return _chatMessages; }
+            get { return _chatMessages = _chatMessages ?? new BindableCollection<String>(); }
             set
             {
                 _chatMessages = value;
