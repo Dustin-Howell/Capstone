@@ -96,9 +96,8 @@ namespace CreeperAI
         #region AlphaBeta
         Move GetAlphaBetaNegaMaxMove(AICreeperBoard board)
         {
-            Move bestMove = new Move();
+            Move bestMove = null;
 
-            double best = Double.NegativeInfinity;
             double alpha = Double.NegativeInfinity;
             double beta = Double.PositiveInfinity;
 
@@ -108,15 +107,17 @@ namespace CreeperAI
             {
                 // Evaluate child node
                 board.PushMove(moves[i]);
-                double score = -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -Math.Max(alpha, best), _MiniMaxDepth - 1);
+                double score = ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
                 board.PopMove();
 
-                if (score > best)
+                if (score > alpha)
                 {
-                    best = score;
+                    alpha = score;
                     bestMove = moves[i];
                 }
             }
+
+            if (bestMove == null) throw new InvalidOperationException("Don't ask AI for a move on a moveless board.");
 
             return bestMove;
         }
@@ -167,24 +168,21 @@ namespace CreeperAI
                 return ScoreBoard(board, turnColor.Opposite(), depth);
             }
 
-            // Initialize the best score
-            double best = Double.NegativeInfinity;
-
             // Enumerate the children of the current node
             Move[] moves = board.AllPossibleMoves(turnColor);
             for (int i = 0; i < moves.Length; i++)
             {
                 // Evaluate child node:
                 board.PushMove(moves[i]);
-                best = Math.Max(best, -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -Math.Max(alpha, best), depth - 1));
+                alpha = Math.Max(alpha, -ScoreAlphaBetaNegaMaxMove(board, turnColor.Opposite(), -beta, -alpha, depth - 1));
                 board.PopMove();
 
                 // Prune if the current best score crosses beta
-                if (best >= beta)
-                    return best;
+                if (alpha >= beta)
+                    return alpha;
             }
 
-            return best;
+            return alpha;
         }
 
         private double ScoreAlphaBetaMiniMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
