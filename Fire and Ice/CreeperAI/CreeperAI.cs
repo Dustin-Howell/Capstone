@@ -70,15 +70,7 @@ namespace CreeperAI
             Stopwatch stopwatch = new Stopwatch();
             if (_reportTime) stopwatch.Start();
 
-            Move bestMove = new Move();
-            if (_parallel)
-            {
-                bestMove = GetParallelAlphaBetaNegaMaxMove(board);
-            }
-            else
-            {
-                bestMove = GetAlphaBetaNegaMaxMove(_board);
-            }
+            Move bestMove = GetAlphaBetaNegaMaxMove(_board);
 
             if (_reportTime)
             {
@@ -122,43 +114,6 @@ namespace CreeperAI
             return bestMove;
         }
 
-        Move GetParallelAlphaBetaNegaMaxMove(CreeperBoard board)
-        {
-            Move bestMove = new Move();
-
-            double best = Double.NegativeInfinity;
-            double alpha = Double.NegativeInfinity;
-            double beta = Double.PositiveInfinity;
-
-            // Enumerate the children of the current node
-            Move[] moves = new AICreeperBoard(board).AllPossibleMoves(_turnColor);
-
-            Dictionary<Move, double> moveScores = new Dictionary<Move, double>();
-
-            Parallel.ForEach(moves, move =>
-                {
-                    // If you have weird bugs, maybe use IDisposable?
-                    AICreeperBoard currentBoard = new AICreeperBoard(board);
-                    currentBoard.PushMove(move);
-                    double score = -ScoreAlphaBetaNegaMaxMove(currentBoard, _turnColor.Opposite(), -beta, -Math.Max(alpha, best), _MiniMaxDepth - 1);
-                    lock (this)
-                    {
-                        moveScores.Add(move, score);
-                    }
-                });
-
-            bestMove = moveScores.First().Key;
-            foreach (KeyValuePair<Move, double> move in moveScores)
-            {
-                if (moveScores[move.Key] > moveScores[bestMove])
-                {
-                    bestMove = move.Key;
-                }
-            }
-
-            return bestMove;
-        }
-
         private double ScoreAlphaBetaNegaMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
         {
             // if  depth = 0 or node is a terminal node
@@ -184,67 +139,6 @@ namespace CreeperAI
 
             return alpha;
         }
-
-        private double ScoreAlphaBetaMiniMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)
-        {
-            // if  depth = 0 or node is a terminal node
-            if ((depth <= 0) || board.IsFinished)
-            {
-                // return the heuristic value of node
-                return ScoreBoard(board, turnColor, depth);
-            }
-
-            // if  Player = MaximizedPlayer
-            if (turnColor == _turnColor)
-            {
-                // prioitize favorable boards
-                Move[] moves = board.AllPossibleMoves(turnColor);              
-
-                // for each child of node
-                for (int i = 0; i < moves.Length; i++)
-                {
-                    Move currentMove = moves[i];
-                    // α := max(α, alphabeta(child, depth-1, α, β, not(Player) ))
-                    board.PushMove(currentMove);
-                    alpha = Math.Max(alpha, ScoreAlphaBetaMiniMaxMove(board, turnColor.Opposite(), alpha, beta, depth - 1));
-                    board.PopMove();
-
-                    // if β ≤ α
-                    if (beta <= alpha)
-                    {
-                        break;
-                    }
-                }
-
-                // return α
-                return alpha;
-            }
-            else
-            {
-                // prioitize favorable boards
-                Move[] moves = board.AllPossibleMoves(turnColor);
-
-                // for each child of node
-                for (int i = 0; i < moves.Length; i++)
-                {
-                    Move currentMove = moves[i];
-
-                    // β := min(β, alphabeta(child, depth-1, α, β, not(Player) ))
-                    board.PushMove(currentMove);
-                    beta = Math.Min(beta, ScoreAlphaBetaMiniMaxMove(board, turnColor.Opposite(), alpha, beta, depth - 1));
-                    board.PopMove();
-
-                    // if β ≤ α
-                    if (beta <= alpha)
-                    {
-                        break;
-                    }
-                }
-
-                // return β
-                return beta;
-            }
-        }
         #endregion
 
         #region BoardScoring
@@ -263,9 +157,9 @@ namespace CreeperAI
                     break;
 
                 default:
-                    //score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
-                    //score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
-                    //score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
+                    score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
+                    score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
+                    score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
                     score += ScoreBoardShortestDistance(board, turnColor) * ShortestDistanceWeight;
                     break;
             }
