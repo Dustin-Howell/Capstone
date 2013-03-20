@@ -546,7 +546,7 @@ namespace CreeperAI
             return possibleMoves;
         }
 
-        private IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node, CreeperColor color)
+        public IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node, CreeperColor color)
         {
             foreach (Position neighborPosition in new[]{
                 new Position(node.Row - 1, node.Column),

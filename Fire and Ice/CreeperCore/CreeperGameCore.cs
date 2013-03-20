@@ -62,7 +62,7 @@ namespace CreeperCore
                     TerritorialWeight = 15d,
                     MaterialWeight = 84d,
                     PositionalWeight = 2d,
-                    PathHueristicWeight = 43d,
+                    ShortestDistanceWeight = 43d,
                     VictoryWeight = 100000,
                     Difficulty = difficulty,
                 };

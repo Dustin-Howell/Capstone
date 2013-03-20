@@ -29,7 +29,7 @@ namespace CreeperAI
         public double TerritorialWeight { get; set; }
         public double MaterialWeight { get; set; }
         public double PositionalWeight { get; set; }
-        public double PathHueristicWeight { get; set; }
+        public double ShortestDistanceWeight { get; set; }
         public double VictoryWeight { get; set; }
         public AIDifficulty Difficulty { get; set; }
 
@@ -149,7 +149,7 @@ namespace CreeperAI
             if ((depth <= 0) || board.IsFinished)
             {
                 // return the heuristic value of node
-                return ScoreBoard(board, turnColor, depth);
+                return ScoreBoard(board, turnColor.Opposite(), depth);
             }
 
             // Initialize the best score
@@ -253,7 +253,7 @@ namespace CreeperAI
                     score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
                     score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
                     score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
-                    score += ScoreBoardVictory(board, turnColor);
+                    score += ScoreBoardShortestDistance(board, turnColor) * ShortestDistanceWeight;
                     break;
             }
 
@@ -313,63 +313,66 @@ namespace CreeperAI
             return score;
         }
 
-        private double ScoreBoardVictory(AICreeperBoard board, CreeperColor turn)
+        private double ScoreBoardShortestDistance(AICreeperBoard board, CreeperColor turn)
         {
-            double score = 0.0;
+            Position start = turn.IsBlack() ? AICreeperBoard._BlackStart : AICreeperBoard._WhiteStart;
+            Position end = turn.IsBlack() ? AICreeperBoard._BlackEnd : AICreeperBoard._WhiteEnd;
+            HashSet<AIBoardNode> startTiles = new HashSet<AIBoardNode>();
+            startTiles.Add(board.TileBoard[start.Row, start.Column]);
+            HashSet<AIBoardNode> endTiles = new HashSet<AIBoardNode>();
+            endTiles.Add(board.TileBoard[end.Row, end.Column]);
+            Stack<AIBoardNode> stack = new Stack<AIBoardNode>();
 
-            Move currentMove = board.CurrentMove;
-            if (board.IsFlipMove(currentMove))
+            stack.Push(board.TileBoard[start.Row, start.Column]);
+            do
             {
-                AIBoardNode flippedTile = board.GetFlippedTileCopy(currentMove);
-                AIBoardNode[] columnHead = (turn == CreeperColor.Fire) ? board.ColumnHeadWhite : board.ColumnHeadWhite;
-                AIBoardNode[] rowHead = (turn == CreeperColor.Fire) ? board.RowHeadWhite : board.RowHeadWhite;
+                AIBoardNode currentTile = stack.Pop();
 
-                //If we are null in this row, we want to add a new tile here
-                if (rowHead[flippedTile.Row] == null)
+                IEnumerable<AIBoardNode> neighbors = board.GetNeighbors(currentTile, turn);
+                foreach (AIBoardNode neighbor in neighbors)
                 {
-                    //so we add to the score
-                    score += PathHueristicWeight;
-
-                    //if the tile above us is our color
-                    if (flippedTile.Row - 1 >= 0
-                        && board.TileBoard[flippedTile.Row - 1, flippedTile.Column].Color == turn)
+                    if (!startTiles.Contains(neighbor))
                     {
-                        //bonus points for an adjacency when moving to a null row
-                        score += PathHueristicWeight;
-                    }
-                    //and if the row below us is our color
-                    if (flippedTile.Row + 1 <= CreeperBoard.TileRows - 1
-                        && board.TileBoard[flippedTile.Row + 1, flippedTile.Column].Color == turn)
-                    {
-                        //more bonus points
-                        score += PathHueristicWeight;
+                        stack.Push(neighbor);
                     }
                 }
 
-                //if this column is null
-                if (columnHead[flippedTile.Column] == null)
-                {
-                    //that's good--we want to be filling in columns with no pieces
-                    score += PathHueristicWeight;
-
-                    //and if the column to our left has someone there
-                    if (flippedTile.Column - 1 >= 0
-                        && board.TileBoard[flippedTile.Row, flippedTile.Column - 1].Color == turn)
-                    {
-                        //great, another connection
-                        score += PathHueristicWeight;
-                    }
-                    //and if the column to our right does as well
-                    if (flippedTile.Column + 1 <= CreeperBoard.TileRows - 1
-                        && board.TileBoard[flippedTile.Row, flippedTile.Column + 1].Color == turn)
-                    {
-                        //even better
-                        score += PathHueristicWeight;
-                    }
-                }
+                startTiles.UnionWith(neighbors);
             }
+            while (stack.Any());
 
-            return score;
+            double shortestDistance = DistanceBetweenTiles(board.TileBoard[start.Row, start.Column], board.TileBoard[end.Row, end.Column]);
+
+            stack.Push(board.TileBoard[end.Row, end.Column]);
+            do
+            {
+                AIBoardNode currentTile = stack.Pop();
+
+                //Here is where we calculate the distances...
+                foreach (AIBoardNode tile in startTiles)
+                {
+                    shortestDistance = Math.Min(shortestDistance, DistanceBetweenTiles(currentTile, tile));
+                }
+
+                IEnumerable<AIBoardNode> neighbors = board.GetNeighbors(currentTile, turn);
+                foreach (AIBoardNode neighbor in neighbors)
+                {
+                    if (!endTiles.Contains(neighbor))
+                    {
+                        stack.Push(neighbor);
+                    }
+                }
+
+                endTiles.UnionWith(neighbors);
+            }
+            while (stack.Any());
+
+            return 1 - shortestDistance / 10;
+        }
+
+        private double DistanceBetweenTiles(AIBoardNode tile1, AIBoardNode tile2)
+        {
+            return Math.Abs(tile1.Row - tile2.Row) + Math.Abs(tile1.Column - tile2.Column);
         }
         #endregion
 
