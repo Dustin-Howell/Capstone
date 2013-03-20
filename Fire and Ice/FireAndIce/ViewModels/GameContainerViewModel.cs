@@ -13,7 +13,7 @@ using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<GameOverMessage>, IHandle<MoveResponseMessage>
+    class GameContainerViewModel : Screen, IHandle<GameOverMessage>, IHandle<MoveResponseMessage>, IHandle<ChatMessage>
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
@@ -53,6 +53,28 @@ namespace FireAndIce.ViewModels
             get
             {
                 return GameTracker.CurrentPlayer != null? GameTracker.CurrentPlayer.Color.ToString() : "Fire";
+            }
+        }
+
+        private BindableCollection<String> _chatMessages;
+        public BindableCollection<String> ChatMessages
+        {
+            get { return _chatMessages; }
+            set
+            {
+                _chatMessages = value;
+                NotifyOfPropertyChange(() => ChatMessages);
+            }
+        }
+
+        private String _message;
+        public String Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                NotifyOfPropertyChange(() => Message);
             }
         }
 
@@ -108,6 +130,20 @@ namespace FireAndIce.ViewModels
         public void Handle(MoveResponseMessage message)
         {
             NotifyOfPropertyChange(() => CurrentTurn);
+        }
+
+        public void SendMessage()
+        {
+            AppModel.EventAggregator.Publish(new ChatMessage(Message, ChatMessageType.Send));
+            Message = "";
+        }
+
+        public void Handle(ChatMessage message)
+        {
+            if (message.Type == ChatMessageType.Receive)
+            {
+                ChatMessages.Add(message.Message);
+            }
         }
     }
 }

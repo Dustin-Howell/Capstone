@@ -12,7 +12,7 @@ using CreeperMessages;
 
 namespace CreeperNetwork
 {
-    public class Network : IHandle<GameOverMessage>, IHandle<MoveRequestMessage>, IHandle<MoveResponseMessage>
+    public class Network : IHandle<GameOverMessage>, IHandle<MoveRequestMessage>, IHandle<MoveResponseMessage>, IHandle<ChatMessage>
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
@@ -469,8 +469,7 @@ namespace CreeperNetwork
                         acknowledged = true;
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
 
-                        _eventAggregator.Publish(new ChatMessage(currentMessage));
-
+                        _eventAggregator.Publish(new ChatMessage(currentMessage, ChatMessageType.Receive));
 
                     }
                     else if (packet[1] == CMD_MAKE_MOVE)
@@ -983,6 +982,14 @@ namespace CreeperNetwork
             if (message.PlayerType != PlayerType.Network)
             {
                 move(message.Move);
+            }
+        }
+
+        public void Handle(ChatMessage message)
+        {
+            if (message.Type == ChatMessageType.Send)
+            {
+                chat(message.Message);
             }
         }
     }

@@ -23,6 +23,10 @@
                     <Label FontSize="12">Current Turn:</Label>
                     <Label FontSize="12" x:Name="CurrentTurn" />
                 </StackPanel>
+                <Label x:Name="GameOverText" 
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                       DockPanel.Dock="Top"/>
                 <Button DockPanel.Dock="Bottom"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Bottom"
@@ -53,9 +57,13 @@
                 Background="{StaticResource Complementary1}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-            <Label x:Name="GameOverText" 
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                <ItemsControl x:Name="ChatMessages" HorizontalAlignment="Stretch" Width="500" Height="70" BorderThickness="1" BorderBrush="White"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <TextBox x:Name="Message" Width="420"/>
+                    <Button x:Name="SendMessage" Width="70" Content="Send" IsDefault="True" />
+                </StackPanel>
+            </StackPanel>
         </Border>
     </Grid>
     
