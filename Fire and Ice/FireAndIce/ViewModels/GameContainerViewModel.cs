@@ -13,7 +13,7 @@ using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<GameOverMessage>
+    class GameContainerViewModel : Screen, IHandle<GameOverMessage>, IHandle<MoveResponseMessage>
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
@@ -45,6 +45,14 @@ namespace FireAndIce.ViewModels
             {
                 _gameOverText = value;
                 NotifyOfPropertyChange(() => GameOverText);
+            }
+        }
+
+        public String CurrentTurn
+        {
+            get
+            {
+                return GameTracker.CurrentPlayer != null? GameTracker.CurrentPlayer.Color.ToString() : "Fire";
             }
         }
 
@@ -95,6 +103,11 @@ namespace FireAndIce.ViewModels
         public void Handle(GameOverMessage message)
         {
             GameOverText = String.Format("{0} wins!", message.Winner.ToString());
+        }
+
+        public void Handle(MoveResponseMessage message)
+        {
+            NotifyOfPropertyChange(() => CurrentTurn);
         }
     }
 }

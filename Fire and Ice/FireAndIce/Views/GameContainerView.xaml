@@ -18,11 +18,19 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Panel.ZIndex="2">
-            <Button VerticalAlignment="Bottom"
-                HorizontalAlignment="Stretch"
-                x:Name="ReturnToMainMenu">
-                Quit
-            </Button>
+            <DockPanel>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Top" HorizontalAlignment="Center">
+                    <Label FontSize="12">Current Turn:</Label>
+                    <Label FontSize="12" x:Name="CurrentTurn" />
+                </StackPanel>
+                <Button DockPanel.Dock="Bottom"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        x:Name="ReturnToMainMenu"
+                        Height="50">
+                    Quit
+                </Button>
+            </DockPanel>
         </Border>
         <local:AirspacePopup PlacementTarget="{Binding ElementName=XNAControl}"
                              FollowPlacementTarget="True"
