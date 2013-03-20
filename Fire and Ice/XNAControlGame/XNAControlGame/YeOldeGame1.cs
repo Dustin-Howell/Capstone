@@ -208,7 +208,7 @@ namespace XNAControlGame
         protected override void LoadContent()
         {
             // Load the peg model
-            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
+            Microsoft.Xna.Framework.Graphics.Model pegModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePegModel);
             fireOne = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
             fireTwo = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
             iceOne = new Nine.Graphics.ParticleEffects.ParticleEffect(GraphicsDevice);
