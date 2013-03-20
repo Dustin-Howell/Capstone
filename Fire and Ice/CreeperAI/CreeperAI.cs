@@ -259,13 +259,13 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = VictoryWeight * depth * ((_MiniMaxDepth % 2 == 0)? 1 : -1);
+                    score = VictoryWeight * (depth + 1);
                     break;
 
                 default:
-                    score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
-                    score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
-                    score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
+                    //score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
+                    //score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
+                    //score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
                     score += ScoreBoardShortestDistance(board, turnColor) * ShortestDistanceWeight;
                     break;
             }
