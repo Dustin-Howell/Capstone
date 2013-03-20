@@ -253,10 +253,10 @@ namespace XNAControlGame
 
             //Find all of the dimensions of the board to determine where the peg models need to be placed in relation to the middle of the board.
             float boardHeight, boardWidth, squareWidth, squareHeight;
-            boardHeight = _scene.Find<Surface>().Heightmap.Height;
-            boardWidth = _scene.Find<Surface>().Heightmap.Width;
-            squareHeight = (boardHeight / CreeperBoard.TileRows) * _scene.Find<Surface>().Heightmap.Step;
-            squareWidth = (boardWidth / CreeperBoard.TileRows) * _scene.Find<Surface>().Heightmap.Step;
+            boardHeight = _scene.FindName<Surface>("boardSurface").Heightmap.Height;
+            boardWidth = _scene.FindName<Surface>("boardSurface").Heightmap.Width;
+            squareHeight = (boardHeight / CreeperBoard.TileRows) * _scene.FindName<Surface>("boardSurface").Heightmap.Step;
+            squareWidth = (boardWidth / CreeperBoard.TileRows) * _scene.FindName<Surface>("boardSurface").Heightmap.Step;
             Vector3 startCoordinates = new Vector3(0, 0, 0);
 
             Position pegPosition;
