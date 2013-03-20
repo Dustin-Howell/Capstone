@@ -908,7 +908,7 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_Chat(string messageIn)
         {
-            byte[] packet = new byte[24];
+            byte[] packet = new byte[10 + messageIn.Length];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
 
             homeSequenceNumber++;
@@ -919,7 +919,7 @@ namespace CreeperNetwork
             (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
 
             //Message length
-            (BitConverter.GetBytes(clientPlayerName.Length)).CopyTo(packet, 6);
+            (BitConverter.GetBytes(messageIn.Length)).CopyTo(packet, 6);
 
             (encoding.GetBytes(messageIn)).CopyTo(packet, 10);
 
