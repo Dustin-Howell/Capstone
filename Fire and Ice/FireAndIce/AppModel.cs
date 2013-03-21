@@ -52,6 +52,23 @@ namespace FireAndIce
             }
         }
 
+        private static CreeperAI.CreeperAI _AI;
+        public static CreeperAI.CreeperAI AI
+        {
+            get
+            {
+                return _AI = _AI ?? new CreeperAI.CreeperAI(EventAggregator)
+                {
+                    TerritorialWeight = 15d,
+                    MaterialWeight = 84d,
+                    PositionalWeight = 2d,
+                    ShortestDistanceWeight = 43d,
+                    VictoryWeight = 100000,
+                    Difficulty = AIDifficulty.Hard,
+                };
+            }
+        }
+
         private static ResourceDictionary _resources;
         public static ResourceDictionary Resources { get { return _resources = _resources ?? new ResourceDictionary() { Source = new Uri(@"..\Resources.xaml", UriKind.Relative) }; } }
     }

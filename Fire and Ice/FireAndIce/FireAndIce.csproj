@@ -178,6 +178,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CreeperAI\CreeperAI.csproj">
+      <Project>{33BA3E7F-7DA1-4A7D-8215-845273C681AA}</Project>
+      <Name>CreeperAI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CreeperCore\CreeperCore.csproj">
       <Project>{1F579A95-D709-4BE7-B5DE-438A59016AC4}</Project>
       <Name>CreeperCore</Name>

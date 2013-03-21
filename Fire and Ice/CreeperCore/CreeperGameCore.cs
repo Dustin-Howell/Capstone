@@ -28,7 +28,6 @@ namespace CreeperCore
         }
 
         private XNAControl.XNAControlGame _xnaGame;
-        private CreeperAI.CreeperAI _AI;
         private Network _network;
         private IEventAggregator _eventAggregator;
         private bool _IsNetworkGame { get { return GameTracker.Player1.PlayerType == PlayerType.Network || GameTracker.Player2.PlayerType == PlayerType.Network; } }
@@ -53,19 +52,6 @@ namespace CreeperCore
             if (player1Type == PlayerType.Network || player2Type == PlayerType.Network)
             {
                 throw new ArgumentException("Cannot start a local game with a player type of network.");
-            }
-            if (player1Type == PlayerType.AI || player2Type == PlayerType.AI)
-            {
-                //TODO: Think this through more thoroughly later
-                _AI = new CreeperAI.CreeperAI(_eventAggregator)
-                {
-                    TerritorialWeight = 15d,
-                    MaterialWeight = 84d,
-                    PositionalWeight = 2d,
-                    ShortestDistanceWeight = 43d,
-                    VictoryWeight = 100000,
-                    Difficulty = difficulty,
-                };
             }
 
             StartGame(player1Type, player2Type);
