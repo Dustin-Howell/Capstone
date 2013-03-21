@@ -139,12 +139,34 @@ namespace XNAControlGame
             _firePegs = new List<Nine.Graphics.Model>();
             _icePegs = new List<Nine.Graphics.Model>();
 
+            base.LoadContent();
 
             LoadViewModels();
 
-            base.LoadContent();
+            LoadPegModels();
 
             
+        }
+
+        private void LoadPegModels()
+        {
+
+            foreach (Piece piece in GameTracker.Board.Pegs.Where(x => x.Color.IsTeamColor()))
+            {
+                CreeperPeg peg;
+                if (piece.Color == CreeperColor.Fire)
+                {
+                    peg = new CreeperPeg(_fireModel, piece.Position);
+                    _firePegs.Add(peg);
+                }
+                else
+                {
+                    peg = new CreeperPeg(_iceModel, piece.Position);
+                    _icePegs.Add(peg);
+                }
+
+                _scene.Add(peg);
+            }
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
@@ -153,8 +175,7 @@ namespace XNAControlGame
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
-        {
-            
+        {            
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             _scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
             

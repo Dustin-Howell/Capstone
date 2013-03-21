@@ -18,8 +18,8 @@ namespace Resources
         public static Vector3 PegScale { get { return _pegScale; } }
 
         //Model Names
-        public static String FirePeg { get { return "Model/sphere"; } }
-        public static String IcePeg { get { return "Model/sphere"; } }
+        public static String FirePeg { get { return "Model/TempFirePeg"; } }
+        public static String IcePeg { get { return "Model/TempIcePeg"; } }
         public static String SelectedPeg { get { return "Model/sphere"; } }
     }
 

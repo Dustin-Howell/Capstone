@@ -1,1 +1,1 @@
-Error: Texture file does not exist:  (file: C:\Users\ggwaltne\Documents\Sample Models\TempIcePeg\Water_Sparkling_.jpg) [ (line 0)]
+Warning: None triangle mesh: ID25 (file: 'C:\Users\ggwaltne\Documents\GitHub\Capstone\Fire and Ice\XNAControlGame\XNAControlGameContent\Model\TempIcePeg.fbx') [ (line 0)]
