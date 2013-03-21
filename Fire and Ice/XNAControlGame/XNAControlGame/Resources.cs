@@ -14,11 +14,13 @@ namespace Resources
     static class Models
     {
         //Model Scales
-        private static readonly Vector3 _pegScale = new Vector3( 2.5f, 2.5f, 2.5f );
+        private static readonly Vector3 _pegScale = new Vector3(2.5f, 2.5f, 2.5f);
         public static Vector3 PegScale { get { return _pegScale; } }
 
         //Model Names
-        public static String PegModel { get { return "Model/sphere"; } }
+        public static String FirePeg { get { return "Model/sphere"; } }
+        public static String IcePeg { get { return "Model/sphere"; } }
+        public static String SelectedPeg { get { return "Model/sphere"; } }
     }
 
     static class Textures

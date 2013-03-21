@@ -27,7 +27,9 @@ namespace XNAControlGame
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
         private Scene _scene;
-        private Microsoft.Xna.Framework.Graphics.Model _pegModel;
+        private Microsoft.Xna.Framework.Graphics.Model _selectedModel;
+        private Microsoft.Xna.Framework.Graphics.Model _fireModel;
+        private Microsoft.Xna.Framework.Graphics.Model _iceModel;
         private CreeperBoardViewModel _creeperBoardViewModel;
         private Input _input;
 
@@ -124,31 +126,20 @@ namespace XNAControlGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        private Microsoft.Xna.Framework.Graphics.Model testModel;
         protected override void LoadContent()
         {
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
 
-            
-
             _scene = Content.Load<Scene>("Scene1");
-            //_scene.Add(Content.Load<Group>("PegView"));
 
-            //testModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PegModel);
-            //var material = new BasicMaterial(GraphicsDevice);
-            //var nineTestModel = new Nine.Graphics.Model(testModel) 
-            //{ 
-            //    Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(0, 0, 0), 
-            //    Material = material,
-            //};
+            _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
+            _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
+            _selectedModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.SelectedPeg);
 
-            //_firePegs = new List<Nine.Graphics.Model>();
-            //_icePegs = new List<Nine.Graphics.Model>();
-            //_firePegs.Add(nineTestModel);
-            //_icePegs.Add(nineTestModel);
-            //_scene.Add(nineTestModel);
+            _firePegs = new List<Nine.Graphics.Model>();
+            _icePegs = new List<Nine.Graphics.Model>();
+
             base.LoadContent();
-
             LoadViewModels();
         }
 
@@ -161,7 +152,7 @@ namespace XNAControlGame
         {
             
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
-            //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
+            _scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
             
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_spriteFont, "("+ Mouse.GetState().X.ToString() + ", "+ Mouse.GetState().Y.ToString() + ")", new Vector2(0, 0), Color.White);

@@ -130,7 +130,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Resources.cs" />
-    <Compile Include="YeOldeGame1.cs" />
+    <None Include="YeOldeGame1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
