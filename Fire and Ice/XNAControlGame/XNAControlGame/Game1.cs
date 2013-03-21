@@ -139,9 +139,12 @@ namespace XNAControlGame
             _firePegs = new List<Nine.Graphics.Model>();
             _icePegs = new List<Nine.Graphics.Model>();
 
-            base.LoadContent();
 
             LoadViewModels();
+
+            base.LoadContent();
+
+            
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
