@@ -286,8 +286,7 @@ namespace XNAControlGame
 
         public void Handle(MoveResponseMessage message)
         {
-            //animate
-            throw new NotImplementedException(message.ToString());
+
         }
     }
 }

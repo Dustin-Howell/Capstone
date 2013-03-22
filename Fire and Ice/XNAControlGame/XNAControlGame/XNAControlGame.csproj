@@ -123,7 +123,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animation.cs" />
+    <Compile Include="PegAnimation.cs" />
     <Compile Include="CreeperBoardViewModel.cs" />
     <Compile Include="CreeperPeg.cs" />
     <Compile Include="MoveRequestMessage.cs" />
