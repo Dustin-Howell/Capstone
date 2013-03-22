@@ -54,6 +54,16 @@ namespace XNAControlGame
                     .Select(x => (CreeperPeg)x);                
             }
         }
+        private IEnumerable<CreeperPeg> _possiblePegs
+        {
+            get
+            {
+                return _boardGroup.Children
+                    .Where(x => x.GetType() == typeof(CreeperPeg)
+                        && ((CreeperPeg)x).PegType == CreeperPegType.Possible)
+                    .Select(x => (CreeperPeg)x);
+            }
+        }
 
         private CreeperPeg _selectedPeg;
 
@@ -63,12 +73,21 @@ namespace XNAControlGame
             : base(handle, "Content", width, height)
         {
             _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
 
             Components.Add(new InputComponent(handle));
             _input = new Input();
 
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s,e) => DetectFullClick(e));
+            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) => { ClearPossiblePegs(); DetectFullClick(e); });
             _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s,e) => DetectFullClick(e));
+        }
+
+        private void ClearPossiblePegs()
+        {
+            foreach (CreeperPeg pegToRemove in _possiblePegs)
+            {
+                _boardGroup.Remove(pegToRemove);
+            }
         }
 
         private CreeperPeg _lastDownClickedModel;
@@ -100,13 +119,20 @@ namespace XNAControlGame
             switch (clickedModel.PegType)
             {
                 case CreeperPegType.Fire:
+                    _selectedPeg = clickedModel;
                     UpdatePossibleMoves(clickedModel);
                     break;
                 case CreeperPegType.Ice:
+                    _selectedPeg = clickedModel;
                     UpdatePossibleMoves(clickedModel);
                     break;
                 case CreeperPegType.Possible:
-                    //make move
+                    _eventAggregator.Publish(
+                        new MoveResponseMessage(
+                            new Move(_selectedPeg.Position, clickedModel.Position, 
+                                _selectedPeg.PegType.ToCreeperColor()), 
+                                PlayerType.Human)
+                            );
                     break;
             }
         }
