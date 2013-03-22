@@ -27,15 +27,16 @@ namespace XNAControlGame
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
         private Scene _scene;
+        private Group _boardGroup;
         private Microsoft.Xna.Framework.Graphics.Model _selectedModel;
         private Microsoft.Xna.Framework.Graphics.Model _fireModel;
         private Microsoft.Xna.Framework.Graphics.Model _iceModel;
         private CreeperBoardViewModel _creeperBoardViewModel;
         private Input _input;
 
-        private List<Nine.Graphics.Model> _firePegs;
-        private List<Nine.Graphics.Model> _icePegs;
-        private Nine.Graphics.Model _selectedPeg;
+        private List<CreeperPeg> _firePegs;
+        private List<CreeperPeg> _icePegs;
+        private CreeperPeg _selectedPeg;
 
         private bool _humanMovePending = false;
 
@@ -44,9 +45,6 @@ namespace XNAControlGame
         {
             _eventAggregator = eventAggregator;
 
-            _firePegs = new List<Nine.Graphics.Model>();
-            _icePegs = new List<Nine.Graphics.Model>();
-
             Components.Add(new InputComponent(handle));
             _input = new Input();
 
@@ -54,10 +52,10 @@ namespace XNAControlGame
             _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s,e) => DetectFullClick(e));
         }
 
-        private Nine.Graphics.Model _lastDownClickedModel;
+        private CreeperPeg _lastDownClickedModel;
         void DetectFullClick(Nine.MouseEventArgs e)
         {
-            Nine.Graphics.Model clickedModel = GetClickedModel(new Vector2(e.MouseState.X, e.MouseState.Y));
+            CreeperPeg clickedModel = GetClickedModel(new Vector2(e.MouseState.X, e.MouseState.Y));
             if (clickedModel != null)
             {
                 //if downclick
@@ -98,13 +96,13 @@ namespace XNAControlGame
             return pickRay;
         }
 
-        private Nine.Graphics.Model GetClickedModel(Vector2 mousePosition)
+        private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Ray selectionRay = GetSelectionRay(mousePosition);
-            List<Nine.Graphics.Model> currentTeam = (GameTracker.CurrentPlayer.Color == CreeperColor.Fire) ? _firePegs : _icePegs;
-            Nine.Graphics.Model clickedModel = null;
+            List<CreeperPeg> currentTeam = (GameTracker.CurrentPlayer.Color == CreeperColor.Fire) ? _firePegs : _icePegs;
+            CreeperPeg clickedModel = null;
 
-            foreach (Nine.Graphics.Model peg in currentTeam)
+            foreach (CreeperPeg peg in currentTeam)
             {
                 if (selectionRay.Intersects(peg.BoundingBox).HasValue)
                 {
@@ -130,27 +128,25 @@ namespace XNAControlGame
         {
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
 
-            _scene = Content.Load<Scene>("Scene1");
+            _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
+            _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
             _selectedModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.SelectedPeg);
 
-            _firePegs = new List<Nine.Graphics.Model>();
-            _icePegs = new List<Nine.Graphics.Model>();
+            _firePegs = new List<CreeperPeg>();
+            _icePegs = new List<CreeperPeg>();
 
             base.LoadContent();
 
             LoadViewModels();
 
-            LoadPegModels();
-
-            
+            LoadPegModels();            
         }
 
         private void LoadPegModels()
         {
-
             foreach (Piece piece in GameTracker.Board.Pegs.Where(x => x.Color.IsTeamColor()))
             {
                 CreeperPeg peg;

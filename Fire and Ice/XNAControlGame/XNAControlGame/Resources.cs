@@ -11,10 +11,16 @@ namespace Resources
         public static String MainPlayScene { get { return "Scene1"; } }
     }
 
+    static class ElementNames
+    {
+        public static String BoardGroup { get { return "GameBoard"; } }
+        public static String RootScene { get { return "Scene1"; } }
+    }
+
     static class Models
     {
         //Model Scales
-        private static readonly Vector3 _pegScale = new Vector3(2.5f, 2.5f, 2.5f);
+        private static readonly Vector3 _pegScale = new Vector3(.2f, .2f, .2f);
         public static Vector3 PegScale { get { return _pegScale; } }
 
         //Model Names

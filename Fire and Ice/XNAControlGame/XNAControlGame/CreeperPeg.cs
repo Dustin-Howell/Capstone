@@ -12,12 +12,12 @@ namespace XNAControlGame
 
     public class CreeperPeg : Nine.Graphics.Model
     {
-        public Position PegPosition { get; set; }
+        public Position Position { get; set; }
 
         public CreeperPeg(Microsoft.Xna.Framework.Graphics.Model model, Position position)
             : base(model)
         {
-            PegPosition = position;
+            Position = position;
         }
     }
 }

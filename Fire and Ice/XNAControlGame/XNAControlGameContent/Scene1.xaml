@@ -5,7 +5,7 @@
 
     <AmbientLight AmbientLightColor="0.0, 0.0, 0.0" Enabled="True" />
     <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Direction="1, -1, 1" />
-    
+
 
     <Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
