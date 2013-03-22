@@ -34,8 +34,27 @@ namespace XNAControlGame
         private CreeperBoardViewModel _creeperBoardViewModel;
         private Input _input;
 
-        private List<CreeperPeg> _firePegs;
-        private List<CreeperPeg> _icePegs;
+        private IEnumerable<CreeperPeg> _firePegs
+        {
+            get
+            {
+                return _boardGroup.Children
+                    .Where(x => x.GetType() == typeof(CreeperPeg) 
+                        && ((CreeperPeg)x).PegType == CreeperPegType.Fire)
+                    .Select(x => (CreeperPeg)x);
+            }
+        }
+        private IEnumerable<CreeperPeg> _icePegs
+        {
+            get
+            {
+                return _boardGroup.Children
+                    .Where(x => x.GetType() == typeof(CreeperPeg) 
+                        && ((CreeperPeg)x).PegType == CreeperPegType.Ice)
+                    .Select(x => (CreeperPeg)x);                
+            }
+        }
+
         private CreeperPeg _selectedPeg;
 
         private bool _humanMovePending = false;
@@ -66,10 +85,41 @@ namespace XNAControlGame
                 //if upclick
                 else if (_lastDownClickedModel == clickedModel)
                 {
-                    _selectedPeg = clickedModel;
                     _lastDownClickedModel = null;
+
+                    if (GameTracker.CurrentPlayer.Color == clickedModel.PegType.ToCreeperColor())
+                    {
+                        OnPegClicked(clickedModel);
+                    }
                 }
             }
+        }
+
+        private void OnPegClicked(CreeperPeg clickedModel)
+        {
+            switch (clickedModel.PegType)
+            {
+                case CreeperPegType.Fire:
+                    UpdatePossibleMoves(clickedModel);
+                    break;
+                case CreeperPegType.Ice:
+                    UpdatePossibleMoves(clickedModel);
+                    break;
+                case CreeperPegType.Possible:
+                    //make move
+                    break;
+            }
+        }
+
+        private void UpdatePossibleMoves(CreeperPeg clickedPeg)
+        {
+            IEnumerable<Move> possibleMoves = GameTracker.Board.Pegs.At(clickedPeg.Position).PossibleMoves(GameTracker.Board);
+            foreach (Position position in possibleMoves.Select(x => x.EndPosition))
+            {
+                CreeperPeg peg = new CreeperPeg(_iceModel) { Position = position, PegType = CreeperPegType.Possible, };
+                _boardGroup.Add(peg);
+            }
+
         }
 
         /// <summary>
@@ -99,7 +149,7 @@ namespace XNAControlGame
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Ray selectionRay = GetSelectionRay(mousePosition);
-            List<CreeperPeg> currentTeam = (GameTracker.CurrentPlayer.Color == CreeperColor.Fire) ? _firePegs : _icePegs;
+            IEnumerable<CreeperPeg> currentTeam = (GameTracker.CurrentPlayer.Color == CreeperColor.Fire) ? _firePegs : _icePegs;
             CreeperPeg clickedModel = null;
 
             foreach (CreeperPeg peg in currentTeam)
@@ -120,8 +170,6 @@ namespace XNAControlGame
 
         protected override void Initialize()
         {
-            _firePegs = new List<CreeperPeg>();
-            _icePegs = new List<CreeperPeg>();
 
             base.Initialize();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -157,26 +205,30 @@ namespace XNAControlGame
                 CreeperPeg peg;
                 if (piece.Color == CreeperColor.Fire)
                 {
-                    peg = new CreeperPeg(_fireModel, piece.Position);
-                    _firePegs.Add(peg);
+                    peg = new CreeperPeg(_fireModel) 
+                    { 
+                        PegType = CreeperPegType.Fire, 
+                        Position = piece.Position, 
+                    };
                 }
                 else
                 {
-                    peg = new CreeperPeg(_iceModel, piece.Position);
-                    _icePegs.Add(peg);
+                    peg = new CreeperPeg(_iceModel) 
+                    { 
+                        PegType = CreeperPegType.Ice, 
+                        Position = piece.Position,
+                    };
                 }
-
-                peg.Transform = Matrix.CreateScale(Resources.Models.PegScale)
-                                    * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-
+                
                 _boardGroup.Add(peg);
             }
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            _scene.Update(gameTime.ElapsedGameTime);
             base.Update(gameTime);
+
+            _scene.Update(gameTime.ElapsedGameTime);
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)

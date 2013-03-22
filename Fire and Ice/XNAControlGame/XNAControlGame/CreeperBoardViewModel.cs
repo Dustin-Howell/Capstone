@@ -19,7 +19,7 @@ namespace XNAControlGame
         public CreeperBoard Board { get; private set; }
 
         // This should map abstract piece positions to spatial positions via array indices.
-        public Vector3[,] GraphicalPositions { get; private set; }
+        public static Vector3[,] GraphicalPositions { get; private set; }
 
         public static string SelectedPieceProperty = CreeperUtility.GetPropertyName((CreeperBoardViewModel x) => x.SelectedPiece);
         public Piece SelectedPiece
