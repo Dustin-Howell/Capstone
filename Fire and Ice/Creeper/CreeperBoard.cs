@@ -14,10 +14,8 @@ namespace Creeper
 
     public class CreeperBoard
     {
-        protected const int _TileRows = 6;
-        protected const int _PegRows = _TileRows + 1;
-        public static int TileRows { get { return _TileRows; } }
-        public static int PegRows { get { return _PegRows; } }
+        public const int TileRows = 6;
+        public const int PegRows = TileRows + 1;
 
         private static Position _BlackStart { get { return new Position(0, 5); } }
         private static Position _WhiteStart { get { return new Position(0, 0); } }
@@ -60,8 +58,8 @@ namespace Creeper
 
         public void ResetCreeperBoard()
         {
-            Tiles = GenerateEmptyPieces(_TileRows).ToList();
-            Pegs = GenerateEmptyPieces(_PegRows).ToList();
+            Tiles = GenerateEmptyPieces(TileRows).ToList();
+            Pegs = GenerateEmptyPieces(PegRows).ToList();
 
             foreach (Piece tile in Tiles.Where(x => x.Position == _BlackStart
                 || x.Position == _WhiteStart
