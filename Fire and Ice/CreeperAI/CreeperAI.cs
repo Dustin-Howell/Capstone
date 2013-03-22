@@ -108,7 +108,9 @@ namespace CreeperAI
             {
                 // Evaluate child node
                 board.PushMove(moves[i]);
-                double score = -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
+                double score = board.IsCaptureMove(moves[i]) ?
+                    -ScoreNegaMaterialExchange(board, _turnColor.Opposite())
+                    : -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
                 board.PopMove();
 
                 if (score > alpha)
@@ -121,6 +123,28 @@ namespace CreeperAI
             if (bestMove == null) throw new InvalidOperationException("Don't ask AI for a move on a moveless board.");
 
             return bestMove;
+        }
+
+        private double ScoreNegaMaterialExchange(AICreeperBoard board, CreeperColor turnColor)
+        {
+            double score = double.NegativeInfinity;
+            Move[] captures = board.AllPossibleCaptures(turnColor);
+
+            if (captures.Length > 0)
+            {
+                for (int i = 0; i < captures.Length; i++)
+                {
+                    board.PushMove(captures[i]);
+                    score = -ScoreNegaMaterialExchange(board, turnColor.Opposite());
+                    board.PopMove();
+                }
+            }
+            else
+            {
+                score = ScoreBoard(board, _turnColor, -1) * ((turnColor == _turnColor) ? 1 : -1);
+            }
+
+            return score;
         }
 
         private double ScoreAlphaBetaNegaMaxMove(AICreeperBoard board, CreeperColor turnColor, double alpha, double beta, int depth)

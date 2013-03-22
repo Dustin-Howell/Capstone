@@ -546,6 +546,38 @@ namespace CreeperAI
             return possibleMoves;
         }
 
+        public Move[] AllPossibleCaptures(CreeperColor color)
+        {
+            if (color == CreeperColor.Invalid || color == CreeperColor.Empty) throw new ArgumentOutOfRangeException(color.ToString());
+
+            Position startPosition = new Position();
+            Move[] possibleMoves = new Move[100];
+            int index = 0;
+            foreach (AIBoardNode peg in (color == CreeperColor.Ice) ? BlackPegs : WhitePegs)
+            {
+                startPosition = new Position(peg.Row, peg.Column);
+
+                Move[] movesForPeg = new Move[]
+                    {
+                        new Move(startPosition, new Position(peg.Row + 2, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row - 2, peg.Column), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column + 2), color),
+                        new Move(startPosition, new Position(peg.Row, peg.Column - 2), color),
+                    };
+
+                for (int i = 0; i < movesForPeg.Length; i++)
+                {
+                    if (IsValidMove(movesForPeg[i]))
+                    {
+                        possibleMoves[index++] = movesForPeg[i];
+                    }
+                }
+            }
+
+            Array.Resize(ref possibleMoves, index);
+            return possibleMoves;
+        }
+
         public IEnumerable<AIBoardNode> GetNeighbors(AIBoardNode node, CreeperColor color)
         {
             foreach (Position neighborPosition in new[]{
