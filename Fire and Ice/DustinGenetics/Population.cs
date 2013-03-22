@@ -49,6 +49,7 @@ namespace DustinGenetics
             {
                 Gene gene = GenePool[i];
                 Console.WriteLine("Analyzing Gene {0}", GenePool.IndexOf(gene));
+                gene.Print();
 
                 for (int j = 0; j < GenePool.Count; j++)
                 {

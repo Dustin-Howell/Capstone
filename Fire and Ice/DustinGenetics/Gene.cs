@@ -31,7 +31,14 @@ namespace DustinGenetics
             Type T = typeof(CreeperAI.CreeperAI);
             foreach (String property in T.GetProperties().Where(x => x.Name.Contains("Weight")).Select(x => x.Name))
             {
-                _weights[property] = _Random.Next(-100, 100);
+                if (property.Contains("Power"))
+                {
+                    _weights[property] = _Random.NextDouble() * 2;
+                }
+                else
+                {
+                    _weights[property] = _Random.Next(-100, 100);
+                }
             }
         }
 
@@ -62,7 +69,14 @@ namespace DustinGenetics
         {
             foreach (String key in _weights.Keys)
             {
-                _weights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.Next() % 5 : _weights[key] - _Random.Next() % 5;
+                if (key.Contains("Power"))
+                {
+                    _weights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.NextDouble() / 5 : _weights[key] - _Random.NextDouble() / 5;
+                }
+                else
+                {
+                    _weights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.Next() % 5 : _weights[key] - _Random.Next() % 5;
+                }
             }
 
             return new Gene(_weights);
