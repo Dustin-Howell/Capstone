@@ -187,8 +187,12 @@ namespace Creeper
 
         public CreeperGameState GetGameState(CreeperColor playerTurn)
         {
-            IEnumerable<Piece> opponent = WhereTeam(playerTurn.Opposite(), PieceType.Peg);
-            if (!opponent.Any() || !opponent.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
+            IEnumerable<Piece> currentTeam = WhereTeam(playerTurn, PieceType.Peg);
+            IEnumerable<Piece> opponentTeam = WhereTeam(playerTurn.Opposite(), PieceType.Peg);
+            if (!currentTeam.Any()
+                || !currentTeam.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any()
+                || !opponentTeam.Any()
+                || !opponentTeam.SelectMany(x => CreeperUtility.PossibleMoves(x, this)).Any())
             {
                 return CreeperGameState.Draw;
             }
