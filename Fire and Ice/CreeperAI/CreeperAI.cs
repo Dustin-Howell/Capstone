@@ -22,6 +22,12 @@ namespace CreeperAI
         private bool _sort = true;
         private bool _parallel = false;
 
+        //Math Constants
+        private const double _MaxPegDistanceFromCenter = 3.60555127546; // Square Root of 13
+        private const double _MaxPathLength = 10;
+        private const double _TileCenterRow = (double)CreeperBoard.TileRows / 2d;
+        private const double _TileCenterColumn = (double)CreeperBoard.TileRows / 2d;
+
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
         public int _MiniMaxDepth = 5;
@@ -157,14 +163,15 @@ namespace CreeperAI
             switch (board.GameState)
             {
                 case CreeperGameState.Complete:
-                    score = VictoryWeight * (depth + 1);
+                    score = VictoryValue * (depth + 1);
                     break;
 
                 default:
                     score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
                     score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
                     score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
-                    score += ScoreBoardShortestDistance(board, turnColor) * ShortestDistanceWeight;
+                    double path = ScoreBoardShortestDistance(board, turnColor);
+                    score += Math.Pow(path, PathPowerWeight) * ShortestDistanceWeight;
                     break;
             }
 
@@ -185,7 +192,7 @@ namespace CreeperAI
                 opponentTeamCount = 1;
             }
 
-            return myTeamCount / opponentTeamCount;
+            return myTeamCount / opponentTeamCount - 1;
         }
 
         private double ScoreBoardMaterial(AICreeperBoard board, CreeperColor turn)
@@ -199,29 +206,44 @@ namespace CreeperAI
                 opponentTeamCount = 1;
             }
 
-            return myTeamCount / opponentTeamCount;
+            return myTeamCount / opponentTeamCount - 1;
         }
         
         private double ScoreBoardPositional(AICreeperBoard board, CreeperColor turn)
         {
             double score = 0d;
-
             if (turn == CreeperColor.Fire)
             {
                 foreach (AIBoardNode peg in board.WhitePegs)
                 {
-                    score += 2 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                    score += Math.Sqrt(Math.Pow(peg.Row - _TileCenterRow, 2) + (Math.Pow(peg.Column - _TileCenterColumn, 2)));
+                }
+                if (board.WhitePegs.Count > 0)
+                {
+                    score /= board.WhitePegs.Count;
+                }
+                else
+                {
+                    score = _MaxPegDistanceFromCenter;
                 }
             }
             else
             {
                 foreach (AIBoardNode peg in board.BlackPegs)
                 {
-                    score += 2 - Math.Sqrt(Math.Pow(peg.Row - 3, 2) + (Math.Pow(peg.Column - 3, 2)));
+                    score += EuclideanDistance(peg.Row, peg.Column, _TileCenterRow, _TileCenterColumn);
+                }
+                if (board.BlackPegs.Count > 0)
+                {
+                    score /= board.BlackPegs.Count;
+                }
+                else
+                {
+                    score = _MaxPegDistanceFromCenter;
                 }
             }
 
-            return score;
+            return 1 - score / _MaxPegDistanceFromCenter;
         }
 
         private double ScoreBoardShortestDistance(AICreeperBoard board, CreeperColor turn)
@@ -252,7 +274,7 @@ namespace CreeperAI
             }
             while (stack.Any());
 
-            double shortestDistance = DistanceBetweenTiles(board.TileBoard[start.Row, start.Column], board.TileBoard[end.Row, end.Column]);
+            double shortestDistance = TaxiCabDistance(start.Row, start.Column, end.Row, end.Column);
 
             stack.Push(board.TileBoard[end.Row, end.Column]);
             do
@@ -262,7 +284,7 @@ namespace CreeperAI
                 //Here is where we calculate the distances...
                 foreach (AIBoardNode tile in startTiles)
                 {
-                    shortestDistance = Math.Min(shortestDistance, DistanceBetweenTiles(currentTile, tile));
+                    shortestDistance = Math.Min(shortestDistance, TaxiCabDistance(currentTile.Row, currentTile.Column, tile.Row, tile.Column));
                 }
 
                 IEnumerable<AIBoardNode> neighbors = board.GetNeighbors(currentTile, turn);
@@ -278,12 +300,17 @@ namespace CreeperAI
             }
             while (stack.Any());
 
-            return 1 - shortestDistance / 10;
+            return 1 - shortestDistance / _MaxPathLength;
         }
 
-        private double DistanceBetweenTiles(AIBoardNode tile1, AIBoardNode tile2)
+        // Scoring Utility Functions
+        private double TaxiCabDistance(double row1,double column1, double row2, double column2)
         {
-            return Math.Abs(tile1.Row - tile2.Row) + Math.Abs(tile1.Column - tile2.Column);
+            return Math.Abs(row1 - row2) + Math.Abs(column1 - column2);
+        }
+        private double EuclideanDistance(double row1,double column1, double row2, double column2)
+        {
+            return Math.Sqrt(Math.Pow(row1 - row2, 2) + Math.Pow(column1 - column2, 2));
         }
         #endregion
 
