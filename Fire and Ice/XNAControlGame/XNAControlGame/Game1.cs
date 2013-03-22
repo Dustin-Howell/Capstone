@@ -120,6 +120,9 @@ namespace XNAControlGame
 
         protected override void Initialize()
         {
+            _firePegs = new List<CreeperPeg>();
+            _icePegs = new List<CreeperPeg>();
+
             base.Initialize();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
@@ -128,21 +131,23 @@ namespace XNAControlGame
         {
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
 
-            _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
-            _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
+            _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);            
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
             _selectedModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.SelectedPeg);
 
-            _firePegs = new List<CreeperPeg>();
-            _icePegs = new List<CreeperPeg>();
-
             base.LoadContent();
 
-            LoadViewModels();
+            OnContentLoaded();          
+        }
 
-            LoadPegModels();            
+        private void OnContentLoaded()
+        {
+            _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
+
+            LoadViewModels();
+            LoadPegModels();  
         }
 
         private void LoadPegModels()
