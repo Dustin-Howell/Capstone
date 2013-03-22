@@ -37,7 +37,8 @@ namespace CreeperAI
         public double MaterialWeight { get; set; }
         public double PositionalWeight { get; set; }
         public double ShortestDistanceWeight { get; set; }
-        public double VictoryWeight { get; set; }
+        public double PathPowerWeight { get; set; }
+        public double VictoryValue { get; set; }
         public AIDifficulty Difficulty { get; set; }
 
         private static Random _Random = new Random();
@@ -66,6 +67,8 @@ namespace CreeperAI
                     property.SetValue(this, weights[key], null);
                 }
             }
+
+            VictoryValue = 10000;
         }
 
         public Move GetMove(CreeperBoard board, CreeperColor turnColor)
