@@ -161,12 +161,16 @@ namespace XNAControlGame
                     _icePegs.Add(peg);
                 }
 
-                _scene.Add(peg);
+                peg.Transform = Matrix.CreateScale(Resources.Models.PegScale)
+                                    * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+
+                _boardGroup.Add(peg);
             }
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            _scene.Update(gameTime.ElapsedGameTime);
             base.Update(gameTime);
         }
 
