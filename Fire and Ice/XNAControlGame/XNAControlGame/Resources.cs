@@ -14,6 +14,7 @@ namespace Resources
     static class ElementNames
     {
         public static String BoardGroup { get { return "GameBoard"; } }
+        public static String BoardSurface { get { return "boardSurface"; } }
         public static String RootScene { get { return "Scene1"; } }
     }
 

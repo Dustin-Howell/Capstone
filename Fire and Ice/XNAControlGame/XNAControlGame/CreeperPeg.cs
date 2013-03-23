@@ -39,18 +39,38 @@ namespace XNAControlGame
                 DoTransform();
             }
         }
+        private Position _destinationPosition;
         public CreeperPegType PegType { get; set; }
+        public event EventHandler PegStopped;
 
         private void DoTransform()
         {
             Transform = Matrix.CreateScale(Resources.Models.PegScale)
-                                       * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
+                        * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
         }
 
         public CreeperPeg(Microsoft.Xna.Framework.Graphics.Model model)
             : base(model)
         {
-            
+            _destinationPosition = Position;
+        }
+
+        public void MoveTo(Position position)
+        {
+            _destinationPosition = position;
+        }
+
+        public void UpdatePosition(TimeSpan gameTime)
+        {
+            if (_destinationPosition != Position)
+            {
+                Position = _destinationPosition;
+            }
+
+            if (_destinationPosition == Position)
+            {
+                PegStopped(this, new EventArgs());
+            }
         }
     }
 }

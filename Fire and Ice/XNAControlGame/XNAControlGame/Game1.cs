@@ -38,20 +38,23 @@ namespace XNAControlGame
         {
             get
             {
-                return _boardGroup.Children
-                    .Where(x => x.GetType() == typeof(CreeperPeg) 
-                        && ((CreeperPeg)x).PegType == CreeperPegType.Fire)
-                    .Select(x => (CreeperPeg)x);
+                return _pegs.Where(x => x.PegType == CreeperPegType.Fire);  
             }
         }
         private IEnumerable<CreeperPeg> _icePegs
         {
             get
             {
+                return _pegs.Where(x => x.PegType == CreeperPegType.Ice);                
+            }
+        }
+        private IEnumerable<CreeperPeg> _pegs
+        {
+            get
+            {
                 return _boardGroup.Children
-                    .Where(x => x.GetType() == typeof(CreeperPeg) 
-                        && ((CreeperPeg)x).PegType == CreeperPegType.Ice)
-                    .Select(x => (CreeperPeg)x);                
+                    .Where(x => x.GetType() == typeof(CreeperPeg))
+                    .Select(x => (CreeperPeg)x);
             }
         }
         private IEnumerable<CreeperPeg> _possiblePegs
@@ -64,6 +67,9 @@ namespace XNAControlGame
                     .Select(x => (CreeperPeg)x);
             }
         }
+
+        private List<CreeperPeg> _movingPegs;
+        private List<CreeperPeg> _stoppedPegs;
 
         private CreeperPeg _selectedPeg;
 
@@ -78,8 +84,12 @@ namespace XNAControlGame
             Components.Add(new InputComponent(handle));
             _input = new Input();
 
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) => { ClearPossiblePegs(); DetectFullClick(e); });
-            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s,e) => DetectFullClick(e));
+            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) => { 
+                //ClearPossiblePegs(); 
+                DetectFullClick(e); });
+            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) => { DetectFullClick(e); 
+                //ClearPossiblePegs(); 
+            });
         }
 
         private void ClearPossiblePegs()
@@ -106,7 +116,8 @@ namespace XNAControlGame
                 {
                     _lastDownClickedModel = null;
 
-                    if (GameTracker.CurrentPlayer.Color == clickedModel.PegType.ToCreeperColor())
+                    if (clickedModel.PegType == CreeperPegType.Possible ||
+                        GameTracker.CurrentPlayer.Color == clickedModel.PegType.ToCreeperColor())
                     {
                         OnPegClicked(clickedModel);
                     }
@@ -133,6 +144,7 @@ namespace XNAControlGame
                                 _selectedPeg.PegType.ToCreeperColor()), 
                                 PlayerType.Human)
                             );
+                    ClearPossiblePegs();
                     break;
             }
         }
@@ -175,7 +187,9 @@ namespace XNAControlGame
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Ray selectionRay = GetSelectionRay(mousePosition);
-            IEnumerable<CreeperPeg> currentTeam = (GameTracker.CurrentPlayer.Color == CreeperColor.Fire) ? _firePegs : _icePegs;
+            List<CreeperPeg> currentTeam = ((GameTracker.CurrentPlayer.Color == CreeperColor.Fire) ? _firePegs : _icePegs).ToList();
+            currentTeam.AddRange(_possiblePegs);
+
             CreeperPeg clickedModel = null;
 
             foreach (CreeperPeg peg in currentTeam)
@@ -196,9 +210,10 @@ namespace XNAControlGame
 
         protected override void Initialize()
         {
-
             base.Initialize();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _movingPegs = new List<CreeperPeg>();
+            _stoppedPegs = new List<CreeperPeg>();
         }
 
         protected override void LoadContent()
@@ -231,17 +246,18 @@ namespace XNAControlGame
                 CreeperPeg peg;
                 if (piece.Color == CreeperColor.Fire)
                 {
-                    peg = new CreeperPeg(_fireModel) 
-                    { 
-                        PegType = CreeperPegType.Fire, 
-                        Position = piece.Position, 
+                    peg = new CreeperPeg(_fireModel)
+                    {
+                        PegType = CreeperPegType.Fire,
+                        Position = piece.Position,
                     };
+
                 }
                 else
                 {
                     peg = new CreeperPeg(_iceModel) 
                     { 
-                        PegType = CreeperPegType.Ice, 
+                        PegType = CreeperPegType.Ice,
                         Position = piece.Position,
                     };
                 }
@@ -253,7 +269,15 @@ namespace XNAControlGame
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             base.Update(gameTime);
-
+            foreach (CreeperPeg peg in _movingPegs)
+            {
+                peg.UpdatePosition(gameTime.ElapsedGameTime);
+            }
+            foreach (CreeperPeg peg in _stoppedPegs)
+            {
+                _movingPegs.Remove(peg);
+            }
+            _stoppedPegs.Clear();
             _scene.Update(gameTime.ElapsedGameTime);
         }
 
@@ -286,7 +310,15 @@ namespace XNAControlGame
 
         public void Handle(MoveResponseMessage message)
         {
+            CreeperPeg pegToMove = _pegs.First(x => x.Position == message.Move.StartPosition);
+            pegToMove.MoveTo(message.Move.EndPosition);
+            _movingPegs.Add(pegToMove);
+            pegToMove.PegStopped += new EventHandler(pegToMove_PegStopped);
+        }
 
+        void pegToMove_PegStopped(object sender, EventArgs e)
+        {
+            _stoppedPegs.Add((CreeperPeg)sender);
         }
     }
 }
