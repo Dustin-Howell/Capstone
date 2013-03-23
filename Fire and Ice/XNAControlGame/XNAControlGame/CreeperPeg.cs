@@ -64,7 +64,14 @@ namespace XNAControlGame
         {
             if (_destinationPosition != Position)
             {
-                Position = _destinationPosition;
+                Vector3 difference = (CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] 
+                    - CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
+                Transform *= Matrix.CreateTranslation(difference / 50);
+
+                if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).X <= .5)
+                {
+                    Position = _destinationPosition;
+                }
             }
 
             if (_destinationPosition == Position)
