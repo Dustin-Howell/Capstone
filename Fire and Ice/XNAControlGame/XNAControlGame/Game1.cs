@@ -65,9 +65,6 @@ namespace XNAControlGame
             }
         }
 
-        private List<CreeperPeg> _movingPegs;
-        private List<CreeperPeg> _stoppedPegs;
-
         private CreeperPeg _selectedPeg;
 
         private bool _humanMovePending = false;
@@ -209,8 +206,6 @@ namespace XNAControlGame
         {
             base.Initialize();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _movingPegs = new List<CreeperPeg>();
-            _stoppedPegs = new List<CreeperPeg>();
         }
 
         protected override void LoadContent()
@@ -266,15 +261,6 @@ namespace XNAControlGame
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             base.Update(gameTime);
-            foreach (CreeperPeg peg in _movingPegs)
-            {
-                peg.UpdatePosition(gameTime.ElapsedGameTime);
-            }
-            foreach (CreeperPeg peg in _stoppedPegs)
-            {
-                _movingPegs.Remove(peg);
-            }
-            _stoppedPegs.Clear();
             _scene.Update(gameTime.ElapsedGameTime);
         }
 
@@ -309,13 +295,6 @@ namespace XNAControlGame
         {
             CreeperPeg pegToMove = _pegs.First(x => x.Position == message.Move.StartPosition);
             pegToMove.MoveTo(message.Move.EndPosition);
-            _movingPegs.Add(pegToMove);
-            pegToMove.PegStopped += new EventHandler(pegToMove_PegStopped);
-        }
-
-        void pegToMove_PegStopped(object sender, EventArgs e)
-        {
-            _stoppedPegs.Add((CreeperPeg)sender);
         }
     }
 }

@@ -41,7 +41,6 @@ namespace XNAControlGame
         }
         private Position _destinationPosition;
         public CreeperPegType PegType { get; set; }
-        public event EventHandler PegStopped;
 
         private void DoTransform()
         {
@@ -57,50 +56,7 @@ namespace XNAControlGame
 
         public void MoveTo(Position position)
         {
-            _destinationPosition = position;
-        }
-
-        public void UpdatePosition(TimeSpan gameTime)
-        {
-            if (_destinationPosition != Position)
-            {
-                Vector3 difference = (CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] 
-                    - CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
-                Transform *= Matrix.CreateTranslation(difference / 50);
-
-                //Right
-                if (difference.X > 0)
-                {
-                    if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).X <= .5
-                        && (CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).Y <= .5)
-                    {
-                        Position = _destinationPosition;
-                    }
-                }
-                //Going to the left
-                else if (difference.X < 0)
-                {
-                    if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).X >= .5
-                        && (CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).Y <= .5)
-                    {
-                        Position = _destinationPosition;
-                        
-                    }
-                }
-                // up and Down THIS IS THE ONE THAT NEEDS WORK!
-                else
-                {
-                    if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).Y >= .5)
-                    {
-                        Position = _destinationPosition;
-                    }
-                }
-            }
-
-            if (_destinationPosition == Position)
-            {
-                PegStopped(this, new EventArgs());
-            }
+            
         }
     }
 }
