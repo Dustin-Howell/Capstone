@@ -146,10 +146,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(ChatMessage message)
         {
-            if (message.Type == ChatMessageType.Receive)
-            {
-                ChatMessages.Add(message.Message);
-            }
+            ChatMessages.Add(message.Message);
         }
     }
 }
