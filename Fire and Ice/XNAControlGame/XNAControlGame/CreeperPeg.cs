@@ -6,6 +6,7 @@ using Nine.Graphics;
 using Creeper;
 using Nine;
 using Microsoft.Xna.Framework;
+using Nine.Animations;
 
 namespace XNAControlGame
 {
@@ -56,7 +57,25 @@ namespace XNAControlGame
 
         public void MoveTo(Position position)
         {
-            
+            TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>()
+            {
+                Target = this,
+                TargetProperty = "Transform",
+                Duration = TimeSpan.FromSeconds(1),
+                From = Transform,
+                To = Matrix.CreateScale(Resources.Models.PegScale)
+                        * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[position.Row, position.Column]),
+                Curve = Curves.Smooth,
+            };
+            moveAnimation.Completed += new EventHandler((s,e) =>
+                    {
+                        Position = position;
+                        Animations.Remove("move");
+                    }
+                );
+
+            Animations.Add("move", moveAnimation);
+            Animations.Play("move");
         }
     }
 }
