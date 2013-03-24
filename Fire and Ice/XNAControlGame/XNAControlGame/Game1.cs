@@ -83,11 +83,17 @@ namespace XNAControlGame
             Components.Add(new InputComponent(handle));
             _input = new Input();
 
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) => { 
-                DetectFullClick(e); 
+            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) => {
+                if (_humanMovePending)
+                {
+                    DetectFullClick(e);
+                }
             });
             _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) => {
-                DetectFullClick(e); 
+                if (_humanMovePending)
+                {
+                    DetectFullClick(e);
+                }
             });
         }
        

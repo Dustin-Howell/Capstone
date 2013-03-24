@@ -194,6 +194,10 @@ namespace XNAControlGame
             {
                 _humanMovePending = true;
             }
+            else
+            {
+                _humanMovePending = false;
+            }
         }
 
         public void Handle(MoveResponseMessage message)
