@@ -622,7 +622,7 @@ namespace CreeperNetwork
          *********************************************************/
         private void sendAckOnTime(object source, ElapsedEventArgs e)
         {
-            sendPacket_altPort(packet_Ack(), ipOfLastPacket.Address.ToString());
+           // sendPacket_altPort(packet_Ack(), ipOfLastPacket.Address.ToString());
         }
 
         /**********************************************************
@@ -705,7 +705,7 @@ namespace CreeperNetwork
          *********************************************************/
         private void sendPacket(byte[] packetIn, String ipAddressIn)
         {
-            sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
+            //sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
         }
 
         /**********************************************************
@@ -728,7 +728,7 @@ namespace CreeperNetwork
          *********************************************************/
         private void broadcastPacket(byte[] packetIn)
         {
-            sendPacket(packetIn, BROADCAST_IP);
+           // sendPacket(packetIn, BROADCAST_IP);
         }
 
         //###############################################################

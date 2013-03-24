@@ -68,9 +68,32 @@ namespace XNAControlGame
                     - CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
                 Transform *= Matrix.CreateTranslation(difference / 50);
 
-                if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).X <= .5)
+                //Right
+                if (difference.X > 0)
                 {
-                    Position = _destinationPosition;
+                    if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).X <= .5
+                        && (CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).Y <= .5)
+                    {
+                        Position = _destinationPosition;
+                    }
+                }
+                //Going to the left
+                else if (difference.X < 0)
+                {
+                    if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).X >= .5
+                        && (CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).Y <= .5)
+                    {
+                        Position = _destinationPosition;
+                        
+                    }
+                }
+                // up and Down THIS IS THE ONE THAT NEEDS WORK!
+                else
+                {
+                    if ((CreeperBoardViewModel.GraphicalPositions[_destinationPosition.Row, _destinationPosition.Column] - Transform.Translation).Y >= .5)
+                    {
+                        Position = _destinationPosition;
+                    }
                 }
             }
 
