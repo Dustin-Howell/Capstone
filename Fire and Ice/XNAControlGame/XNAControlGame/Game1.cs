@@ -61,10 +61,7 @@ namespace XNAControlGame
         {
             get
             {
-                return _boardGroup.Children
-                    .Where(x => x.GetType() == typeof(CreeperPeg)
-                        && ((CreeperPeg)x).PegType == CreeperPegType.Possible)
-                    .Select(x => (CreeperPeg)x);
+                return _pegs.Where(x => x.PegType == CreeperPegType.Possible);
             }
         }
 
