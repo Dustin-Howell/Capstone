@@ -17,7 +17,7 @@ namespace FireAndIce.ViewModels
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
-        private Network _network;
+        private Network _network = null;
         private AIDifficulty _aiDifficulty = AIDifficulty.Hard;
 
         //private SlideOutPanelViewModel _gameMenu;
@@ -35,6 +35,11 @@ namespace FireAndIce.ViewModels
                     Title = "Game Menu",
                 };
             }
+        }
+
+        public bool IsNetworkGame
+        {
+            get { return _network != null; }
         }
 
         private String _gameOverText;
@@ -82,6 +87,7 @@ namespace FireAndIce.ViewModels
         {
             Init(player1Type, player2Type);
             _network = network;
+            NotifyOfPropertyChange(() => IsNetworkGame);
         }
 
         public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)

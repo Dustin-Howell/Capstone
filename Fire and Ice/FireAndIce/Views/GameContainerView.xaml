@@ -57,7 +57,8 @@
                 Background="{StaticResource Complementary1}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch"
+                        Visibility="{Binding IsNetworkGame, Converter={StaticResource BoolToVis}}">
                 <ItemsControl x:Name="ChatMessages" HorizontalAlignment="Stretch" Width="500" Height="70" BorderThickness="1" BorderBrush="White"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <TextBox x:Name="Message" Width="420"/>
