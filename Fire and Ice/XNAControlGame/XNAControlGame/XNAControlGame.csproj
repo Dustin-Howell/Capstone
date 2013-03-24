@@ -123,6 +123,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game1.UserMethods.cs">
+		<DependentUpon>Game1.cs</DependentUpon>
+	</Compile>
     <Compile Include="PegAnimation.cs" />
     <Compile Include="CreeperBoardViewModel.cs" />
     <Compile Include="CreeperPeg.cs" />
