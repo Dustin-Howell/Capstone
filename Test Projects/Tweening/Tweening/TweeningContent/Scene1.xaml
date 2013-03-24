@@ -1,0 +1,23 @@
+﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <AmbientLight AmbientLightColor="0.2, 0.2, 0.2" />
+    <DirectionalLight DiffuseColor="0.8, 0.8, 0.8" SpecularColor="1, 1, 1" Direction="-1, -1, -1" />
+       
+    <!--
+        Create a flat terrain
+    -->
+    <Surface Heightmap.Width="32" Heightmap.Height="32" Transform.Position="-16, 0, 0" />
+    
+     
+        <!--Uncomment the next line to add your own model-->
+    <!--<Group>
+        <Group.Animations>
+            <SingleAnimation TargetProperty="Peg.Material.Alpha"
+                             From="1" To="0" Curve="{x:Static Curves.Sin}" Repeat="999999" Easing="In" AutoReverse="True" />
+        </Group.Animations>
+
+        <Model Name="Peg" Source="{ContentReference TempIcePeg}" Transform.Position="0,0,0" Transform.Scale=".05,.05,.05" />
+    </Group>-->
+    <Model Name="Peg" Source="{ContentReference TempIcePeg}" Transform.Position="0,0,0" Transform.Scale=".05,.05,.05" />
+    <Model Name="Peg2" Source="{ContentReference TempIcePeg}" Transform.Position="-10,0,0" Transform.Scale=".05,.05,.05" />
+</Scene>
