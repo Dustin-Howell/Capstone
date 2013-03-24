@@ -121,30 +121,44 @@ namespace XNAControlGame
 
         private void OnPegClicked(CreeperPeg clickedModel)
         {
-            switch (clickedModel.PegType)
+            if (_selectedPeg == clickedModel
+                && _possiblePegs.Any())
             {
-                case CreeperPegType.Fire:
-                    _selectedPeg = clickedModel;
-                    UpdatePossibleMoves(clickedModel);
-                    break;
-                case CreeperPegType.Ice:
-                    _selectedPeg = clickedModel;
-                    UpdatePossibleMoves(clickedModel);
-                    break;
-                case CreeperPegType.Possible:
-                    _eventAggregator.Publish(
-                        new MoveResponseMessage(
-                            new Move(_selectedPeg.Position, clickedModel.Position, 
-                                _selectedPeg.PegType.ToCreeperColor()), 
-                                PlayerType.Human)
-                            );
-                    ClearPossiblePegs();
-                    break;
+                ClearPossiblePegs();                
+            }
+
+            else
+            {
+                switch (clickedModel.PegType)
+                {
+                    case CreeperPegType.Fire:
+                        _selectedPeg = clickedModel;
+                        UpdatePossibleMoves(clickedModel);
+                        break;
+                    case CreeperPegType.Ice:
+                        _selectedPeg = clickedModel;
+                        UpdatePossibleMoves(clickedModel);
+                        break;
+                    case CreeperPegType.Possible:
+                        _eventAggregator.Publish(
+                            new MoveResponseMessage(
+                                new Move(_selectedPeg.Position, clickedModel.Position,
+                                    _selectedPeg.PegType.ToCreeperColor()),
+                                    PlayerType.Human)
+                                );
+                        ClearPossiblePegs();
+                        break;
+                }
             }
         }
 
         private void UpdatePossibleMoves(CreeperPeg clickedPeg)
         {
+            if (_possiblePegs.Any())
+            {
+                ClearPossiblePegs();
+            }
+
             IEnumerable<Move> possibleMoves = GameTracker.Board.Pegs.At(clickedPeg.Position).PossibleMoves(GameTracker.Board);
             foreach (Position position in possibleMoves.Select(x => x.EndPosition))
             {
