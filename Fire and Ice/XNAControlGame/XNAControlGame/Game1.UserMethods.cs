@@ -223,17 +223,29 @@ namespace XNAControlGame
             if (GameTracker.Board.IsCaptureMove(message.Move))
             {
                 //capture
+                _boardGroup.Remove(_pegs.First(x => x.Position == GameTracker.Board.GetCapturedPegPosition(message.Move)));
+                _pegs
+                    .First(x => x.Position == message.Move.StartPosition)
+                    .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
             }
             else if (GameTracker.Board.IsFlipMove(message.Move))
             {
                 //flip
+                _pegs
+                    .First(x => x.Position == message.Move.StartPosition)
+                    .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
+            }
+            else
+            {
+                _pegs
+                    .First(x => x.Position == message.Move.StartPosition)
+                    .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
             }
 
-            _pegs
-                .First(x => x.Position == message.Move.StartPosition)
-                .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
 
             _pegAnimating = true;
         }
+
+
     }
 }
