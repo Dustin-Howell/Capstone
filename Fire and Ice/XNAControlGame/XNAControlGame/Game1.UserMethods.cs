@@ -220,6 +220,15 @@ namespace XNAControlGame
 
         public void Handle(MoveResponseMessage message)
         {
+            if (GameTracker.Board.IsCaptureMove(message.Move))
+            {
+                //capture
+            }
+            else if (GameTracker.Board.IsFlipMove(message.Move))
+            {
+                //flip
+            }
+
             _pegs
                 .First(x => x.Position == message.Move.StartPosition)
                 .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
