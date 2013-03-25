@@ -270,6 +270,11 @@ namespace Creeper
             }
         }
 
+        public bool IsFlipMove(Move move)
+        {
+            return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1);
+        }
+
         private void Flip(Move move)
         {
             Piece tile = GetFlippedTile(move);
@@ -279,15 +284,27 @@ namespace Creeper
             }
         }
 
-        private void Capture(Move move)
+        public bool IsCaptureMove(Move move)
         {
+            return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2);
+        }
+
+        public Position GetCapturedPegPosition(Move move)
+        {            
             foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
             {
                 if (move.EndPosition == move.StartPosition.AtDirection(direction).AtDirection(direction))
                 {
-                    Pegs.At(move.StartPosition.AtDirection(direction)).Color = CreeperColor.Empty;
+                    return move.StartPosition.AtDirection(direction);
                 }
             }
+
+            throw new InvalidOperationException("No captured peg for this move.");
+        }
+
+        private void Capture(Move move)
+        {
+            Pegs.At(GetCapturedPegPosition(move)).Color = CreeperColor.Empty;
         }
 
         public bool Move(Move move)
@@ -301,11 +318,11 @@ namespace Creeper
                 Pegs.First(x => x.Position.Equals(move.StartPosition)).Color = CreeperColor.Empty;
                 Pegs.First(x => x.Position.Equals(move.EndPosition)).Color = move.PlayerColor;
 
-                if (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1)
+                if (IsFlipMove(move))
                 {
                     Flip(move);
                 }
-                else if ((Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2))
+                else if (IsCaptureMove(move))
                 {
                     Capture(move);
                 }
