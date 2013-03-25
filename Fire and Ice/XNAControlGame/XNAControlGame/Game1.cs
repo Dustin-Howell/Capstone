@@ -29,6 +29,7 @@ namespace XNAControlGame
         private IEventAggregator _eventAggregator;
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
+        private Texture2D _fireTexture;
 
         private Scene _scene;
         private Group _boardGroup;
@@ -106,6 +107,8 @@ namespace XNAControlGame
         protected override void LoadContent()
         {
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
+
+            _fireTexture = Content.Load<Texture2D>("Textures/fire");
 
             _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);            
 

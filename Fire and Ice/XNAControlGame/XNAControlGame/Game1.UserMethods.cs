@@ -8,6 +8,7 @@ using Nine.Graphics;
 using Caliburn.Micro;
 using CreeperMessages;
 using Nine;
+using Nine.Graphics.ParticleEffects;
 
 namespace XNAControlGame
 {
@@ -62,11 +63,23 @@ namespace XNAControlGame
                 switch (clickedModel.PegType)
                 {
                     case CreeperPegType.Fire:
-                        _selectedPeg = clickedModel;
-                        UpdatePossibleMoves(clickedModel);
-                        break;
+                        goto case CreeperPegType.Ice;
                     case CreeperPegType.Ice:
                         _selectedPeg = clickedModel;
+                        ParticleEffect effect = new ParticleEffect(GraphicsDevice)
+                                {
+                                    Emitter = new PointEmitter()
+                                    {
+                                        Emission = 50,
+                                        Duration = new Range<float>() { Min = .5f, Max = 1f },
+                                        Speed = new Range<float>() { Min = 1f, Max = 2f },
+                                        Size = new Range<float>() { Min = 12000f, Max = 50000f },
+                                    },
+                                    Texture = _fireTexture,
+                                    Visible = true,
+                                    Enabled = true,
+                                };
+                        _selectedPeg.Attachments.Add(effect);
                         UpdatePossibleMoves(clickedModel);
                         break;
                     case CreeperPegType.Possible:
@@ -92,10 +105,14 @@ namespace XNAControlGame
             IEnumerable<Move> possibleMoves = GameTracker.Board.Pegs.At(clickedPeg.Position).PossibleMoves(GameTracker.Board);
             foreach (Position position in possibleMoves.Select(x => x.EndPosition))
             {
-                CreeperPeg peg = new CreeperPeg(_iceModel) { Position = position, PegType = CreeperPegType.Possible, };
+                CreeperPeg peg = new CreeperPeg(_iceModel) 
+                { 
+                    Position = position, 
+                    PegType = CreeperPegType.Possible,
+                };
+
                 _boardGroup.Add(peg);
             }
-
         }
 
         /// <summary>

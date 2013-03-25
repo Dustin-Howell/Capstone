@@ -21,7 +21,7 @@ namespace Resources
     static class Models
     {
         //Model Scales
-        private static readonly Vector3 _pegScale = new Vector3(.2f, .2f, .2f);
+        private static readonly Vector3 _pegScale = new Vector3(.1f, .1f, .1f);
         public static Vector3 PegScale { get { return _pegScale; } }
 
         //Model Names
