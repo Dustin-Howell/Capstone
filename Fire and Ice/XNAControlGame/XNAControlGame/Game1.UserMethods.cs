@@ -9,6 +9,7 @@ using Caliburn.Micro;
 using CreeperMessages;
 using Nine;
 using Nine.Graphics.ParticleEffects;
+using Nine.Animations;
 
 namespace XNAControlGame
 {
@@ -219,8 +220,11 @@ namespace XNAControlGame
 
         public void Handle(MoveResponseMessage message)
         {
-            CreeperPeg pegToMove = _pegs.First(x => x.Position == message.Move.StartPosition);
-            pegToMove.MoveTo(message.Move.EndPosition);
+            _pegs
+                .First(x => x.Position == message.Move.StartPosition)
+                .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
+
+            _pegAnimating = true;
         }
     }
 }

@@ -6,6 +6,11 @@ using Microsoft.Xna.Framework;
 
 namespace Resources
 {
+    static class AnimationNames
+    {
+        public static String PegMove { get { return "move"; } }
+    }
+
     static class Scenes
     {
         public static String MainPlayScene { get { return "Scene1"; } }

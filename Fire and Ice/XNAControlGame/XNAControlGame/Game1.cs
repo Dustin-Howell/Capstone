@@ -74,6 +74,7 @@ namespace XNAControlGame
         }
 
         private bool _humanMovePending = false;
+        private bool _pegAnimating = false;
 
         public Game1(IntPtr handle, int width, int height, IEventAggregator eventAggregator)
             : base(handle, "Content", width, height)
@@ -85,13 +86,13 @@ namespace XNAControlGame
             _input = new Input();
 
             _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) => {
-                if (_humanMovePending)
+                if (_humanMovePending && !_pegAnimating)
                 {
                     DetectFullClick(e);
                 }
             });
             _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) => {
-                if (_humanMovePending)
+                if (_humanMovePending && !_pegAnimating)
                 {
                     DetectFullClick(e);
                 }

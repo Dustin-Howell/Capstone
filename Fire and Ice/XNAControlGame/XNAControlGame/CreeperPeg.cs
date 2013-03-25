@@ -40,6 +40,7 @@ namespace XNAControlGame
                 DoTransform();
             }
         }
+
         private Position _destinationPosition;
         public CreeperPegType PegType { get; set; }
 
@@ -55,7 +56,7 @@ namespace XNAControlGame
             _destinationPosition = Position;
         }
 
-        public void MoveTo(Position position)
+        public void MoveTo(Position position, Action callback)
         {
             TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>()
             {
@@ -70,12 +71,13 @@ namespace XNAControlGame
             moveAnimation.Completed += new EventHandler((s,e) =>
                     {
                         Position = position;
-                        Animations.Remove("move");
+                        Animations.Remove(Resources.AnimationNames.PegMove);
+                        callback();
                     }
                 );
 
-            Animations.Add("move", moveAnimation);
-            Animations.Play("move");
+            Animations.Add(Resources.AnimationNames.PegMove, moveAnimation);
+            Animations.Play(Resources.AnimationNames.PegMove);
         }
     }
 }
