@@ -42,6 +42,22 @@ namespace XNAControlGame
         private Input _input;
 
         private CreeperPeg _selectedPeg;
+        private CreeperPeg _SelectedPeg
+        {
+            get
+            {
+                return _selectedPeg;
+            }
+            set
+            {
+                if (_selectedPeg != value)
+                {
+                    _selectedPeg = value;
+                    UpdatePossibleMoves(value);
+                }
+            }
+        }
+
         private IEnumerable<CreeperPeg> _pegs
         {
             get

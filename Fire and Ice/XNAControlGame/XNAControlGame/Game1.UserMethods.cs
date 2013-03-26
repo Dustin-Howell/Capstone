@@ -53,10 +53,9 @@ namespace XNAControlGame
 
         private void OnPegClicked(CreeperPeg clickedModel)
         {
-            if (_selectedPeg == clickedModel
-                && _possiblePegs.Any())
+            if (_SelectedPeg == clickedModel)
             {
-                ClearPossiblePegs();
+                _SelectedPeg = null;
             }
 
             else
@@ -66,31 +65,16 @@ namespace XNAControlGame
                     case CreeperPegType.Fire:
                         goto case CreeperPegType.Ice;
                     case CreeperPegType.Ice:
-                        _selectedPeg = clickedModel;
-                        ParticleEffect effect = new ParticleEffect(GraphicsDevice)
-                                {
-                                    Emitter = new PointEmitter()
-                                    {
-                                        Emission = 50,
-                                        Duration = new Range<float>() { Min = .5f, Max = 1f },
-                                        Speed = new Range<float>() { Min = 1f, Max = 2f },
-                                        Size = new Range<float>() { Min = 12000f, Max = 50000f },
-                                    },
-                                    Texture = _fireTexture,
-                                    Visible = true,
-                                    Enabled = true,
-                                };
-                        _selectedPeg.Attachments.Add(effect);
-                        UpdatePossibleMoves(clickedModel);
+                        _SelectedPeg = clickedModel;
                         break;
                     case CreeperPegType.Possible:
                         _eventAggregator.Publish(
                             new MoveResponseMessage(
-                                new Move(_selectedPeg.Position, clickedModel.Position,
-                                    _selectedPeg.PegType.ToCreeperColor()),
+                                new Move(_SelectedPeg.Position, clickedModel.Position,
+                                    _SelectedPeg.PegType.ToCreeperColor()),
                                     PlayerType.Human)
                                 );
-                        ClearPossiblePegs();
+                        _SelectedPeg = null;
                         break;
                 }
             }
@@ -98,21 +82,21 @@ namespace XNAControlGame
 
         private void UpdatePossibleMoves(CreeperPeg clickedPeg)
         {
-            if (_possiblePegs.Any())
-            {
-                ClearPossiblePegs();
-            }
+            ClearPossiblePegs();
 
-            IEnumerable<Move> possibleMoves = GameTracker.Board.Pegs.At(clickedPeg.Position).PossibleMoves(GameTracker.Board);
-            foreach (Position position in possibleMoves.Select(x => x.EndPosition))
+            if (clickedPeg != null)
             {
-                CreeperPeg peg = new CreeperPeg(_iceModel) 
-                { 
-                    Position = position, 
-                    PegType = CreeperPegType.Possible,
-                };
+                IEnumerable<Move> possibleMoves = GameTracker.Board.Pegs.At(clickedPeg.Position).PossibleMoves(GameTracker.Board);
+                foreach (Position position in possibleMoves.Select(x => x.EndPosition))
+                {
+                    CreeperPeg peg = new CreeperPeg(_iceModel)
+                    {
+                        Position = position,
+                        PegType = CreeperPegType.Possible,
+                    };
 
-                _boardGroup.Add(peg);
+                    _boardGroup.Add(peg);
+                }
             }
         }
 
