@@ -1,0 +1,5 @@
+﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
+
+  <Model Name="peon" Source="{ContentReference ./Model/Peon/Peon}" Transform.Scale=".1, .1, .1" Transform.Position="50,50,0" />
+
+</Group>

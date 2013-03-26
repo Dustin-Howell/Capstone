@@ -26,11 +26,11 @@ namespace Resources
     static class Models
     {
         //Model Scales
-        private static readonly Vector3 _pegScale = new Vector3(.1f, .1f, .1f);
+        private static readonly Vector3 _pegScale = new Vector3(.5f, .5f, .5f);
         public static Vector3 PegScale { get { return _pegScale; } }
 
         //Model Names
-        public static String FirePeg { get { return "Model/TempFirePeg"; } }
+        public static String FirePeg { get { return "Model/Peon/Peon"; } }
         public static String IcePeg { get { return "Model/TempIcePeg"; } }
         public static String SelectedPeg { get { return "Model/sphere"; } }
     }
