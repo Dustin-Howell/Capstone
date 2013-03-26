@@ -49,6 +49,10 @@ namespace XNAControlGame
                     }
                 }
             }
+            else
+            {
+                _SelectedPeg = null;
+            }
         }
 
         private void OnPegClicked(CreeperPeg clickedModel)
