@@ -6,15 +6,18 @@ using Creeper;
 
 namespace CreeperMessages
 {
-    public class MoveResponseMessage
+    public enum MoveMessageType { Request, Response }
+    public class MoveMessage
     {
+        public MoveMessageType Type { get; set; }
         public Move Move { get; set; }
         public PlayerType PlayerType { get; set; }
 
-        public MoveResponseMessage(Move move, PlayerType playerType)
+        public MoveMessage(PlayerType playerType, MoveMessageType type, Move move = null)
         {
-            Move = move;
             PlayerType = playerType;
+            Type = type;
+            Move = move;
         }
     }
 }

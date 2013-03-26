@@ -13,7 +13,7 @@ using CreeperMessages;
 
 namespace CreeperCore
 {
-    public class CreeperGameCore : IHandle<MoveResponseMessage>
+    public class CreeperGameCore : IHandle<MoveMessage>
     {
         public XNAControl.XNAControlGame XNAGame
         {
@@ -81,27 +81,26 @@ namespace CreeperCore
 
         private void GetNextMove()
         {
-            _eventAggregator.Publish(
-                new MoveRequestMessage() 
-            { 
-                Responder = GameTracker.CurrentPlayer.PlayerType, 
-                Color = GameTracker.CurrentPlayer.Color, 
-            });
+            _eventAggregator.Publish(new MoveMessage(GameTracker.CurrentPlayer.PlayerType, MoveMessageType.Request));
         }
 
-        public void Handle(MoveResponseMessage message)
+        public void Handle(MoveMessage message)
         {
-            GameTracker.Board.Move(message.Move);
-
-            if (!GameTracker.Board.IsFinished(message.Move.PlayerColor))
+            if (message.Type == MoveMessageType.Response)
             {
-                GameTracker.CurrentPlayer = GameTracker.OpponentPlayer;
+                GameTracker.Board.Move(message.Move);
 
-                GetNextMove();
-            }
-            else
-            {
-                _eventAggregator.Publish(new GameOverMessage() { Winner = GameTracker.CurrentPlayer.Color, });
+                if (!GameTracker.Board.IsFinished(message.Move.PlayerColor))
+                {
+                    GameTracker.CurrentPlayer = GameTracker.OpponentPlayer;
+
+                    GetNextMove();
+                }
+                else
+                {
+                    //TODO: handle draw here
+                    _eventAggregator.Publish(new GameOverMessage(GameOverType.Win, GameTracker.CurrentPlayer));
+                }
             }
         }
     }

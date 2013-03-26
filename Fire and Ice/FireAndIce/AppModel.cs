@@ -14,7 +14,6 @@ namespace FireAndIce
 {
     public static class AppModel
     {
-
         static AppModel()
         {
         }

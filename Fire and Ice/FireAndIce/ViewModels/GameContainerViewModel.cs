@@ -13,7 +13,7 @@ using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<GameOverMessage>, IHandle<MoveResponseMessage>, IHandle<ChatMessage>
+    class GameContainerViewModel : Screen, IHandle<GameOverMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
@@ -130,10 +130,10 @@ namespace FireAndIce.ViewModels
 
         public void Handle(GameOverMessage message)
         {
-            GameOverText = String.Format("{0} wins!", message.Winner.ToString());
+            GameOverText = String.Format("{0} wins!", message.Sender.Color.ToString());
         }
 
-        public void Handle(MoveResponseMessage message)
+        public void Handle(MoveMessage message)
         {
             NotifyOfPropertyChange(() => CurrentTurn);
         }

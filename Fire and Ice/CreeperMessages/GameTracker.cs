@@ -7,7 +7,7 @@ using CreeperMessages;
 
 namespace Creeper
 {
-    public class GameTracker : IHandle<MoveResponseMessage>
+    public class GameTracker : IHandle<MoveMessage>
     {
         private EventAggregator _eventAggregator;
 
@@ -28,7 +28,7 @@ namespace Creeper
         }
         public static CreeperBoard Board { get; set; }
 
-        public void Handle(MoveResponseMessage message)
+        public void Handle(MoveMessage message)
         {
             
         }

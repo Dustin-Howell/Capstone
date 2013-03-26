@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace CreeperAI
 {
-    public class CreeperAI : IHandle<MoveRequestMessage>
+    public class CreeperAI : IHandle<MoveMessage>
     {
         //debug variables\\
         private bool _reportTime = false;
@@ -342,15 +342,18 @@ namespace CreeperAI
         #endregion
 
         #region Event Stuff
-        public void Handle(MoveRequestMessage message)
+        public void Handle(MoveMessage message)
         {
-            if (message.Responder == PlayerType.AI)
-                _getMoveWorker.RunWorkerAsync(message.Color);
+            if (message.Type == MoveMessageType.Request
+                && message.PlayerType == PlayerType.AI)
+            {
+                _getMoveWorker.RunWorkerAsync(message.Move.PlayerColor);
+            }
         }
 
         void _getMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MoveResponseMessage response = new MoveResponseMessage(((Move)e.Result), PlayerType.AI);
+            MoveMessage response = new MoveMessage(PlayerType.AI, MoveMessageType.Response, ((Move)e.Result));
             _eventAggregator.Publish(response);
         }
 

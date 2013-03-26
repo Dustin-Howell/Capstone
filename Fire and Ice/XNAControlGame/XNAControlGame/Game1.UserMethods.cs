@@ -17,7 +17,7 @@ namespace XNAControlGame
     /// <summary>
     /// Any methods that are not overrides go here
     /// </summary>
-    public partial class Game1 : IDisposable, IHandle<MoveRequestMessage>, IHandle<MoveResponseMessage>
+    public partial class Game1 : IDisposable, IHandle<MoveMessage>
     {
         private void ClearPossiblePegs()
         {
@@ -77,11 +77,15 @@ namespace XNAControlGame
                         break;
                     case CreeperPegType.Possible:
                         _eventAggregator.Publish(
-                            new MoveResponseMessage(
-                                new Move(_SelectedPeg.Position, clickedModel.Position,
-                                    _SelectedPeg.PegType.ToCreeperColor()),
-                                    PlayerType.Human)
-                                );
+                            new MoveMessage(
+                                PlayerType.Human,
+                                MoveMessageType.Response,
+                                new Move(
+                                    _SelectedPeg.Position, clickedModel.Position,
+                                    _SelectedPeg.PegType.ToCreeperColor()
+                                )
+                             )
+                         );
                         _SelectedPeg = null;
                         break;
                 }
@@ -224,27 +228,44 @@ namespace XNAControlGame
             base.Dispose(disposing);
         }
 
-        public void Handle(MoveRequestMessage message)
+        public void Handle(MoveMessage message)
         {
-            if (message.Responder == PlayerType.Human)
+            if (message.Type == MoveMessageType.Request)
             {
-                _humanMovePending = true;
+                if (message.PlayerType == PlayerType.Human)
+                {
+                    _humanMovePending = true;
+                }
+                else
+                {
+                    _humanMovePending = false;
+                }
             }
             else
             {
-                _humanMovePending = false;
-            }
-        }
+                if (GameTracker.Board.IsCaptureMove(message.Move))
+                {
+                    //capture
+                    _boardGroup.Remove(_pegs.First(x => x.Position == GameTracker.Board.GetCapturedPegPosition(message.Move)));
+                    _pegs
+                        .First(x => x.Position == message.Move.StartPosition)
+                        .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
+                }
+                else if (GameTracker.Board.IsFlipMove(message.Move))
+                {
+                    //flip
+                    _pegs
+                        .First(x => x.Position == message.Move.StartPosition)
+                        .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
+                }
+                else
+                {
+                    _pegs
+                        .First(x => x.Position == message.Move.StartPosition)
+                        .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
+                }
 
-        public void Handle(MoveResponseMessage message)
-        {
-            if (GameTracker.Board.IsCaptureMove(message.Move))
-            {
-                //capture
-                _boardGroup.Remove(_pegs.First(x => x.Position == GameTracker.Board.GetCapturedPegPosition(message.Move)));
-                _pegs
-                    .First(x => x.Position == message.Move.StartPosition)
-                    .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
+                _pegAnimating = true;
             }
             else if (GameTracker.Board.IsFlipMove(message.Move))
             {
@@ -263,7 +284,5 @@ namespace XNAControlGame
 
             _pegAnimating = true;
         }
-
-
     }
 }

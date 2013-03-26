@@ -12,7 +12,7 @@ using CreeperMessages;
 
 namespace CreeperNetwork
 {
-    public class Network : IHandle<GameOverMessage>, IHandle<MoveRequestMessage>, IHandle<MoveResponseMessage>, IHandle<ChatMessage>
+    public class Network : IHandle<GameOverMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
@@ -483,15 +483,15 @@ namespace CreeperNetwork
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
                             //newMove = true;
 
-                            _eventAggregator.Publish(new MoveResponseMessage(currentMove, PlayerType.Network));
+                            _eventAggregator.Publish(new MoveMessage(PlayerType.Network, MoveMessageType.Response, currentMove));
                         }
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
                             if (packet[6] == MOVETYPE_FORFEIT)
-                                _eventAggregator.Publish(new NetworkGameOverMessage(END_GAME_TYPE.FORFEIT));
+                                _eventAggregator.Publish(new GameOverMessage(GameOverType.Forfeit, GameTracker.CurrentPlayer));
                             //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
                             else if (packet[6] == MOVETYPE_ILLEGAL)
-                                _eventAggregator.Publish(new NetworkGameOverMessage(END_GAME_TYPE.ILLEGAL_MOVE));
+                                _eventAggregator.Publish(new GameOverMessage(GameOverType.IllegalMove, GameTracker.CurrentPlayer));
                             //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
 
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
@@ -966,20 +966,15 @@ namespace CreeperNetwork
         * Description: Handles
         * MoveRequest messages
         ******************************/
-        public void Handle(MoveRequestMessage message)
+        public void Handle(MoveMessage message)
         {
-            //wait for move from opponent
-        }
-
-        /******************************
-        * Function: Handle
-        * Overloaded: GameOverMessage
-        * Description: Handles
-        * MoveResponse messages
-        ******************************/
-        public void Handle(MoveResponseMessage message)
-        {
-            if (message.PlayerType != PlayerType.Network)
+            if (message.Type == MoveMessageType.Request
+                && message.PlayerType == PlayerType.Network)
+            {
+                //wait for move from opponent
+            }
+            else if (message.Type == MoveMessageType.Response
+                && message.PlayerType != PlayerType.Network)
             {
                 move(message.Move);
             }
