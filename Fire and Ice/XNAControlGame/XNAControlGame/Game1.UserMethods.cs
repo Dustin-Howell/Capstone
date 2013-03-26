@@ -10,6 +10,7 @@ using CreeperMessages;
 using Nine;
 using Nine.Graphics.ParticleEffects;
 using Nine.Animations;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAControlGame
 {
@@ -107,6 +108,29 @@ namespace XNAControlGame
             }
         }
 
+        void FlipTile(Move move)
+        {
+            Piece tile = GameTracker.Board.GetFlippedTileCopy(move);
+
+            int boardWidth = _boardTexture.Width;
+            int squareWidth = (boardWidth / CreeperBoard.TileRows);
+
+            Color[] texturePixels = new Color[boardWidth * boardWidth];
+            Color color = (move.PlayerColor.IsBlack()) ? new Color(0, 0, 255) : new Color(255, 0, 0);
+
+            _boardTexture.GetData(texturePixels);
+
+            for (int i = tile.Position.Row * squareWidth; i < tile.Position.Row * squareWidth + squareWidth; i++)
+            {
+                for (int j = tile.Position.Column * squareWidth; j < tile.Position.Column * squareWidth + squareWidth; j++)
+                {
+                    texturePixels[i * boardWidth + j] = color;
+                }
+            }
+
+            _boardTexture.SetData(texturePixels);
+        }
+
         /// <summary>
         /// Returns a ray fired from the click point to test for intersection with a model.
         /// </summary>
@@ -155,9 +179,12 @@ namespace XNAControlGame
             _creeperBoardViewModel = new CreeperBoardViewModel(_scene.FindName<Surface>("boardSurface").Heightmap.Height, _scene.FindName<Surface>("boardSurface").Heightmap.Width, _scene.FindName<Surface>("boardSurface").Heightmap.Step);
         }
 
+        Texture2D _boardTexture;
+
         private void OnContentLoaded()
         {
             _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
+            _boardTexture = _boardGroup.Find<Surface>().Material.Texture;
 
             LoadViewModels();
             LoadPegModels();
@@ -221,7 +248,7 @@ namespace XNAControlGame
             }
             else if (GameTracker.Board.IsFlipMove(message.Move))
             {
-                //flip
+                FlipTile(message.Move);
                 _pegs
                     .First(x => x.Position == message.Move.StartPosition)
                     .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
