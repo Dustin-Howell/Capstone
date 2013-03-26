@@ -253,7 +253,7 @@ namespace XNAControlGame
                 }
                 else if (GameTracker.Board.IsFlipMove(message.Move))
                 {
-                    //flip
+                    FlipTile(message.Move);
                     _pegs
                         .First(x => x.Position == message.Move.StartPosition)
                         .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
@@ -267,22 +267,6 @@ namespace XNAControlGame
 
                 _pegAnimating = true;
             }
-            else if (GameTracker.Board.IsFlipMove(message.Move))
-            {
-                FlipTile(message.Move);
-                _pegs
-                    .First(x => x.Position == message.Move.StartPosition)
-                    .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
-            }
-            else
-            {
-                _pegs
-                    .First(x => x.Position == message.Move.StartPosition)
-                    .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
-            }
-
-
-            _pegAnimating = true;
         }
     }
 }
