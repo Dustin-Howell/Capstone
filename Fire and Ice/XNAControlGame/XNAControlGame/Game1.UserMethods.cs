@@ -29,29 +29,32 @@ namespace XNAControlGame
         private CreeperPeg _lastDownClickedModel;
         void DetectFullClick(Nine.MouseEventArgs e)
         {
-            CreeperPeg clickedModel = GetClickedModel(new Vector2(e.MouseState.X, e.MouseState.Y));
-            if (clickedModel != null)
+            if (e.Button == MouseButtons.Left)
             {
-                //if downclick
-                if (e.IsButtonDown(e.Button))
+                CreeperPeg clickedModel = GetClickedModel(new Vector2(e.MouseState.X, e.MouseState.Y));
+                if (clickedModel != null)
                 {
-                    _lastDownClickedModel = clickedModel;
-                }
-                //if upclick
-                else if (_lastDownClickedModel == clickedModel)
-                {
-                    _lastDownClickedModel = null;
-
-                    if (clickedModel.PegType == CreeperPegType.Possible ||
-                        GameTracker.CurrentPlayer.Color == clickedModel.PegType.ToCreeperColor())
+                    //if downclick
+                    if (e.IsButtonDown(e.Button))
                     {
-                        OnPegClicked(clickedModel);
+                        _lastDownClickedModel = clickedModel;
+                    }
+                    //if upclick
+                    else if (_lastDownClickedModel == clickedModel)
+                    {
+                        _lastDownClickedModel = null;
+
+                        if (clickedModel.PegType == CreeperPegType.Possible ||
+                            GameTracker.CurrentPlayer.Color == clickedModel.PegType.ToCreeperColor())
+                        {
+                            OnPegClicked(clickedModel);
+                        }
                     }
                 }
-            }
-            else
-            {
-                _SelectedPeg = null;
+                else
+                {
+                    _SelectedPeg = null;
+                }
             }
         }
 
