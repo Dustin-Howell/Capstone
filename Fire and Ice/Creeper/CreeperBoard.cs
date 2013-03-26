@@ -270,6 +270,11 @@ namespace Creeper
             }
         }
 
+        public Piece GetFlippedTileCopy(Move move)
+        {
+            return new Piece(GetFlippedTile(move));
+        }
+
         public bool IsFlipMove(Move move)
         {
             return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1);

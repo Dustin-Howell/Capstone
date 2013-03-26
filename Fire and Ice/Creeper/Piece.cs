@@ -16,5 +16,11 @@ namespace Creeper
             Color = color;
             Position = position;
         }
+
+        public Piece(Piece piece)
+        {
+            Position = new Position(piece.Position);
+            Color = piece.Color;
+        }
     }
 }
