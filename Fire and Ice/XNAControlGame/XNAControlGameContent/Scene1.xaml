@@ -6,11 +6,35 @@
     <AmbientLight Transform.Position="54,10,54" AmbientLightColor="1,1,1" Enabled="True" />
     <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Direction="1,-1, 1" />
 
-
     <Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
-             PatchSegmentCount="2" Transform.Position="0, 0, 0" >
-            <BasicMaterial LightingEnabled="True" Texture="{ContentReference Assets/MainBoard}" IsTransparent="True" />
+             PatchSegmentCount="2" Transform.Position="0, 0, 0" VertexType="VertexPositionNormalTangentBinormalTexture">
+            <MaterialGroup MaterialPaintGroup.MaskTextureScale="1, 1">
+
+                <MaterialPaintGroup.MaskTextures>
+                    <Splatter>
+                        <ExternalReference />
+                        <ExternalReference>Surface/Masks/2.bmp</ExternalReference>
+                        <ExternalReference>Surface/Masks/3.bmp</ExternalReference>
+                    </Splatter>
+                </MaterialPaintGroup.MaskTextures>
+
+                <MaterialPaintGroup>
+                    <DiffuseMaterialPart Texture="{ContentReference Assets/MainBoard}" />
+                </MaterialPaintGroup>
+
+                <MaterialPaintGroup>
+                    <DiffuseMaterialPart Texture="{ContentReference Textures/Lava}" />
+                    <SpecularMaterialPart SpecularColor="0.5, 0.5, 0.5" SpecularPower="64" />
+                </MaterialPaintGroup>
+
+                <MaterialPaintGroup>
+                    <DiffuseMaterialPart Texture="{ContentReference Textures/Ice}" />
+                    <SpecularMaterialPart SpecularColor="0.5, 0.5, 0.5" SpecularPower="64" />
+                </MaterialPaintGroup>
+
+                <DirectionalLightMaterialPart />
+            </MaterialGroup>
         </Surface>
     </Group>
 
