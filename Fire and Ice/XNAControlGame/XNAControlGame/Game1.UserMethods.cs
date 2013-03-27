@@ -101,7 +101,7 @@ namespace XNAControlGame
                 IEnumerable<Move> possibleMoves = GameTracker.Board.Pegs.At(clickedPeg.Position).PossibleMoves(GameTracker.Board);
                 foreach (Position position in possibleMoves.Select(x => x.EndPosition))
                 {
-                    CreeperPeg peg = new CreeperPeg(_iceModel)
+                    CreeperPeg peg = new CreeperPeg(_possibleModel)
                     {
                         Position = position,
                         PegType = CreeperPegType.Possible,

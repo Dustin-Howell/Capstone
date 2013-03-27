@@ -219,9 +219,46 @@
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Model\FirePeon\tietu_nongmin.bmp">
+      <Name>tietu_nongmin</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Model\IcePeon\tietu_nongmin.bmp">
+      <Name>tietu_nongmin</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Peon\tietu_nongmin.bmp">
+      <Name>tietu_nongmin</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\FirePeon\Peon.X">
+      <Name>Peon</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="Model\IcePeon\Peon.X">
+      <Name>Peon</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\PossiblePeon\Peon.X">
+      <Name>Peon</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\PossiblePeon\tietu_nongmin.bmp">
       <Name>tietu_nongmin</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

@@ -35,7 +35,7 @@ namespace XNAControlGame
         private Group _boardGroup;
         private CreeperBoardViewModel _creeperBoardViewModel;
 
-        private Microsoft.Xna.Framework.Graphics.Model _selectedModel;
+        private Microsoft.Xna.Framework.Graphics.Model _possibleModel;
         private Microsoft.Xna.Framework.Graphics.Model _fireModel;
         private Microsoft.Xna.Framework.Graphics.Model _iceModel;
 
@@ -131,7 +131,7 @@ namespace XNAControlGame
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
-            _selectedModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.SelectedPeg);
+            _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
 
             base.LoadContent();
 
@@ -147,7 +147,7 @@ namespace XNAControlGame
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {            
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
-            //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
+            _scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
             
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_spriteFont, "("+ Mouse.GetState().X.ToString() + ", "+ Mouse.GetState().Y.ToString() + ")", new Vector2(0, 0), Color.White);
