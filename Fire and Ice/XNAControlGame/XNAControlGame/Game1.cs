@@ -147,7 +147,7 @@ namespace XNAControlGame
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {            
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
-            _scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
+            //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
             
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_spriteFont, "("+ Mouse.GetState().X.ToString() + ", "+ Mouse.GetState().Y.ToString() + ")", new Vector2(0, 0), Color.White);
