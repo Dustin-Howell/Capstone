@@ -27,7 +27,6 @@ namespace XNAControlGame
     public partial class Game1 : XNAControl.XNAControlGame
     {
         private IEventAggregator _eventAggregator;
-        private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
         private Texture2D _fireTexture;
 
@@ -118,7 +117,6 @@ namespace XNAControlGame
         protected override void Initialize()
         {
             base.Initialize();
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         protected override void LoadContent()
@@ -149,10 +147,6 @@ namespace XNAControlGame
             _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
             //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
             
-            _spriteBatch.Begin();
-            _spriteBatch.DrawString(_spriteFont, "("+ Mouse.GetState().X.ToString() + ", "+ Mouse.GetState().Y.ToString() + ")", new Vector2(0, 0), Color.White);
-            _spriteBatch.End();
-
             base.Draw(gameTime);
         }
 

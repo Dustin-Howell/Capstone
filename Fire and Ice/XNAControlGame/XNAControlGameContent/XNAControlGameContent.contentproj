@@ -58,6 +58,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\warlock\warlock.jpg">
+      <Name>warlock</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="square.png">
       <Name>square</Name>
       <Importer>TextureImporter</Importer>
@@ -260,6 +265,20 @@
   <ItemGroup>
     <Compile Include="Model\PossiblePeon\tietu_nongmin.bmp">
       <Name>tietu_nongmin</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\warlock\warlock1.FBX">
+      <Name>warlock1</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\warlock\wkstaff.jpg">
+      <Name>wkstaff</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

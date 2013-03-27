@@ -46,7 +46,6 @@ namespace XNAControlGame
 
         private void DoTransform()
         {
-            //This messes things up. Will fix later. Makes peg rotate while animating.
             Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateRotationY(MathHelper.ToRadians(180))
                         * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
         }

@@ -28,6 +28,12 @@ namespace Resources
         //Model Scales
         private static readonly Vector3 _pegScale = new Vector3(.25f, .25f, .25f);
         public static Vector3 PegScale { get { return _pegScale; } }
+        private static readonly Vector3 _fireScale = new Vector3(.25f, .25f, .25f);
+        public static Vector3 FireScale { get { return _fireScale; } }
+        private static readonly Vector3 _iceScale = new Vector3(1f, 1f, 1f);
+        public static Vector3 IceScale { get { return _iceScale; } }
+        private static readonly Vector3 _possibleScale = new Vector3(.25f, .25f, .25f);
+        public static Vector3 PossibleScale { get { return _possibleScale; } }
 
         //Model Names
         public static String FirePeg { get { return "Model/FirePeon/Peon"; } }
