@@ -37,6 +37,10 @@ namespace XNAControlGame
         private Microsoft.Xna.Framework.Graphics.Model _possibleModel;
         private Microsoft.Xna.Framework.Graphics.Model _fireModel;
         private Microsoft.Xna.Framework.Graphics.Model _iceModel;
+        private Nine.Graphics.Model _possibleModel1;
+        private Instance _fireModel1;
+        private Instance _iceModel1;
+
 
         private Input _input;
 
@@ -125,11 +129,15 @@ namespace XNAControlGame
 
             _fireTexture = Content.Load<Texture2D>("Textures/fire");
 
-            _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);            
+            _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
             _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
+            _fireModel1 = new Instance { Template = "FirePeg" };
+            _iceModel1 = new Instance { Template = "IcePeg" };
+            _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
+            _scene.Add(_possibleModel1);
 
             base.LoadContent();
 

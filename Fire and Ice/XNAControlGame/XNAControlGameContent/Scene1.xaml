@@ -38,6 +38,6 @@
         </Surface>
     </Group>
 
-    <Instance Name="peg" Template="Peon" Transform.Position="0,0,0" Transform.Scale=" .075, .075, .075"/>
+    <!--<Instance Name="peg" Template="Peon" Transform.Position="0,0,0" Transform.Scale=" .075, .075, .075"/>-->
 
 </Scene>
