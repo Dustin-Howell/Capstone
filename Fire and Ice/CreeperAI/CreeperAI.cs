@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace CreeperAI
 {
-    public class CreeperAI : IHandle<MoveMessage>
+    public class AI : IHandle<MoveMessage>
     {
         //debug variables\\
         private bool _reportTime = false;
@@ -46,7 +46,7 @@ namespace CreeperAI
         private IEventAggregator _eventAggregator;
         private BackgroundWorker _getMoveWorker;
 
-        public CreeperAI(IEventAggregator eventAggregator)
+        public AI(IEventAggregator eventAggregator)
         {
             _MiniMaxDepth = (Difficulty == AIDifficulty.Hard) ? 5 : 3;
             _eventAggregator = eventAggregator;
@@ -56,7 +56,7 @@ namespace CreeperAI
             _getMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getMoveWorker_RunWorkerCompleted);
         }
 
-        public CreeperAI(Dictionary<String, double> weights)
+        public AI(Dictionary<String, double> weights)
         {
             _MiniMaxDepth = 3;
             foreach (String key in weights.Keys)

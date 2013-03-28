@@ -51,12 +51,12 @@ namespace FireAndIce
             }
         }
 
-        private static CreeperAI.CreeperAI _AI;
-        public static CreeperAI.CreeperAI AI
+        private static CreeperAI.AI _AI;
+        public static CreeperAI.AI AI
         {
             get
             {
-                return _AI = _AI ?? new CreeperAI.CreeperAI(EventAggregator)
+                return _AI = _AI ?? new CreeperAI.AI(EventAggregator)
                 {
                     TerritorialWeight = 15d,
                     MaterialWeight = 84d,

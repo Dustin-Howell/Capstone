@@ -28,7 +28,7 @@ namespace DustinGenetics
         public Gene()
         {
             _weights = new Dictionary<string, double>();
-            Type T = typeof(CreeperAI.CreeperAI);
+            Type T = typeof(CreeperAI.AI);
             foreach (String property in T.GetProperties().Where(x => x.Name.Contains("Weight")).Select(x => x.Name))
             {
                 if (property.Contains("Power"))
@@ -89,8 +89,8 @@ namespace DustinGenetics
                 int moveCount = 0;
                 CreeperColor turn = CreeperColor.Ice;
                 CreeperBoard board = new CreeperBoard();
-                CreeperAI.CreeperAI thisAI = new CreeperAI.CreeperAI(_weights);
-                CreeperAI.CreeperAI opponentAI = new CreeperAI.CreeperAI(opponent._weights);
+                CreeperAI.AI thisAI = new CreeperAI.AI(_weights);
+                CreeperAI.AI opponentAI = new CreeperAI.AI(opponent._weights);
 
                 while (!board.IsFinished(turn))
                 {
