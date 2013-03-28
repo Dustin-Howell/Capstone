@@ -10,6 +10,7 @@ using CreeperNetwork;
 using System.ComponentModel;
 using Creeper;
 using System.Windows.Controls;
+using CreeperAI;
 
 namespace FireAndIce.ViewModels
 {
@@ -178,9 +179,22 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalEasyAIGame(CreeperColor playerColor)
         {
-            GameContainerViewModel gameContainer = (playerColor == CreeperColor.Fire) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Easy) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Easy);
+            AppModel.ResetEventAggregator();
 
-            AppModel.AppViewModel.ActivateItem(gameContainer);
+            AppModel.SlimCore.StartGame(new GameSettings()
+            {
+                Player1Type = PlayerType.Human,
+                Player2Type = PlayerType.AI,
+
+                //TODO: add difficulty to AI constructor
+                AI = new AI(AppModel.EventAggregator),
+                Board = new CreeperBoard(),
+                StartingColor = CreeperColor.Fire,
+                EventAggregator = AppModel.EventAggregator,
+            });
+
+            throw new NotImplementedException("Not configured for slim core");
+            //Activate GameContainerViewModel
         }
 
         private ToggleButtonMenuViewModel _localHardAIGameMenu;
@@ -203,14 +217,42 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalHardAIGame(CreeperColor playerColor)
         {
-            GameContainerViewModel gameContainer = (playerColor == CreeperColor.Fire) ? new GameContainerViewModel(PlayerType.Human, PlayerType.AI, AIDifficulty.Hard) : new GameContainerViewModel(PlayerType.AI, PlayerType.Human, AIDifficulty.Hard);
+            AppModel.ResetEventAggregator();
 
-            AppModel.AppViewModel.ActivateItem(gameContainer);
+            AppModel.SlimCore.StartGame(new GameSettings()
+            {
+                Player1Type = PlayerType.Human,
+                Player2Type = PlayerType.AI,
+
+                //TODO: add difficulty to AI constructor
+                AI = new AI(AppModel.EventAggregator),
+                Board = new CreeperBoard(),
+                StartingColor = CreeperColor.Fire,
+                EventAggregator = AppModel.EventAggregator,
+            });
+
+            throw new NotImplementedException("Not configured for slim core");
+            //Activate GameContainerViewModel
         }
 
         private void StartLocalHumanGame()
         {
-            AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Human));
+            AppModel.ResetEventAggregator();
+
+            AppModel.SlimCore.StartGame(new GameSettings()
+            {
+                Player1Type = PlayerType.Human,
+                Player2Type = PlayerType.AI,
+
+                //TODO: add difficulty to AI constructor
+                AI = new AI(AppModel.EventAggregator),
+                Board = new CreeperBoard(),
+                StartingColor = CreeperColor.Fire,
+                EventAggregator = AppModel.EventAggregator,
+            });
+
+            throw new NotImplementedException("Not configured for slim core");
+            //Activate GameContainerViewModel
         }
 
         private ToggleButtonMenuViewModel _networkGameMenu;

@@ -73,6 +73,9 @@ namespace FireAndIce.ViewModels
 
         public void HostGame()
         {
+            //TODO: Use with slim core
+            throw new NotImplementedException("Not configured for slim core");
+
             _hostGameWorker = new BackgroundWorker() { WorkerSupportsCancellation = true };
             _connectServerWorker = new BackgroundWorker();
 

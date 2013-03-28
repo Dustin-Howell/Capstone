@@ -24,11 +24,12 @@ namespace FireAndIce
         private static EventAggregator _eventAggregator;
         public static EventAggregator EventAggregator { get { return _eventAggregator = _eventAggregator ?? new EventAggregator(); } }
 
-        private static CreeperGameCore _core;
-        public static CreeperGameCore Core
+        private static SlimCore _slimCore;
+        public static SlimCore SlimCore
         {
-            get { return _core = _core ?? new CreeperGameCore(EventAggregator); }
-        }
+            get { return _slimCore = _slimCore ?? new SlimCore(); }
+        }        
+
         public static AppViewModel AppViewModel { get; set; }
 
         private static Network _network;
@@ -70,5 +71,10 @@ namespace FireAndIce
 
         private static ResourceDictionary _resources;
         public static ResourceDictionary Resources { get { return _resources = _resources ?? new ResourceDictionary() { Source = new Uri(@"..\Resources.xaml", UriKind.Relative) }; } }
+
+        public static void ResetEventAggregator()
+        {
+            _eventAggregator = null;
+        }
     }
 }

@@ -155,6 +155,9 @@ namespace FireAndIce.ViewModels
 
         public void FindGameClick()
         {
+            //TODO: Use with slim core
+            throw new NotImplementedException("Not configured for slim core");
+
             AppModel.Network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
             BackgroundWorker startGameWorker = new BackgroundWorker();
 

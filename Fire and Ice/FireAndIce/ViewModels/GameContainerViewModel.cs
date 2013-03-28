@@ -85,6 +85,7 @@ namespace FireAndIce.ViewModels
 
         public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, Network network = null) : base()
         {
+            throw new NotImplementedException("Not configured for slim core");
             Init(player1Type, player2Type);
             _network = network;
             NotifyOfPropertyChange(() => IsNetworkGame);
@@ -93,34 +94,18 @@ namespace FireAndIce.ViewModels
         public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, AIDifficulty difficulty)
             : base()
         {
+            throw new NotImplementedException("Not configured for slim core");
             Init(player1Type, player2Type);
             _aiDifficulty = difficulty;
         }
 
         private void Init(PlayerType player1Type, PlayerType player2Type)
         {
+            throw new NotImplementedException("Not configured for slim core");
             AppModel.EventAggregator.Subscribe(this);
 
             _player1Type = player1Type;
             _player2Type = player2Type;
-        }
-
-        protected override void OnViewLoaded(object view)
-        {
-            base.OnViewLoaded(view);
-
-            XNAUserControl xnaView = (view as GameContainerView).XNAControl;
-
-            AppModel.Core.InitializeGameGUI(xnaView.Handle, (int)xnaView.Width, (int)xnaView.Height);
-
-            if (_network == null)
-            {
-                AppModel.Core.StartLocalGame(_player1Type, _player2Type, _aiDifficulty);
-            }
-            else
-            {
-                AppModel.Core.StartNetworkGame(_player1Type, _player2Type, _network);
-            }
         }
 
         public void ReturnToMainMenu()
