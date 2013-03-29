@@ -48,8 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreeperGameCore.cs" />
-    <Compile Include="GameSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlimCore.cs" />
   </ItemGroup>

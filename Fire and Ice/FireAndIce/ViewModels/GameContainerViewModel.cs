@@ -10,15 +10,17 @@ using CreeperNetwork;
 using System.Windows.Media;
 using Creeper;
 using CreeperMessages;
+using XNAControlGame;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<GameOverMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
+    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
         private Network _network = null;
         private AIDifficulty _aiDifficulty = AIDifficulty.Hard;
+        private GameSettings _settings;
 
         //private SlideOutPanelViewModel _gameMenu;
         public ToggleButtonMenuViewModel GameMenu
@@ -57,7 +59,7 @@ namespace FireAndIce.ViewModels
         {
             get
             {
-                return GameTracker.CurrentPlayer != null? GameTracker.CurrentPlayer.Color.ToString() : "Fire";
+                return "Fix this!";
             }
         }
 
@@ -81,6 +83,11 @@ namespace FireAndIce.ViewModels
                 _message = value;
                 NotifyOfPropertyChange(() => Message);
             }
+        }
+
+        public GameContainerViewModel(GameSettings settings)
+        {
+            _settings = settings;
         }
 
         public GameContainerViewModel(PlayerType player1Type, PlayerType player2Type, Network network = null) : base()
@@ -113,9 +120,9 @@ namespace FireAndIce.ViewModels
             AppModel.AppViewModel.ActivateItem(new MainMenuViewModel());
         }
 
-        public void Handle(GameOverMessage message)
+        public void Handle(NetworkErrorMessage message)
         {
-            GameOverText = String.Format("{0} wins!", message.Sender.Color.ToString());
+            GameOverText = String.Format("{0} Error!", "Network");
         }
 
         public void Handle(MoveMessage message)
@@ -127,6 +134,26 @@ namespace FireAndIce.ViewModels
         {
             AppModel.EventAggregator.Publish(new ChatMessage(Message, ChatMessageType.Send));
             Message = "";
+        }
+
+        protected override void OnViewLoaded(object view)
+        {
+            base.OnViewLoaded(view);
+
+            XNAUserControl xnaView = (view as GameContainerView).XNAControl;
+
+            AppModel.XNAGame = new Game1(xnaView.Handle, 
+                                        (int)xnaView.Width, 
+                                        (int)xnaView.Height, 
+                                        AppModel.EventAggregator, 
+                                        AppModel.SlimCore);
+
+            Game1 game = AppModel.XNAGame;
+            AppModel.EventAggregator.Subscribe(game);
+            game.InitializeGraphics();
+            game.Run();
+
+            AppModel.SlimCore.StartGame(_settings);
         }
 
         public void Handle(ChatMessage message)

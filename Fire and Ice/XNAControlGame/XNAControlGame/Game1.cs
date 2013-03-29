@@ -91,9 +91,12 @@ namespace XNAControlGame
         private bool _humanMovePending = false;
         private bool _pegAnimating = false;
 
-        public Game1(IntPtr handle, int width, int height, IEventAggregator eventAggregator)
+        public IProvideBoardState BoardProvider { get; private set; }
+
+        public Game1(IntPtr handle, int width, int height, IEventAggregator eventAggregator, IProvideBoardState boardProvider)
             : base(handle, "Content", width, height)
         {
+            BoardProvider = boardProvider;
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
 

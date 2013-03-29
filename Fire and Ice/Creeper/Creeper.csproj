@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CreeperBoard.cs" />
     <Compile Include="CreeperUtility.cs" />
+    <Compile Include="IProvideBoardState.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="Player.cs" />

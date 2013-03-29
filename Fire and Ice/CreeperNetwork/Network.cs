@@ -12,7 +12,7 @@ using CreeperMessages;
 
 namespace CreeperNetwork
 {
-    public class Network : IHandle<GameOverMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
+    public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
@@ -483,15 +483,15 @@ namespace CreeperNetwork
                             currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
                             //newMove = true;
 
-                            _eventAggregator.Publish(new MoveMessage(PlayerType.Network, MoveMessageType.Response, currentMove));
+                            _eventAggregator.Publish(new MoveMessage(){ PlayerType = PlayerType.Network, Type = MoveMessageType.Response,  Move = currentMove});
                         }
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
                             if (packet[6] == MOVETYPE_FORFEIT)
-                                _eventAggregator.Publish(new GameOverMessage(GameOverType.Forfeit, GameTracker.CurrentPlayer));
+                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
                             //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
                             else if (packet[6] == MOVETYPE_ILLEGAL)
-                                _eventAggregator.Publish(new GameOverMessage(GameOverType.IllegalMove, GameTracker.CurrentPlayer));
+                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.IllegalMove));
                             //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
 
                             sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
@@ -955,7 +955,7 @@ namespace CreeperNetwork
         * Description: Handles
         * GameOver messages
         ******************************/
-        public void Handle(GameOverMessage message)
+        public void Handle(NetworkErrorMessage message)
         {
             disconnect();
         }

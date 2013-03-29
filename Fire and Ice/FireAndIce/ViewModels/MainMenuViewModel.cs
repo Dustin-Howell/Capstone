@@ -11,6 +11,7 @@ using System.ComponentModel;
 using Creeper;
 using System.Windows.Controls;
 using CreeperAI;
+using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
@@ -179,22 +180,19 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalEasyAIGame(CreeperColor playerColor)
         {
-            AppModel.ResetEventAggregator();
-
-            AppModel.SlimCore.StartGame(new GameSettings()
+            AppModel.EventAggregator.Publish(new StartGameMessage()
             {
-                Player1Type = PlayerType.Human,
-                Player2Type = PlayerType.AI,
-
-                //TODO: add difficulty to AI constructor
-                AI = new AI(AppModel.EventAggregator),
-                Board = new CreeperBoard(),
-                StartingColor = CreeperColor.Fire,
-                EventAggregator = AppModel.EventAggregator,
+                Settings = new GameSettings()
+                {
+                    AI = AppModel.AI,
+                    Board = new CreeperBoard(),
+                    EventAggregator = AppModel.EventAggregator,
+                    Player1Type = PlayerType.Human,
+                    Player2Type = PlayerType.AI,
+                    StartingColor = CreeperColor.Fire,                
+                }
             });
 
-            throw new NotImplementedException("Not configured for slim core");
-            //Activate GameContainerViewModel
         }
 
         private ToggleButtonMenuViewModel _localHardAIGameMenu;

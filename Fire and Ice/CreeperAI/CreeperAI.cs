@@ -347,19 +347,20 @@ namespace CreeperAI
             if (message.Type == MoveMessageType.Request
                 && message.PlayerType == PlayerType.AI)
             {
-                _getMoveWorker.RunWorkerAsync(message.Move.PlayerColor);
+                _getMoveWorker.RunWorkerAsync(message);
             }
         }
 
         void _getMoveWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MoveMessage response = new MoveMessage(PlayerType.AI, MoveMessageType.Response, ((Move)e.Result));
+            MoveMessage response = new MoveMessage() { PlayerType = PlayerType.AI, Type = MoveMessageType.Response, Move = ((Move)e.Result), };
             _eventAggregator.Publish(response);
         }
 
         void _getMoveWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = GetMove(GameTracker.Board, (CreeperColor)e.Argument);
+            MoveMessage message = (MoveMessage)e.Argument;
+            e.Result = GetMove(message.Board, message.TurnColor);
         }
         #endregion
     }

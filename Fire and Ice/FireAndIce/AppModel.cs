@@ -18,9 +18,6 @@ namespace FireAndIce
         {
         }
 
-        private static GameTracker _gameTracker;
-        public static GameTracker GameTracker { get { return _gameTracker = _gameTracker ?? new GameTracker(EventAggregator); } }
-
         private static EventAggregator _eventAggregator;
         public static EventAggregator EventAggregator { get { return _eventAggregator = _eventAggregator ?? new EventAggregator(); } }
 
@@ -36,19 +33,23 @@ namespace FireAndIce
         public static Network Network { get { return _network = _network ?? new Network(EventAggregator); } }
 
         private static Game1 _game;
-        public static Game1 Game
+        public static Game1 XNAGame
         {
             get
             {
                 //This condition may grow
                 if (AppViewModel != null)
                 {
-                    return _game = _game ?? new Game1(new IntPtr(0), 0, 0, EventAggregator);
+                    return _game;// = _game ?? new Game1(new IntPtr(0), 0, 0, EventAggregator);
                 }
                 else
                 {
                     return null;
                 }
+            }
+            set
+            {
+                _game = value;
             }
         }
 

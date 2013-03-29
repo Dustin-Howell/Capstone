@@ -55,9 +55,11 @@
     <Compile Include="ChatMessage.cs" />
     <Compile Include="ConnectionStatusMessage.cs" />
     <Compile Include="GameOverMessage.cs" />
-    <Compile Include="GameTracker.cs" />
+    <Compile Include="NetworkErrorMessage.cs" />
+    <Compile Include="GameSettings.cs" />
     <Compile Include="MoveMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartGameMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Creeper\Creeper.csproj">

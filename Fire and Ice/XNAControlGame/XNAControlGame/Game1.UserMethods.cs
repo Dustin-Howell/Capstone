@@ -46,7 +46,7 @@ namespace XNAControlGame
                         _lastDownClickedModel = null;
 
                         if (clickedModel.PegType == CreeperPegType.Possible ||
-                            GameTracker.CurrentPlayer.Color == clickedModel.PegType.ToCreeperColor())
+                            BoardProvider.GetCurrentTurn() == clickedModel.PegType.ToCreeperColor())
                         {
                             OnPegClicked(clickedModel);
                         }
@@ -77,14 +77,15 @@ namespace XNAControlGame
                         break;
                     case CreeperPegType.Possible:
                         _eventAggregator.Publish(
-                            new MoveMessage(
-                                PlayerType.Human,
-                                MoveMessageType.Response,
-                                new Move(
+                            new MoveMessage()
+                            {
+                                PlayerType = PlayerType.Human,
+                                Type = MoveMessageType.Response,
+                                Move = new Move(
                                     _SelectedPeg.Position, clickedModel.Position,
                                     _SelectedPeg.PegType.ToCreeperColor()
                                 )
-                             )
+                            }
                          );
                         _SelectedPeg = null;
                         break;
@@ -98,7 +99,7 @@ namespace XNAControlGame
 
             if (clickedPeg != null)
             {
-                IEnumerable<Move> possibleMoves = GameTracker.Board.Pegs.At(clickedPeg.Position).PossibleMoves(GameTracker.Board);
+                IEnumerable<Move> possibleMoves = BoardProvider.GetBoard().Pegs.At(clickedPeg.Position).PossibleMoves(BoardProvider.GetBoard());
                 foreach (Position position in possibleMoves.Select(x => x.EndPosition))
                 {
                     CreeperPeg peg = new CreeperPeg(_possibleModel)
@@ -167,7 +168,7 @@ namespace XNAControlGame
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Ray selectionRay = GetSelectionRay(mousePosition);
-            List<CreeperPeg> currentTeam = ((GameTracker.CurrentPlayer.Color == CreeperColor.Fire) ? _firePegs : _icePegs).ToList();
+            List<CreeperPeg> currentTeam = ((BoardProvider.GetCurrentTurn() == CreeperColor.Fire) ? _firePegs : _icePegs).ToList();
             currentTeam.AddRange(_possiblePegs);
 
             CreeperPeg clickedModel = null;
@@ -201,7 +202,7 @@ namespace XNAControlGame
 
         private void LoadPegModels()
         {
-            foreach (Piece piece in GameTracker.Board.Pegs.Where(x => x.Color.IsTeamColor()))
+            foreach (Piece piece in BoardProvider.GetBoard().Pegs.Where(x => x.Color.IsTeamColor()))
             {
                 CreeperPeg peg;
                 if (piece.Color == CreeperColor.Fire)
@@ -248,15 +249,16 @@ namespace XNAControlGame
             }
             else
             {
-                if (GameTracker.Board.IsCaptureMove(message.Move))
+                // Refactor into static call?
+                if (BoardProvider.GetBoard().IsCaptureMove(message.Move))
                 {
                     //capture
-                    _boardGroup.Remove(_pegs.First(x => x.Position == GameTracker.Board.GetCapturedPegPosition(message.Move)));
+                    _boardGroup.Remove(_pegs.First(x => x.Position == BoardProvider.GetBoard().GetCapturedPegPosition(message.Move)));
                     _pegs
                         .First(x => x.Position == message.Move.StartPosition)
                         .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
                 }
-                else if (GameTracker.Board.IsFlipMove(message.Move))
+                else if (BoardProvider.GetBoard().IsFlipMove(message.Move))
                 {
                     FlipTile(message.Move);
                     _pegs

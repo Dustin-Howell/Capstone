@@ -80,10 +80,17 @@ namespace XNAControl
             get { return m_graphics; }
         }
 
+        private int _width = 0, _height = 0;
         public XNAControlGame(IntPtr windowHandle, string contentRoot, int width, int height)
             : base()
         {
             m_windowHandle = windowHandle;
+            _width = width;
+            _height = height;
+        }
+
+        public virtual void InitializeGraphics()
+        {
 
             // Create the graphics device manager and set the delegate for initializing the graphics device
             m_graphics = new GraphicsDeviceManager(this);
@@ -93,35 +100,45 @@ namespace XNAControl
             m_graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(PreparingDeviceSettings);
 
             // Now set the resolution and create the graphics device manually
-            ChangeGraphics(width, height);
+            ChangeGraphics(_width, _height);
 
-            Content.RootDirectory = contentRoot;
+            Content.RootDirectory = "Content";
 
             m_graphics.GraphicsDevice.DeviceResetting += new EventHandler<EventArgs>(GraphicsDevice_DeviceResetting);
             m_graphics.GraphicsDevice.DeviceReset += new EventHandler<EventArgs>(GraphicsDevice_DeviceReset);
-                
-            this.Initialize();
 
+            this.Initialize();
+        }
+
+        public void Run()
+        {
             timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1 / 60);
+
+            // 50 fps
+            timer.Interval = TimeSpan.FromMilliseconds(20);
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
-            //this.Tick();
         }
 
-        protected void UpdateWindowHandle(IntPtr handle)
+        public void Stop()
         {
-            m_windowHandle = handle;
-            m_graphics.GraphicsDevice.Reset(new PresentationParameters() 
-            {  
-                BackBufferWidth = ResolutionWidth,
-                BackBufferHeight = ResolutionHeight,
-                DeviceWindowHandle = m_windowHandle, 
-                RenderTargetUsage = RenderTargetUsage.PreserveContents,
-                IsFullScreen = false,
-                MultiSampleCount = 8,
-            });
+            timer.Stop();
+            timer = null;
         }
+
+        //public void UpdateWindowHandle(IntPtr handle)
+        //{
+        //    m_windowHandle = handle;
+        //    m_graphics.GraphicsDevice.Reset(new PresentationParameters() 
+        //    {  
+        //        BackBufferWidth = ResolutionWidth,
+        //        BackBufferHeight = ResolutionHeight,
+        //        DeviceWindowHandle = m_windowHandle, 
+        //        RenderTargetUsage = RenderTargetUsage.PreserveContents,
+        //        IsFullScreen = false,
+        //        MultiSampleCount = 8,
+        //    });
+        //}
 
         void GraphicsDevice_DeviceReset(object sender, EventArgs e)
         {

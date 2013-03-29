@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Creeper;
-using CreeperNetwork;
-using CreeperAI;
 using Caliburn.Micro;
 
-namespace CreeperCore
+namespace CreeperMessages
 {
     public class GameSettings
     {
@@ -18,7 +16,7 @@ namespace CreeperCore
 
         public EventAggregator EventAggregator { get; set; }
 
-        public Network Network { get; set; }
-        public AI AI { get; set; }
+        public IHandle Network { get; set; }
+        public IHandle AI { get; set; }
     }
 }
