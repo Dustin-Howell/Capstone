@@ -1,7 +1,7 @@
 import os
 from os.path import join, getsize, splitext
 
-root= '.'
+root= os.getcwd()
 
 fileExtensionCounts= {}
 byteSum= 0
