@@ -30,10 +30,10 @@ print "Total relevant file size:"
 abbreviations= ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'Insane Bytes!']
 displayedSize= float(byteSum)
 for abbrev in abbreviations:
-	if len(str(int(displayedSize))) <= 3:
+	if displayedSize / 1000 < 1:
 		print str(displayedSize) + " " + abbrev
 		break
 	else:
-		displayedSize/= float(1000)
+		displayedSize/= 1000
 else:
 	print "This is just way too big."
