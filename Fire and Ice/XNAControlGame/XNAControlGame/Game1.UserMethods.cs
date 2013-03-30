@@ -139,7 +139,7 @@ namespace XNAControlGame
 
         void FlipTile(Move move)
         {
-            Piece tile = GameTracker.Board.GetFlippedTileCopy(move);
+            Piece tile = BoardProvider.GetBoard().GetFlippedTileCopy(move);
             
             string name = tile.Position.Row.ToString() + 'x' + tile.Position.Column.ToString();
 
