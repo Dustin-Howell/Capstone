@@ -145,11 +145,11 @@ namespace XNAControlGame
 
             Surface jumped = _scene.FindName<Surface>(name);
 
-            if( tile.Color == CreeperColor.Fire )
+            if (move.PlayerColor == CreeperColor.Fire)
             {
                 jumped.Material.Texture = _fireTile;
             }
-            else if( tile.Color == CreeperColor.Ice )
+            else if(move.PlayerColor == CreeperColor.Ice )
             {
                 jumped.Material.Texture = _iceTile;
             }
