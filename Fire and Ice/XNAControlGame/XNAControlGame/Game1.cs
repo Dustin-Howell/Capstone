@@ -41,6 +41,8 @@ namespace XNAControlGame
         private Instance _fireModel1;
         private Instance _iceModel1;
 
+        private Texture2D _fireTile;
+        private Texture2D _iceTile;
 
         private Input _input;
 
@@ -137,7 +139,9 @@ namespace XNAControlGame
             _fireModel1 = new Instance { Template = "FirePeg" };
             _iceModel1 = new Instance { Template = "IcePeg" };
             _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
-            _scene.Add(_possibleModel1);
+
+            _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
+            _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
 
             base.LoadContent();
 

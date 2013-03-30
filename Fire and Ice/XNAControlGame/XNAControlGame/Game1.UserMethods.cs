@@ -11,6 +11,7 @@ using Nine;
 using Nine.Graphics.ParticleEffects;
 using Nine.Animations;
 using Microsoft.Xna.Framework.Graphics;
+using Nine.Graphics.Materials;
 
 namespace XNAControlGame
 {
@@ -137,7 +138,22 @@ namespace XNAControlGame
 
         void FlipTile(Move move)
         {
+            Piece tile = GameTracker.Board.GetFlippedTileCopy(move);
+            
+            string name = tile.Position.Row.ToString() + 'x' + tile.Position.Column.ToString();
 
+            Surface jumped = _scene.FindName<Surface>(name);
+
+            if( tile.Color == CreeperColor.Fire )
+            {
+                jumped.Material.Texture = _fireTile;
+            }
+            else if( tile.Color == CreeperColor.Ice )
+            {
+                jumped.Material.Texture = _iceTile;
+            }
+
+            jumped.Material.Alpha = 1;
         }
 
         /// <summary>
@@ -197,6 +213,27 @@ namespace XNAControlGame
 
             LoadViewModels();
             LoadPegModels();
+            //Prototype Specific Methods
+            LoadTileSurfaces();
+        }
+        
+        //For hacked in tiles for our testing prototype. Nothing more.
+        private void LoadTileSurfaces()
+        {
+            int boardWidth = _boardGroup.FindName<Nine.Graphics.Surface>("boardSurface").Heightmap.Width;
+            int squareWidth = (boardWidth / CreeperBoard.TileRows);
+
+            for (int row = 0; row < 6; row++)
+            {
+                for (int col = 0; col < 6; col++)
+                {
+                    Surface tile = new Surface(GraphicsDevice, 2, 108 / CreeperBoard.TileRows, 108 / CreeperBoard.TileRows, 2);
+                    tile.Transform = Matrix.CreateTranslation(0 + col * squareWidth * 2, 2, 0 + row * squareWidth * 2);
+                    tile.Name = row.ToString() + 'x' + col.ToString();
+                    tile.Material = new BasicMaterial(GraphicsDevice) { Alpha = 0, IsTransparent = true, };
+                    _scene.Add(tile);
+                }
+            }
         }
 
         private void LoadPegModels()
