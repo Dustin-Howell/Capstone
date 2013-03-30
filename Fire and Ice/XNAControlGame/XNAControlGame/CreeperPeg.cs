@@ -46,7 +46,7 @@ namespace XNAControlGame
 
         private void DoTransform()
         {
-            Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateRotationY(MathHelper.ToRadians(180))
+            Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateRotationY(MathHelper.ToRadians(135))
                         * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
         }
 
@@ -64,7 +64,7 @@ namespace XNAControlGame
                 TargetProperty = "Transform",
                 Duration = TimeSpan.FromSeconds(1),
                 From = Transform,
-                To = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateRotationY(MathHelper.ToRadians(180))
+                To = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateRotationY(MathHelper.ToRadians(135))
                         * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[position.Row, position.Column]),
                 Curve = Curves.Smooth,
             };

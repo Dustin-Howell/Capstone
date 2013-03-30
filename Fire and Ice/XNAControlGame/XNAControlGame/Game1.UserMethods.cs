@@ -114,9 +114,9 @@ namespace XNAControlGame
             }
         }
 
-        //void YeOldeFlipTile(Move move)
+        //void FlipTile(Move move)
         //{
-        //    Piece tile = GameTracker.Board.GetFlippedTileCopy(move);
+        //    Piece tile = BoardProvider.GetBoard().GetFlippedTileCopy(move);
 
         //    int boardWidth = _boardTexture.Width;
         //    int squareWidth = (boardWidth / CreeperBoard.TileRows);
@@ -140,7 +140,7 @@ namespace XNAControlGame
         void FlipTile(Move move)
         {
             Piece tile = BoardProvider.GetBoard().GetFlippedTileCopy(move);
-            
+
             string name = tile.Position.Row.ToString() + 'x' + tile.Position.Column.ToString();
 
             Surface jumped = _scene.FindName<Surface>(name);
@@ -149,7 +149,7 @@ namespace XNAControlGame
             {
                 jumped.Material.Texture = _fireTile;
             }
-            else if(move.PlayerColor == CreeperColor.Ice )
+            else if (move.PlayerColor == CreeperColor.Ice)
             {
                 jumped.Material.Texture = _iceTile;
             }
