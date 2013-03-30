@@ -35,22 +35,25 @@ namespace CreeperCore
             _eventAggregator = settings.EventAggregator;
             _player1 = new Player(settings.Player1Type, settings.StartingColor);
             _player2 = new Player(settings.Player2Type, settings.StartingColor.Opposite());
+            _currentPlayer = _player1;
 
             //if networked game
-            if (_player1.PlayerType == PlayerType.Network
-                || _player2.PlayerType == PlayerType.Network)
+            if (_player1.Type == PlayerType.Network
+                || _player2.Type == PlayerType.Network)
             {
                 _networkReference = settings.Network;
                 _eventAggregator.Subscribe(_networkReference);
             }
 
             //else if ai game
-            if (_player1.PlayerType == PlayerType.AI
-                || _player2.PlayerType == PlayerType.AI)
+            if (_player1.Type == PlayerType.AI
+                || _player2.Type == PlayerType.AI)
             {
                 _aiReference = settings.AI;
                 _eventAggregator.Subscribe(_aiReference);
             }
+
+            RequestMove();
         }
 
         public CreeperBoard GetBoard()
@@ -74,12 +77,7 @@ namespace CreeperCore
                 if (!_board.IsFinished(_currentPlayer.Color))
                 {
                     _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
-                    _eventAggregator.Publish(new MoveMessage(){
-                        PlayerType = _currentPlayer.PlayerType, 
-                        Type = MoveMessageType.Request,
-                        Board = new CreeperBoard(_board),
-                        TurnColor = _currentPlayer.Color,
-                    });
+                    RequestMove();
                 }
                 else
                 {
@@ -91,6 +89,17 @@ namespace CreeperCore
         public void Handle(NetworkErrorMessage message)
         {
             throw new NotImplementedException("Core did not handle network error.");
+        }
+
+        private void RequestMove()
+        {
+            _eventAggregator.Publish(new MoveMessage()
+            {
+                PlayerType = _currentPlayer.Type,
+                Type = MoveMessageType.Request,
+                Board = new CreeperBoard(_board),
+                TurnColor = _currentPlayer.Color,
+            });
         }
     }
 }

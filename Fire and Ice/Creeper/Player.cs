@@ -11,11 +11,11 @@ namespace Creeper
     public class Player
     {
         public CreeperColor Color { get; private set; }
-        public PlayerType PlayerType { get; private set; }
+        public PlayerType Type { get; private set; }
 
         public Player(PlayerType playerType, CreeperColor creeperColor)
         {
-            PlayerType = playerType;
+            Type = playerType;
             Color = creeperColor;
         }
     }
