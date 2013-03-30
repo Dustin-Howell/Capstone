@@ -33,6 +33,7 @@ namespace CreeperCore
         public void StartGame(GameSettings settings)
         {
             _eventAggregator = settings.EventAggregator;
+            _eventAggregator.Subscribe(this);
             _player1 = new Player(settings.Player1Type, settings.StartingColor);
             _player2 = new Player(settings.Player2Type, settings.StartingColor.Opposite());
             _currentPlayer = _player1;
