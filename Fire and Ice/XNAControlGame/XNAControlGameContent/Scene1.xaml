@@ -1,12 +1,19 @@
 ﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
-    <!--<SkyBox Color="255,255,255"/>-->
+    <SkyBox Color="0,0,0"/>
     <FreeCamera Name="MainCamera" Position="106.6, 254.1, 235.78" Angle="1.14,0,0" />
 
     <AmbientLight Transform.Position="54,10,54" AmbientLightColor="1,1,1" Enabled="True" />
     <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Direction="1,-1, 1" />
 
     <Group Name="GameBoard">
+        <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
+             PatchSegmentCount="2" Transform.Position="0,0,0" >
+            <BasicMaterial Texture="{ContentReference Assets/PrototypeMainBoard}" IsTransparent="True" />
+        </Surface>
+    </Group>
+
+    <!--<Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
              PatchSegmentCount="2" Transform.Position="0, 0, 0" VertexType="VertexPositionNormalTangentBinormalTexture">
             <MaterialGroup MaterialPaintGroup.MaskTextureScale="1, 1">
@@ -36,8 +43,8 @@
                 <DirectionalLightMaterialPart />
             </MaterialGroup>
         </Surface>
-    </Group>
+    </Group>-->
 
-    <Instance Name="peg" Template="Peon" Transform.Position="0,0,0" Transform.Scale=" .075, .075, .075"/>
+    <!--<Instance Name="peg" Template="Peon" Transform.Position="0,0,0" Transform.Scale=" .075, .075, .075"/>-->
 
 </Scene>

@@ -307,6 +307,45 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FirePeg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <Name>FirePeg</Name>
+      <Importer>XamlImporter</Importer>
+      <Processor>DefaultContentProcessor</Processor>
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="IcePeg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <Name>IcePeg</Name>
+      <Importer>XamlImporter</Importer>
+      <Processor>DefaultContentProcessor</Processor>
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="PossiblePeg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <Name>PossiblePeg</Name>
+      <Importer>XamlImporter</Importer>
+      <Processor>DefaultContentProcessor</Processor>
+      <SubType>Designer</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\PrototypeMainBoard.png">
+      <Name>PrototypeMainBoard</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TileSurface.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <Name>TileSurface</Name>
+      <Importer>XamlImporter</Importer>
+      <Processor>DefaultContentProcessor</Processor>
+      <SubType>Designer</SubType>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

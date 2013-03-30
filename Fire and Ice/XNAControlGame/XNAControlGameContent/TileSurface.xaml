@@ -1,0 +1,4 @@
+﻿<Surface xmlns="http://schemas.microsoft.com/nine/2011/xaml" Heightmap.Width="18" Heightmap.Height="18" Heightmap.Step="2"
+         PatchSegmentCount="2" LevelOfDetailEnabled="False">
+    
+</Surface>
