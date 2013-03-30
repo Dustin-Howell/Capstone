@@ -1,6 +1,6 @@
 ﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
-    <SkyBox Color="0,0,0"/>
+    <SkyBox Texture="{ContentReference Textures/SkyCubeMap}"/>
     <FreeCamera Name="MainCamera" Position="106.6, 254.1, 235.78" Angle="1.14,0,0" />
 
     <AmbientLight Transform.Position="54,10,54" AmbientLightColor="1,1,1" Enabled="True" />
