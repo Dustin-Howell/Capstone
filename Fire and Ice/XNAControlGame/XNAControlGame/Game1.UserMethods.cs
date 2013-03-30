@@ -249,6 +249,7 @@ namespace XNAControlGame
             }
             else
             {
+                _humanMovePending = false;
                 // Refactor into static call?
                 if (BoardProvider.GetBoard().IsCaptureMove(message.Move))
                 {
