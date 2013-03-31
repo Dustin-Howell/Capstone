@@ -2,7 +2,7 @@
 
     <SkyBox Texture="{ContentReference Textures/SkyCubeMap}"/>
     <!--<FreeCamera Name="MainCamera" Position="53.23169, 346.7901, 201.4682" Angle="1.315531,0.781909,0" />-->
-    <ModelViewerCamera  Name="MainCamera" Center="0,0,0" Radius="2.58"/>
+    <ModelViewerCamera  Name="MainCamera" Center="0,0,0" Radius="2.58" MinRadius="2" MaxRadius="3.5" />
 
     <!--<AmbientLight Transform.Position="54,10,54" AmbientLightColor="1,1,1" Enabled="True" />-->
     <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Direction="1,-1, 1" />
