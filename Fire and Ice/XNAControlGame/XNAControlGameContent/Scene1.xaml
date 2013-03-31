@@ -1,21 +1,24 @@
 ﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
     <SkyBox Texture="{ContentReference Textures/SkyCubeMap}"/>
-    <FreeCamera Name="MainCamera" Position="53.23169, 346.7901, 201.4682" Angle="1.315531,0.781909,0" />
+    <!--<FreeCamera Name="MainCamera" Position="53.23169, 346.7901, 201.4682" Angle="1.315531,0.781909,0" />-->
+    <ModelViewerCamera  Name="MainCamera" Center="0,0,0" Radius="2.58"/>
 
-    <AmbientLight Transform.Position="54,10,54" AmbientLightColor="1,1,1" Enabled="True" />
+    <!--<AmbientLight Transform.Position="54,10,54" AmbientLightColor="1,1,1" Enabled="True" />-->
     <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Direction="1,-1, 1" />
     
-    <!--<BasicMaterial Texture="{ContentReference Assets/Fire Tile Cropped}" Name="PlanetMaterial" />
-    <Model Source="{ContentReference Model/sphere}" Name="thePlanet" Transform.Position="0,0,0" Transform.Scale="5,5,5"
-           Material="PlanetMaterial"/>-->
+    <Model Source="{ContentReference Model/LavaPlanet}" Name="thePlanet" Transform.Position="0,0,0" Transform.Scale="1,1,1" >
+        <Model.Material>
+            <BasicMaterial DiffuseColor="1,0,0" />
+        </Model.Material>
+    </Model>
     
-    <Group Name="GameBoard">
+    <!--<Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
              PatchSegmentCount="2" Transform.Position="0,0,0" >
             <BasicMaterial Texture="{ContentReference Assets/PrototypeMainBoard}" IsTransparent="True" />
         </Surface>
-    </Group>
+    </Group>-->
 
     <!--<Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"

@@ -148,7 +148,7 @@ namespace XNAControlGame
 
             base.LoadContent();
 
-            OnContentLoaded();          
+            //OnContentLoaded();          
         }
         
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
