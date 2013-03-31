@@ -75,14 +75,18 @@ namespace CreeperCore
 
                 _board.Move(message.Move);
 
-                if (!_board.IsFinished(_currentPlayer.Color))
+                switch (_board.GetGameState(_currentPlayer.Color))
                 {
-                    _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
-                    RequestMove();
-                }
-                else
-                {
-                    _eventAggregator.Publish(new GameOverMessage() { Winner = _currentPlayer.Color, });
+                    case CreeperGameState.Unfinished:
+                        _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
+                        RequestMove();
+                        break;
+                    case CreeperGameState.Complete:
+                        _eventAggregator.Publish(new GameOverMessage() { Winner = _currentPlayer.Color, });
+                        break;
+                    case CreeperGameState.Draw:
+                        _eventAggregator.Publish(new GameOverMessage() { Winner = null, });
+                        break;
                 }
             }
         }
