@@ -5,9 +5,6 @@ using System.Text;
 using Caliburn.Micro;
 using CreeperMessages;
 using Creeper;
-using CreeperNetwork;
-using CreeperAI;
-using XNAControlGame;
 
 namespace CreeperCore
 {
@@ -57,6 +54,7 @@ namespace CreeperCore
             RequestMove();
         }
 
+        #region IProvideBoardState
         public CreeperBoard GetBoard()
         {
             return new CreeperBoard(_board);
@@ -66,7 +64,9 @@ namespace CreeperCore
         {
             return _currentPlayer.Color;
         }
+        #endregion
 
+        #region IHandle
         public void Handle(MoveMessage message)
         {
             if (message.Type == MoveMessageType.Response)
@@ -91,6 +91,7 @@ namespace CreeperCore
         {
             throw new NotImplementedException("Core did not handle network error.");
         }
+        #endregion
 
         private void RequestMove()
         {

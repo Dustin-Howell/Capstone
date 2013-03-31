@@ -275,8 +275,8 @@ namespace CreeperAI
 
         private double ScoreBoardShortestDistance(AICreeperBoard board, CreeperColor turn)
         {
-            Position start = turn.IsBlack() ? AICreeperBoard._BlackStart : AICreeperBoard._WhiteStart;
-            Position end = turn.IsBlack() ? AICreeperBoard._BlackEnd : AICreeperBoard._WhiteEnd;
+            Position start = turn.IsIce() ? AICreeperBoard._BlackStart : AICreeperBoard._WhiteStart;
+            Position end = turn.IsIce() ? AICreeperBoard._BlackEnd : AICreeperBoard._WhiteEnd;
             HashSet<AIBoardNode> startTiles = new HashSet<AIBoardNode>();
             startTiles.Add(board.TileBoard[start.Row, start.Column]);
             HashSet<AIBoardNode> endTiles = new HashSet<AIBoardNode>();

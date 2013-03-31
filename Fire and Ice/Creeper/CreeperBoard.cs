@@ -10,21 +10,21 @@ namespace Creeper
     public enum CardinalDirection { North, South, East, West, Northwest, Northeast, Southwest, Southeast }
     public enum Status { ValidMove, InvalidMove, GameOver }
     public enum PieceType { Peg, Tile }
-    public enum CreeperGameState {Complete, Draw, Unfinished }
+    public enum CreeperGameState { Complete, Draw, Unfinished }
 
     public class CreeperBoard
     {
         public const int TileRows = 6;
         public const int PegRows = TileRows + 1;
 
-        private static Position _BlackStart { get { return new Position(0, 5); } }
+        private static Position _BlackStart { get { return new Position(0, TileRows - 1); } }
         private static Position _WhiteStart { get { return new Position(0, 0); } }
-        private static Position _BlackEnd { get { return new Position(5, 0); } }
-        private static Position _WhiteEnd { get { return new Position(5, 5); } }
-        private static Position _NorthBlackPegCorner { get { return new Position(0, 6); } }
+        private static Position _BlackEnd { get { return new Position(TileRows - 1, 0); } }
+        private static Position _WhiteEnd { get { return new Position(TileRows - 1, TileRows - 1); } }
+        private static Position _NorthBlackPegCorner { get { return new Position(0, PegRows - 1); } }
         private static Position _NorthWhitePegCorner { get { return new Position(0, 0); } }
-        private static Position _SouthBlackPegCorner { get { return new Position(6, 0); } }
-        private static Position _SouthWhitePegCorner { get { return new Position(6, 6); } }
+        private static Position _SouthBlackPegCorner { get { return new Position(PegRows - 1, 0); } }
+        private static Position _SouthWhitePegCorner { get { return new Position(PegRows - 1, PegRows - 1); } }
 
         public IEnumerable<Piece> Pegs { get; private set; }
         public IEnumerable<Piece> Tiles { get; private set; }
@@ -61,20 +61,14 @@ namespace Creeper
             Tiles = GenerateEmptyPieces(TileRows).ToList();
             Pegs = GenerateEmptyPieces(PegRows).ToList();
 
-            foreach (Piece tile in Tiles.Where(x => x.Position == _BlackStart
-                || x.Position == _WhiteStart
-                || x.Position == _BlackEnd
-                || x.Position == _WhiteEnd))
+            foreach (Piece tile in Tiles.Where(x => IsCorner(x)))
             {
                 tile.Color = CreeperColor.Invalid;
             }
 
 
             CreeperColor color = CreeperColor.Fire;
-            foreach (Piece peg in Pegs.Where(x => x.Position == _NorthBlackPegCorner
-                || x.Position == _NorthWhitePegCorner
-                || x.Position == _SouthBlackPegCorner
-                || x.Position == _SouthWhitePegCorner))
+            foreach (Piece peg in Pegs.Where(x => IsCorner(x)))
             {
                 peg.Color = CreeperColor.Invalid;
 
@@ -108,81 +102,6 @@ namespace Creeper
         public bool IsFinished(CreeperColor playerTurn)
         {
             return GetGameState(playerTurn) != CreeperGameState.Unfinished;
-        }
-
-        public List<Piece> GetValidTilesFromCurrentRow(List<Piece> knownValidTiles, int row, CreeperColor color)
-        {
-            //All tiles on the current row
-            IEnumerable<Piece> currentRow = Pegs.Where(x => x.Position.Row == row);
-
-            //The list of tiles we will return
-            List<Piece> validTiles = new List<Piece>();
-
-            //We want to add the ones that are already known to be valid to the valid tiles list
-            validTiles.AddRange(knownValidTiles);
-
-
-            foreach (Piece validTile in knownValidTiles)
-            {
-                int column = validTile.Position.Column;
-                //Starting from our current known valid tile's column, go toward zero
-                for (int i = column; i > 0; i--)
-                {
-                    Position adjacentPosition = new Position(validTile.Position.Row, i - 1);
-                    Piece adjacentTile = Tiles.At(adjacentPosition);
-
-                    //if the adjacent tile is our color, it's valid
-                    if (adjacentTile.Color == color
-                        && !validTiles.Contains(adjacentTile))
-                    {
-                        validTiles.Add(adjacentTile);
-                    }
-
-                    //if the adjacent tile is not valid, the one next to it won't be either, so we just break
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                //Same as above, but we're going toward the higher column values now
-                for (int i = column; i < TileRows - 1; i++)
-                {
-                    Position adjacentPosition = new Position(validTile.Position.Row, i + 1);
-                    Piece adjacentTile = Tiles.At(adjacentPosition);
-                    if (adjacentTile.Color == color
-                        && !validTiles.Contains(adjacentTile))
-                    {
-                        validTiles.Add(adjacentTile);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            return validTiles;
-        }
-
-        public List<Piece> GetValidTilesFromNextRow(List<Piece> knownValidTiles, CardinalDirection direction, CreeperColor color)
-        {
-            List<Piece> validTiles = new List<Piece>();
-
-            foreach (Piece validTile in knownValidTiles)
-            {
-                Position nextPosition = validTile.Position.AtDirection(direction);
-                if (IsValidPosition(nextPosition, PieceType.Tile))
-                {
-                    Piece nextTile = Tiles.At(validTile.Position.AtDirection(direction));
-                    if (nextTile.Color == color)
-                    {
-                        validTiles.Add(nextTile);
-                    }
-                }
-            }
-
-            return validTiles;
         }
 
         public CreeperGameState GetGameState(CreeperColor playerTurn)
@@ -266,7 +185,7 @@ namespace Creeper
                     return Tiles.At(new Position(move.StartPosition.Row, move.StartPosition.Column));
 
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException("No flipped tile for this move.");
             }
         }
 
@@ -304,7 +223,7 @@ namespace Creeper
                 }
             }
 
-            throw new InvalidOperationException("No captured peg for this move.");
+            throw new ArgumentException("No captured peg for this move.");
         }
 
         private void Capture(Move move)
@@ -337,7 +256,7 @@ namespace Creeper
             return isValid;
         }
 
-        //forgot that I wrote this function... didn't use it above. May refactor to use it
+
         public bool IsCorner(Piece piece)
         {
             bool isCorner = false;

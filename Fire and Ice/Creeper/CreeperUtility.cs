@@ -38,12 +38,12 @@ namespace Creeper
             return (color == CreeperColor.Fire) ? CreeperColor.Ice : CreeperColor.Fire;
         }
 
-        public static bool IsWhite(this CreeperColor color)
+        public static bool IsFire(this CreeperColor color)
         {
             return color == CreeperColor.Fire;
         }
 
-        public static bool IsBlack(this CreeperColor color)
+        public static bool IsIce(this CreeperColor color)
         {
             return color == CreeperColor.Ice;
         }
@@ -114,51 +114,6 @@ namespace Creeper
             }
 
             yield break;
-        }
-
-        static public Position NumberToPosition(int number, bool isPeg = false)
-        {
-            Position position = new Position();
-            if (isPeg)
-            {
-                position.Row = (int)number / CreeperBoard.PegRows;
-                position.Column = number % CreeperBoard.PegRows;
-            }
-            else
-            {
-                position.Row = (int)number / CreeperBoard.TileRows;
-                position.Column = number % CreeperBoard.TileRows;
-            }
-
-            return position;
-        }
-
-        static public int PositionToNumber(Position position, bool isPeg = true)
-        {
-            int number;
-            if (isPeg)
-            {
-                number = (position.Column + (position.Row * CreeperBoard.PegRows));
-            }
-            else
-            {
-                number = (position.Column + (position.Row * CreeperBoard.TileRows));
-            }
-
-            return number;
-        }
-
-        // Get the name of a static or instance property from a property access lambda.
-        public static string GetPropertyName<T1, T2>(Expression<Func<T1, T2>> propertyLambda)
-        {
-            var me = propertyLambda.Body as MemberExpression;
-
-            if (me == null)
-            {
-                throw new ArgumentException("You must pass a lambda of the form: '() => Class.Property' or '() => object.Property'");
-            }
-
-            return me.Member.Name;
         }
     }
 }

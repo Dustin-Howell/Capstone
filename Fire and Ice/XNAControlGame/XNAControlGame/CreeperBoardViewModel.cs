@@ -11,17 +11,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAControlGame
 {
-    public class CreeperBoardViewModel : INotifyPropertyChanged
+    public class CreeperBoardViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        private Piece _selectedPiece;
 
-        public static string BoardProperty = CreeperUtility.GetPropertyName((CreeperBoardViewModel x) => x.Board);
         public CreeperBoard Board { get; private set; }
 
         // This should map abstract piece positions to spatial positions via array indices.
         public static Vector3[,] GraphicalPositions { get; private set; }
 
-        public static string SelectedPieceProperty = CreeperUtility.GetPropertyName((CreeperBoardViewModel x) => x.SelectedPiece);
         public Piece SelectedPiece
         {
             get
@@ -31,7 +29,6 @@ namespace XNAControlGame
             set
             {
                 _selectedPiece = value;
-                OnPropertyChanged("SelectedPiece");
             }
         }
 
@@ -55,16 +52,5 @@ namespace XNAControlGame
             }
 
          }
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        private Piece _selectedPiece;
     }
 }
