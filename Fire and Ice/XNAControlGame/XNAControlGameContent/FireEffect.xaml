@@ -1,7 +1,11 @@
 ﻿<ParticleEffect xmlns="http://schemas.microsoft.com/nine/2011/xaml" Name="Fire" Transform.Position="10, 0, -10" Texture="{ContentReference ./Textures/fire}">
-  <ParticleEffect.Emitter>
-    <SphereEmitter Emission="1000" Duration="2 ~ 3" Speed="-0.2 ~ 0.2" Size="1 ~ 1.5" Shell="True" Radius="6"  />
-  </ParticleEffect.Emitter>
+    <ParticleEffect.Emitter>
+        <!-- Use cylinder emitter to emulate a ring -->
+        <CylinderEmitter Emission="50" Radiate="True" Shell="True" Radius="5" Height="0"
+                             Duration="1.5 ~ 3" Speed="0.5 ~ 1" Size="2 ~ 3" Spread="{Degrees 15}" />
+    </ParticleEffect.Emitter>
 
-  <FadeController />
+    <SizeController EndSize ="4 ~ 5" />
+    <SpeedController EndSpeed ="0" />
+    <FadeController />
 </ParticleEffect>
