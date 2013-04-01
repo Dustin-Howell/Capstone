@@ -64,7 +64,7 @@ namespace XNAControlGame
         private Instance _fireModel1;
         private Instance _iceModel1;
 
-        private ParticleEffect _fireEffect;
+        static public ParticleEffect _fireEffect;
 
         private Texture2D _fireTile;
         private Texture2D _iceTile;
@@ -188,6 +188,7 @@ namespace XNAControlGame
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
+
             _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
 
             _fireModel1 = new Instance { Template = "FirePeg" };

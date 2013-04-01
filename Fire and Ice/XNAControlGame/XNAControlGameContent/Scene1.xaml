@@ -16,6 +16,7 @@
             <BasicMaterial Texture="{ContentReference Assets/PrototypeMainBoard}" IsTransparent="True" />
         </Surface>
     </Group>
+    
 
     <!--<Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
