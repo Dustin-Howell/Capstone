@@ -16,6 +16,8 @@ namespace FireAndIce
     {
         static AppModel()
         {
+            _slimCore = SlimCore;
+            _game = XNAGame;
         }
 
         private static EventAggregator _eventAggregator;
@@ -24,7 +26,7 @@ namespace FireAndIce
         private static SlimCore _slimCore;
         public static SlimCore SlimCore
         {
-            get { return _slimCore = _slimCore ?? new SlimCore(); }
+            get { return _slimCore = _slimCore ?? new SlimCore(EventAggregator); }
         }        
 
         public static AppViewModel AppViewModel { get; set; }
@@ -37,19 +39,7 @@ namespace FireAndIce
         {
             get
             {
-                //This condition may grow
-                if (AppViewModel != null)
-                {
-                    return _game;// = _game ?? new Game1(new IntPtr(0), 0, 0, EventAggregator);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                _game = value;
+                return _game = _game ?? new Game1(EventAggregator, SlimCore);
             }
         }
 

@@ -191,7 +191,7 @@ namespace XNAControlGame
 
             foreach (CreeperPeg peg in currentTeam)
             {
-                if (selectionRay.Intersects(peg.BoundingBox).HasValue)
+                if (peg.Intersects(selectionRay).HasValue)
                 {
                     clickedModel = peg;
                     break;

@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreeperAI", "CreeperAI\Cree
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreeperNetwork", "CreeperNetwork\CreeperNetwork.csproj", "{0FCE3293-C97E-4A99-95C7-2D592B7F949D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAControl", "XNAControl\XNAControl.csproj", "{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB2596A8-749E-4DAA-877D-3BECB1BFA6D4}"
 	ProjectSection(SolutionItems) = preProject
 		Performance1.psess = Performance1.psess
@@ -105,16 +103,6 @@ Global
 		{0FCE3293-C97E-4A99-95C7-2D592B7F949D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0FCE3293-C97E-4A99-95C7-2D592B7F949D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0FCE3293-C97E-4A99-95C7-2D592B7F949D}.Release|x86.ActiveCfg = Release|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}.Release|x86.ActiveCfg = Release|Any CPU
 		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{03480C41-BE4F-4320-AC1C-814DE9F4CFEB}.Debug|Mixed Platforms.Build.0 = Debug|x86

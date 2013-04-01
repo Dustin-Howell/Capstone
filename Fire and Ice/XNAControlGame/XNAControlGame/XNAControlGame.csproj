@@ -5,7 +5,7 @@
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XNAControlGame</RootNamespace>
     <AssemblyName>XNAControlGame</AssemblyName>
@@ -162,10 +162,6 @@
     <ProjectReference Include="..\..\Creeper\Creeper.csproj">
       <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
       <Name>Creeper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\XNAControl\XNAControl.csproj">
-      <Project>{D98D6FF4-6F72-4E54-B84E-3E8592B7A181}</Project>
-      <Name>XNAControl</Name>
     </ProjectReference>
     <ProjectReference Include="..\XNAControlGameContent\XNAControlGameContent.contentproj">
       <Name>XNAControlGameContent</Name>
