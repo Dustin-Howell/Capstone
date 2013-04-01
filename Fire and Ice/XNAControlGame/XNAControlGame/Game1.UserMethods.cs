@@ -75,6 +75,7 @@ namespace XNAControlGame
                         goto case CreeperPegType.Ice;
                     case CreeperPegType.Ice:
                         _SelectedPeg = clickedModel;
+                        _SelectedPeg.Attachments.Add(_fireEffect);
                         break;
                     case CreeperPegType.Possible:
                         _eventAggregator.Publish(

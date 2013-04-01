@@ -64,6 +64,8 @@ namespace XNAControlGame
         private Instance _fireModel1;
         private Instance _iceModel1;
 
+        private ParticleEffect _fireEffect;
+
         private Texture2D _fireTile;
         private Texture2D _iceTile;
 
@@ -191,6 +193,9 @@ namespace XNAControlGame
             _fireModel1 = new Instance { Template = "FirePeg" };
             _iceModel1 = new Instance { Template = "IcePeg" };
             _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
+
+            //Loads in the fire particle effect
+            _fireEffect = Content.Load<Nine.Graphics.ParticleEffects.ParticleEffect>("FireEffect");
 
             _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
             _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
