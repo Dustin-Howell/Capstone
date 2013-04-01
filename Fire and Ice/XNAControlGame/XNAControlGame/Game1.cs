@@ -153,14 +153,15 @@ namespace XNAControlGame
         
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            _scene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             base.Update(gameTime);
-            _scene.Update(gameTime.ElapsedGameTime);
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {            
-            _scene.Draw(GraphicsDevice, gameTime.ElapsedGameTime);
-            //_scene.DrawDiagnostics(GraphicsDevice, gameTime.ElapsedGameTime);
+            _scene.Draw(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
+            //_scene.DrawDiagnostics(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
             
             base.Draw(gameTime);
         }

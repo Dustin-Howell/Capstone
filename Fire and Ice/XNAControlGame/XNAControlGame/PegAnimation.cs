@@ -25,9 +25,9 @@ namespace XNAControlGame
         private CreeperPeg _peg;
         private Position _startPostion;
         private Position _endPosition;
-        private TimeSpan _duration;
+        private float _duration;
 
-        public PegAnimation(CreeperPeg peg, Position startPostion, Position endPosition, TimeSpan duration)
+        public PegAnimation(CreeperPeg peg, Position startPostion, Position endPosition, float duration)
         {
             _peg = peg;
             _startPostion = startPostion;
@@ -35,7 +35,7 @@ namespace XNAControlGame
             _duration = duration;
         }
 
-        public override void Update(TimeSpan elapsedTime)
+        public override void Update(float elapsedTime)
         {
             _duration -= elapsedTime;
 

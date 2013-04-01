@@ -96,11 +96,26 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Nine, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86" />
-    <Reference Include="Nine.Content.Pipeline.Silverlight.ShaderCompiler, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86" />
-    <Reference Include="Nine.Graphics, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86" />
-    <Reference Include="Nine.Navigation, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86" />
-    <Reference Include="Nine.Physics, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86" />
+    <Reference Include="Nine, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\nine\References\x86\Nine.dll</HintPath>
+    </Reference>
+    <Reference Include="Nine.Content.Pipeline, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\nine\References\x86\Nine.Content.Pipeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Nine.Graphics, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\nine\References\x86\Nine.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="Nine.Navigation, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\nine\References\x86\Nine.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Nine.Physics, Version=1.4.0.0, Culture=neutral, PublicKeyToken=ed8336b5652212a9, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\nine\References\x86\Nine.Physics.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -124,8 +139,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.UserMethods.cs">
-		<DependentUpon>Game1.cs</DependentUpon>
-	</Compile>
+      <DependentUpon>Game1.cs</DependentUpon>
+    </Compile>
     <Compile Include="PegAnimation.cs" />
     <Compile Include="CreeperBoardViewModel.cs" />
     <Compile Include="CreeperPeg.cs" />
