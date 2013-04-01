@@ -1,0 +1,854 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nine.Navigation</name>
+    </assembly>
+    <members>
+        <member name="T:Nine.Navigation.IPathGraph">
+            <summary>
+            Defines a navigation graph for path finding.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.IPathGraph.QueryPathTaskAsync(Microsoft.Xna.Framework.Vector3,Microsoft.Xna.Framework.Vector3,System.Single,System.Collections.Generic.IList{Microsoft.Xna.Framework.Vector3})">
+            <summary>
+            Begins an asynchronous path query.
+            </summary>
+            <param name="start">The start position of the path.</param>
+            <param name="end">The end position of the path.</param>
+            <param name="radius">The radius of the moving entity.</param>
+            <param name="cancellationToken">The task cancellation token</param>
+            <param name="wayPoints">
+            A resulting empty list to hold the smoothed path waypoints including the end location but excluding the start location.
+            </param>
+        </member>
+        <member name="T:Nine.Navigation.GraphEdge">
+            <summary>
+            Represents a graph edge.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphEdge.From">
+            <summary>
+            Gets an index representing where the edge is from.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphEdge.To">
+            <summary>
+            Gets an index representing where the edge leads to.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphEdge.Cost">
+            <summary>
+            Gets a non-negtive cost associated to the edge.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.GraphEdge.ToString">
+            <summary>
+            Gets the string representation of this instance.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.IGraph">
+            <summary>
+            Interface for a directed graph.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.IGraph.GetEdges(System.Int32,Nine.Navigation.GraphEdge[],System.Int32)">
+            <summary>
+            Gets all the out-going edges of a given node.
+            </summary>
+            <returns>
+            Returns the count of edges.
+            </returns>
+        </member>
+        <member name="M:Nine.Navigation.IGraph.GetHeuristicValue(System.Int32,System.Int32)">
+            <summary>
+            Gets the heuristic value between two nodes used in A* algorithm.
+            </summary>
+            <returns>A heuristic value between the two nodes.</returns>
+        </member>
+        <member name="P:Nine.Navigation.IGraph.NodeCount">
+            <summary>
+            Gets the total number of nodes in the graph
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.IGraph.MaxEdgeCount">
+            <summary>
+            Gets the max count of edges for each node.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.GraphSearch">
+            <summary>
+            Performs an A* graph search on a given graph.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphSearch.path">
+            <summary>
+            A list holding the path information.
+            For a given node index, the value at that index is the parent
+            (or the previous step) index.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphSearch.costs">
+            <summary>
+            Contains the real accumulative cost from the start to that node
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphSearch.nodeCount">
+            <summary>
+            Current length of path or costs (Node count)
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphSearch.queue">
+            <summary>
+            Create an priority queue to store node indices.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.GraphSearch.edges">
+            <summary>
+            A list holding the edges during search.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.GraphSearch.Search(Nine.Navigation.IGraph,System.Int32,System.Int32,System.Collections.Generic.ICollection{System.Int32})">
+            <summary>
+            Perform a graph search on a graph, find a best path from start to end.
+            </summary>
+            <param name="graph">The graph to be searched.</param>
+            <param name="start">Start node.</param>
+            <param name="end">End node</param>
+            <param name="result">The result path from end node to start node.</param>
+        </member>
+        <member name="T:Nine.Navigation.NavigatorState">
+            <summary>
+            Defines the state of a <see cref="T:Nine.Navigation.Navigator"/>
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.NavigatorState.Stopped">
+            <summary>
+            The navigator has stopped moving.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.NavigatorState.Moving">
+            <summary>
+            The navigator is moving.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.Navigator">
+            <summary>
+            Represents a basic navigator to simulate game object movement.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.#ctor">
+            <summary>
+            Creates a new instance of Navigator.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.MoveTo(Microsoft.Xna.Framework.Vector3)">
+            <summary>
+            Moves this navigator to the specified location.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.MoveAlong(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector3})">
+            <summary>
+            Moves this navigator along the specified waypoints.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.Move(Microsoft.Xna.Framework.Vector3)">
+            <summary>
+            Moves this navigator towards the specified direction for one frame.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.Stop">
+            <summary>
+            Stops this navigator from moving.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.Update(System.Single)">
+            <summary>
+            Updates the specified game time.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.OnStarted">
+            <summary>
+            Called when this <see cref="T:Nine.Navigation.Navigator"/> has started moving.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Navigator.OnStopped">
+            <summary>
+            Called when this <see cref="T:Nine.Navigation.Navigator"/> has stopped moving.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.State">
+            <summary>
+            Gets the current state of this <see cref="T:Nine.Navigation.Navigator"/>.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Position">
+            <summary>
+            Gets or sets the current position of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Forward">
+            <summary>
+            Gets the forward direction (facing) of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Rotation">
+            <summary>
+            Gets or sets the rotation of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Acceleration">
+            <summary>
+            Gets or sets the max acceleration of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Speed">
+            <summary>
+            Gets or sets the current speed of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.MaxSpeed">
+            <summary>
+            Gets or sets the max speed of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.SoftBoundingRadius">
+            <summary>
+            Gets or sets the visual bounding radius of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.HardBoundingRadius">
+            <summary>
+            Gets or sets the visual bounding radius of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.AngularSpeed">
+            <summary>
+            Gets the current angular speed of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.MaxAngularSpeed">
+            <summary>
+            Gets or sets the max angular speed of this navigator.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Height">
+            <summary>
+            Gets or sets the height of this navigator above the ground surface.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.IsMachinery">
+            <summary>
+            Gets or sets whether this navigator is used as a machinery.
+            A machinery always moves towards the <c>Forward</c> direction.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.HoldPosition">
+            <summary>
+            Gets or sets whether this navigator should hold its position
+            when stopped.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Ground">
+            <summary>
+            Gets or sets the ground surface this navigator is moving on.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.PathGraph">
+            <summary>
+            Gets or sets the navigation graph used for path finding.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Obstacles">
+            <summary>
+            Gets or sets the interface to query for nearby obstacles.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Walls">
+            <summary>
+            Gets or sets the interface to query for nearby collision walls.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Friends">
+            <summary>
+            Gets or sets the interface to query for nearby friends.
+            Friends will try to make way for each other when possible.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.Opponents">
+            <summary>
+            Gets or sets the interface to query for nearby opponents.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Navigator.BoundingBox">
+            <summary>
+            Gets the axis aligned bounding box in world space.
+            </summary>
+        </member>
+        <member name="E:Nine.Navigation.Navigator.Nine#ISpatialQueryable#BoundingBoxChanged">
+            <summary>
+            Occurs when the bounding box changed.
+            </summary>
+        </member>
+        <member name="E:Nine.Navigation.Navigator.Started">
+            <summary>
+            Occurs when this navigator has started to move.
+            </summary>
+        </member>
+        <member name="E:Nine.Navigation.Navigator.Stopped">
+            <summary>
+            Occurs when this navigator has stopped moving when calling <c>Stop</c> 
+            or when the target is reached or when failed to reach the target.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.PathGrid">
+            <summary>
+            A grid based path graph.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Navigation.PathGrid"/> class.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.#ctor(System.Single,System.Single,System.Single,System.Single,System.Int32,System.Int32)">
+            <summary>
+            Creates a new PathGraph.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.Mark(System.Int32,System.Int32)">
+            <summary>
+            Marks one grid as obstacle. Input boundary is not checked.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.Mark(System.Single,System.Single)">
+            <summary>
+            Marks the grid under the specified location as obstacle. 
+            Input location is truncated.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.Unmark(System.Int32,System.Int32)">
+            <summary>
+            Unmark one grid. Input boundary is not checked.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.Unmark(System.Single,System.Single)">
+            <summary>
+            Unmark the grid under the specified location as obstacle. 
+            Input location is truncated.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.IsMarked(System.Int32,System.Int32)">
+            <summary>
+            Checks if the specified grid is marked as obstacle.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.IsMarked(System.Single,System.Single)">
+            <summary>
+            Checks if the grid under the specified location is marked as obstacle. 
+            Input location is truncated.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.PositionToIndex(System.Single,System.Single)">
+            <summary>
+            Gets the path graph node under the specified grid.
+            Input location is turncated.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.SegmentToIndex(System.Int32,System.Int32)">
+            <summary>
+            Gets the path graph node under the specified location.
+            Input location is not truncated.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.IndexToPosition(System.Int32)">
+            <summary>
+            Gets the location of the path node.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.GetEdges(System.Int32,Nine.Navigation.GraphEdge[],System.Int32)">
+            <summary>
+            Gets all the adjacent edges of the specified node.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PathGrid.GetHeuristicValue(System.Int32,System.Int32)">
+            <summary>
+            Gets the heuristic value used by A star search.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.PathGrid.Bounds">
+            <summary>
+            Gets or sets the boundary of the PathGraph. 
+            This value must be contained by Rectangle(0, 0, TessellationX, TessellationY).
+            When the path graph is searched, the search process will be restricted to the boundary.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.PathGrid.NodeCount">
+            <summary>
+            Gets total node count.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.PathGrid.MaxEdgeCount">
+            <summary>
+            Gets the max count of edges for each node.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.PriorityQueue">
+            <summary>
+            Use min heap to implement a priority queue.
+            Used to implement Dijkstra's algorithm.
+            </summary>
+            <remarks>
+            The size of the indexed priority queue is fixed.
+            </remarks>
+        </member>
+        <member name="F:Nine.Navigation.PriorityQueue.data">
+            <summary>
+            Internal queue elements.
+            The first element is not used for easy index generation.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.PriorityQueue.priorities">
+            <summary>
+            Priority of each item.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.PriorityQueue.count">
+            <summary>
+            Actual data length
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.PriorityQueue.Index">
+            <summary>
+            Keep track of the position of individual item in the heap.
+            E.g. index[3] = 5 means that data[5] = 3;
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PriorityQueue.#ctor(System.Int32)">
+            <summary>
+            Creates a priority queue to hold n elements
+            </summary>
+            <param name="capacity"></param>
+        </member>
+        <member name="M:Nine.Navigation.PriorityQueue.Clear">
+            <summary>
+            Clear the priority queue
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PriorityQueue.Push(System.Int32,System.Single)">
+            <summary>
+            Adds an element to the queue
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PriorityQueue.Pop">
+            <summary>
+            Remove and retrieve the minimun (top) element
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PriorityQueue.IncreasePriority(System.Int32,System.Single)">
+            <summary>
+            Increase the priority of a given node
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.PriorityQueue.FixHeap(System.Int32,System.Int32,System.Int32,System.Single)">
+            <summary>
+            Fix the heap
+            </summary>
+            <param name="cost"></param>
+            <param name="value"></param>
+            <param name="i">Root index of the subtree</param>
+            <param name="n">Subtree size</param>
+            <param name="k">Element to be add as the root</param>
+        </member>
+        <member name="P:Nine.Navigation.PriorityQueue.Count">
+            <summary>
+            Gets the number of elements added to the priority queue.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.PriorityQueue.Top">
+            <summary>
+            Retrive the minimun (top) element without removing it
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.Steering.SteeringBehavior">
+            <summary>
+            Represents the base class for basic steering behaviors.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.Steering.ISteeringBehavior">
+            <summary>
+            Defines the behavior of the Steerer.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.ISteeringBehavior.UpdateSteeringForce(System.Single,Nine.Navigation.Steering.Steerable)">
+            <summary>
+            Updates and returns the steering force.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.ISteeringBehavior.Collides(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,Nine.Navigation.Steering.Steerable)">
+            <summary>
+            Checks if the step collides with any obstacles. Return null if don't collide, 
+            otherwise, returns the max penertration depth allowed.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.SteeringBehavior.Enabled">
+            <summary>
+            Gets or sets whether this behavior is enabled.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.SteeringBehavior.Random">
+            <summary>
+            Gets or sets the random number generator used by derived types.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.Steering.Math2D">
+            <summary>
+            Helper class for 2D math and geometries
+            
+            Thanks for the code from Mat Buckland (fup@ai-junkie.com)
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.Steering.Math2D.Epsilon">
+            <summary>
+            Default epsilion used all over Math2D
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Nine.Navigation.Steering.Math2D.FloatEquals(System.Single,System.Single)" -->
+        <!-- Badly formed XML comment ignored for member "M:Nine.Navigation.Steering.Math2D.FloatEqualsZero(System.Single)" -->
+        <member name="M:Nine.Navigation.Steering.Math2D.WorldToLocal(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Transform a world point p to local space specified by position and rotation
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.LocalToWorld(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Transform a local point p to world space specified by position and rotation
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.RayPlaneIntersects(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            given a plane and a ray this function determines how far along the ray 
+            an intersection occurs. Returns null if the ray is parallel
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.PointLineRelation(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the relation between a point and a plane
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.RayCircleIntersectionTest(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Test to see if a ray intersects a circle
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.RayCircleIntersects(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Whether a ray intersects a circle
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.GetTangentPoints(Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2@,Microsoft.Xna.Framework.Vector2@)">
+            <summary>
+            Given a point P and a circle of radius R centered at C this function
+            determines the two points on the circle that intersect with the 
+            tangents from P to the circle. Returns false if P is within the circle.
+            thanks to Dave Eberly for this one.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.DistanceToLineSegment(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            given a line segment AB and a point P, this function returns the
+            shortest distance between a point on AB and P.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.DistanceToLine(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            given a line AB and a point P, this function returns the
+            shortest distance between a line AB and P.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.DistanceToLineSquared(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            given a line AB and a point P, this function returns the
+            shortest distance between a line AB and P.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.DistanceToLineSegment(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2@)">
+            <summary>
+            given a line segment AB and a point P, this function returns the
+            shortest distance between a point on AB and P.
+            N represents the vector from the closest point on AB to P.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.DistanceToLineSegmentSquared(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            given a line segment AB and a point P, this function returns the
+            shortest distance squared between a point on AB and P.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.DistanceToRectangle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the nearest distance from point P to the specified rectangle
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.LineSegmentIntersects(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Given 2 lines in 2D space AB, CD this returns true if an 
+            intersection occurs.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.LineSegmentIntersectionTest(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Given 2 lines in 2D space AB, CD this returns true if an 
+            intersection occurs and sets dist to the distance the intersection
+            occurs along AB. Also sets the 2d vector point to the point of
+            intersection
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.LineSegmentIntersectionTest(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single@,Microsoft.Xna.Framework.Vector2@)">
+            <summary>
+            Given 2 lines in 2D space AB, CD this returns true if an 
+            intersection occurs and sets dist to the distance the intersection
+            occurs along AB. Also sets the 2d vector point to the point of
+            intersection
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.PolygonIntersects(Microsoft.Xna.Framework.Vector2[],Microsoft.Xna.Framework.Vector2[])">
+            <summary>
+            Tests two polygons for intersection.
+            </summary>
+            <remarks>This algorithm does not check for enclosure</remarks>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.PolygonSegmentIntersects(Microsoft.Xna.Framework.Vector2[],Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Tests to see if a polygon and a line segment intersects
+            </summary>
+            <remarks>This algorithm does not check for enclosure</remarks>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.CircleIntersects(Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Tests to see if two circle overlaps
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.CircleIntersectionPoints(Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2@,Microsoft.Xna.Framework.Vector2@)">
+            <summary>
+            Given two circles this function calculates the intersection points
+            of any overlap. This function assumes that the two circles overlaps.
+            
+            see http://astronomy.swin.edu.au/~pbourke/geometry/2circle/
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.PointInCircle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Tests to see if a point is in a circle
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.LineSegmentCircleIntersects(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Returns true if the line segemnt AB intersects with a circle at
+            position P with radius r
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.LineSegmentCircleClosestIntersectionPoint(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Given a line segment AB and a circle position and radius, this function
+            determines if there is an intersection and stores the position of the 
+            closest intersection in the reference IntersectionPoint.
+            
+            returns null if no intersection point is found
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.PointInRectangle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Tests to see if a rectangle contains a point.
+            Note that min should be smaller than max.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.PointInRectangle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Tests to see if a rectangle contains a point. 
+            v1 and v2 are in local space relative to position and rotation
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.LineSegmentRectangleIntersects(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Tests to see if a rectangle and a line segment intersects.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.RectangleIntersects(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Returns true if two rectangles intersect.
+            This algorithm does not check for enclosure
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Math2D.RectangleCircleIntersects(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Returns true if a rectangle and a circle intersects.
+            This algorithm does not check for enclosure.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.Steering.Math2D.SpanType">
+            <summary>
+            Span relation
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.Steering.SteeringBehaviorBlendMode">
+            <summary>
+            Defines how the final force of steering behaviors are blended.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.Steering.SteeringBehaviorBlendMode.WeightedSum">
+            <summary>
+            Sum up all each steering force with weight until the max force limit is reached.
+            </summary>
+        </member>
+        <member name="F:Nine.Navigation.Steering.SteeringBehaviorBlendMode.Solo">
+            <summary>
+            Only use the first non-zero steering force.
+            </summary>
+        </member>
+        <member name="T:Nine.Navigation.Steering.Steerable">
+            <summary>
+            Represents a steerable moving entity that can with steering behaviors.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Steerable.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Navigation.Steering.Steerable"/> class.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.Steerable.Update(System.Single)">
+            <summary>
+            Updates the internal state of the object based on game time.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Target">
+            <summary>
+            Gets or sets the target position of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Position">
+            <summary>
+            Gets the position of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Forward">
+            <summary>
+            Gets or sets the forward moving direction of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Acceleration">
+            <summary>
+            Gets or sets the acceleration of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Speed">
+            <summary>
+            Gets the moving speed of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.MaxSpeed">
+            <summary>
+            Gets or sets the maximum moving speed of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Force">
+            <summary>
+            Gets the current force that is applied to the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.MaxForce">
+            <summary>
+            Gets the maximum force that can be applied to the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Velocity">
+            <summary>
+            Gets the velocity of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.BoundingRadius">
+            <summary>
+            Gets the bounding radius of the moving entity.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.AllowPenetration">
+            <summary>
+            Gets or sets whether this moving entity can penetrate through obstacles.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.IsStucked">
+            <summary>
+            Gets whether this moving entity is stucked this frame.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Tag">
+            <summary>
+            Gets or sets user data.
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.BlendMode">
+            <summary>
+            Gets or sets the technique used to blend between behaviors
+            </summary>
+        </member>
+        <member name="P:Nine.Navigation.Steering.Steerable.Behaviors">
+            <summary>
+            Gets the collection of behaviors used by this moving entity.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.GetDecelerateRange(Nine.Navigation.Steering.Steerable)">
+            <summary>
+            Finds the miminum distance required to fully stop the moving entity from top speed.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.GetTargetedForward(Nine.Navigation.Steering.Steerable)">
+            <summary>
+            Gets the forward vector that are influenced by the target.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.GetTargetedForward(Nine.Navigation.Steering.Steerable,Microsoft.Xna.Framework.Vector2,System.Single,System.Boolean)">
+            <summary>
+            Gets the forward vector that are influenced by the target.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.Seek(System.Single,Nine.Navigation.Steering.Steerable)">
+            <summary>
+            Calculates the steering force to seek to the target.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.Flee(System.Single,Nine.Navigation.Steering.Steerable,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Calculates the steering force to flee from the target.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.Arrive(System.Single,Nine.Navigation.Steering.Steerable)">
+            <summary>
+            Calculates the steering force to arrive at the target.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.AvoidWall(Nine.LineSegment,System.Single,Nine.Navigation.Steering.Steerable,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Calculates the steering force to avoid a line segment.
+            </summary>
+        </member>
+        <member name="M:Nine.Navigation.Steering.SteeringHelper.AvoidObstacle(Nine.BoundingCircle,System.Single,Nine.Navigation.Steering.Steerable,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Calculates the steering force to avoid a circular obstacle.
+            </summary>
+        </member>
+    </members>
+</doc>

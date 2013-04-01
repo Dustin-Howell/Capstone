@@ -1,0 +1,1887 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nine.Content.Pipeline</name>
+    </assembly>
+    <members>
+        <member name="T:Nine.Content.Pipeline.BounceCurveWriter">
+            <summary>
+            Content writer for <c>BounceCurve</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.CustomCurveWriter">
+            <summary>
+            Content writer for <c>CustomCurve</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.ElasticCurveWriter">
+            <summary>
+            Content writer for <c>ElasticCurve</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.ExponentialCurveWriter">
+            <summary>
+            Content writer for <c>ExponentialCurve</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.GroupWriter">
+            <summary>
+            Content writer for <c>Group</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.InstanceWriter">
+            <summary>
+            Content writer for <c>Instance</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.LinearCurveWriter">
+            <summary>
+            Content writer for <c>LinearCurve</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.SceneWriter">
+            <summary>
+            Content writer for <c>Scene</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.SinCurveWriter">
+            <summary>
+            Content writer for <c>SinCurve</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.SmoothCurveWriter">
+            <summary>
+            Content writer for <c>SmoothCurve</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.AnimationGroupWriter">
+            <summary>
+            Content writer for <c>AnimationGroup</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.AnimationPlayerWriter">
+            <summary>
+            Content writer for <c>AnimationPlayer</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.AnimationReferenceWriter">
+            <summary>
+            Content writer for <c>AnimationReference</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.AnimationSequenceWriter">
+            <summary>
+            Content writer for <c>AnimationSequence</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.BooleanAnimationWriter">
+            <summary>
+            Content writer for <c>BooleanAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.ByteAnimationWriter">
+            <summary>
+            Content writer for <c>ByteAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.CharAnimationWriter">
+            <summary>
+            Content writer for <c>CharAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.ColorAnimationWriter">
+            <summary>
+            Content writer for <c>ColorAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.DecimalAnimationWriter">
+            <summary>
+            Content writer for <c>DecimalAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.DelayAnimationWriter">
+            <summary>
+            Content writer for <c>DelayAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.DoubleAnimationWriter">
+            <summary>
+            Content writer for <c>DoubleAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.Int16AnimationWriter">
+            <summary>
+            Content writer for <c>Int16Animation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.Int32AnimationWriter">
+            <summary>
+            Content writer for <c>Int32Animation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.Int64AnimationWriter">
+            <summary>
+            Content writer for <c>Int64Animation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.MatrixAnimationWriter">
+            <summary>
+            Content writer for <c>MatrixAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.PointAnimationWriter">
+            <summary>
+            Content writer for <c>PointAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.QuaternionAnimationWriter">
+            <summary>
+            Content writer for <c>QuaternionAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.RectangleAnimationWriter">
+            <summary>
+            Content writer for <c>RectangleAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.SingleAnimationWriter">
+            <summary>
+            Content writer for <c>SingleAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.TweenAnimationWriter`1">
+            <summary>
+            Content writer for <c>TweenAnimation`1</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.Vector2AnimationWriter">
+            <summary>
+            Content writer for <c>Vector2Animation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.Vector3AnimationWriter">
+            <summary>
+            Content writer for <c>Vector3Animation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.Vector4AnimationWriter">
+            <summary>
+            Content writer for <c>Vector4Animation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.BoneAnimationWriter">
+            <summary>
+            Content writer for <c>BoneAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.BoneAnimationClipWriter">
+            <summary>
+            Content writer for <c>BoneAnimationClip</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.BoneAnimationControllerWriter">
+            <summary>
+            Content writer for <c>BoneAnimationController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Animations.SpriteAnimationWriter">
+            <summary>
+            Content writer for <c>SpriteAnimation</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.AmbientLightWriter">
+            <summary>
+            Content writer for <c>AmbientLight</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.BirdEyeCameraWriter">
+            <summary>
+            Content writer for <c>BirdEyeCamera</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.CameraWriter">
+            <summary>
+            Content writer for <c>Camera</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Camera2DWriter">
+            <summary>
+            Content writer for <c>Camera2D</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ChaseCameraWriter">
+            <summary>
+            Content writer for <c>ChaseCamera</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.DecalWriter">
+            <summary>
+            Content writer for <c>Decal</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.DirectionalLightWriter">
+            <summary>
+            Content writer for <c>DirectionalLight</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.FogWriter">
+            <summary>
+            Content writer for <c>Fog</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.FreeCameraWriter">
+            <summary>
+            Content writer for <c>FreeCamera</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.FullScreenQuadWriter">
+            <summary>
+            Content writer for <c>FullScreenQuad</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.GeometryWriter">
+            <summary>
+            Content writer for <c>Geometry</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.HeightmapWriter">
+            <summary>
+            Content writer for <c>Heightmap</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.InstancedModelWriter">
+            <summary>
+            Content writer for <c>InstancedModel</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelWriter">
+            <summary>
+            Content writer for <c>Model</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelAttachmentWriter">
+            <summary>
+            Content writer for <c>ModelAttachment</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelCollisionWriter">
+            <summary>
+            Content writer for <c>ModelCollision</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelMeshWriter">
+            <summary>
+            Content writer for <c>ModelMesh</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelMeshPartTagWriter">
+            <summary>
+            Content writer for <c>ModelMeshPartTag</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelSkeletonDataWriter">
+            <summary>
+            Content writer for <c>ModelSkeletonData</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelTagWriter">
+            <summary>
+            Content writer for <c>ModelTag</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ModelViewerCameraWriter">
+            <summary>
+            Content writer for <c>ModelViewerCamera</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PointLightWriter">
+            <summary>
+            Content writer for <c>PointLight</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ShadowMapWriter">
+            <summary>
+            Content writer for <c>ShadowMap</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.SkyBoxWriter">
+            <summary>
+            Content writer for <c>SkyBox</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.SpotLightWriter">
+            <summary>
+            Content writer for <c>SpotLight</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.SpriteWriter">
+            <summary>
+            Content writer for <c>Sprite</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.SurfaceWriter">
+            <summary>
+            Content writer for <c>Surface</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.TextSpriteWriter">
+            <summary>
+            Content writer for <c>TextSprite</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.AlphaTestMaterialWriter">
+            <summary>
+            Content writer for <c>AlphaTestMaterial</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.BasicMaterialWriter">
+            <summary>
+            Content writer for <c>BasicMaterial</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.BlurMaterialWriter">
+            <summary>
+            Content writer for <c>BlurMaterial</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.CustomMaterialPartWriter">
+            <summary>
+            Content writer for <c>CustomMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.DebugMaterialWriter">
+            <summary>
+            Content writer for <c>DebugMaterial</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.DualTextureMaterialWriter">
+            <summary>
+            Content writer for <c>DualTextureMaterial</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.EnvironmentMapMaterialWriter">
+            <summary>
+            Content writer for <c>EnvironmentMapMaterial</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialLevelOfDetailWriter">
+            <summary>
+            Content writer for <c>MaterialLevelOfDetail</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialPaintGroupWriter">
+            <summary>
+            Content writer for <c>MaterialPaintGroup</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.SkinnedMaterialWriter">
+            <summary>
+            Content writer for <c>SkinnedMaterial</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.AlphaTestMaterialPartWriter">
+            <summary>
+            Content writer for <c>AlphaTestMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.BeginLightMaterialPartWriter">
+            <summary>
+            Content writer for <c>BeginLightMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.BeginPaintGroupMaterialPartWriter">
+            <summary>
+            Content writer for <c>BeginPaintGroupMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.ColorMatrixMaterialPartWriter">
+            <summary>
+            Content writer for <c>ColorMatrixMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.DeferredLightsMaterialPartWriter">
+            <summary>
+            Content writer for <c>DeferredLightsMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.DepthAndNormalMaterialPartWriter">
+            <summary>
+            Content writer for <c>DepthAndNormalMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.DepthMaterialPartWriter">
+            <summary>
+            Content writer for <c>DepthMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.DetailMaterialPartWriter">
+            <summary>
+            Content writer for <c>DetailMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.DiffuseMaterialPartWriter">
+            <summary>
+            Content writer for <c>DiffuseMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.DirectionalLightMaterialPartWriter">
+            <summary>
+            Content writer for <c>DirectionalLightMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.DualTextureMaterialPartWriter">
+            <summary>
+            Content writer for <c>DualTextureMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.EmissiveMaterialPartWriter">
+            <summary>
+            Content writer for <c>EmissiveMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.EndLightMaterialPartWriter">
+            <summary>
+            Content writer for <c>EndLightMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.EndPaintGroupMaterialPartWriter">
+            <summary>
+            Content writer for <c>EndPaintGroupMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.FogMaterialPartWriter">
+            <summary>
+            Content writer for <c>FogMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.InstancedMaterialPartWriter">
+            <summary>
+            Content writer for <c>InstancedMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.NormalMapMaterialPartWriter">
+            <summary>
+            Content writer for <c>NormalMapMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.ShadowMapMaterialPartWriter">
+            <summary>
+            Content writer for <c>ShadowMapMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.SkinnedMaterialPartWriter">
+            <summary>
+            Content writer for <c>SkinnedMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.SpecularMaterialPartWriter">
+            <summary>
+            Content writer for <c>SpecularMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.TangentTransformMaterialPartWriter">
+            <summary>
+            Content writer for <c>TangentTransformMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.TextureTransformMaterialPartWriter">
+            <summary>
+            Content writer for <c>TextureTransformMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialParts.VertexTransformMaterialPartWriter">
+            <summary>
+            Content writer for <c>VertexTransformMaterialPart</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.AbsorbControllerWriter">
+            <summary>
+            Content writer for <c>AbsorbController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.BoxEmitterWriter">
+            <summary>
+            Content writer for <c>BoxEmitter</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.ColorControllerWriter">
+            <summary>
+            Content writer for <c>ColorController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.CylinderEmitterWriter">
+            <summary>
+            Content writer for <c>CylinderEmitter</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.FadeControllerWriter">
+            <summary>
+            Content writer for <c>FadeController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.ForceControllerWriter">
+            <summary>
+            Content writer for <c>ForceController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.LineEmitterWriter">
+            <summary>
+            Content writer for <c>LineEmitter</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.ParticleEffectWriter">
+            <summary>
+            Content writer for <c>ParticleEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.PointEmitterWriter">
+            <summary>
+            Content writer for <c>PointEmitter</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.RotationControllerWriter">
+            <summary>
+            Content writer for <c>RotationController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.SizeControllerWriter">
+            <summary>
+            Content writer for <c>SizeController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.SpeedControllerWriter">
+            <summary>
+            Content writer for <c>SpeedController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.SphereEmitterWriter">
+            <summary>
+            Content writer for <c>SphereEmitter</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.ParticleEffects.TangentForceControllerWriter">
+            <summary>
+            Content writer for <c>TangentForceController</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.AdaptationEffectWriter">
+            <summary>
+            Content writer for <c>AdaptationEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.AntiAliasEffectWriter">
+            <summary>
+            Content writer for <c>AntiAliasEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.BloomEffectWriter">
+            <summary>
+            Content writer for <c>BloomEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.BlurEffectWriter">
+            <summary>
+            Content writer for <c>BlurEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.DepthOfFieldEffectWriter">
+            <summary>
+            Content writer for <c>DepthOfFieldEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.HighDynamicRangeEffectWriter">
+            <summary>
+            Content writer for <c>HighDynamicRangeEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.PostEffectWriter">
+            <summary>
+            Content writer for <c>PostEffect</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.PostEffectChainWriter">
+            <summary>
+            Content writer for <c>PostEffectChain</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PostEffects.PostEffectGroupWriter">
+            <summary>
+            Content writer for <c>PostEffectGroup</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.BoxWriter">
+            <summary>
+            Content writer for <c>Box</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.ConeWriter">
+            <summary>
+            Content writer for <c>Cone</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.CrossWriter">
+            <summary>
+            Content writer for <c>Cross</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.CylinderWriter">
+            <summary>
+            Content writer for <c>Cylinder</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.DomeWriter">
+            <summary>
+            Content writer for <c>Dome</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.DynamicPrimitiveWriter">
+            <summary>
+            Content writer for <c>DynamicPrimitive</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.PlaneWriter">
+            <summary>
+            Content writer for <c>Plane</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.SphereWriter">
+            <summary>
+            Content writer for <c>Sphere</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.TeapotWriter">
+            <summary>
+            Content writer for <c>Teapot</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Primitives.TorusWriter">
+            <summary>
+            Content writer for <c>Torus</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.RigidBodyWriter">
+            <summary>
+            Content writer for <c>RigidBody</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.BoxColliderWriter">
+            <summary>
+            Content writer for <c>BoxCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.CapsuleColliderWriter">
+            <summary>
+            Content writer for <c>CapsuleCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.CompoundColliderWriter">
+            <summary>
+            Content writer for <c>CompoundCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.ConeColliderWriter">
+            <summary>
+            Content writer for <c>ConeCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.CylinderColliderWriter">
+            <summary>
+            Content writer for <c>CylinderCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.ModelColliderWriter">
+            <summary>
+            Content writer for <c>ModelCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.SphereColliderWriter">
+            <summary>
+            Content writer for <c>SphereCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Physics.Colliders.TerrainColliderWriter">
+            <summary>
+            Content writer for <c>TerrainCollider</c>.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.ContentReference`1">
+            <summary>
+            ContentReference is used to reference the output xnb file.
+            ExternalReference is used to reference the source asset file.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.ContentReference`1.Filename">
+            <summary>
+            Gets and sets the file name of an External.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.PipelineBuilder">
+            <summary>
+            Enables Xna framework content build without using MSBuild
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Xaml.Transform2D">
+            <summary>
+            Defines a markup extension that constructs a 2D transform from scale,
+            rotation and translation components.
+            </summary>
+        </member>
+        <member name="F:Nine.Content.Pipeline.Xaml.Transform2D.Identity">
+            <summary>
+            Gets the identity transform.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.Transform2D"/> class.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.ProvideValue(System.IServiceProvider)">
+            <summary>
+            When implemented in a derived class, returns an object that is set as the value of the target property for this markup extension.
+            </summary>
+            <param name="serviceProvider">Object that can provide services for the markup extension.</param>
+            <returns>
+            The object value to set on the property where the extension is applied.
+            </returns>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.ToMatrix">
+            <summary>
+            Checks whether the current Triangle intersects a Ray.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.GetScale(System.Object)">
+            <summary>
+            Gets the scale of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.SetScale(System.Object,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Sets the scale of the target object.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.GetPosition(System.Object)">
+            <summary>
+            Gets the position of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.SetPosition(System.Object,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Sets the position of the target object.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.GetRotation(System.Object)">
+            <summary>
+            Gets the rotation of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform2D.SetRotation(System.Object,System.Single)">
+            <summary>
+            Sets the rotation of the target object.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform2D.Scale">
+            <summary>
+            Gets or sets scale on x, y axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform2D.ScaleX">
+            <summary>
+            Gets or sets scale on x axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform2D.ScaleY">
+            <summary>
+            Gets or sets scale on y axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform2D.Rotation">
+            <summary>
+            Gets or sets rotation in radius.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform2D.Position">
+            <summary>
+            Gets or sets position on x, y axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform2D.X">
+            <summary>
+            Gets or sets position on x axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform2D.Y">
+            <summary>
+            Gets or sets position on y axis.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.DistributionMap.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.DistributionMap"/> class.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.Density">
+            <summary>
+            Gets or sets the max number of plants per hectare.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.Step">
+            <summary>
+            Gets or sets the length of each pixel in meters.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.Height">
+            <summary>
+            Gets or sets the max height of the heightmap.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.Seed">
+            <summary>
+            Gets or sets the random seed.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.RandomizeRotation">
+            <summary>
+            Gets or sets whether rotation will be randomized.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.VerticalScale">
+            <summary>
+            Gets or sets the randomized upper and lower bounds of vertical scaling.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.HorizontalScale">
+            <summary>
+            Gets or sets the randomized upper and lower bounds of horizontal scaling.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.Texture">
+            <summary>
+            Gets or sets the distribution texture.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.DistributionMap.Heightmap">
+            <summary>
+            Gets or sets the heightmap texture.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.CustomEffectContent">
+            <summary>
+            Content model for CustomEffect.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.CustomEffectContent.EffectCode">
+            <summary>
+            Gets or sets the effect byte code.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.CustomEffectContent.Parameters">
+            <summary>
+            Gets or sets all the parameters of this custom effect.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Navigation.PathGridContent">
+            <summary>
+            Contains attached properties for path grid.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Navigation.PathGridContent.GetIsPath(System.Object)">
+            <summary>
+            Gets or sets whether the target is a path.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Navigation.PathGridContent.SetIsPath(System.Object,System.Boolean)">
+            <summary>
+            Gets or sets whether the target is a path.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Navigation.PathGridContent.GetIsObstacle(System.Object)">
+            <summary>
+            Gets or sets whether the target is an obstacle.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Navigation.PathGridContent.SetIsObstacle(System.Object,System.Boolean)">
+            <summary>
+            Gets or sets whether the target is an obstacle.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.CustomEffectAnnotations">
+            <summary>
+            Defines a list of effect parameter semantics supported by the rendering system.
+            </summary>
+            <remarks>
+            Prefix the enum value with "Sas", "SasEffect" or "SasUi" is also supported.
+            </remarks>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.CustomEffectProcessor">
+            <summary>
+            Processes the input CustomEffectContent.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.DefaultContentProcessor">
+            <summary>
+            Processes each property of the input object graph using the processor specified by 
+            DefaultContentProcessorAttribute or the method marked with SelfProcessAttribute.
+            </summary>
+        </member>
+        <member name="F:Nine.Content.Pipeline.Processors.DefaultContentProcessor.contextStack">
+            <summary>
+            A stack holding the current processor context.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.DefaultContentProcessor.Process(System.Object,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>
+            Processes the specified input data and returns the result.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.DefaultContentProcessor.FindDefaultProcessor(System.Object)">
+            <summary>
+            Finds the default processor for the given input object
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.SelfProcessAttribute">
+            <summary>
+            Specifies the processing method for the object that has self processor.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.ObjectGraph">
+            <summary>
+            Traverses an object graph.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.ObjectGraph.TraverseProperties(System.Object,System.Func{System.Object,System.Object})">
+            <summary>
+            Traverses the each property of the target object.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Nine.Content.Pipeline.DefaultContentProcessorAttribute" -->
+        <member name="P:Nine.Content.Pipeline.DefaultContentProcessorAttribute.DefaultProcessor">
+            <summary>
+            Gets or sets the assembly quanlified name of the default processor.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Importers.XamlImporter">
+            <summary>
+            Imports object graph from Xaml files.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Importers.XamlImporter.OnResolveInstance(System.Type,System.Object[])">
+            <summary>
+            Called when this xaml importer failed to create an instance of the specified type and arguments.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.ContentProcessorContextExtensions">
+            <summary>
+            Enables a centralized place where LinkedEffect can be compiled and cached.
+            Use this library to eliminated duplicated LinkedEffects.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.ContentProcessorContextExtensions.BuildAsset``2(Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext,``0,System.String)">
+            <summary>
+            Initiates a nested build of the input object.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Nine.Content.Pipeline.ContentProcessorContextExtensions.BuildAsset``2(Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext,``0,System.String,Microsoft.Xna.Framework.Content.Pipeline.OpaqueDataDictionary,System.String)" -->
+        <member name="M:Nine.Content.Pipeline.ContentProcessorContextExtensions.BuildAndLoadAsset``2(Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext,``0,System.String)">
+            <summary>
+            Initiates a nested build of the specified asset and then loads the result into memory.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Nine.Content.Pipeline.ContentProcessorContextExtensions.BuildAndLoadAsset``2(Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext,``0,System.String,Microsoft.Xna.Framework.Content.Pipeline.OpaqueDataDictionary,System.String)" -->
+        <member name="M:Nine.Content.Pipeline.ContentProcessorContextExtensions.BuildCompileAndLoadAsset``2(Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext,``0,System.String,System.Action{``1,Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Content.ContentManager})">
+            <summary>
+            Initiates a nested build of the input object and loads the runtime type though ContentManager.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.ContentProcessorContextExtensions.BuildCompileAndLoadAsset``2(Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext,``0,System.String,Microsoft.Xna.Framework.Content.Pipeline.OpaqueDataDictionary,System.String,Microsoft.Xna.Framework.Graphics.GraphicsProfile,System.Action{``1,Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Content.ContentManager})">
+            <summary>
+            Initiates a nested build of the input object and loads the runtime type though ContentManager.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.ContentProcessorContextExtensions.Compile(System.Object,System.String,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>
+            Hacks into the Xna content pipeline to compiles the input content to an xnb file.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ManifestProcessor.ContentProject">
+            <summary>
+            Gets or sets the regular expression that is used to match the name of the content project.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.AlphaTest">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.BeginLight">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.BeginPaintGroup">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.ColorMatrix">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.DeferredLightBuffer">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.DeferredLights">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.Depth">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.DepthAndNormal">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.DetailTexture">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.DiffuseTexture">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.DirectionalLight">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.DualTexture">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.EmissiveMap">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.EndLight">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.EndPaintGroup">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.EnvironmentMap">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.Fog">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.InstanceTransform">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.NormalMap">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.PointLight">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.ShadowMap">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.SkinTransform">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.SpecularMap">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.SpotLight">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.TangentTransform">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.TextureTransform">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Graphics.Materials.MaterialPartShaders.VertexTransform">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.ModelCollisionProcessor">
+            <summary>
+            A custom processor to extract model collision data.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.NormalTextureProcessor">
+            <summary>
+            The NormalMapTextureProcessor takes in an encoded normal map, and outputs
+            a texture in the NormalizedByte4 format.  Every pixel in the source texture
+            is remapped so that values ranging from 0 to 1 will range from -1 to 1.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Nine.Content.Pipeline.Properties.Resources.Culture" -->
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.FragmentParserParameterBlockTypeExpected">
+            <summary>
+              Looks up a localized string similar to Block type (parameters, headercode, interpolators, vertexattributes, textures, vertexoutputs, vs, ps) expected, but found &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.LexerUnexpectedCharacter">
+            <summary>
+              Looks up a localized string similar to Unexpected character: &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.LexerUnexpectedEndOfFileString">
+            <summary>
+              Looks up a localized string similar to Unexpected end of file found. &apos;&quot;&apos; expected..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.ParserArrayIndexExpected">
+            <summary>
+              Looks up a localized string similar to Expected array index, which must be either a positive integer &gt;= 1, or an identifier..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.ParserDataTypeExpected">
+            <summary>
+              Looks up a localized string similar to Data type (bool, int, int2, int3, int4, intNxM, float, float2, float3, float4, floatNxM, matrix, Texture1D, Texture2D, Texture3D, TextureCube) expected..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.ParserInitialValueUnexpected">
+            <summary>
+              Looks up a localized string similar to Initial value was not expected for this type of parameter block..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.ParserShaderProfileNotSupported">
+            <summary>
+              Looks up a localized string similar to Shader profile &apos;{0}&apos; is not supported. Only 2_0 and 3_0 are supported..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.ParserTokenExpected">
+            <summary>
+              Looks up a localized string similar to Syntax error: &apos;{0}&apos; expected..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.ParserTokenUnexpected">
+            <summary>
+              Looks up a localized string similar to Syntax error: &apos;{0}&apos; unexpected..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.StitchedEffectParserParameterBlockTypeExpected">
+            <summary>
+              Looks up a localized string similar to Block type (headercode, fragments, techniques) expected, but found &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Properties.Resources.StitchedEffectParserStringLiteralOrIdentifierExpected">
+            <summary>
+              Looks up a localized string similar to String literal or identifier expected..
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Xaml.Degrees">
+            <summary>
+            Defines a markup extension that converts from degrees to radians.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Xaml.ExternalReference">
+            <summary>
+            Defines a markup extension to reference external source asset.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.ExternalReference.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.ExternalReference"/> class.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.ExternalReference.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.ExternalReference"/> class.
+            </summary>
+            <param name="fileName">The name of the asset.</param>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.ExternalReference.ProvideValue(System.IServiceProvider)">
+            <summary>
+            When implemented in a derived class, returns an object that is set as the value of the target property for this markup extension.
+            </summary>
+            <param name="serviceProvider">Object that can provide services for the markup extension.</param>
+            <returns>
+            The object value to set on the property where the extension is applied.
+            </returns>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.ExternalReference.FileName">
+            <summary>
+            Gets or sets the file name of the source asset.
+            </summary>
+        </member>
+        <member name="F:Nine.Content.Pipeline.Xaml.TextureTransform.Identity">
+            <summary>
+            Gets the identity transform.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.TextureTransform.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.TextureTransform"/> class.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.TextureTransform.ProvideValue(System.IServiceProvider)">
+            <summary>
+            When implemented in a derived class, returns an object that is set as the value of the target property for this markup extension.
+            </summary>
+            <param name="serviceProvider">Object that can provide services for the markup extension.</param>
+            <returns>
+            The object value to set on the property where the extension is applied.
+            </returns>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.TextureTransform.ToMatrix">
+            <summary>
+            Checks whether the current Triangle intersects a Ray.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.TextureTransform.GetScale(System.Object)">
+            <summary>
+            Gets the scale of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.TextureTransform.SetScale(System.Object,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Sets the scale of the target object.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.TextureTransform.GetOffset(System.Object)">
+            <summary>
+            Gets the position of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.TextureTransform.SetOffset(System.Object,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Sets the position of the target object.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.TextureTransform.Scale">
+            <summary>
+            Gets or sets the scale.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.TextureTransform.Rotation">
+            <summary>
+            Gets or sets rotation on x, y, z axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.TextureTransform.Offset">
+            <summary>
+            Gets or sets the translation
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Xaml.Transform">
+            <summary>
+            Defines a markup extension that constructs a 3D transform from scale,
+            rotation and translation components.
+            </summary>
+        </member>
+        <member name="F:Nine.Content.Pipeline.Xaml.Transform.Identity">
+            <summary>
+            Gets the identity transform.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.Transform"/> class.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.ProvideValue(System.IServiceProvider)">
+            <summary>
+            When implemented in a derived class, returns an object that is set as the value of the target property for this markup extension.
+            </summary>
+            <param name="serviceProvider">Object that can provide services for the markup extension.</param>
+            <returns>
+            The object value to set on the property where the extension is applied.
+            </returns>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.ToMatrix">
+            <summary>
+            Checks whether the current Triangle intersects a Ray.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.GetScale(System.Object)">
+            <summary>
+            Gets the scale of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.SetScale(System.Object,Microsoft.Xna.Framework.Vector3)">
+            <summary>
+            Sets the scale of the target object.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.GetRotation(System.Object)">
+            <summary>
+            Gets the rotation of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.SetRotation(System.Object,Microsoft.Xna.Framework.Vector3)">
+            <summary>
+            Sets the rotation of the target object.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.GetPosition(System.Object)">
+            <summary>
+            Gets the position of the target object
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.Transform.SetPosition(System.Object,Microsoft.Xna.Framework.Vector3)">
+            <summary>
+            Sets the position of the target object.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.Scale">
+            <summary>
+            Gets or sets scale on x, y, z axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.ScaleX">
+            <summary>
+            Gets or sets scale on x axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.ScaleY">
+            <summary>
+            Gets or sets scale on y axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.ScaleZ">
+            <summary>
+            Gets or sets scale on z axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.Rotation">
+            <summary>
+            Gets or sets rotation on x, y, z axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.RotationX">
+            <summary>
+            Gets or sets rotation on x axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.RotationY">
+            <summary>
+            Gets or sets rotation on y axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.RotationZ">
+            <summary>
+            Gets or sets rotation on z axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.RotationOrder">
+            <summary>
+            Gets or sets the order of rotation.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.Position">
+            <summary>
+            Gets or sets position on x, y, z axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.PositionX">
+            <summary>
+            Gets or sets position on x axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.PositionY">
+            <summary>
+            Gets or sets position on y axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.Transform.PositionZ">
+            <summary>
+            Gets or sets position on z axis.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.TextureAtlasContent">
+            <summary>
+            Build-time type used to hold the output data from the SpriteSheetProcessor.
+            This is saved into XNB format by the SpriteSheetWriter helper class, then
+            at runtime, the SpriteSheetReader loads the data into a SpriteSheet object.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Graphics.PackedTextureWriter">
+            <summary>
+            Content pipeline support class for saving sprite sheet data into XNB format.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Graphics.PackedTextureWriter.Write(Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler.ContentWriter,Nine.Content.Pipeline.Graphics.TextureAtlasContent)">
+            <summary>
+            Saves sprite sheet data into an XNB file.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Graphics.PackedTextureWriter.GetRuntimeReader(Microsoft.Xna.Framework.Content.Pipeline.TargetPlatform)">
+            <summary>
+            Tells the content pipeline what worker type
+            will be used to load the sprite sheet data.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Graphics.PackedTextureWriter.GetRuntimeType(Microsoft.Xna.Framework.Content.Pipeline.TargetPlatform)">
+            <summary>
+            Tells the content pipeline what CLR type the sprite sheet
+            data will be loaded into at runtime.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.Keyframe">
+            <summary>
+            Describes the position of a single bone at a single point in time.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.Keyframe.#ctor(System.Int32,System.TimeSpan,Microsoft.Xna.Framework.Matrix)">
+            <summary>
+            Constructs a new keyframe object.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.Keyframe.#ctor">
+            <summary>
+            Private constructor for use by the XNB deserializer.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.Keyframe.Bone">
+            <summary>
+            Gets the index of the target bone that is animated by this keyframe.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.Keyframe.Time">
+            <summary>
+            Gets the time offset from the start of the animation to this keyframe.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.Keyframe.Transform">
+            <summary>
+            Gets the bone transform for this keyframe.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.AnimationClip">
+            <summary>
+            It holds all the keyframes needed to describe a single animation.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.AnimationClip.#ctor(System.TimeSpan,System.Collections.Generic.List{Nine.Content.Pipeline.Processors.Keyframe})">
+            <summary>
+            Constructs a new animation clip object.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.AnimationClip.#ctor">
+            <summary>
+            Private constructor for use by the XNB deserializer.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.AnimationClip.Duration">
+            <summary>
+            Gets the total length of the animation.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.AnimationClip.Keyframes">
+            <summary>
+            Gets a combined list containing all the keyframes for all bones,
+            sorted by time.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.ModelAnimationProcessor">
+            <summary>
+            Custom processor extends the builtin framework ModelProcessor class,
+            adding animation support.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelAnimationProcessor.#ctor">
+            <summary>
+            Creates a new instance of ModelAnimationProcessor.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelAnimationProcessor.FlattenNodeContent(Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent,System.Collections.Generic.List{Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent})">
+            <summary>
+            This method traverses the input bone hierarchy
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelAnimationProcessor.ProcessAnimation(Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent,System.Collections.Generic.Dictionary{System.String,Nine.Content.Pipeline.Processors.AnimationClip},System.Collections.Generic.IList{Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent})">
+            <summary>
+            Recursive traverses the input hierarchy, merge all animation clips
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelAnimationProcessor.ProcessAnimations(Microsoft.Xna.Framework.Content.Pipeline.Graphics.AnimationContentDictionary,System.Collections.Generic.IList{Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent})">
+            <summary>
+            Converts an intermediate format content pipeline AnimationContentDictionary
+            object to our runtime AnimationClip format.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelAnimationProcessor.ProcessAnimation(Microsoft.Xna.Framework.Content.Pipeline.Graphics.AnimationContent,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Converts an intermediate format content pipeline AnimationContent
+            object to our runtime AnimationClip format.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelAnimationProcessor.CompareKeyframeTimes(Nine.Content.Pipeline.Processors.Keyframe,Nine.Content.Pipeline.Processors.Keyframe)">
+            <summary>
+            Comparison function for sorting keyframes into ascending time order.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ModelAnimationProcessor.Skeleton">
+            <summary>
+            Gets the skeleton data of this animation.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.ModelSkeletonProcessor">
+             <summary>
+             Custom processor that extract skinning info from a skinned model.
+             </summary>
+             <remarks>
+             This processor is used by ExtendedModelProcessor,
+             There is no need to expose it to the xna build.
+            </remarks>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelSkeletonProcessor.FindSkeletonIndex(Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent,Microsoft.Xna.Framework.Content.Pipeline.Graphics.BoneContent,System.Int32@)">
+            <summary>
+            Finds the index of the first node content that is a bone content.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelSkeletonProcessor.MeshHasSkinning(Microsoft.Xna.Framework.Content.Pipeline.Graphics.MeshContent)">
+            <summary>
+            Checks whether a mesh contains skininng information.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ModelSkeletonProcessor.IsSkinned(Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent)">
+            <summary>
+            Checks whether a mesh is a skinned mesh
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.TextureAtlasProcessor">
+            <summary>
+            Processes image sequential
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.SpritePacker">
+            <summary>
+            Helper for arranging many small sprites into a single larger sheet.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.SpritePacker.PackSprites(System.Collections.Generic.IList{Microsoft.Xna.Framework.Content.Pipeline.Graphics.BitmapContent},System.Collections.Generic.ICollection{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>
+            Packs a list of sprites into a single big texture,
+            recording where each one was stored.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.SpritePacker.CopySpritesToOutput(System.Collections.Generic.List{Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite},System.Collections.Generic.IList{Microsoft.Xna.Framework.Content.Pipeline.Graphics.BitmapContent},System.Collections.Generic.ICollection{Microsoft.Xna.Framework.Rectangle},System.Int32,System.Int32)">
+            <summary>
+            Once the arranging is complete, copies the bitmap data for each
+            sprite to its chosen position in the single larger output bitmap.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.SpritePacker.PositionSprite(System.Collections.Generic.List{Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite},System.Int32,System.Int32)">
+            <summary>
+            Works out where to position a single sprite.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.SpritePacker.FindIntersectingSprite(System.Collections.Generic.List{Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Checks if a proposed sprite position collides with anything
+            that we already arranged.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.SpritePacker.CompareSpriteSizes(Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite,Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite)">
+            <summary>
+            Comparison function for sorting sprites by size.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.SpritePacker.CompareSpriteIndices(Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite,Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite)">
+            <summary>
+            Comparison function for sorting sprites by their original indices.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.SpritePacker.GuessOutputWidth(System.Collections.Generic.List{Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite})">
+            <summary>
+            Heuristic guesses what might be a good output width for a list of sprites.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.SpritePacker.ArrangedSprite">
+            <summary>
+            Internal helper class keeps track of a sprite while it is being arranged.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Importers.RawTextureImporter">
+            <summary>
+            Imports grayscale raw texture.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.GrayScaleTextureProcessor">
+            <summary>
+            This processor gray scales the input texture and produces an output texture with 8bit per pixel.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.GrayScaleTextureProcessor.Process(Microsoft.Xna.Framework.Content.Pipeline.Graphics.TextureContent,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>
+            Process converts the encoded normals to the NormalizedByte4 format and 
+            generates mipmaps.
+            </summary>
+            <param name="input"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.SplatterTextureProcessor">
+            <summary>
+            Processes texture splatter used for terrain rendering.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.SplatterTextureProcessor.GenerateBaseLayer">
+            <summary>
+            Gets or sets a value indicating whether a base layer should be generated.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.ExtendedModelProcessor">
+            <summary>
+            Custom processor extends the builtin framework ModelProcessor class,
+            adding animation support.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.#ctor">
+            <summary>
+            Creates a new instance of ExtendedModelProcessor.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.Process(Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>
+            The main Process method converts an intermediate format content pipeline
+            NodeContent tree to a ModelContent object with embedded animation data.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.ValidateMesh(Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext,Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent)">
+            <summary>
+            Makes sure this mesh contains the kind of data we know how to animate.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.FlattenTransforms(Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent)">
+            <summary>
+            Bakes unwanted transforms into the model geometry,
+            so everything ends up in the same coordinate system.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.IgnoreRootTransform">
+            <summary>
+            Gets a value indicating whether the transform of the root bone is ignored.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.GenerateDualTextureChannel">
+            <summary>
+            Gets or sets a value indicating whether a second texture coordinate channel
+            will be generated if it does not exist.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.GenerateAnimationData">
+            <summary>
+            Gets or sets a value indicating whether animation data will be generated.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.GenerateCollisionData">
+            <summary>
+            Gets or sets a value indicating whether collision data will be generated.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.GenerateVertexColor">
+            <summary>
+            Gets or sets a value indicating whether vertex color channel will be generated.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.CollisionTreeDepth">
+            <summary>
+            Gets or sets the depth of the collision tree.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.Textures">
+            <summary>
+            Gets or sets the textures attached to the model.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.ExtendedModelProcessor.TextureProcessors">
+            <summary>
+            Gets or sets the processors for each texture attached to the model.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.HeightmapProcessor">
+            <summary>
+            Turns a heightmap into a terrain geometry.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.HeightmapProcessor.#ctor">
+            <summary>
+            Creates a new instance fo heightmap processor
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Processors.HeightmapProcessor.Process(Microsoft.Xna.Framework.Content.Pipeline.Graphics.Texture2DContent,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>
+            Generates a terrain mesh from an input heightfield texture.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.HeightmapProcessor.Step">
+            <summary>
+            Controls the scale of the terrain. This will be the distance between
+            vertices in the finished terrain mesh.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.HeightmapProcessor.Height">
+            <summary>
+            Controls the height of the terrain. The heights of the vertices in the
+            finished mesh will vary between 0 and -Bumpiness.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.HeightmapProcessor.FlipX">
+            <summary>
+            Determines whether the positions will be flipped on X axis.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Processors.HeightmapProcessor.FlipY">
+            <summary>
+            Determines whether the positions will be flipped on X axis.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Processors.GeometryProcessor">
+            <summary>
+            A custom processor to convert a mesh into a geometry.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Xaml.ContentReference">
+            <summary>
+            Defines a markup extension to reference external content.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.ContentReference.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.ContentReference"/> class.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.ContentReference.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nine.Content.Pipeline.Xaml.ContentReference"/> class.
+            </summary>
+            <param name="assetName">The name of the asset.</param>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.ContentReference.ProvideValue(System.IServiceProvider)">
+            <summary>
+            When implemented in a derived class, returns an object that is set as the value of the target property for this markup extension.
+            </summary>
+            <param name="serviceProvider">Object that can provide services for the markup extension.</param>
+            <returns>
+            The object value to set on the property where the extension is applied.
+            </returns>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.ContentReference.ResolveContentReference(System.String)">
+            <summary>
+            Resolves the external reference.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.ContentReference.AssetName">
+            <summary>
+            Gets or sets the name of the content.
+            This value should be set to the asset name instead of filename when used with Xna content pipeline.
+            </summary>
+        </member>
+        <member name="E:Nine.Content.Pipeline.Xaml.ContentReference.Resolve">
+            <summary>
+            Occurs when this serializer failed to create an instance from a content reference.
+            </summary>
+        </member>
+        <member name="T:Nine.Content.Pipeline.Xaml.XamlSerializer">
+            <summary>
+            Provides extended Xaml load and save methods.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.XamlSerializer.Load(System.String)">
+            <summary>
+            Loads the object graph from a xaml file.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.XamlSerializer.Load(System.IO.Stream)">
+            <summary>
+            Loads the object graph from a stream.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.XamlSerializer.Save(System.String,System.Object)">
+            <summary>
+            Saves the specified object to a file.
+            </summary>
+        </member>
+        <member name="M:Nine.Content.Pipeline.Xaml.XamlSerializer.Save(System.IO.Stream,System.Object)">
+            <summary>
+            Saves the specified object to a stream.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Nine.Content.Pipeline.Xaml.XamlSerializer.ResolveInstance(System.Type,System.Object[])" -->
+        <member name="E:Nine.Content.Pipeline.Xaml.XamlSerializer.InstanceResolve">
+            <summary>
+            Occurs when this serializer failed to create an instance of the specified type and arguments.
+            </summary>
+        </member>
+        <member name="E:Nine.Content.Pipeline.Xaml.XamlSerializer.MarkupExtensionResolve">
+            <summary>
+            Occurs when this xaml serializer tried to save an object to markup extension.
+            </summary>
+        </member>
+        <member name="P:Nine.Content.Pipeline.Xaml.XamlSerializer.SerializationData">
+            <summary>
+            Gets the serialization data used during the serialization.
+            </summary>
+        </member>
+    </members>
+</doc>
