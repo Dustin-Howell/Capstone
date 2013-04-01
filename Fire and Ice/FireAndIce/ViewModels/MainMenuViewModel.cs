@@ -186,7 +186,6 @@ namespace FireAndIce.ViewModels
                 {
                     AI = AppModel.AI,
                     Board = new CreeperBoard(),
-                    EventAggregator = AppModel.EventAggregator,
                     Player1Type = PlayerType.Human,
                     Player2Type = PlayerType.AI,
                     StartingColor = CreeperColor.Fire,                
@@ -220,7 +219,6 @@ namespace FireAndIce.ViewModels
                 {
                     AI = AppModel.AI,
                     Board = new CreeperBoard(),
-                    EventAggregator = AppModel.EventAggregator,
                     Player1Type = PlayerType.Human,
                     Player2Type = PlayerType.AI,
                     StartingColor = CreeperColor.Fire,
@@ -236,7 +234,6 @@ namespace FireAndIce.ViewModels
                 {
                     AI = AppModel.AI,
                     Board = new CreeperBoard(),
-                    EventAggregator = AppModel.EventAggregator,
                     Player1Type = PlayerType.Human,
                     Player2Type = PlayerType.Human,
                     StartingColor = CreeperColor.Fire,

@@ -60,6 +60,10 @@
       <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
       <Name>Creeper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XNAControlGame\XNAControlGame\XNAControlGame.csproj">
+      <Project>{6B40F385-30BC-4BE7-9E8F-A5E82821C047}</Project>
+      <Name>XNAControlGame</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

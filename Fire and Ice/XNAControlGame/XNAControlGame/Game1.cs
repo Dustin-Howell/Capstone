@@ -21,10 +21,25 @@ using CreeperMessages;
 
 namespace XNAControlGame
 {
+    internal class DummyBoardProvider : IProvideBoardState
+    {
+        CreeperBoard _board;
+
+        public CreeperBoard GetBoard()
+        {
+            return _board = _board ?? new CreeperBoard();
+        }
+
+        public CreeperColor GetCurrentTurn()
+        {
+            return CreeperColor.Fire;
+        }
+    }
+
     /// <summary>
     /// Only class level variables and override methods go in this file
     /// </summary>
-    public partial class Game1 : XNAControl.XNAControlGame
+    public partial class Game1 : Game
     {
         private IEventAggregator _eventAggregator;
         private SpriteFont _spriteFont;
@@ -96,35 +111,52 @@ namespace XNAControlGame
 
         private bool _humanMovePending = false;
         private bool _pegAnimating = false;
+        private GraphicsDeviceManager _graphics;
 
         public IProvideBoardState BoardProvider { get; private set; }
 
-        public Game1(IntPtr handle, int width, int height, IEventAggregator eventAggregator, IProvideBoardState boardProvider)
-            : base(handle, "Content", width, height)
+        public Game1() : base()
+        {
+            _eventAggregator = new EventAggregator();
+            BoardProvider = new DummyBoardProvider();
+
+            _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+
+            Content.RootDirectory = "Content";
+        }
+
+        public Game1(IEventAggregator eventAggregator, IProvideBoardState boardProvider) : base()
         {
             BoardProvider = boardProvider;
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
 
-            Components.Add(new InputComponent(handle));
-            _input = new Input();
-
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) => {
-                if (_humanMovePending && !_pegAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
-            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) => {
-                if (_humanMovePending && !_pegAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
         }
-       
+
+        private string _mouseClickCoords;
         protected override void Initialize()
         {
+            _input = new Input();
+
+            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
+            {
+                if (_humanMovePending && !_pegAnimating)
+                {
+                    DetectFullClick(e);
+                }
+            });
+            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
+            {
+                if (_humanMovePending && !_pegAnimating)
+                {
+                    DetectFullClick(e);
+                }
+            });
+
             base.Initialize();
         }
 
@@ -148,7 +180,7 @@ namespace XNAControlGame
 
             base.LoadContent();
 
-            OnContentLoaded();          
+            OnContentLoaded();
         }
         
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
@@ -159,12 +191,19 @@ namespace XNAControlGame
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
-        {            
+        {
             _scene.Draw(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
             //_scene.DrawDiagnostics(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
             
             base.Draw(gameTime);
         }
 
+        public static void Main()
+        {
+            using (Game1 game = new Game1())
+            {
+                game.Run();
+            }
+        }
     }
 }

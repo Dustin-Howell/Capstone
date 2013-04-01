@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Caliburn.Micro;
-using XNAControl;
 using CreeperCore;
 using FireAndIce.Views;
 using CreeperNetwork;
@@ -85,6 +84,8 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        public Game1 Game { get { return AppModel.XNAGame; } }
+
         public GameContainerViewModel(GameSettings settings)
         {
             _settings = settings;
@@ -134,26 +135,6 @@ namespace FireAndIce.ViewModels
         {
             AppModel.EventAggregator.Publish(new ChatMessage(Message, ChatMessageType.Send));
             Message = "";
-        }
-
-        protected override void OnViewLoaded(object view)
-        {
-            base.OnViewLoaded(view);
-
-            XNAUserControl xnaView = (view as GameContainerView).XNAControl;
-
-            AppModel.XNAGame = new Game1(xnaView.Handle, 
-                                        (int)xnaView.Width, 
-                                        (int)xnaView.Height, 
-                                        AppModel.EventAggregator, 
-                                        AppModel.SlimCore);
-
-            Game1 game = AppModel.XNAGame;
-            AppModel.EventAggregator.Subscribe(game);
-            game.InitializeGraphics();
-            game.Run();
-
-            AppModel.SlimCore.StartGame(_settings);
         }
 
         public void Handle(ChatMessage message)

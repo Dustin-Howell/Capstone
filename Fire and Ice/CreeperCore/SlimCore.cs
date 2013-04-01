@@ -8,9 +8,9 @@ using Creeper;
 
 namespace CreeperCore
 {
-    public class SlimCore : IProvideBoardState, IHandle<MoveMessage>, IHandle<NetworkErrorMessage>
+    public class SlimCore : IProvideBoardState, IHandle<MoveMessage>, IHandle<NetworkErrorMessage>, IHandle<StartGameMessage>
     {
-        private EventAggregator _eventAggregator;
+        private IEventAggregator _eventAggregator;
         private Player _player1;
         private Player _player2;
 
@@ -22,15 +22,15 @@ namespace CreeperCore
         private CreeperBoard _board;
         private Player _currentPlayer;
 
-        public SlimCore()
-        {            
+        public SlimCore(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
             _board = new CreeperBoard();
         }
 
-        public void StartGame(GameSettings settings)
+        private void StartGame(GameSettings settings)
         {
-            _eventAggregator = settings.EventAggregator;
-            _eventAggregator.Subscribe(this);
             _player1 = new Player(settings.Player1Type, settings.StartingColor);
             _player2 = new Player(settings.Player2Type, settings.StartingColor.Opposite());
             _currentPlayer = _player1;
@@ -89,6 +89,11 @@ namespace CreeperCore
                         break;
                 }
             }
+        }
+
+        public void Handle(StartGameMessage message)
+        {
+            StartGame(message.Settings);
         }
 
         public void Handle(NetworkErrorMessage message)

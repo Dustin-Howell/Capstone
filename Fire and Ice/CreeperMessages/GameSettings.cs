@@ -14,8 +14,6 @@ namespace CreeperMessages
         public CreeperBoard Board { get; set; }
         public CreeperColor StartingColor { get; set; }
 
-        public EventAggregator EventAggregator { get; set; }
-
         public IHandle Network { get; set; }
         public IHandle AI { get; set; }
     }
