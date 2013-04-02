@@ -62,9 +62,9 @@ namespace CreeperCore
             return new CreeperBoard(_board);
         }
 
-        public CreeperColor GetCurrentTurn()
+        public Player GetCurrentPlayer()
         {
-            return _currentPlayer.Color;
+            return new Player(_currentPlayer);
         }
 
         public void Handle(MoveMessage message)

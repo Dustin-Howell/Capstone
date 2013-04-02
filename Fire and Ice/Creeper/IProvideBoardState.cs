@@ -8,6 +8,6 @@ namespace Creeper
     public interface IProvideBoardState
     {
         CreeperBoard GetBoard();
-        CreeperColor GetCurrentTurn();
+        Player GetCurrentPlayer();
     }
 }

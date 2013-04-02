@@ -30,9 +30,9 @@ namespace XNAControlGame
             return _board = _board ?? new CreeperBoard();
         }
 
-        public CreeperColor GetCurrentTurn()
+        public Player GetCurrentPlayer()
         {
-            return CreeperColor.Fire;
+            return new Player(PlayerType.Human, CreeperColor.Fire);
         }
     }
 
@@ -109,7 +109,6 @@ namespace XNAControlGame
             }
         }
 
-        private bool _humanMovePending = false;
         private bool _pegAnimating = false;
         private GraphicsDeviceManager _graphics;
 
@@ -149,14 +148,14 @@ namespace XNAControlGame
 
             _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
             {
-                if (_humanMovePending && !_pegAnimating)
+                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_pegAnimating)
                 {
                     DetectFullClick(e);
                 }
             });
             _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
             {
-                if (_humanMovePending && !_pegAnimating)
+                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_pegAnimating)
                 {
                     DetectFullClick(e);
                 }
