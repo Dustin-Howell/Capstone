@@ -118,11 +118,16 @@ namespace XNAControlGame
         public Game1() : base()
         {
             _eventAggregator = new EventAggregator();
+            _eventAggregator.Subscribe(this);
             BoardProvider = new DummyBoardProvider();
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
+
+            Components.Add(new InputComponent(Window.Handle));
+
+            IsMouseVisible = true;
 
             Content.RootDirectory = "Content";
         }
@@ -171,12 +176,18 @@ namespace XNAControlGame
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
             _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
+
             _fireModel1 = new Instance { Template = "FirePeg" };
             _iceModel1 = new Instance { Template = "IcePeg" };
             _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
 
             _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
             _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
+
+#if DEBUG
+            _pointer = Content.Load<Texture2D>("Textures/flake");
+            _sb = new SpriteBatch(GraphicsDevice);
+#endif
 
             base.LoadContent();
 
@@ -187,14 +198,29 @@ namespace XNAControlGame
         {
             _scene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
+#if DEBUG
+            _pointerPosition = new Vector2(Mouse.GetState().X - 16, Mouse.GetState().Y - 16);
+#endif
+
             base.Update(gameTime);
         }
 
+#if DEBUG
+        SpriteBatch _sb;
+        Texture2D _pointer;
+        Vector2 _pointerPosition = new Vector2();
+#endif
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _scene.Draw(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
             //_scene.DrawDiagnostics(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
-            
+
+#if DEBUG
+            _sb.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            _sb.Draw(_pointer, _pointerPosition, Color.White);
+            _sb.End();
+#endif
+
             base.Draw(gameTime);
         }
 
@@ -202,6 +228,16 @@ namespace XNAControlGame
         {
             using (Game1 game = new Game1())
             {
+                game._eventAggregator.Publish(new MoveMessage()
+                {
+                    Board = game.BoardProvider.GetBoard(),
+                    TurnColor = CreeperColor.Fire,
+                    Type = MoveMessageType.Request,
+                    PlayerType = PlayerType.Human,
+                });
+
+                game.IsMouseVisible = false;
+
                 game.Run();
             }
         }

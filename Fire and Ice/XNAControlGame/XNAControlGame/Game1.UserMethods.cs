@@ -162,16 +162,17 @@ namespace XNAControlGame
         /// </summary>
         Ray GetSelectionRay(Vector2 mouseCoor)
         {
+            Camera camera = _scene.FindName<FreeCamera>("MainCamera");
             Vector3 nearsource = new Vector3(mouseCoor, 0f);
             Vector3 farsource = new Vector3(mouseCoor, 1f);
 
             Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
-            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource, _scene.FindName<FreeCamera>("MainCamera").Projection,
-                    _scene.FindName<FreeCamera>("MainCamera").View, world);
+            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource, camera.Projection,
+                    camera.View, world);
 
-            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, _scene.FindName<FreeCamera>("MainCamera").Projection,
-                    _scene.FindName<FreeCamera>("MainCamera").View, world);
+            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, camera.Projection,
+                    camera.View, world);
 
             // Create a ray from the near clip plane to the far clip plane.
             Vector3 direction = farPoint - nearPoint;
@@ -191,7 +192,7 @@ namespace XNAControlGame
 
             foreach (CreeperPeg peg in currentTeam)
             {
-                if (peg.Intersects(selectionRay).HasValue)
+                if (selectionRay.Intersects(peg.BoundingBox).HasValue)
                 {
                     clickedModel = peg;
                     break;
