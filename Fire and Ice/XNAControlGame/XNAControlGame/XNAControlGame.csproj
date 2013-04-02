@@ -138,6 +138,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MoveAnimationListener.cs" />
     <Compile Include="Game1.UserMethods.cs">
       <DependentUpon>Game1.cs</DependentUpon>
     </Compile>

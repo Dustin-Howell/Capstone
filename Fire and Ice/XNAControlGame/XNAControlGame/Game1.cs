@@ -36,10 +36,18 @@ namespace XNAControlGame
         }
     }
 
+    public interface ICreeperBoardLayout
+    {
+        Group BoardGroup { get; }
+        IEnumerable<CreeperPeg> Pegs { get; }
+
+        void FlipTile(Move move);
+    }
+
     /// <summary>
     /// Only class level variables and override methods go in this file
     /// </summary>
-    public partial class Game1 : Game
+    public partial class Game1 : Game, ICreeperBoardLayout
     {
         private IEventAggregator _eventAggregator;
         private SpriteFont _spriteFont;
@@ -60,6 +68,8 @@ namespace XNAControlGame
         private Texture2D _iceTile;
 
         private Input _input;
+
+        private MoveAnimationListener _moveAnimationListener;
 
         private CreeperPeg _selectedPeg;
         private CreeperPeg _SelectedPeg
@@ -109,7 +119,6 @@ namespace XNAControlGame
             }
         }
 
-        private bool _pegAnimating = false;
         private GraphicsDeviceManager _graphics;
 
         public IProvideBoardState BoardProvider { get; private set; }
@@ -141,25 +150,28 @@ namespace XNAControlGame
             Content.RootDirectory = "Content";
         }
 
-        private string _mouseClickCoords;
         protected override void Initialize()
         {
             _input = new Input();
 
             _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
             {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_pegAnimating)
+                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
                 {
                     DetectFullClick(e);
                 }
             });
             _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
             {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_pegAnimating)
+                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
                 {
                     DetectFullClick(e);
                 }
             });
+
+            _moveAnimationListener = new MoveAnimationListener(this);
+            _eventAggregator.Subscribe(_moveAnimationListener);
+            Components.Add( _moveAnimationListener );
 
             base.Initialize();
         }
@@ -239,6 +251,16 @@ namespace XNAControlGame
 
                 game.Run();
             }
+        }
+
+        public Group BoardGroup
+        {
+            get { return _boardGroup; }
+        }
+
+        public IEnumerable<CreeperPeg> Pegs
+        {
+            get { return _pegs; }
         }
     }
 }

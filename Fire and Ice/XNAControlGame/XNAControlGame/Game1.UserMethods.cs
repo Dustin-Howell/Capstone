@@ -137,7 +137,7 @@ namespace XNAControlGame
         //    _boardTexture.SetData(texturePixels);
         //}
 
-        void FlipTile(Move move)
+        public void FlipTile(Move move)
         {
             Position position = CreeperBoard.GetFlippedPosition(move);
 
@@ -274,32 +274,32 @@ namespace XNAControlGame
 
         public void Handle(MoveMessage message)
         {
-            if (message.Type == MoveMessageType.Response)
-            {
-                if (CreeperBoard.IsCaptureMove(message.Move))
-                {
-                    //capture
-                    _boardGroup.Remove(_pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(message.Move)));
-                    _pegs
-                        .First(x => x.Position == message.Move.StartPosition)
-                        .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
-                }
-                else if (CreeperBoard.IsFlipMove(message.Move))
-                {
-                    FlipTile(message.Move);
-                    _pegs
-                        .First(x => x.Position == message.Move.StartPosition)
-                        .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
-                }
-                else
-                {
-                    _pegs
-                        .First(x => x.Position == message.Move.StartPosition)
-                        .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
-                }
+        //    if (message.Type == MoveMessageType.Response)
+        //    {
+        //        if (CreeperBoard.IsCaptureMove(message.Move))
+        //        {
+        //            //capture
+        //            _boardGroup.Remove(_pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(message.Move)));
+        //            _pegs
+        //                .First(x => x.Position == message.Move.StartPosition)
+        //                .MoveTo(message.Move.EndPosition, () => _moveAnimationListener.IsAnimating = false);
+        //        }
+        //        else if (CreeperBoard.IsFlipMove(message.Move))
+        //        {
+        //            FlipTile(message.Move);
+        //            _pegs
+        //                .First(x => x.Position == message.Move.StartPosition)
+        //                .MoveTo(message.Move.EndPosition, () => _moveAnimationListener.IsAnimating = false);
+        //        }
+        //        else
+        //        {
+        //            _pegs
+        //                .First(x => x.Position == message.Move.StartPosition)
+        //                .MoveTo(message.Move.EndPosition, () => _moveAnimationListener.IsAnimating = false);
+        //        }
 
-                _pegAnimating = true;
-            }
+        //        _moveAnimationListener.IsAnimating = true;
+        //    }
         }
 
         public void Handle(SychronizeBoardMessage message)
