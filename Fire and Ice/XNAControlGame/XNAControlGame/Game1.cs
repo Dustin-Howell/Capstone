@@ -240,24 +240,6 @@ namespace XNAControlGame
             base.Draw(gameTime);
         }
 
-        public static void Main()
-        {
-            using (Game1 game = new Game1())
-            {
-                game._eventAggregator.Publish(new MoveMessage()
-                {
-                    Board = game.BoardProvider.GetBoard(),
-                    TurnColor = CreeperColor.Fire,
-                    Type = MoveMessageType.Request,
-                    PlayerType = PlayerType.Human,
-                });
-
-                game.IsMouseVisible = false;
-
-                game.Run();
-            }
-        }
-
         public Group BoardGroup
         {
             get { return _boardGroup; }

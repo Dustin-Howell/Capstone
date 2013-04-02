@@ -139,6 +139,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MoveAnimationListener.cs" />
+    <Compile Include="Game1.Main.cs">
+      <SubType>Code</SubType>
+	  <DependentUpon>Game1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game1.UserMethods.cs">
       <DependentUpon>Game1.cs</DependentUpon>
     </Compile>
