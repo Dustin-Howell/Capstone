@@ -152,12 +152,28 @@ namespace FireAndIce.ViewModels
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => AddMenu(LocalEasyAIGameMenu), Title = "Novice"},
                     new OptionButtonViewModel {ClickAction = () => AddMenu(LocalHardAIGameMenu), Title = "Expert"},
+                    new OptionButtonViewModel {ClickAction = () => StartAIvAIGame(), Title = "AI vs. AI"},
                 },
                     Background = AppModel.Resources["Primary1"] as SolidColorBrush,
                     Title = "Difficulty?",
                     MenuParent = LocalGameMenu,
                 };
             }
+        }
+
+        private void StartAIvAIGame()
+        {
+            AppModel.EventAggregator.Publish(new StartGameMessage()
+            {
+                Settings = new GameSettings()
+                {
+                    AI = AppModel.AI,
+                    Board = new CreeperBoard(),
+                    Player1Type = PlayerType.AI,
+                    Player2Type = PlayerType.AI,
+                    StartingColor = CreeperColor.Fire,
+                }
+            });
         }
 
         private ToggleButtonMenuViewModel _localEasyAIGameMenu;
