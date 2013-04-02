@@ -137,6 +137,11 @@ namespace FireAndIce.ViewModels
             Message = "";
         }
 
+        public void Undo()
+        {
+            AppModel.EventAggregator.Publish(new MoveMessage() { Type = MoveMessageType.Undo, });
+        }
+
         public void Handle(ChatMessage message)
         {
             ChatMessages.Add(message.Message);

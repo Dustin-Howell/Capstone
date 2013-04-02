@@ -19,14 +19,30 @@ namespace CreeperCore
         private IHandle _aiReference;
 
         //State Variables
-        private CreeperBoard _board;
+        private CreeperBoard _board
+        {
+            get
+            {
+                if (_boardHistory.Count > 0)
+                {
+                    return _boardHistory.Peek();
+                }
+                else
+                {
+                    throw new IndexOutOfRangeException("No boards left in board history.");
+                }
+            }
+        }
         private Player _currentPlayer;
+
+        private Stack<CreeperBoard> _boardHistory;
 
         public SlimCore(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
-            _board = new CreeperBoard();
+            _boardHistory = new Stack<CreeperBoard>();
+            _boardHistory.Push(new CreeperBoard());
         }
 
         private void StartGame(GameSettings settings)
@@ -72,8 +88,9 @@ namespace CreeperCore
             if (message.Type == MoveMessageType.Response)
             {
                 //TODO: throw some exceptions if something went wrong
-
-                _board.Move(message.Move);
+                CreeperBoard board = new CreeperBoard(_board);
+                board.Move(message.Move);
+                _boardHistory.Push(board);
 
                 switch (_board.GetGameState(_currentPlayer.Color))
                 {
@@ -87,6 +104,14 @@ namespace CreeperCore
                     case CreeperGameState.Draw:
                         _eventAggregator.Publish(new GameOverMessage() { Winner = null, });
                         break;
+                }
+            }
+            else
+            {
+                if (message.Type == MoveMessageType.Undo)
+                {
+                    _boardHistory.Pop();
+                    _eventAggregator.Publish(new SychronizeBoardMessage() { Board = _board, });
                 }
             }
         }

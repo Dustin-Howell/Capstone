@@ -18,7 +18,7 @@ namespace XNAControlGame
     /// <summary>
     /// Any methods that are not overrides go here
     /// </summary>
-    public partial class Game1 : IDisposable, IHandle<MoveMessage>
+    public partial class Game1 : IDisposable, IHandle<MoveMessage>, IHandle<SychronizeBoardMessage>
     {
         private void ClearPossiblePegs()
         {
@@ -300,6 +300,19 @@ namespace XNAControlGame
 
                 _pegAnimating = true;
             }
+        }
+
+        public void Handle(SychronizeBoardMessage message)
+        {
+            //throw new NotImplementedException("Undo functionality does not exist in Game1.UserMethods: Handle(SychronizedBoardMessage)");
+            //remove all pegs
+
+            //remove all tiles
+
+            //add all pegs
+            LoadPegModels();
+
+            //add all tiles
         }
     }
 }
