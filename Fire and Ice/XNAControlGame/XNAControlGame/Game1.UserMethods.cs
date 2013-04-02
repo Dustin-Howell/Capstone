@@ -139,9 +139,9 @@ namespace XNAControlGame
 
         void FlipTile(Move move)
         {
-            Piece tile = BoardProvider.GetBoard().GetFlippedTileCopy(move);
+            Position position = CreeperBoard.GetFlippedPosition(move);
 
-            string name = tile.Position.Row.ToString() + 'x' + tile.Position.Column.ToString();
+            string name = position.Row.ToString() + 'x' + position.Column.ToString();
 
             Surface jumped = _scene.FindName<Surface>(name);
 
@@ -276,16 +276,15 @@ namespace XNAControlGame
         {
             if (message.Type == MoveMessageType.Response)
             {
-                // Refactor into static call?
-                if (BoardProvider.GetBoard().IsCaptureMove(message.Move))
+                if (CreeperBoard.IsCaptureMove(message.Move))
                 {
                     //capture
-                    _boardGroup.Remove(_pegs.First(x => x.Position == BoardProvider.GetBoard().GetCapturedPegPosition(message.Move)));
+                    _boardGroup.Remove(_pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(message.Move)));
                     _pegs
                         .First(x => x.Position == message.Move.StartPosition)
                         .MoveTo(message.Move.EndPosition, () => _pegAnimating = false);
                 }
-                else if (BoardProvider.GetBoard().IsFlipMove(message.Move))
+                else if (CreeperBoard.IsFlipMove(message.Move))
                 {
                     FlipTile(message.Move);
                     _pegs

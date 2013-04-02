@@ -14,6 +14,7 @@ namespace Creeper
 
     public class CreeperBoard
     {
+        #region Static
         public const int TileRows = 6;
         public const int PegRows = TileRows + 1;
 
@@ -25,6 +26,61 @@ namespace Creeper
         private static Position _NorthWhitePegCorner { get { return new Position(0, 0); } }
         private static Position _SouthBlackPegCorner { get { return new Position(PegRows - 1, 0); } }
         private static Position _SouthWhitePegCorner { get { return new Position(PegRows - 1, PegRows - 1); } }
+
+        public static bool IsValidPosition(Position position, PieceType pieceType)
+        {
+            int rows = (pieceType == PieceType.Tile) ? TileRows : PegRows;
+
+            return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
+        }
+
+        public static bool IsFlipMove(Move move)
+        {
+            return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1);
+        }
+
+        public static bool IsCaptureMove(Move move)
+        {
+            return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2);
+        }
+
+        public static Position GetFlippedPosition(Move move)
+        {
+            CardinalDirection direction = move.EndPosition.Row < move.StartPosition.Row ? (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Northwest : CardinalDirection.Northeast)
+                : (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Southwest : CardinalDirection.Southeast);
+
+            switch (direction)
+            {
+                case CardinalDirection.Northwest:
+                    return new Position(move.EndPosition.Row, move.EndPosition.Column);
+
+                case CardinalDirection.Northeast:
+                    return new Position(move.EndPosition.Row, move.EndPosition.Column - 1);
+
+                case CardinalDirection.Southwest:
+                    return new Position(move.EndPosition.Row - 1, move.EndPosition.Column);
+
+                case CardinalDirection.Southeast:
+                    return new Position(move.StartPosition.Row, move.StartPosition.Column);
+
+                default:
+                    throw new ArgumentException("No flipped tile for this move.");
+            }
+        }
+
+        public static Position GetCapturedPegPosition(Move move)
+        {
+            foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
+            {
+                if (move.EndPosition == move.StartPosition.AtDirection(direction).AtDirection(direction))
+                {
+                    return move.StartPosition.AtDirection(direction);
+                }
+            }
+
+            throw new ArgumentException("No captured peg for this move.");
+        }
+        #endregion
 
         public IEnumerable<Piece> Pegs { get; private set; }
         public IEnumerable<Piece> Tiles { get; private set; }
@@ -47,13 +103,6 @@ namespace Creeper
         {
             IEnumerable<Piece> pieces = (pieceType == PieceType.Peg) ? Pegs : Tiles;
             return pieces.Where(x => x.Color == color);
-        }
-
-        public bool IsValidPosition(Position position, PieceType pieceType)
-        {
-            int rows = (pieceType == PieceType.Tile) ? TileRows : PegRows;
-
-            return (position.Column >= 0 && position.Column < rows && position.Row >= 0 && position.Row < rows);
         }
 
         public void ResetCreeperBoard()
@@ -83,15 +132,6 @@ namespace Creeper
                     }
                 }
             }
-        }
-
-        private IEnumerable<Piece> GenerateEmptyPieces(int size)
-        {
-            IEnumerable<int> range = Enumerable.Range(0, size);
-            return range.Join(range,
-                row => 0,
-                column => 0,
-                (row, column) => new Piece(CreeperColor.Empty, new Position(row, column)));
         }
 
         public bool IsValidMove(Move move)
@@ -165,72 +205,6 @@ namespace Creeper
             return gameOver ? CreeperGameState.Complete : CreeperGameState.Unfinished;
         }
 
-        private Piece GetFlippedTile(Move move)
-        {
-            CardinalDirection direction = move.EndPosition.Row < move.StartPosition.Row ? (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Northwest : CardinalDirection.Northeast)
-                : (move.EndPosition.Column < move.StartPosition.Column ? CardinalDirection.Southwest : CardinalDirection.Southeast);
-
-            switch (direction)
-            {
-                case CardinalDirection.Northwest:
-                    return Tiles.At(new Position(move.EndPosition.Row, move.EndPosition.Column));
-
-                case CardinalDirection.Northeast:
-                    return Tiles.At(new Position(move.EndPosition.Row, move.EndPosition.Column - 1));
-
-                case CardinalDirection.Southwest:
-                    return Tiles.At(new Position(move.EndPosition.Row - 1, move.EndPosition.Column));
-
-                case CardinalDirection.Southeast:
-                    return Tiles.At(new Position(move.StartPosition.Row, move.StartPosition.Column));
-
-                default:
-                    throw new ArgumentException("No flipped tile for this move.");
-            }
-        }
-
-        public Piece GetFlippedTileCopy(Move move)
-        {
-            return new Piece(GetFlippedTile(move));
-        }
-
-        public bool IsFlipMove(Move move)
-        {
-            return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) * Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 1);
-        }
-
-        private void Flip(Move move)
-        {
-            Piece tile = GetFlippedTile(move);
-            if (!IsCorner(tile))
-            {
-                tile.Color = move.PlayerColor;
-            }
-        }
-
-        public bool IsCaptureMove(Move move)
-        {
-            return (Math.Abs(move.StartPosition.Row - move.EndPosition.Row) == 2) != (Math.Abs(move.StartPosition.Column - move.EndPosition.Column) == 2);
-        }
-
-        public Position GetCapturedPegPosition(Move move)
-        {            
-            foreach (CardinalDirection direction in new[] { CardinalDirection.North, CardinalDirection.South, CardinalDirection.East, CardinalDirection.West })
-            {
-                if (move.EndPosition == move.StartPosition.AtDirection(direction).AtDirection(direction))
-                {
-                    return move.StartPosition.AtDirection(direction);
-                }
-            }
-
-            throw new ArgumentException("No captured peg for this move.");
-        }
-
-        private void Capture(Move move)
-        {
-            Pegs.At(GetCapturedPegPosition(move)).Color = CreeperColor.Empty;
-        }
-
         public bool Move(Move move)
         {
             bool isValid = false;
@@ -273,6 +247,36 @@ namespace Creeper
 
             return isCorner;
         }
+
+        #region Private
+        private void Flip(Move move)
+        {
+            Piece tile = GetFlippedTile(move);
+            if (!IsCorner(tile))
+            {
+                tile.Color = move.PlayerColor;
+            }
+        }
+
+        private Piece GetFlippedTile(Move move)
+        {
+            return Tiles.At(GetFlippedPosition(move));
+        }
+
+        private void Capture(Move move)
+        {
+            Pegs.At(GetCapturedPegPosition(move)).Color = CreeperColor.Empty;
+        }
+
+        private IEnumerable<Piece> GenerateEmptyPieces(int size)
+        {
+            IEnumerable<int> range = Enumerable.Range(0, size);
+            return range.Join(range,
+                row => 0,
+                column => 0,
+                (row, column) => new Piece(CreeperColor.Empty, new Position(row, column)));
+        }
+        #endregion
 
         #region Debug Functions
         public void PrintToConsole(bool pause = false)

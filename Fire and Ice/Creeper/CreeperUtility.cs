@@ -88,7 +88,7 @@ namespace Creeper
             foreach (CardinalDirection direction in neighborlyDirections)
             {
                 Position destinationPosition = peg.Position.AtDirection(direction);
-                if (board.IsValidPosition(destinationPosition, PieceType.Peg)
+                if (CreeperBoard.IsValidPosition(destinationPosition, PieceType.Peg)
                     && pegs.At(destinationPosition).Color == CreeperColor.Empty)
                 {
                     yield return new Move(peg.Position, destinationPosition, peg.Color);
@@ -100,12 +100,12 @@ namespace Creeper
                         || direction == CardinalDirection.East
                         || direction == CardinalDirection.West
                         )
-                        && (board.IsValidPosition(destinationPosition, PieceType.Peg))
+                        && (CreeperBoard.IsValidPosition(destinationPosition, PieceType.Peg))
                         && (pegs.At(destinationPosition).Color == ((peg.Color == CreeperColor.Fire) ? CreeperColor.Ice : CreeperColor.Fire))
                     )
                 {
                     destinationPosition = destinationPosition.AtDirection(direction);
-                    if (board.IsValidPosition(destinationPosition, PieceType.Peg)
+                    if (CreeperBoard.IsValidPosition(destinationPosition, PieceType.Peg)
                         && pegs.At(destinationPosition).Color == CreeperColor.Empty)
                     {
                         yield return new Move(peg.Position, destinationPosition, peg.Color);
