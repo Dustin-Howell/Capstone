@@ -47,7 +47,7 @@ namespace XNAControlGame
                         _lastDownClickedModel = null;
 
                         if (clickedModel.PegType == CreeperPegType.Possible ||
-                            BoardProvider.GetCurrentTurn() == clickedModel.PegType.ToCreeperColor())
+                            BoardProvider.GetCurrentPlayer().Color == clickedModel.PegType.ToCreeperColor())
                         {
                             OnPegClicked(clickedModel);
                         }
@@ -185,7 +185,7 @@ namespace XNAControlGame
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Ray selectionRay = GetSelectionRay(mousePosition);
-            List<CreeperPeg> currentTeam = ((BoardProvider.GetCurrentTurn() == CreeperColor.Fire) ? _firePegs : _icePegs).ToList();
+            List<CreeperPeg> currentTeam = ((BoardProvider.GetCurrentPlayer().Color == CreeperColor.Fire) ? _firePegs : _icePegs).ToList();
             currentTeam.AddRange(_possiblePegs);
 
             CreeperPeg clickedModel = null;
@@ -274,20 +274,8 @@ namespace XNAControlGame
 
         public void Handle(MoveMessage message)
         {
-            if (message.Type == MoveMessageType.Request)
+            if (message.Type == MoveMessageType.Response)
             {
-                if (message.PlayerType == PlayerType.Human)
-                {
-                    _humanMovePending = true;
-                }
-                else
-                {
-                    _humanMovePending = false;
-                }
-            }
-            else
-            {
-                _humanMovePending = false;
                 // Refactor into static call?
                 if (BoardProvider.GetBoard().IsCaptureMove(message.Move))
                 {

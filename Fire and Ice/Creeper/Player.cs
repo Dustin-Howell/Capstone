@@ -18,5 +18,11 @@ namespace Creeper
             Type = playerType;
             Color = creeperColor;
         }
+
+        public Player(Player player)
+        {
+            Color = player.Color;
+            Type = player.Type;
+        }
     }
 }
