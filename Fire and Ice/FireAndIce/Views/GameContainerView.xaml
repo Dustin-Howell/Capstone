@@ -12,8 +12,7 @@
             <RowDefinition />
             <RowDefinition Height="100" />
         </Grid.RowDefinitions>
-        <Border Background="{StaticResource Primary1}"
-                Grid.Row="0"
+        <Border Grid.Row="0"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -37,13 +36,12 @@
             </DockPanel>
         </Border>
         
-        <n:GameHost Game="{Binding Game}"
-                    Grid.Row="0"
-                    Grid.Column="1"/>
+        <n:GameHost x:Name="GameHost" Game="{Binding Game}"
+                    Grid.RowSpan="2"
+                    Grid.ColumnSpan="2"/>
         
         <Border Grid.Row="1"
                 Grid.ColumnSpan="2"
-                Background="{StaticResource Complementary1}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch"
