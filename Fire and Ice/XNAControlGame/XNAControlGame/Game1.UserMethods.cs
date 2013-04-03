@@ -249,6 +249,7 @@ namespace XNAControlGame
         {
             //throw new NotImplementedException("Undo functionality does not exist in Game1.UserMethods: Handle(SychronizedBoardMessage)");
             //remove all pegs
+            _pegs.Apply(x => _boardGroup.Children.Remove(x)); 
 
             //remove all tiles
 
