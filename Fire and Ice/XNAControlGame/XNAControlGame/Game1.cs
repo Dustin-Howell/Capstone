@@ -171,9 +171,8 @@ namespace XNAControlGame
                 }
             });
 
-            _moveAnimationListener = new MoveAnimationListener(this);
+            Components.Add(_moveAnimationListener = new MoveAnimationListener(this));
             _eventAggregator.Subscribe(_moveAnimationListener);
-            Components.Add( _moveAnimationListener );
 
             base.Initialize();
         }
