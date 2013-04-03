@@ -728,7 +728,7 @@ namespace CreeperNetwork
          *********************************************************/
         private void broadcastPacket(byte[] packetIn)
         {
-           // sendPacket(packetIn, BROADCAST_IP);
+           sendPacket(packetIn, BROADCAST_IP);
         }
 
         //###############################################################

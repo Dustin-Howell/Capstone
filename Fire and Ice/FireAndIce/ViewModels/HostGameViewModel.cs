@@ -82,18 +82,21 @@ namespace FireAndIce.ViewModels
                     AppModel.Network.server_hostGame(GameName, PlayerName);
                 });
 
-            _connectServerWorker.DoWork += new DoWorkEventHandler((s, e) => AppModel.Network.server_startGame());
-
             _hostGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
+            {
+                if (e.Cancelled)
                 {
-                    if (e.Cancelled)
-                    {
-                        CanHostGame = true;
-                    }
-                    else
-                    {
-                        _connectServerWorker.RunWorkerAsync();
-                    }
+                    CanHostGame = true;
+                }
+                else
+                {
+                    _connectServerWorker.RunWorkerAsync();
+                }
+            });
+
+            _connectServerWorker.DoWork += new DoWorkEventHandler(
+                (s, e) => {
+                    AppModel.Network.server_startGame();
                 });
 
             _connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
