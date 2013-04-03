@@ -75,12 +75,16 @@
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\FindGameViewModel.cs" />
     <Compile Include="ViewModels\GameContainerViewModel.cs" />
+    <Compile Include="ViewModels\GameOverViewModel.cs" />
     <Compile Include="ViewModels\HostGameViewModel.cs" />
     <Compile Include="ViewModels\InstructionsViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
     <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
     <Compile Include="Views\AirspacePopup.cs" />
+    <Compile Include="Views\GameOverView.xaml.cs">
+      <DependentUpon>GameOverView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SlideOutControl.cs" />
     <Page Include="ColorSchemes\Default.xaml">
       <SubType>Designer</SubType>
@@ -119,6 +123,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GameContainerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GameOverView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
