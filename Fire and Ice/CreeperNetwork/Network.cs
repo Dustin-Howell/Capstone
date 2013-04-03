@@ -12,7 +12,7 @@ using CreeperMessages;
 
 namespace CreeperNetwork
 {
-    public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
+    public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
@@ -985,6 +985,15 @@ namespace CreeperNetwork
             if (message.Type == ChatMessageType.Send)
             {
                 chat(message.Message);
+            }
+        }
+
+        public void Handle(StartGameMessage message)
+        {
+            if (message.Settings.Player1Type == PlayerType.Network
+                || message.Settings.Player2Type == PlayerType.Network)
+            {
+                //we could handle the start of a networked game here, though I'm not sure what would go here (maybe a network settings object?)
             }
         }
     }

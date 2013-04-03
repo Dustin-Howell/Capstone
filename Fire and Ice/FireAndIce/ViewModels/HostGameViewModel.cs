@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using CreeperNetwork;
 using System.ComponentModel;
 using Creeper;
+using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
@@ -73,9 +74,6 @@ namespace FireAndIce.ViewModels
 
         public void HostGame()
         {
-            //TODO: Use with slim core
-            throw new NotImplementedException("Not configured for slim core");
-
             _hostGameWorker = new BackgroundWorker() { WorkerSupportsCancellation = true };
             _connectServerWorker = new BackgroundWorker();
 
@@ -99,13 +97,25 @@ namespace FireAndIce.ViewModels
                 });
 
             _connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
-                {
-                    AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Human, PlayerType.Network, AppModel.Network));
+            {
+                AppModel.EventAggregator.Publish(
+                    new StartGameMessage()
+                    {
+                        Settings = new GameSettings()
+                        {
+                            Board = new CreeperBoard(),
+                            Player1Type = PlayerType.Human,
+                            Player2Type = PlayerType.Network,
+                            StartingColor = CreeperColor.Fire,
+                            Network = AppModel.Network,
+                        }
+                    });                    
                 });
 
             CanHostGame = false;
 
             _hostGameWorker.RunWorkerAsync();
+
         }
     }
 }

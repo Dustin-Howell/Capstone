@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using System.ComponentModel;
 using CreeperNetwork;
 using Creeper;
+using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
@@ -155,16 +156,25 @@ namespace FireAndIce.ViewModels
 
         public void FindGameClick()
         {
-            //TODO: Use with slim core
-            throw new NotImplementedException("Not configured for slim core");
-
             AppModel.Network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
             BackgroundWorker startGameWorker = new BackgroundWorker();
 
             startGameWorker.DoWork += new DoWorkEventHandler((s, e) => AppModel.Network.client_ackStartGame());
-            startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) => AppModel.AppViewModel.ActivateItem(new GameContainerViewModel(PlayerType.Network, PlayerType.Human, AppModel.Network)));
-            startGameWorker.RunWorkerAsync();
-            
+            startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) 
+                => 
+                AppModel.EventAggregator.Publish(
+                    new StartGameMessage()
+                    {
+                        Settings = new GameSettings()
+                        {
+                            Board = new CreeperBoard(),
+                            Player1Type = PlayerType.Network,
+                            Player2Type = PlayerType.Human,
+                            StartingColor = CreeperColor.Fire,
+                            Network = AppModel.Network,
+                        }
+                    }));
+            startGameWorker.RunWorkerAsync();            
         }
     }
 }
