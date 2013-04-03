@@ -164,48 +164,14 @@ namespace XNAControlGame
             jumped.Material.Alpha = 1;
         }
 
-        /// <summary>
-        /// Returns a ray fired from the click point to test for intersection with a model.
-        /// </summary>
-        Ray GetSelectionRay(Vector2 mouseCoor)
-        {
-            Camera camera = _scene.FindName<FreeCamera>("MainCamera");
-            Vector3 nearsource = new Vector3(mouseCoor, 0f);
-            Vector3 farsource = new Vector3(mouseCoor, 1f);
-
-            Matrix world = Matrix.CreateTranslation(0, 0, 0);
-
-            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource, camera.Projection,
-                    camera.View, world);
-
-            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource, camera.Projection,
-                    camera.View, world);
-
-            // Create a ray from the near clip plane to the far clip plane.
-            Vector3 direction = farPoint - nearPoint;
-            direction.Normalize();
-            Ray pickRay = new Ray(nearPoint, direction);
-
-            return pickRay;
-        }
-
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
-            Ray selectionRay = GetSelectionRay(mousePosition);
-            List<CreeperPeg> currentTeam = ((BoardProvider.GetCurrentPlayer().Color == CreeperColor.Fire) ? _firePegs : _icePegs).ToList();
-            currentTeam.AddRange(_possiblePegs);
+            Camera camera = _scene.FindName<Camera>("MainCamera");
+            Ray selectionRay = GraphicsDevice.Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, camera.View, camera.Projection);
 
-            CreeperPeg clickedModel = null;
-
-            foreach (CreeperPeg peg in currentTeam)
-            {
-                if (selectionRay.Intersects(peg.BoundingBox).HasValue)
-                {
-                    clickedModel = peg;
-                    break;
-                }
-            }
-            return clickedModel;
+            List<CreeperPeg> found = new List<CreeperPeg>();
+            _scene.FindAll<CreeperPeg>(ref selectionRay, (x) => x.PegType.ToCreeperColor() == BoardProvider.GetCurrentPlayer().Color, found);
+            return found.FirstOrDefault();
         }
 
         private void LoadViewModels()
