@@ -170,7 +170,7 @@ namespace XNAControlGame
             Ray selectionRay = GraphicsDevice.Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, camera.View, camera.Projection);
 
             List<CreeperPeg> found = new List<CreeperPeg>();
-            _scene.FindAll<CreeperPeg>(ref selectionRay, (x) => x.PegType.ToCreeperColor() == BoardProvider.GetCurrentPlayer().Color, found);
+            _scene.FindAll<CreeperPeg>(ref selectionRay, (x) => x.PegType == CreeperPegType.Possible || x.PegType.ToCreeperColor() == BoardProvider.GetCurrentPlayer().Color, found);
             return found.FirstOrDefault();
         }
 
