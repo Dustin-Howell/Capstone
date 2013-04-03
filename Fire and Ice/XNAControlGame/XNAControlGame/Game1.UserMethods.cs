@@ -18,7 +18,7 @@ namespace XNAControlGame
     /// <summary>
     /// Any methods that are not overrides go here
     /// </summary>
-    public partial class Game1 : IDisposable, IHandle<MoveMessage>, IHandle<SychronizeBoardMessage>
+    public partial class Game1 : IDisposable, IHandle<SychronizeBoardMessage>
     {
         private void ClearPossiblePegs()
         {
@@ -277,36 +277,6 @@ namespace XNAControlGame
             //dispose stuff
 
             base.Dispose(disposing);
-        }
-
-        public void Handle(MoveMessage message)
-        {
-        //    if (message.Type == MoveMessageType.Response)
-        //    {
-        //        if (CreeperBoard.IsCaptureMove(message.Move))
-        //        {
-        //            //capture
-        //            _boardGroup.Remove(_pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(message.Move)));
-        //            _pegs
-        //                .First(x => x.Position == message.Move.StartPosition)
-        //                .MoveTo(message.Move.EndPosition, () => _moveAnimationListener.IsAnimating = false);
-        //        }
-        //        else if (CreeperBoard.IsFlipMove(message.Move))
-        //        {
-        //            FlipTile(message.Move);
-        //            _pegs
-        //                .First(x => x.Position == message.Move.StartPosition)
-        //                .MoveTo(message.Move.EndPosition, () => _moveAnimationListener.IsAnimating = false);
-        //        }
-        //        else
-        //        {
-        //            _pegs
-        //                .First(x => x.Position == message.Move.StartPosition)
-        //                .MoveTo(message.Move.EndPosition, () => _moveAnimationListener.IsAnimating = false);
-        //        }
-
-        //        _moveAnimationListener.IsAnimating = true;
-        //    }
         }
 
         public void Handle(SychronizeBoardMessage message)
