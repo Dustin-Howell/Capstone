@@ -69,7 +69,6 @@ namespace Creeper
 
             if (peg.Color == CreeperColor.Empty || peg.Color == CreeperColor.Invalid)
             {
-                yield return new Move();
                 yield break;
             }
 
