@@ -147,6 +147,7 @@ namespace XNAControlGame
             BoardProvider = boardProvider;
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
+            _eventAggregator.Subscribe(_moveAnimationListener = new MoveAnimationListener(this));
 
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -171,8 +172,7 @@ namespace XNAControlGame
                 }
             });
 
-            Components.Add(_moveAnimationListener = new MoveAnimationListener(this));
-            _eventAggregator.Subscribe(_moveAnimationListener);
+            Components.Add(_moveAnimationListener);
 
             base.Initialize();
         }

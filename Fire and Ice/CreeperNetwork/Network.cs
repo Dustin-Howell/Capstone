@@ -84,7 +84,6 @@ namespace CreeperNetwork
         public Network(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
-            _eventAggregator.Subscribe(this);
             if (++instanceCount > 1) throw new InvalidOperationException();
 
             _keepAliveWorker = new BackgroundWorker();

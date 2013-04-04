@@ -50,7 +50,6 @@ namespace CreeperAI
         {
             _MiniMaxDepth = (Difficulty == AIDifficulty.Hard) ? 5 : 3;
             _eventAggregator = eventAggregator;
-            _eventAggregator.Subscribe(this);
             _getMoveWorker = new BackgroundWorker();
             _getMoveWorker.DoWork += new DoWorkEventHandler(_getMoveWorker_DoWork);
             _getMoveWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_getMoveWorker_RunWorkerCompleted);
