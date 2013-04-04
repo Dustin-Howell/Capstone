@@ -50,6 +50,8 @@ namespace CreeperCore
             _player1 = new Player(settings.Player1Type, settings.StartingColor);
             _player2 = new Player(settings.Player2Type, settings.StartingColor.Opposite());
             _currentPlayer = _player1;
+            _boardHistory.Clear();
+            _boardHistory.Push(settings.Board);
 
             //if networked game
             if (_player1.Type == PlayerType.Network
