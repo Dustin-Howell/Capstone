@@ -21,8 +21,26 @@ namespace CreeperSound
         public void Handle(SoundPlayMessage message)
         {
             String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
-            SoundPlayer player = new SoundPlayer(path + "\\default.wav");
+            String soundFile = "\\";
+            SoundPlayer player;
 
+            switch (message.Type)
+            {
+                case SoundPlayType.Default:
+                    soundFile += "default.wav";
+                    break;
+                case SoundPlayType.MenuSlideOut:
+                    soundFile += "MenuSlideOut.wav";
+                    break;
+                case SoundPlayType.MenuButtonMouseOver:
+                    soundFile += "MenuButtonMouseOver.wav";
+                    break;
+                case SoundPlayType.MenuButtonClick:
+                    soundFile += "MenuButtonClick.wav";
+                    break;
+            }
+
+            player = new SoundPlayer(path + soundFile);
             player.Play();
         }
     }

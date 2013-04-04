@@ -60,12 +60,12 @@ namespace FireAndIce.ViewModels
                 WasClicked(this, null);
             }
 
-            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.Default) { Type = SoundPlayType.Default });
+            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuButtonClick));
         }
 
         public void MouseEnter()
         {
-            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.Default) { Type = SoundPlayType.Default });
+            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuButtonMouseOver));
         }
     }
 }

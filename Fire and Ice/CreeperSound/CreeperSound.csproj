@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SoundAssets\default.wav" />
+    <Content Include="SoundAssets\MenuButtonClick.wav" />
+    <Content Include="SoundAssets\MenuButtonMouseOver.wav" />
+    <Content Include="SoundAssets\MenuSlideOut.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
