@@ -6,6 +6,7 @@ using CreeperCore;
 using FireAndIce.ViewModels;
 using System.Windows;
 using CreeperNetwork;
+using CreeperSound;
 using Caliburn.Micro;
 using XNAControlGame;
 using Creeper;
@@ -18,6 +19,7 @@ namespace FireAndIce
         {
             _slimCore = SlimCore;
             _game = XNAGame;
+            _soundEngine = SoundEngine;
         }
 
         private static EventAggregator _eventAggregator;
@@ -33,6 +35,10 @@ namespace FireAndIce
 
         private static Network _network;
         public static Network Network { get { return _network = _network ?? new Network(EventAggregator); } }
+
+        private static SoundEngine _soundEngine;
+        public static SoundEngine SoundEngine { get { return _soundEngine = _soundEngine ?? new SoundEngine(EventAggregator); } }
+
 
         private static Game1 _game;
         public static Game1 XNAGame

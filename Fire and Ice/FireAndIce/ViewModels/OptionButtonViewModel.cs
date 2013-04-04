@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Caliburn.Micro;
+using CreeperSound;
+using CreeperMessages;
 using System.Windows;
 
 namespace FireAndIce.ViewModels
@@ -56,6 +58,8 @@ namespace FireAndIce.ViewModels
             {
                 WasClicked(this, null);
             }
+
+            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.Default) { Type = SoundPlayType.Default });
         }
     }
 }
