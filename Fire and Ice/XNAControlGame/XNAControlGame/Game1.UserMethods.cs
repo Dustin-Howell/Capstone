@@ -252,11 +252,42 @@ namespace XNAControlGame
             _pegs.Apply(x => _boardGroup.Children.Remove(x)); 
 
             //remove all tiles
+            ClearBoardTiles();
 
             //add all pegs
             LoadPegModels();
 
             //add all tiles
+            LoadBoardTiles();
+        }
+
+        private void LoadBoardTiles()
+        {
+            foreach (Piece piece in BoardProvider.GetBoard().Tiles)
+            {
+                Surface check =  _scene.FindName<Surface>(piece.Position.Row.ToString() + 'x' + piece.Position.Column.ToString());
+                if (piece.Color == CreeperColor.Fire)
+                {
+                    check.Material.Texture = _fireTile;
+                    check.Material.Alpha = 1;
+                }
+                else if (piece.Color == CreeperColor.Ice)
+                {
+                    check.Material.Texture = _iceTile;
+                    check.Material.Alpha = 1;
+                }
+            }
+        }
+
+        private void ClearBoardTiles()
+        {
+            for (int row = 0; row < 6; row++)
+            {
+                for (int col = 0; col < 6; col++)
+                {
+                    _scene.FindName<Surface>(row.ToString() + 'x' + col.ToString()).Material.Alpha = 0;
+                }
+            }
         }
     }
 }
