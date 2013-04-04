@@ -59,7 +59,10 @@ namespace XNAControlGame
 
         public void Handle(MoveMessage message)
         {
-            _movesToAnimate.Enqueue(message);
+            if (message.Type == MoveMessageType.Response)
+            {
+                _movesToAnimate.Enqueue(message);
+            }
         }
     }
 }
