@@ -41,7 +41,8 @@
             </DockPanel>
         </Border>
         
-        <n:GameHost x:Name="GameHost" Game="{Binding Game}"
+        <n:GameHost x:Name="GameHost"
+                    Game="{Binding Game}"
                     Grid.RowSpan="2"
                     Grid.ColumnSpan="2"/>
         
