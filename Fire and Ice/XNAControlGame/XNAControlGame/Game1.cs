@@ -125,21 +125,9 @@ namespace XNAControlGame
 
         public IProvideBoardState BoardProvider { get; private set; }
 
-        public Game1() : base()
+        public Game1() : this(new EventAggregator(), new DummyBoardProvider())
         {
-            _eventAggregator = new EventAggregator();
-            _eventAggregator.Subscribe(this);
-            BoardProvider = new DummyBoardProvider();
-
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
-
             Components.Add(new InputComponent(Window.Handle));
-
-            IsMouseVisible = true;
-
-            Content.RootDirectory = "Content";
         }
 
         public Game1(IEventAggregator eventAggregator, IProvideBoardState boardProvider) : base()
