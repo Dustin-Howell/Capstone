@@ -115,6 +115,7 @@ namespace CreeperCore
                     _boardHistory.Pop();
                     _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
                     _eventAggregator.Publish(new SychronizeBoardMessage() { Board = _board, });
+                    //publish new move request
                 }
             }
         }
