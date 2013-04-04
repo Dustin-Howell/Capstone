@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using CreeperSound;
 using CreeperMessages;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace FireAndIce.ViewModels
 {
@@ -30,7 +31,7 @@ namespace FireAndIce.ViewModels
                     NotifyOfPropertyChange(() => IsOptionChecked);
 
                     // TODO: Fix this nastiness...
-                    NotifyOfPropertyChange(() => CanClick);
+                    NotifyOfPropertyChange(() => CanDoSomething);
                 }
             }
         }
@@ -49,9 +50,9 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        public bool CanClick { get { return !IsOptionChecked; } }
+        public bool CanDoSomething { get { return !IsOptionChecked; } }
 
-        public void Click()
+        public void DoSomething()
         {
             ClickAction();
             if (WasClicked != null)
@@ -59,6 +60,11 @@ namespace FireAndIce.ViewModels
                 WasClicked(this, null);
             }
 
+            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.Default) { Type = SoundPlayType.Default });
+        }
+
+        public void MouseEnter()
+        {
             AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.Default) { Type = SoundPlayType.Default });
         }
     }
