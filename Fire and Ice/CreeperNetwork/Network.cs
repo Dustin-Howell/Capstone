@@ -708,6 +708,8 @@ namespace CreeperNetwork
                 data = null;
             }
 
+            //TODO: Fix null reference exception on exiting game
+            //client was null
             listenerAlt.Client.ReceiveTimeout = 0;
 
             return data;
