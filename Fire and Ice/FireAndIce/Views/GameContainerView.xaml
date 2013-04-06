@@ -55,7 +55,7 @@
                 Grid.ColumnSpan="2"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch"
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                         Visibility="{Binding IsNetworkGame, Converter={StaticResource BoolToVis}}">
                 <ItemsControl x:Name="ChatMessages" HorizontalAlignment="Stretch" Width="500" Height="70" BorderThickness="1" BorderBrush="White"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">

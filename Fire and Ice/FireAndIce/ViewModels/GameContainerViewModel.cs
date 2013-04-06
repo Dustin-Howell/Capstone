@@ -13,11 +13,10 @@ using XNAControlGame;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
+    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
-        private Network _network = null;
         private AIDifficulty _aiDifficulty = AIDifficulty.Hard;
         private GameSettings _settings;
 
@@ -38,9 +37,15 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        private bool _isNetworkGame;
         public bool IsNetworkGame
         {
-            get { return _network != null; }
+            get { return _isNetworkGame; }
+            set
+            {
+                _isNetworkGame = value;
+                NotifyOfPropertyChange(() => IsNetworkGame);
+            }
         }
 
         private String _gameOverText;
@@ -127,6 +132,15 @@ namespace FireAndIce.ViewModels
         public void Handle(ChatMessage message)
         {
             ChatMessages.Add(AppModel.Network.getOpponentName() + ": " + message.Message);
+        }
+
+        public void Handle(StartGameMessage message)
+        {
+            if (message.Settings.Player1Type == PlayerType.Network
+                || message.Settings.Player2Type == PlayerType.Network)
+            {
+                IsNetworkGame = true;
+            }
         }
     }
 }
