@@ -368,6 +368,8 @@ namespace FireAndIce.ViewModels
 
         public MainMenuViewModel()
         {
+            AppModel.ResetAppModel();
+
             Menus = new BindableCollection<ToggleButtonMenuViewModel>();
             MainMenu = new ToggleButtonMenuViewModel() {
                 Buttons  = new BindableCollection<OptionButtonViewModel> {

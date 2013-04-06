@@ -10,6 +10,7 @@ using CreeperSound;
 using Caliburn.Micro;
 using XNAControlGame;
 using Creeper;
+using CreeperMessages;
 
 namespace FireAndIce
 {
@@ -69,9 +70,20 @@ namespace FireAndIce
         private static ResourceDictionary _resources;
         public static ResourceDictionary Resources { get { return _resources = _resources ?? new ResourceDictionary() { Source = new Uri(@"..\Resources.xaml", UriKind.Relative) }; } }
 
-        public static void ResetEventAggregator()
+        public static void ResetAppModel()
         {
+            IEventAggregator oldAggregator = _eventAggregator;
             _eventAggregator = null;
+            _slimCore = null;
+            //_network = null;
+            _game = null;
+
+            //Create new instances of these things by accessing them
+            EventAggregator.GetHashCode();
+            SlimCore.GetHashCode();
+            XNAGame.GetHashCode();
+            
+            oldAggregator.Publish(new ResetMessage());
         }
     }
 }

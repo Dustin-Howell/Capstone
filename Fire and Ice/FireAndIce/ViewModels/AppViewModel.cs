@@ -10,7 +10,7 @@ using System.ComponentModel.Composition;
 namespace FireAndIce.ViewModels
 {
     [Export(typeof(AppViewModel))]
-    public class AppViewModel : Conductor<Screen>.Collection.OneActive, IHandle<StartGameMessage>, IHandle<GameOverMessage>
+    public class AppViewModel : Conductor<Screen>.Collection.OneActive, IHandle<StartGameMessage>, IHandle<GameOverMessage>, IHandle<ResetMessage>
     {
         private readonly IWindowManager _windowManager;
 
@@ -32,6 +32,11 @@ namespace FireAndIce.ViewModels
         public void Handle(GameOverMessage message)
         {
             _windowManager.ShowDialog(new GameOverViewModel(message.Winner));
+        }
+
+        public void Handle(ResetMessage message)
+        {
+            AppModel.EventAggregator.Subscribe(this);
         }
     }
 }
