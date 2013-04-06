@@ -968,7 +968,7 @@ namespace CreeperNetwork
         {
             if (message.Type == NetworkErrorType.Forfeit)
             {
-                Console.WriteLine("The game was forfeited -- you LOST. -_-");
+                Console.WriteLine("Game ended by forfeit.");
             }
             else if (message.Type == NetworkErrorType.Disconnect)
             {
