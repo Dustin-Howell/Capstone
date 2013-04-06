@@ -34,7 +34,7 @@ namespace FireAndIce.ViewModels
         }
     }
 
-    public class FindGameViewModel : PropertyChangedBase, IDisposable
+    public class FindGameViewModel : PropertyChangedBase, IDisposable, IHandle<StartGameMessage>
     {
         private List<NetworkGameInfo> _gamesData;
 
@@ -48,9 +48,11 @@ namespace FireAndIce.ViewModels
         {
             refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
             // Set the Interval to 5000 milliseconds.
-            refreshTimer.Interval = 2000;
+            refreshTimer.Interval = 5000;
             refreshTimer.Enabled = true;
-            refreshTimer.AutoReset = true;
+
+            //ideally true...
+            refreshTimer.AutoReset = false;
         }
 
         // Dynamically bindable properties.
@@ -194,6 +196,11 @@ namespace FireAndIce.ViewModels
         {
             refreshTimer.Enabled = false;
             refreshTimer.Close();
+        }
+
+        public void Handle(StartGameMessage message)
+        {
+            Dispose();
         }
     }
 }

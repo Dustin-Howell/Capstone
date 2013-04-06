@@ -16,7 +16,7 @@ namespace CreeperNetwork
     {
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
-        public const int SERVER_PORT = 1875;
+        public const int SERVER_PORT = 1877;
         public const int ALT_SERVER_PORT = 1876;
         public const int ACKNOWLEDGEMENT_TIMER = 100;
         public const int PACKET_LOSS = 1000;
