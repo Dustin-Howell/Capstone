@@ -10,7 +10,7 @@ using System.Media;
 namespace CreeperSound
 {
     
-    public class SoundEngine : IHandle<SoundPlayMessage>
+    public class SoundEngine : IHandle<SoundPlayMessage>, IHandle<ResetMessage>
     {
         public SoundEngine(IEventAggregator eventAggregator)
         {
@@ -42,6 +42,11 @@ namespace CreeperSound
 
             player = new SoundPlayer(path + soundFile);
             player.Play();
+        }
+
+        public void Handle(ResetMessage message)
+        {
+            message.EventAggregator.Subscribe(this);
         }
     }
 }

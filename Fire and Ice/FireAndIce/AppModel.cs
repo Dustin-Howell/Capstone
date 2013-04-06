@@ -82,8 +82,8 @@ namespace FireAndIce
             EventAggregator.GetHashCode();
             SlimCore.GetHashCode();
             XNAGame.GetHashCode();
-            
-            oldAggregator.Publish(new ResetMessage());
+
+            oldAggregator.Publish(new ResetMessage() { EventAggregator = _eventAggregator, });
         }
     }
 }
