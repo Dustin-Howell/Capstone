@@ -38,6 +38,11 @@
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Stretch"
                         Height="50" />
+                <Button x:Name="Forfeit" Content="Forfeit"
+                        DockPanel.Dock="Bottom"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Stretch"
+                        Height="50" />
             </DockPanel>
         </Border>
         

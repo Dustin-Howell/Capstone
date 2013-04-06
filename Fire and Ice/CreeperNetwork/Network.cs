@@ -393,6 +393,7 @@ namespace CreeperNetwork
                 sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty), 
                     MOVETYPE_FORFEIT), ipOfLastPacket.Address.ToString());
                 acknowledged = false;
+                Console.WriteLine("Forfeited game.");
             }
         }
 
@@ -962,6 +963,19 @@ namespace CreeperNetwork
         ******************************/
         public void Handle(NetworkErrorMessage message)
         {
+            if (message.Type == NetworkErrorType.Forfeit)
+            {
+                Console.WriteLine("The game was forfeited -- you win!");
+            }
+            else if (message.Type == NetworkErrorType.Disconnect)
+            {
+                Console.WriteLine("Player disconnected.");
+            }
+            else if (message.Type == NetworkErrorType.IllegalMove)
+            {
+                Console.WriteLine("Illegal move detected.");
+            }
+
             disconnect();
         }
 

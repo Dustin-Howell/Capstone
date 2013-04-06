@@ -121,6 +121,16 @@ namespace FireAndIce.ViewModels
             AppModel.AppViewModel.ActivateItem(new MainMenuViewModel());
         }
 
+        public void Forfeit()
+        {
+            //forfeit logic here
+
+            //TEMP -- THIS WILL CRASH...not sure what to put here at this point. 
+            _network.forfeit();
+            ReturnToMainMenu();
+            //END TEMP
+        }
+
         public void Handle(NetworkErrorMessage message)
         {
             GameOverText = String.Format("{0} Error!", "Network");
