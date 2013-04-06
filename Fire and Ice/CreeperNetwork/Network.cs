@@ -52,7 +52,7 @@ namespace CreeperNetwork
         private int homeSequenceNumber = 0;
         private int awaySequenceNumber = -1;
         private bool acknowledged = false;
-        private bool gameRunning = true;
+        private bool gameRunning = false;
         private string currentMessage = "";
         private bool newMessage = false;
         private Move currentMove;
@@ -340,8 +340,12 @@ namespace CreeperNetwork
          *********************************************************/
         public void disconnect()
         {
-            sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
-            gameRunning = false;
+            if (gameRunning)
+            {
+                sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+                gameRunning = false;
+            }
+            
             listener.Close();
             listenerAlt.Close();
             sender.Close();
