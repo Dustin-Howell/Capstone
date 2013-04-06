@@ -136,7 +136,7 @@ namespace FireAndIce.ViewModels
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => StartLocalHumanGame(), Title = "Human"},
-                    new OptionButtonViewModel {ClickAction = () => AddMenu(LocalAIGameMenu), Title = "AI"},
+                    new OptionButtonViewModel {ClickAction = () => AddMenu(LocalAIGameMenu), Title = "Computer"},
                 },
                     Background = AppModel.Resources["Primary5"] as SolidColorBrush,
                     Title = "Against?",
@@ -155,7 +155,7 @@ namespace FireAndIce.ViewModels
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => AddMenu(LocalEasyAIGameMenu), Title = "Novice"},
                     new OptionButtonViewModel {ClickAction = () => AddMenu(LocalHardAIGameMenu), Title = "Expert"},
-                    new OptionButtonViewModel {ClickAction = () => StartAIvAIGame(), Title = "AI vs. AI"},
+                    new OptionButtonViewModel {ClickAction = () => StartAIvAIGame(), Title = "AI vs. AI (Debug)"},
                 },
                     Background = AppModel.Resources["Primary1"] as SolidColorBrush,
                     Title = "Difficulty?",
