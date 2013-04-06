@@ -64,7 +64,6 @@
                          FontFamily="pack://application:,,,/Fonts/#Holy Empire"/>
             </Grid>
 
-            <Button x:Name="RefreshFoundGames">Refresh Games</Button>
             <Button x:Name="FindGameClick">Start</Button>
         </StackPanel>
     </Grid>

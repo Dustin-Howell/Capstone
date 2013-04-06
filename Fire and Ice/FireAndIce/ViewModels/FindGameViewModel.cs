@@ -48,7 +48,7 @@ namespace FireAndIce.ViewModels
         {
             refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
             // Set the Interval to 5000 milliseconds.
-            refreshTimer.Interval = 5000;
+            refreshTimer.Interval = 500;
             refreshTimer.Enabled = true;
             refreshTimer.AutoReset = true;
         }
@@ -132,11 +132,7 @@ namespace FireAndIce.ViewModels
             BackgroundWorker findGamesWorker = new BackgroundWorker();
 
             string[,] gamesFound = new string[256, 7];
-            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) =>
-                {
-                    gamesFound = AppModel.Network.client_findGames(PlayerName);
-                    Console.WriteLine("Finding games...");
-                });
+            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = AppModel.Network.client_findGames(PlayerName));
             
 
             findGamesWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
