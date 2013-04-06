@@ -7,6 +7,7 @@ using System.ComponentModel;
 using CreeperNetwork;
 using Creeper;
 using CreeperMessages;
+using System.Timers;
 
 namespace FireAndIce.ViewModels
 {
@@ -33,12 +34,24 @@ namespace FireAndIce.ViewModels
         }
     }
 
-    public class FindGameViewModel : PropertyChangedBase
+    public class FindGameViewModel : PropertyChangedBase, IDisposable
     {
         private List<NetworkGameInfo> _gamesData;
 
         // Title of menu screen
         public string Title { get; set; }
+
+        private Timer refreshTimer = new Timer();
+
+        //Constructor
+        public FindGameViewModel()
+        {
+            refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
+            // Set the Interval to 5000 milliseconds.
+            refreshTimer.Interval = 5000;
+            refreshTimer.Enabled = true;
+            refreshTimer.AutoReset = true;
+        }
 
         // Dynamically bindable properties.
 
@@ -119,7 +132,11 @@ namespace FireAndIce.ViewModels
             BackgroundWorker findGamesWorker = new BackgroundWorker();
 
             string[,] gamesFound = new string[256, 7];
-            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = AppModel.Network.client_findGames(PlayerName));
+            findGamesWorker.DoWork += new DoWorkEventHandler((s, e) =>
+                {
+                    gamesFound = AppModel.Network.client_findGames(PlayerName);
+                    Console.WriteLine("Finding games...");
+                });
             
 
             findGamesWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
@@ -175,6 +192,12 @@ namespace FireAndIce.ViewModels
                         }
                     }));
             startGameWorker.RunWorkerAsync();            
+        }
+
+        public void Dispose()
+        {
+            refreshTimer.Enabled = false;
+            refreshTimer.Close();
         }
     }
 }

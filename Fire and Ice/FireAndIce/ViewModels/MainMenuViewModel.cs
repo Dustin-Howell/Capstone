@@ -60,6 +60,9 @@ namespace FireAndIce.ViewModels
             }
             set
             {
+                if (_popup as IDisposable != null)
+                    ((IDisposable)_popup).Dispose();
+                
                 _popup = value;
                 NotifyOfPropertyChange(() => Popup);
             }
@@ -280,7 +283,7 @@ namespace FireAndIce.ViewModels
 
         private void HostNetworkGame()
         {
-             Popup = new HostGameViewModel() { Title = "What's your name?" };
+            Popup = new HostGameViewModel() { Title = "What's your name?" };
         }
 
         private void FindNetworkGame()
