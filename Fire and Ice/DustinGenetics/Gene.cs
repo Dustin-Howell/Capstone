@@ -57,12 +57,13 @@ namespace DustinGenetics
 
         public Gene CrossWith(Gene gene)
         {
+            Dictionary<String, double> newWeights = new Dictionary<string, double>();
             foreach (String key in _weights.Keys)
             {
-                _weights[key] = _Random.Next() % 2 == 0 ? gene._weights[key] : _weights[key];
+                newWeights[key] = _Random.Next() % 2 == 0 ? gene._weights[key] : _weights[key];
             }
 
-            return new Gene(_weights);
+            return new Gene(newWeights);
         }
 
         public Gene Mutate()
