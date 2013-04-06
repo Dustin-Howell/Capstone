@@ -27,16 +27,16 @@ namespace FireAndIce.ViewModels
         public void Handle(StartGameMessage message)
         {
             ActivateItem(new GameContainerViewModel(message.Settings));
+        }         
+
+        public void Handle(ResetMessage message)
+        {
+            message.EventAggregator.Subscribe(this);
         }
 
         public void Handle(GameOverMessage message)
         {
             _windowManager.ShowDialog(new GameOverViewModel(message.Winner));
-        }
-
-        public void Handle(ResetMessage message)
-        {
-            AppModel.EventAggregator.Subscribe(this);
         }
     }
 }
