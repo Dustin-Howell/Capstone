@@ -59,7 +59,7 @@
                         Visibility="{Binding IsNetworkGame, Converter={StaticResource BoolToVis}}">
                 <ItemsControl x:Name="ChatMessages" HorizontalAlignment="Stretch" Width="500" Height="70" BorderThickness="1" BorderBrush="White"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                    <TextBox x:Name="Message" Width="420"/>
+                    <TextBox x:Name="Message" Width="420" MaxLength="255"/>
                     <Button x:Name="SendMessage" Width="70" Content="Send" IsDefault="True" />
                 </StackPanel>
             </StackPanel>
