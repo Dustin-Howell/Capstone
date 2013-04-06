@@ -14,10 +14,6 @@ namespace CreeperCore
         private Player _player1;
         private Player _player2;
 
-        //Keeping a reference to the network so the GC doesn't eat it.
-        private IHandle _networkReference;
-        private IHandle _aiReference;
-
         //State Variables
         private CreeperBoard _board
         {
@@ -57,16 +53,14 @@ namespace CreeperCore
             if (_player1.Type == PlayerType.Network
                 || _player2.Type == PlayerType.Network)
             {
-                _networkReference = settings.Network;
-                _eventAggregator.Subscribe(_networkReference);
+                _eventAggregator.Subscribe(settings.Network);
             }
 
             //else if ai game
             if (_player1.Type == PlayerType.AI
                 || _player2.Type == PlayerType.AI)
             {
-                _aiReference = settings.AI;
-                _eventAggregator.Subscribe(_aiReference);
+                _eventAggregator.Subscribe(settings.AI);
             }
 
             RequestMove();

@@ -83,11 +83,13 @@ namespace FireAndIce
 
             _network = null;
             _game = null;
+            _AI = null;
 
             //Create new instances of these things by accessing them
             EventAggregator.GetHashCode();
             SlimCore.GetHashCode();
             XNAGame.GetHashCode();
+            AI.GetHashCode();
 
             oldAggregator.Publish(new ResetMessage() { EventAggregator = _eventAggregator, });
         }
