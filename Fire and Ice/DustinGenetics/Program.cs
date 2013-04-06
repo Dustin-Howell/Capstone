@@ -7,18 +7,19 @@ namespace DustinGenetics
 {
     class Program
     {
-        public static string LogPath = @"C:\Users\Dustin\Dropbox\Capstone\Genetics\bestGenes.log";
+        public static string LogPath = @"C:\Users\dhowell2\Dropbox\Capstone\Genetics\bestGenes.log";
         
         public static Gene SeedGene = new Gene(new Dictionary<String, double>()
         {
-            {"TerritorialWeight", 19},
-            {"MaterialWeight", 75},
-            {"PositionalWeight", -71},
-            {"ShortestDistanceWeight", 86},
+            {"TerritorialWeight", 84},
+            {"MaterialWeight", 51},
+            {"PositionalWeight", 12},
+            {"ShortestDistanceWeight", 40},
+            {"PathPowerWeight", 1.72285873988776},
             {"VictoryWeight", 104},
         });
 
-        public static bool UseSeed = false;
+        public static bool UseSeed = true;
 
         static void Main(string[] args)
         {

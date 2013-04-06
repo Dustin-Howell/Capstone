@@ -68,19 +68,20 @@ namespace DustinGenetics
 
         public Gene Mutate()
         {
+            Dictionary<String, double> newWeights = new Dictionary<string, double>();
             foreach (String key in _weights.Keys)
             {
                 if (key.Contains("Power"))
                 {
-                    _weights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.NextDouble() / 5 : _weights[key] - _Random.NextDouble() / 5;
+                    newWeights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.NextDouble() / 5 : _weights[key] - _Random.NextDouble() / 5;
                 }
                 else
                 {
-                    _weights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.Next() % 5 : _weights[key] - _Random.Next() % 5;
+                    newWeights[key] = _Random.Next() % 2 == 0 ? _weights[key] + _Random.Next() % 5 : _weights[key] - _Random.Next() % 5;
                 }
             }
 
-            return new Gene(_weights);
+            return new Gene(newWeights);
         }
 
         public bool Defeats(Gene opponent)

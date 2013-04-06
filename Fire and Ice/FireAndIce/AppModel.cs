@@ -61,7 +61,7 @@ namespace FireAndIce
                     MaterialWeight = 84d,
                     PositionalWeight = 2d,
                     ShortestDistanceWeight = 43d,
-                    VictoryValue = 100000,
+                    VictoryWeight = 100000,
                     Difficulty = AIDifficulty.Hard,
                 };
             }
