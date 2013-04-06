@@ -36,7 +36,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(ResetMessage message)
         {
-            AppModel.EventAggregator.Subscribe(this);
+            message.EventAggregator.Subscribe(this);
         }
     }
 }

@@ -122,7 +122,15 @@ namespace CreeperCore
 
         public void Handle(StartGameMessage message)
         {
-            StartGame(message.Settings);
+            if (message.Settings.Player1Type == PlayerType.Tutorial
+                || message.Settings.Player2Type == PlayerType.Tutorial)
+            {
+                _eventAggregator.Unsubscribe(this);
+            }
+            else
+            {
+                StartGame(message.Settings);
+            }
         }
 
         public void Handle(NetworkErrorMessage message)

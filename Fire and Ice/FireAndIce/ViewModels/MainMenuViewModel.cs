@@ -297,13 +297,26 @@ namespace FireAndIce.ViewModels
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { Popup = new InstructionsViewModel() {Title = "Instructions"}; }, Title = "Instructions"},
                     new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Practice"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Guided Tour"},
+                    new OptionButtonViewModel {ClickAction = () => { StartTutorial(); }, Title = "Tutorial"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Help",
                     MenuParent = MainMenu,
                 };
             }
+        }
+
+        private void StartTutorial()
+        {
+            AppModel.EventAggregator.Publish(new StartGameMessage()
+            {
+                Settings = new GameSettings()
+                {
+                    Player1Type = PlayerType.Tutorial,
+                    Player2Type = PlayerType.Tutorial,
+                    Board = new CreeperBoard(),
+                }
+            });
         }
 
         private ToggleButtonMenuViewModel _highScoresMenu;

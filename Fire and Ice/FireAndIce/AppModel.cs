@@ -30,6 +30,12 @@ namespace FireAndIce
         public static SlimCore SlimCore
         {
             get { return _slimCore = _slimCore ?? new SlimCore(EventAggregator); }
+        }
+
+        private static CreeperTeacher _teacherCore;
+        public static CreeperTeacher TeacherCore
+        {
+            get { return _teacherCore = _teacherCore ?? new CreeperTeacher(EventAggregator); }
         }        
 
         public static AppViewModel AppViewModel { get; set; }
@@ -75,12 +81,13 @@ namespace FireAndIce
             IEventAggregator oldAggregator = _eventAggregator;
             _eventAggregator = null;
             _slimCore = null;
-            //_network = null;
+            _network = null;
             _game = null;
 
             //Create new instances of these things by accessing them
             EventAggregator.GetHashCode();
             SlimCore.GetHashCode();
+            TeacherCore.GetHashCode();
             XNAGame.GetHashCode();
 
             oldAggregator.Publish(new ResetMessage() { EventAggregator = _eventAggregator, });

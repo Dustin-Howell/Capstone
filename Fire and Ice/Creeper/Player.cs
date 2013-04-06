@@ -6,7 +6,7 @@ using Creeper;
 
 namespace Creeper
 {
-    public enum PlayerType { AI, Human, Network }
+    public enum PlayerType { AI, Human, Network, Tutorial }
 
     public class Player
     {

@@ -41,7 +41,7 @@ namespace CreeperSound
             }
 
             player = new SoundPlayer(path + soundFile);
-            player.Play();
+            //player.Play();
         }
 
         public void Handle(ResetMessage message)
