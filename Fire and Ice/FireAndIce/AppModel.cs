@@ -75,7 +75,13 @@ namespace FireAndIce
             IEventAggregator oldAggregator = _eventAggregator;
             _eventAggregator = null;
             _slimCore = null;
-            //_network = null;
+
+            if (_network != null)
+            {
+                _network.Dispose();
+            }
+
+            _network = null;
             _game = null;
 
             //Create new instances of these things by accessing them
