@@ -12,6 +12,7 @@ using Creeper;
 using System.Windows.Controls;
 using CreeperAI;
 using CreeperMessages;
+using CreeperSound;
 
 namespace FireAndIce.ViewModels
 {
@@ -333,14 +334,28 @@ namespace FireAndIce.ViewModels
                 return _settingsMenu = _settingsMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Toggle"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Sprocket"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Switch"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Pixel"},
+                    new OptionButtonViewModel {ClickAction = () => { AddMenu(SoundMenu); }, Title = "Sound"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
-                    Title = "Settings",
+                    Title = "Option",
                     MenuParent = MainMenu,
+                };
+            }
+        }
+
+        private ToggleButtonMenuViewModel _soundMenu;
+        private ToggleButtonMenuViewModel SoundMenu
+        {
+            get
+            {
+                return _soundMenu = _soundMenu ?? new ToggleButtonMenuViewModel
+                {
+                    Buttons = new BindableCollection<OptionButtonViewModel> {
+                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(false), Title = "On",},
+                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(true), Title = "Off",},
+
+                    },
+                    Background = AppModel.Resources["Primary5"] as SolidColorBrush,
                 };
             }
         }
@@ -376,7 +391,7 @@ namespace FireAndIce.ViewModels
                     new OptionButtonViewModel { ClickAction = () => AddMenu(NewGameMenu), Title = "New Game" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(HelpMenu), Title = "Help" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(HighScoresMenu), Title = "High Scores" },
-                    new OptionButtonViewModel { ClickAction = () => AddMenu(SettingsMenu), Title = "Settings" },
+                    new OptionButtonViewModel { ClickAction = () => AddMenu(SettingsMenu), Title = "Option" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(CreditsMenu), Title = "Credits" },
                     new OptionButtonViewModel { ClickAction = () => AppModel.AppViewModel.TryClose(), Title = "Exit" },
                 },

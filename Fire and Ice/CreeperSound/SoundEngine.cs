@@ -12,36 +12,45 @@ namespace CreeperSound
     
     public class SoundEngine : IHandle<SoundPlayMessage>, IHandle<ResetMessage>
     {
+        private static bool _muted = false;
+        public static void ToggleSound(bool muted)
+        {
+            _muted = muted;
+        }
+
         public SoundEngine(IEventAggregator eventAggregator)
         {
             eventAggregator.Subscribe(this);
         }
 
-
         public void Handle(SoundPlayMessage message)
         {
-            String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
-            String soundFile = "\\";
-            SoundPlayer player;
-
-            switch (message.Type)
+            if (!_muted)
             {
-                case SoundPlayType.Default:
-                    soundFile += "default.wav";
-                    break;
-                case SoundPlayType.MenuSlideOut:
-                    soundFile += "MenuSlideOut.wav";
-                    break;
-                case SoundPlayType.MenuButtonMouseOver:
-                    soundFile += "MenuButtonMouseOver.wav";
-                    break;
-                case SoundPlayType.MenuButtonClick:
-                    soundFile += "MenuButtonClick.wav";
-                    break;
-            }
+                String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
+                String soundFile = "\\";
+                SoundPlayer player;
 
-            player = new SoundPlayer(path + soundFile);
-            player.Play();
+                switch (message.Type)
+                {
+                    case SoundPlayType.Default:
+                        soundFile += "default.wav";
+                        break;
+                    case SoundPlayType.MenuSlideOut:
+                        soundFile += "MenuSlideOut.wav";
+                        break;
+                    case SoundPlayType.MenuButtonMouseOver:
+                        soundFile += "MenuButtonMouseOver.wav";
+                        break;
+                    case SoundPlayType.MenuButtonClick:
+                        soundFile += "MenuButtonClick.wav";
+                        break;
+                }
+
+                player = new SoundPlayer(path + soundFile);
+
+                player.Play();
+            }
         }
 
         public void Handle(ResetMessage message)
