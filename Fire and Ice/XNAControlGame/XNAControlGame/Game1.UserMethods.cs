@@ -215,26 +215,39 @@ namespace XNAControlGame
         {
             foreach (Piece piece in BoardProvider.GetBoard().Pegs.Where(x => x.Color.IsTeamColor()))
             {
-                CreeperPeg peg;
+                //CreeperPeg peg;
+                //if (piece.Color == CreeperColor.Fire)
+                //{
+                //    peg = new CreeperPeg(_fireModel)
+                //    {
+                //        PegType = CreeperPegType.Fire,
+                //        Position = piece.Position,
+                //    };
+
+                //}
+                //else
+                //{
+                //    peg = new CreeperPeg(_iceModel)
+                //    {
+                //        PegType = CreeperPegType.Ice,
+                //        Position = piece.Position,
+                //    };
+                //}
+                
+                //_boardGroup.Add(peg);
                 if (piece.Color == CreeperColor.Fire)
                 {
-                    peg = new CreeperPeg(_fireModel)
-                    {
-                        PegType = CreeperPegType.Fire,
-                        Position = piece.Position,
-                    };
-
+                    actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    actualFireXamlFileStuff.Add(new PeonController());
+                    _scene.Add(actualFireXamlFileStuff);
                 }
                 else
                 {
-                    peg = new CreeperPeg(_iceModel)
-                    {
-                        PegType = CreeperPegType.Ice,
-                        Position = piece.Position,
-                    };
+                    actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    actualIceXamlFileStuff.Add(new PeonController());
+                    _scene.Add(actualIceXamlFileStuff);
                 }
-                
-                _boardGroup.Add(peg);
+
             }
         }
 

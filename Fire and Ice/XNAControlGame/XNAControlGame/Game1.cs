@@ -54,6 +54,9 @@ namespace XNAControlGame
         private SpriteFont _spriteFont;
         private Texture2D _fireTexture;
 
+        Group actualFireXamlFileStuff;
+        Group actualIceXamlFileStuff;
+
         private Scene _scene;
         private Group _boardGroup;
         private CreeperBoardViewModel _creeperBoardViewModel;
@@ -183,13 +186,12 @@ namespace XNAControlGame
 
             _fireModel1 = new Instance { Template = "FirePeg" };
 
-            Group actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
-            actualFireXamlFileStuff.Add(new PeonController());
-            _scene.Add(actualFireXamlFileStuff);
+            actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+            
 
             _iceModel1 = new Instance { Template = "IcePeg" };
 
-            Group actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
+            actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
 
             _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
 
