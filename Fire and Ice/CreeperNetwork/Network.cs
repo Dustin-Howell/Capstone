@@ -70,6 +70,8 @@ namespace CreeperNetwork
         private string hostGameName = "";
         private string hostPlayerName = "";
         private string clientPlayerName = "";
+        private string selfPlayerName = "";
+        private string opponentPlayerName = "";
          
         //Class variables
         private static int instanceCount = 0;
@@ -175,6 +177,8 @@ namespace CreeperNetwork
         public void server_startGame()
         {
             sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
+            selfPlayerName = hostPlayerName;
+            opponentPlayerName = clientPlayerName;
 
             Console.WriteLine("GAME STARTED.");
             gameRunning = true;
@@ -292,6 +296,9 @@ namespace CreeperNetwork
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
             Boolean commandReceived = false;
+
+            selfPlayerName = hostPlayerName;
+            opponentPlayerName = clientPlayerName;
 
             while (!commandReceived)
             {
@@ -956,6 +963,16 @@ namespace CreeperNetwork
             // Console.WriteLine("ACK.");
 
             return packet;
+        }
+
+        public string getSelfName()
+        {
+            return selfPlayerName;
+        }
+
+        public string getOpponentName()
+        {
+            return opponentPlayerName;
         }
 
         /******************************

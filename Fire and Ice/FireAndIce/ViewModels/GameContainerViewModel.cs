@@ -79,7 +79,7 @@ namespace FireAndIce.ViewModels
             get { return _message; }
             set
             {
-                _message = value;
+                _message = AppModel.Network.getSelfName() + ": " + value;
                 NotifyOfPropertyChange(() => Message);
             }
         }
@@ -126,7 +126,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(ChatMessage message)
         {
-            ChatMessages.Add(message.Message);
+            ChatMessages.Add(AppModel.Network.getOpponentName() + ": " + message.Message);
         }
     }
 }
