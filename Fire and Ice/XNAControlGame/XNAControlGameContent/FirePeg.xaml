@@ -1,4 +1,4 @@
-﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
+﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml">
 
     <Model Name="FirePeg" Source="{ContentReference ./Model/Peon/Peon}" Transform.Scale=".25, .25, .25" >
         <ModelAttachment>
@@ -15,6 +15,5 @@
             </ParticleEffect>
 
         </ModelAttachment>
-    </Model>
-
+    </Model>    
 </Group>

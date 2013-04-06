@@ -1,4 +1,4 @@
-﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
+﻿<Scene xmlns="http://schemas.microsoft.com/nine/2011/xaml">
 
     <SkyBox Texture="{ContentReference Textures/SkyCubeMap}"/>
     <FreeCamera Name="MainCamera" Position="53.23169, 346.7901, 201.4682" Angle="1.315531,0.781909,0" />
@@ -17,7 +17,6 @@
         </Surface>
     </Group>
     
-
     <!--<Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
              PatchSegmentCount="2" Transform.Position="0, 0, 0" VertexType="VertexPositionNormalTangentBinormalTexture">
@@ -49,7 +48,4 @@
             </MaterialGroup>
         </Surface>
     </Group>-->
-
-    <!--<Instance Name="peg" Template="Peon" Transform.Position="0,0,0" Transform.Scale=" .075, .075, .075"/>-->
-
 </Scene>

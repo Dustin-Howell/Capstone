@@ -7,6 +7,8 @@ using Creeper;
 using Nine;
 using Microsoft.Xna.Framework;
 using Nine.Animations;
+using Microsoft.Xna.Framework.Input;
+
 
 namespace XNAControlGame
 {
@@ -76,8 +78,31 @@ namespace XNAControlGame
                     }
                 );
 
+            //var keyboardState = Keyboard.GetState();
+
+            //if (keyboardState.IsKeyDown(Keys.Space))
+            //{
+            //    var Ani = Animations;
+            //    if (Ani["Chop"].State != Nine.Animations.AnimationState.Playing)
+            //        Ani.Play("Chop");
+            //}
+            //else
+            //{
+            //    var Ani = Animations;
+            //    if (Ani["Run"].State != Nine.Animations.AnimationState.Playing)
+            //        Ani.Play("Run");
+            //}
+
+            //var run = new BoneAnimationController(Source.GetAnimation("Run"));
+            //var blended = new BoneAnimation(Skeleton);
+            //blended.Controllers.Add(run);
+
+            //blended.KeyController = run;
+            //blended.IsSychronized = true;
+            
             Animations.Add(Resources.AnimationNames.PegMove, moveAnimation);
             Animations.Play(Resources.AnimationNames.PegMove);
+            //Animations.Play(blended);
         }
     }
 }

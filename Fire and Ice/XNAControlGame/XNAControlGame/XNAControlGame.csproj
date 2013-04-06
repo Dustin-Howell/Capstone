@@ -138,10 +138,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttackAndRun.cs" />
     <Compile Include="MoveAnimationListener.cs" />
     <Compile Include="Game1.Main.cs">
       <SubType>Code</SubType>
-	  <DependentUpon>Game1.cs</DependentUpon>
+      <DependentUpon>Game1.cs</DependentUpon>
     </Compile>
     <Compile Include="Game1.UserMethods.cs">
       <DependentUpon>Game1.cs</DependentUpon>
@@ -150,6 +151,7 @@
     <Compile Include="CreeperBoardViewModel.cs" />
     <Compile Include="CreeperPeg.cs" />
     <Compile Include="MoveRequestMessage.cs" />
+    <Compile Include="PeonController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Resources.cs" />

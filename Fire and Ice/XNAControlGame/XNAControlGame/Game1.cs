@@ -11,6 +11,7 @@ using Nine.Graphics.Materials;
 using Nine.Graphics.ParticleEffects;
 using Nine.Graphics.PostEffects;
 using Nine.Graphics.Primitives;
+using Nine.Animations;
 using Nine.Physics;
 using Creeper;
 using System.Collections.Generic;
@@ -85,6 +86,7 @@ namespace XNAControlGame
                 if (_selectedPeg != value)
                 {
                     _selectedPeg = value;
+                    
                     UpdatePossibleMoves(value);
                 }
             }
@@ -175,11 +177,20 @@ namespace XNAControlGame
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
-
             _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
 
+            Microsoft.Xna.Framework.Graphics.Model testmodel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/Peon/Peon");
+
             _fireModel1 = new Instance { Template = "FirePeg" };
+
+            Group actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+            actualFireXamlFileStuff.Add(new PeonController());
+            _scene.Add(actualFireXamlFileStuff);
+
             _iceModel1 = new Instance { Template = "IcePeg" };
+
+            Group actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
+
             _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
 
             //Loads in the fire particle effect
@@ -201,7 +212,7 @@ namespace XNAControlGame
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _scene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-
+            
 #if DEBUG
             _pointerPosition = new Vector2(Mouse.GetState().X - 16, Mouse.GetState().Y - 16);
 #endif
