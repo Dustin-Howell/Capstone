@@ -123,12 +123,8 @@ namespace FireAndIce.ViewModels
 
         public void Forfeit()
         {
-            //forfeit logic here
-
-            //TEMP -- THIS WILL CRASH...not sure what to put here at this point. 
-            _network.forfeit();
+            AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
             ReturnToMainMenu();
-            //END TEMP
         }
 
         public void Handle(NetworkErrorMessage message)

@@ -127,7 +127,8 @@ namespace CreeperCore
 
         public void Handle(NetworkErrorMessage message)
         {
-            throw new NotImplementedException("Core did not handle network error.");
+            //throw new NotImplementedException("Core did not handle network error.");
+            Console.WriteLine("The core did not do anything with the network error message.");
         }
         #endregion
 

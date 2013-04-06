@@ -494,8 +494,11 @@ namespace CreeperNetwork
                         else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
                         {
                             if (packet[6] == MOVETYPE_FORFEIT)
+                            {
                                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
-                            //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
+                                //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
+                                Console.WriteLine("THEY forfeited. YOU win.");
+                            }
                             else if (packet[6] == MOVETYPE_ILLEGAL)
                                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.IllegalMove));
                             //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
@@ -965,7 +968,7 @@ namespace CreeperNetwork
         {
             if (message.Type == NetworkErrorType.Forfeit)
             {
-                Console.WriteLine("The game was forfeited -- you win!");
+                Console.WriteLine("The game was forfeited -- you LOST. -_-");
             }
             else if (message.Type == NetworkErrorType.Disconnect)
             {
