@@ -107,9 +107,9 @@ namespace CreeperAI
             {
                 // Evaluate child node
                 board.PushMove(moves[i]);
-                double score = board.IsCaptureMove(moves[i]) ?
-                    -ScoreNegaMaterialExchange(board, _turnColor.Opposite())
-                    : -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
+                double score =
+                    //board.IsCaptureMove(moves[i]) ? -ScoreNegaMaterialExchange(board, _turnColor.Opposite()) : 
+                    -ScoreAlphaBetaNegaMaxMove(board, _turnColor.Opposite(), -beta, -alpha, _MiniMaxDepth - 1);
                 board.PopMove();
 
                 if (score > alpha)
