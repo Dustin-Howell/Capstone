@@ -48,7 +48,7 @@ namespace FireAndIce.ViewModels
         {
             refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
             // Set the Interval to 5000 milliseconds.
-            refreshTimer.Interval = 500;
+            refreshTimer.Interval = 2000;
             refreshTimer.Enabled = true;
             refreshTimer.AutoReset = true;
         }
