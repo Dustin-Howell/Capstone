@@ -375,15 +375,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FireEffect.xaml">
-      <Name>FireEffect</Name>
-      <Importer>XamlImporter</Importer>
-      <Processor>DefaultContentProcessor</Processor>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>

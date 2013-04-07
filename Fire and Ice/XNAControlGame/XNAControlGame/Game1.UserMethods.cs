@@ -29,6 +29,8 @@ namespace XNAControlGame
         }
 
         private CreeperPeg _lastDownClickedModel;
+
+        //CUT OUT???
         void DetectFullClick(Nine.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -60,11 +62,11 @@ namespace XNAControlGame
             }
         }
 
+        //CUT OUT???
         private void OnPegClicked(CreeperPeg clickedModel)
         {
             if (_SelectedPeg == clickedModel)
             {
-                _selectedPeg.Attachments.Remove(_fireEffect);
                 _SelectedPeg = null;
             }
 
@@ -75,12 +77,7 @@ namespace XNAControlGame
                     case CreeperPegType.Fire:
                         goto case CreeperPegType.Ice;
                     case CreeperPegType.Ice:
-                        if (_SelectedPeg != null )
-                        {
-                            _SelectedPeg.Attachments.Remove(_fireEffect);
-                        }
                         _SelectedPeg = clickedModel;
-                        _SelectedPeg.Attachments.Add(_fireEffect);
                         break;
                     case CreeperPegType.Possible:
                         _eventAggregator.Publish(
@@ -94,12 +91,12 @@ namespace XNAControlGame
                                 )
                             }
                          );
-                        _SelectedPeg.Attachments.Remove(_fireEffect);
                         _SelectedPeg = null;
                         break;
                 }
             }
         }
+
 
         private void UpdatePossibleMoves(CreeperPeg clickedPeg)
         {
@@ -164,6 +161,7 @@ namespace XNAControlGame
             jumped.Material.Alpha = 1;
         }
 
+        //CUT OUT???
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Camera camera = _scene.FindName<Camera>("MainCamera");
@@ -215,40 +213,29 @@ namespace XNAControlGame
         {
             foreach (Piece piece in BoardProvider.GetBoard().Pegs.Where(x => x.Color.IsTeamColor()))
             {
-                //CreeperPeg peg;
-                //if (piece.Color == CreeperColor.Fire)
-                //{
-                //    peg = new CreeperPeg(_fireModel)
-                //    {
-                //        PegType = CreeperPegType.Fire,
-                //        Position = piece.Position,
-                //    };
-
-                //}
-                //else
-                //{
-                //    peg = new CreeperPeg(_iceModel)
-                //    {
-                //        PegType = CreeperPegType.Ice,
-                //        Position = piece.Position,
-                //    };
-                //}
-                
-                //_boardGroup.Add(peg);
                 if (piece.Color == CreeperColor.Fire)
                 {
                     actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     actualFireXamlFileStuff.Add(new PeonController());
+                    actualFireXamlFileStuff.Transform = TransfomationMatrix(piece);
                     _scene.Add(actualFireXamlFileStuff);
                 }
                 else
                 {
                     actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     actualIceXamlFileStuff.Add(new PeonController());
+                    actualIceXamlFileStuff.Transform = TransfomationMatrix(piece);
                     _scene.Add(actualIceXamlFileStuff);
                 }
 
             }
+        }
+
+
+        private Matrix TransfomationMatrix(Piece piece)
+        {
+            return Matrix.CreateRotationY(MathHelper.ToRadians(135))
+                        * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
         }
 
         protected override void Dispose(bool disposing)

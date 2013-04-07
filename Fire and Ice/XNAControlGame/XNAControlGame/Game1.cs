@@ -62,13 +62,9 @@ namespace XNAControlGame
         private CreeperBoardViewModel _creeperBoardViewModel;
 
         private Microsoft.Xna.Framework.Graphics.Model _possibleModel;
-        private Microsoft.Xna.Framework.Graphics.Model _fireModel;
-        private Microsoft.Xna.Framework.Graphics.Model _iceModel;
         private Nine.Graphics.Model _possibleModel1;
         private Instance _fireModel1;
         private Instance _iceModel1;
-
-        static public ParticleEffect _fireEffect;
 
         private Texture2D _fireTile;
         private Texture2D _iceTile;
@@ -178,8 +174,8 @@ namespace XNAControlGame
 
             _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
 
-            _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
-            _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
+            //_fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
+            //_iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
             _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
 
             Microsoft.Xna.Framework.Graphics.Model testmodel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/Peon/Peon");
@@ -194,9 +190,6 @@ namespace XNAControlGame
             actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
 
             _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
-
-            //Loads in the fire particle effect
-            _fireEffect = Content.Load<Nine.Graphics.ParticleEffects.ParticleEffect>("FireEffect");
 
             _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
             _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
@@ -214,6 +207,7 @@ namespace XNAControlGame
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _scene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            
             
 #if DEBUG
             _pointerPosition = new Vector2(Mouse.GetState().X - 16, Mouse.GetState().Y - 16);
