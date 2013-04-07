@@ -64,10 +64,8 @@ namespace XNAControlGame
         {
             if (_SelectedPeg == clickedModel)
             {
-                _selectedPeg.Attachments.Remove(_fireEffect);
                 _SelectedPeg = null;
             }
-
             else
             {
                 switch (clickedModel.PegType)
@@ -121,47 +119,58 @@ namespace XNAControlGame
             }
         }
 
-        //void FlipTile(Move move)
-        //{
-        //    Piece tile = BoardProvider.GetBoard().GetFlippedTileCopy(move);
-
-        //    int boardWidth = _boardTexture.Width;
-        //    int squareWidth = (boardWidth / CreeperBoard.TileRows);
-
-        //    Color[] texturePixels = new Color[boardWidth * boardWidth];
-        //    Color color = (move.PlayerColor.IsBlack()) ? new Color(0, 0, 255) : new Color(255, 0, 0);
-
-        //    _boardTexture.GetData(texturePixels);
-
-        //    for (int i = tile.Position.Row * squareWidth; i < tile.Position.Row * squareWidth + squareWidth; i++)
-        //    {
-        //        for (int j = tile.Position.Column * squareWidth; j < tile.Position.Column * squareWidth + squareWidth; j++)
-        //        {
-        //            texturePixels[i * boardWidth + j] = color;
-        //        }
-        //    }
-
-        //    _boardTexture.SetData(texturePixels);
-        //}
-
+        Random _randomizeTiles = new Random();
+        double FULL_CIRCLE_RADS = Math.PI / 2;
         public void FlipTile(Move move)
         {
+            Surface s = _scene.Find<Surface>();
+            Texture2D _dynamicMaskTexture = move.PlayerColor.IsFire() ? _fireTileMask : _iceTileMask;
+
+            Rectangle surfaceRect = new Rectangle(0, 0, (int)s.Size.X, (int)s.Size.Z);
             Position position = CreeperBoard.GetFlippedPosition(move);
 
-            string name = position.Row.ToString() + 'x' + position.Column.ToString();
+            List<Texture2D> texList = MaterialPaintGroup.GetMaskTextures((MaterialGroup)s.Material).OfType<Texture2D>().ToList();
 
-            Surface jumped = _scene.FindName<Surface>(name);
+            float scale = (texList[0].Width / 6f) / _dynamicMaskTexture.Width;
+            Vector2 texPosition = new Vector2(position.Column * (texList[0].Width / 6f), position.Row * (texList[0].Width / 6f)) + new Vector2(_dynamicMaskTexture.Width * scale / 2);
 
-            if (move.PlayerColor == CreeperColor.Fire)
-            {
-                jumped.Material.Texture = _fireTile;
-            }
-            else if (move.PlayerColor == CreeperColor.Ice)
-            {
-                jumped.Material.Texture = _iceTile;
-            }
+            RenderTarget2D target = new RenderTarget2D(GraphicsDevice, texList[0].Width, texList[0].Height);
 
-            jumped.Material.Alpha = 1;
+            GraphicsDevice.SetRenderTarget(target);
+
+            SpriteBatch sb = new SpriteBatch(GraphicsDevice);
+
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
+
+            GraphicsDevice.Clear(Color.Transparent);
+
+            sb.Draw(texList[0],
+                Vector2.Zero,
+                null,
+                Color.White,
+                0f,
+                Vector2.Zero,
+                1f,
+                SpriteEffects.None,
+                1f);
+
+            sb.Draw(_dynamicMaskTexture,
+                texPosition,
+                null,
+                Color.White,
+                0f,
+                new Vector2(_dynamicMaskTexture.Width) / 2,
+                scale,
+                SpriteEffects.None,
+                1f);
+
+            sb.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+
+            texList[0] = target;
+
+            MaterialPaintGroup.SetMaskTextures((MaterialGroup)s.Material, texList);
         }
 
         private CreeperPeg GetClickedModel(Vector2 mousePosition)

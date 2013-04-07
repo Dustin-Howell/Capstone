@@ -68,6 +68,8 @@ namespace XNAControlGame
 
         private Texture2D _fireTile;
         private Texture2D _iceTile;
+        Texture2D _fireTileMask;
+        Texture2D _iceTileMask;
 
         private Input _input;
 
@@ -137,8 +139,11 @@ namespace XNAControlGame
             _eventAggregator.Subscribe(this);
             _eventAggregator.Subscribe(_moveAnimationListener = new MoveAnimationListener(this));
 
+            Components.Add(_moveAnimationListener);
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            IsFixedTimeStep = true;
         }
 
         protected override void Initialize()
@@ -160,13 +165,14 @@ namespace XNAControlGame
                 }
             });
 
-            Components.Add(_moveAnimationListener);
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            _fireTileMask = Content.Load<Texture2D>("Assets/greenOctoMask");//"Surface/Masks/2-green");
+            _iceTileMask = Content.Load<Texture2D>("Assets/blueOctoMask");//"Surface/Masks/2-blue");
+
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
 
             _fireTexture = Content.Load<Texture2D>("Textures/fire");
@@ -183,7 +189,7 @@ namespace XNAControlGame
             _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
 
             //Loads in the fire particle effect
-            _fireEffect = Content.Load<Nine.Graphics.ParticleEffects.ParticleEffect>("FireEffect");
+            //_fireEffect = Content.Load<Nine.Graphics.ParticleEffects.ParticleEffect>("FireEffect");
 
             _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
             _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
