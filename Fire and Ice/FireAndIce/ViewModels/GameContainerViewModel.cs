@@ -13,7 +13,7 @@ using XNAControlGame;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>
+    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
     {
         private PlayerType _player1Type;
         private PlayerType _player2Type;
@@ -94,6 +94,13 @@ namespace FireAndIce.ViewModels
         public GameContainerViewModel(GameSettings settings)
         {
             _settings = settings;
+            AppModel.EventAggregator.Subscribe(this);
+
+            if (_settings.Player1Type == PlayerType.Network
+                || _settings.Player2Type == PlayerType.Network)
+            {
+                IsNetworkGame = true;
+            }
         }
 
         public void ReturnToMainMenu()
