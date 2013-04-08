@@ -140,14 +140,5 @@ namespace FireAndIce.ViewModels
         {
             ChatMessages.Add(AppModel.Network.getOpponentName() + ": " + message.Message);
         }
-
-        public void Handle(StartGameMessage message)
-        {
-            if (message.Settings.Player1Type == PlayerType.Network
-                || message.Settings.Player2Type == PlayerType.Network)
-            {
-                IsNetworkGame = true;
-            }
-        }
     }
 }
