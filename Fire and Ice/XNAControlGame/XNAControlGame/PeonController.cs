@@ -26,6 +26,11 @@ namespace XNAControlGame
                 if (IsPegClicked(Parent, new Vector2(mouseState.X, mouseState.Y)))
                 {
                     //Load Possible Pegs
+                    var Ani = Parent.Find<Nine.Graphics.Model>().Animations;
+                    if (Ani["Die"].State != Nine.Animations.AnimationState.Playing)
+                    {
+                        Ani.Play("Die");
+                    }
                     //follow logic from Game1
                 }
 

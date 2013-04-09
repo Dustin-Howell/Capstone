@@ -20,18 +20,19 @@ namespace XNAControlGame
     /// </summary>
     public partial class Game1 : IDisposable, IHandle<SychronizeBoardMessage>
     {
+       
         private void ClearPossiblePegs()
         {
-            foreach (CreeperPeg pegToRemove in _possiblePegs)
+            foreach (Nine.Graphics.Model pegToRemove in _possiblePegs)
             {
                 _boardGroup.Remove(pegToRemove);
             }
         }
 
-        private CreeperPeg _lastDownClickedModel;
+        //private CreeperPeg _lastDownClickedModel;
 
         //CUT OUT???
-        void DetectFullClick(Nine.MouseEventArgs e)
+        /*void DetectFullClick(Nine.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -95,10 +96,10 @@ namespace XNAControlGame
                         break;
                 }
             }
-        }
+        }*/
 
 
-        private void UpdatePossibleMoves(CreeperPeg clickedPeg)
+        public void UpdatePossibleMoves(CreeperPeg clickedPeg)
         {
             ClearPossiblePegs();
 
@@ -162,7 +163,7 @@ namespace XNAControlGame
         }
 
         //CUT OUT???
-        private CreeperPeg GetClickedModel(Vector2 mousePosition)
+        /*private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Camera camera = _scene.FindName<Camera>("MainCamera");
             Ray selectionRay = GraphicsDevice.Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, camera.View, camera.Projection);
@@ -170,7 +171,7 @@ namespace XNAControlGame
             List<CreeperPeg> found = new List<CreeperPeg>();
             _scene.FindAll<CreeperPeg>(ref selectionRay, (x) => x.PegType == CreeperPegType.Possible || x.PegType.ToCreeperColor() == BoardProvider.GetCurrentPlayer().Color, found);
             return found.FirstOrDefault();
-        }
+        }*/
 
         private void LoadViewModels()
         {

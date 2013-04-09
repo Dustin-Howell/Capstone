@@ -1,5 +1,5 @@
 ﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
-    <Model Name="IcePeg" Source="{ContentReference ./Model/IcePeon/Peon}" Transform.Scale=".25, .25, .25"  />
-
+    <Model Name="IcePeg" Source="{ContentReference ./Model/IcePeon/Peon}" Transform.Scale=".25, .25, .25" Material="{SkinnedMaterial }"  />
+    
 </Group>

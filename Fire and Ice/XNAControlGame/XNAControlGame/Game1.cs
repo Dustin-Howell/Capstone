@@ -69,27 +69,27 @@ namespace XNAControlGame
         private Texture2D _fireTile;
         private Texture2D _iceTile;
 
-        private Input _input;
+        //private Input _input;
 
         private MoveAnimationListener _moveAnimationListener;
 
-        private CreeperPeg _selectedPeg;
-        private CreeperPeg _SelectedPeg
-        {
-            get
-            {
-                return _selectedPeg;
-            }
-            set
-            {
-                if (_selectedPeg != value)
-                {
-                    _selectedPeg = value;
+        //private CreeperPeg _selectedPeg;
+        //private CreeperPeg _SelectedPeg
+        //{
+        //    get
+        //    {
+        //        return _selectedPeg;
+        //    }
+        //    set
+        //    {
+        //        if (_selectedPeg != value)
+        //        {
+        //            _selectedPeg = value;
                     
-                    UpdatePossibleMoves(value);
-                }
-            }
-        }
+        //            UpdatePossibleMoves(value);
+        //        }
+        //    }
+        //}
 
         private IEnumerable<CreeperPeg> _pegs
         {
@@ -144,22 +144,23 @@ namespace XNAControlGame
 
         protected override void Initialize()
         {
-            _input = new Input();
+            
+            //_input = new Input();
 
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
-            {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
-            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
-            {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
+            //_input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
+            //{
+            //    if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
+            //    {
+            //        DetectFullClick(e);
+            //    }
+            //});
+            //_input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
+            //{
+            //    if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
+            //    {
+            //        DetectFullClick(e);
+            //    }
+            //});
 
             Components.Add(_moveAnimationListener);
 
@@ -168,6 +169,7 @@ namespace XNAControlGame
 
         protected override void LoadContent()
         {
+
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
 
             _fireTexture = Content.Load<Texture2D>("Textures/fire");
@@ -221,6 +223,7 @@ namespace XNAControlGame
 #endif
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             _scene.Draw(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
             //_scene.DrawDiagnostics(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
