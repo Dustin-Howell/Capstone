@@ -174,8 +174,6 @@ namespace XNAControlGame
 
             _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
 
-            //_fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
-            //_iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
             _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
 
             Microsoft.Xna.Framework.Graphics.Model testmodel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>("Model/Peon/Peon");

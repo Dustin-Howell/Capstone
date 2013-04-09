@@ -228,7 +228,7 @@ namespace XNAControlGame
                     _scene.Add(actualIceXamlFileStuff);
                 }
 
-            }
+            } 
         }
 
 
