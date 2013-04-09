@@ -183,7 +183,6 @@ namespace XNAControlGame
             _fireModel1 = new Instance { Template = "FirePeg" };
 
             actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
-            
 
             _iceModel1 = new Instance { Template = "IcePeg" };
 
