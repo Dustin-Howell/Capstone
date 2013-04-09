@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using CreeperAI;
 using CreeperMessages;
 using CreeperSound;
+using System.Diagnostics;
 
 namespace FireAndIce.ViewModels
 {
@@ -300,8 +301,8 @@ namespace FireAndIce.ViewModels
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { Popup = new InstructionsViewModel() {Title = "Instructions"}; }, Title = "Instructions"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Practice"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Guided Tour"},
+                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Practice"},
+                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Guided Tour"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Help",
@@ -318,9 +319,9 @@ namespace FireAndIce.ViewModels
                 return _highScoresMenu = _highScoresMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Super"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Good"},
-                    new OptionButtonViewModel {ClickAction = () => { throw new NotImplementedException(); }, Title = "Meh"},
+                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Super"},
+                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Good"},
+                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Meh"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "High Scores",
