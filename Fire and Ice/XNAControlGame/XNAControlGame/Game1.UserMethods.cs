@@ -123,22 +123,56 @@ namespace XNAControlGame
 
         public void FlipTile(Move move)
         {
+            Texture2D maskTexture = move.PlayerColor.IsFire() ? _fireTileMask : _iceTileMask;
+
+            Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
             Position position = CreeperBoard.GetFlippedPosition(move);
 
-            string name = position.Row.ToString() + 'x' + position.Column.ToString();
+            List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures((MaterialGroup)_boardSurface.Material).OfType<Texture2D>().ToList();
+            Texture2D oldMask = maskTextures.First();
 
-            Surface jumped = _scene.FindName<Surface>(name);
+            float scale = (oldMask.Width / 6f) / maskTexture.Width;
 
-            if (move.PlayerColor == CreeperColor.Fire)
-            {
-                jumped.Material.Texture = _fireTile;
-            }
-            else if (move.PlayerColor == CreeperColor.Ice)
-            {
-                jumped.Material.Texture = _iceTile;
-            }
+            Vector2 texPosition = new Vector2(position.Column * (oldMask.Width / 6f), position.Row * (oldMask.Width / 6f))
+                + new Vector2(maskTexture.Width * scale / 2);
 
-            jumped.Material.Alpha = 1;
+            RenderTarget2D target = new RenderTarget2D(GraphicsDevice, oldMask.Width, oldMask.Height);
+
+            GraphicsDevice.SetRenderTarget(target);
+
+            SpriteBatch sb = new SpriteBatch(GraphicsDevice);
+
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
+
+            GraphicsDevice.Clear(Color.Transparent);
+
+            sb.Draw(oldMask,
+                Vector2.Zero,
+                null,
+                Color.White,
+                0f,
+                Vector2.Zero,
+                1f,
+                SpriteEffects.None,
+                1f);
+
+            sb.Draw(maskTexture,
+                texPosition,
+                null,
+                Color.White,
+                0f,
+                new Vector2(maskTexture.Width) / 2,
+                scale,
+                SpriteEffects.None,
+                1f);
+
+            sb.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+
+            maskTextures[0] = target;
+
+            MaterialPaintGroup.SetMaskTextures((MaterialGroup)_boardSurface.Material, maskTextures);
         }
 
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
@@ -157,35 +191,16 @@ namespace XNAControlGame
         }
 
         Texture2D _boardTexture;
+        Surface _boardSurface;
 
         private void OnContentLoaded()
         {
             _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
-            _boardTexture = _boardGroup.Find<Surface>().Material.Texture;
+            _boardSurface = _boardGroup.Find<Surface>();
+            _boardTexture = _boardSurface.Material.Texture;
 
             LoadViewModels();
             LoadPegModels();
-            //Prototype Specific Methods
-            LoadTileSurfaces();
-        }
-        
-        //For hacked in tiles for our testing prototype. Nothing more.
-        private void LoadTileSurfaces()
-        {
-            int boardWidth = _boardGroup.FindName<Nine.Graphics.Surface>("boardSurface").Heightmap.Width;
-            int squareWidth = (boardWidth / CreeperBoard.TileRows);
-
-            for (int row = 0; row < 6; row++)
-            {
-                for (int col = 0; col < 6; col++)
-                {
-                    Surface tile = new Surface(GraphicsDevice, 2, 108 / CreeperBoard.TileRows, 108 / CreeperBoard.TileRows, 2);
-                    tile.Transform = Matrix.CreateTranslation(0 + col * squareWidth * 2, 2, 0 + row * squareWidth * 2);
-                    tile.Name = row.ToString() + 'x' + col.ToString();
-                    tile.Material = new BasicMaterial(GraphicsDevice) { Alpha = 0, IsTransparent = true, };
-                    _scene.Add(tile);
-                }
-            }
         }
 
         private void LoadPegModels()
@@ -226,45 +241,10 @@ namespace XNAControlGame
         {
             //throw new NotImplementedException("Undo functionality does not exist in Game1.UserMethods: Handle(SychronizedBoardMessage)");
             //remove all pegs
-            _pegs.Apply(x => _boardGroup.Children.Remove(x)); 
-
-            //remove all tiles
-            ClearBoardTiles();
+            _pegs.Apply(x => _boardGroup.Children.Remove(x));
 
             //add all pegs
             LoadPegModels();
-
-            //add all tiles
-            LoadBoardTiles();
-        }
-
-        private void LoadBoardTiles()
-        {
-            foreach (Piece piece in BoardProvider.GetBoard().Tiles)
-            {
-                Surface check =  _scene.FindName<Surface>(piece.Position.Row.ToString() + 'x' + piece.Position.Column.ToString());
-                if (piece.Color == CreeperColor.Fire)
-                {
-                    check.Material.Texture = _fireTile;
-                    check.Material.Alpha = 1;
-                }
-                else if (piece.Color == CreeperColor.Ice)
-                {
-                    check.Material.Texture = _iceTile;
-                    check.Material.Alpha = 1;
-                }
-            }
-        }
-
-        private void ClearBoardTiles()
-        {
-            for (int row = 0; row < 6; row++)
-            {
-                for (int col = 0; col < 6; col++)
-                {
-                    _scene.FindName<Surface>(row.ToString() + 'x' + col.ToString()).Material.Alpha = 0;
-                }
-            }
         }
     }
 }

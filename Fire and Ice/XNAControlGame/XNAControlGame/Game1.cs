@@ -63,11 +63,10 @@ namespace XNAControlGame
         private Nine.Graphics.Model _possibleModel1;
         private Instance _fireModel1;
         private Instance _iceModel1;
+        private Texture2D _fireTileMask;
+        private Texture2D _iceTileMask;
 
         static public ParticleEffect _fireEffect;
-
-        private Texture2D _fireTile;
-        private Texture2D _iceTile;
 
         private Input _input;
 
@@ -167,6 +166,9 @@ namespace XNAControlGame
 
         protected override void LoadContent()
         {
+            _fireTileMask = Content.Load<Texture2D>("Assets/greenOctoMask");
+            _iceTileMask = Content.Load<Texture2D>("Assets/blueOctoMask");
+
             _spriteFont = Content.Load<SpriteFont>("defaultFont");
 
             _fireTexture = Content.Load<Texture2D>("Textures/fire");
@@ -184,9 +186,6 @@ namespace XNAControlGame
 
             //Loads in the fire particle effect
             _fireEffect = Content.Load<Nine.Graphics.ParticleEffects.ParticleEffect>("FireEffect");
-
-            _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
-            _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
 
 #if DEBUG
             _pointer = Content.Load<Texture2D>("Textures/flake");
