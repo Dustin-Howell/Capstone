@@ -41,7 +41,7 @@ namespace XNAControlGame
         Group BoardGroup { get; }
         IEnumerable<CreeperPeg> Pegs { get; }
 
-        void FlipTile(Move move);
+        void FlipTile(Position position, CreeperColor color);
     }
 
     /// <summary>

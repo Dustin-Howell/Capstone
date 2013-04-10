@@ -41,7 +41,7 @@ namespace XNAControlGame
                     }
                     else if (CreeperBoard.IsFlipMove(message.Move))
                     {
-                        _boardLayout.FlipTile(message.Move);
+                        _boardLayout.FlipTile(CreeperBoard.GetFlippedPosition(message.Move), message.Move.PlayerColor);
                         _boardLayout.Pegs
                             .First(x => x.Position == message.Move.StartPosition)
                             .MoveTo(message.Move.EndPosition, () => IsAnimating = false);

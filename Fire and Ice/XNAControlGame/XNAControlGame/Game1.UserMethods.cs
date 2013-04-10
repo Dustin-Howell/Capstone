@@ -121,12 +121,11 @@ namespace XNAControlGame
             }
         }
 
-        public void FlipTile(Move move)
+        public void FlipTile(Position position, CreeperColor color)
         {
-            Texture2D maskTexture = move.PlayerColor.IsFire() ? _fireTileMask : _iceTileMask;
+            Texture2D maskTexture = color.IsFire() ? _fireTileMask : _iceTileMask;
 
             Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
-            Position position = CreeperBoard.GetFlippedPosition(move);
 
             List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures((MaterialGroup)_boardSurface.Material).OfType<Texture2D>().ToList();
             Texture2D oldMask = maskTextures.First();
