@@ -121,29 +121,6 @@ namespace XNAControlGame
             }
         }
 
-        //void FlipTile(Move move)
-        //{
-        //    Piece tile = BoardProvider.GetBoard().GetFlippedTileCopy(move);
-
-        //    int boardWidth = _boardTexture.Width;
-        //    int squareWidth = (boardWidth / CreeperBoard.TileRows);
-
-        //    Color[] texturePixels = new Color[boardWidth * boardWidth];
-        //    Color color = (move.PlayerColor.IsBlack()) ? new Color(0, 0, 255) : new Color(255, 0, 0);
-
-        //    _boardTexture.GetData(texturePixels);
-
-        //    for (int i = tile.Position.Row * squareWidth; i < tile.Position.Row * squareWidth + squareWidth; i++)
-        //    {
-        //        for (int j = tile.Position.Column * squareWidth; j < tile.Position.Column * squareWidth + squareWidth; j++)
-        //        {
-        //            texturePixels[i * boardWidth + j] = color;
-        //        }
-        //    }
-
-        //    _boardTexture.SetData(texturePixels);
-        //}
-
         public void FlipTile(Move move)
         {
             Position position = CreeperBoard.GetFlippedPosition(move);

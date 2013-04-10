@@ -372,6 +372,40 @@
       <Generator>MSBuild:Compile</Generator>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Surface\Masks\initialMask.png">
+      <Name>initialMask</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>HeightmapProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Surface\SunTexture\SunTexture_400x400_COLOR.png">
+      <Name>SunTexture_400x400_COLOR</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Surface\SunTexture\SunTexture_400x400_DISP.png">
+      <Name>SunTexture_400x400_DISP</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Surface\SunTexture\SunTexture_400x400_NRM.png">
+      <Name>SunTexture_400x400_NRM</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>NormalTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Surface\SunTexture\SunTexture_400x400_OCC.png">
+      <Name>SunTexture_400x400_OCC</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Surface\SunTexture\SunTexture_400x400_SPEC.png">
+      <Name>SunTexture_400x400_SPEC</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

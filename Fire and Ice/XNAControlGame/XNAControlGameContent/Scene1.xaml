@@ -5,51 +5,68 @@
 
     <AmbientLight Transform.Position="54,10,54" AmbientLightColor="1,1,1" Enabled="True" />
     <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Direction="1,-1, 1" />
-    
-    <!--<BasicMaterial Texture="{ContentReference Assets/Fire Tile Cropped}" Name="PlanetMaterial" />
-    <Model Source="{ContentReference Model/sphere}" Name="thePlanet" Transform.Position="0,0,0" Transform.Scale="5,5,5"
-           Material="PlanetMaterial"/>-->
-    
-    <Group Name="GameBoard">
-        <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
-             PatchSegmentCount="2" Transform.Position="0,0,0" >
-            <BasicMaterial Texture="{ContentReference Assets/PrototypeMainBoard}" IsTransparent="True" />
-        </Surface>
-    </Group>
-    
 
-    <!--<Group Name="GameBoard">
-        <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
-             PatchSegmentCount="2" Transform.Position="0, 0, 0" VertexType="VertexPositionNormalTangentBinormalTexture">
+    <Group Name="GameBoard">
+        <Surface Name="boardSurface"
+                 Heightmap.Width="108"
+                 Heightmap.Height="108"
+                 Heightmap.Step="2"
+                 PatchSegmentCount="4"
+                 VertexType="VertexPositionNormalTangentBinormalTexture">
             <MaterialGroup MaterialPaintGroup.MaskTextureScale="1, 1">
 
                 <MaterialPaintGroup.MaskTextures>
                     <Splatter>
+                        <ExternalReference>Surface/Masks/initialMask.png</ExternalReference>
                         <ExternalReference />
-                        <ExternalReference>Surface/Masks/2.bmp</ExternalReference>
-                        <ExternalReference>Surface/Masks/3.bmp</ExternalReference>
+                        <ExternalReference />
                     </Splatter>
                 </MaterialPaintGroup.MaskTextures>
 
+                <!--The splatter alpha masks are combined into the four channels of a single texture.
+                They are mapped as follows:-->
+
+                <!--Red-->
                 <MaterialPaintGroup>
                     <DiffuseMaterialPart Texture="{ContentReference Assets/MainBoard}" />
                 </MaterialPaintGroup>
 
+                <!--Green-->
                 <MaterialPaintGroup>
-                    <DiffuseMaterialPart Texture="{ContentReference Textures/Lava}" />
-                    <SpecularMaterialPart SpecularColor="0.5, 0.5, 0.5" SpecularPower="64" />
+                    <CustomMaterialPart xml:space="preserve">
+                    <![CDATA[
+                        float Time:TIME;
+                        void PixelShader(inout float2 uv:TEXCOORD0)
+                        {
+                            uv += frac(Time * 0.05f);
+                        }
+                    ]]>
+                </CustomMaterialPart>
+                    <DiffuseMaterialPart Texture="{ContentReference Surface/SunTexture/SunTexture_400x400_COLOR}" />
+                    <NormalMapMaterialPart NormalMap="{ContentReference Surface/SunTexture/SunTexture_400x400_NRM}" />
+                    <!--<SpecularMaterialPart SpecularColor="0.5, 0, 0" SpecularPower="64" />-->
                 </MaterialPaintGroup>
 
+                <!--Blue-->
                 <MaterialPaintGroup>
+                    <CustomMaterialPart xml:space="preserve">
+                    <![CDATA[
+                        float Time:TIME;
+                        void PixelShader(inout float2 uv:TEXCOORD0)
+                        {
+                            uv += frac(Time * -0.05f);
+                        }
+                    ]]>
+                </CustomMaterialPart>
                     <DiffuseMaterialPart Texture="{ContentReference Textures/Ice}" />
-                    <SpecularMaterialPart SpecularColor="0.5, 0.5, 0.5" SpecularPower="64" />
+                    <!--<SpecularMaterialPart SpecularColor="0.5, 0.5, 0.5" SpecularPower="64" />-->
                 </MaterialPaintGroup>
+
+                <!--Alpha-->
+                <!--No material for the alpha channel yet.-->
 
                 <DirectionalLightMaterialPart />
             </MaterialGroup>
         </Surface>
-    </Group>-->
-
-    <!--<Instance Name="peg" Template="Peon" Transform.Position="0,0,0" Transform.Scale=" .075, .075, .075"/>-->
-
+    </Group>
 </Scene>
