@@ -23,8 +23,7 @@ namespace XNAControlGame
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                //if (IsPegClicked(Parent.Find<Nine.Graphics.Model>(), new Vector2(mouseState.X, mouseState.Y)))
-                if (Parent.Contains(Parent.GetGraphicsDevice().Viewport.CreatePickRay(mouseState.X, mouseState.Y, Parent.FindParent<Camera>().View, Parent.FindParent<Camera>().Projection))) ;
+                if (IsPegClicked(Parent.Find<Nine.Graphics.Model>(), new Vector2(mouseState.X, mouseState.Y)))
                 {
                     //Load Possible Pegs
                     var Ani = Parent.Find<Nine.Graphics.Model>().Animations;
@@ -46,9 +45,10 @@ namespace XNAControlGame
         /// <param name="parent"></param>
         /// <param name="mousePosition"></param>
         /// <returns></returns>
-        private bool IsPegClicked(Nine.Graphics.Model peg, Vector2 mousePosition, GraphicsDevice GraphicsDevice, Camera MainCamera)
+        private bool IsPegClicked(Nine.Graphics.Model peg, Vector2 mousePosition)
         {
-            Ray selectionRay = GraphicsDevice.Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, MainCamera.View, MainCamera.Projection);
+            Camera MainCamera = Scene.FindName<Camera>("MainCamera");
+            Ray selectionRay = Parent.GetGraphicsDevice().Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, MainCamera.View, MainCamera.Projection);
             return selectionRay.Intersects( Parent.ComputeBounds() ).HasValue;
         }
     }
