@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     
-    <ToggleButton x:Name="DoSomething" Content="{Binding Title}" IsChecked="{Binding IsOptionChecked}" 
+    <ToggleButton x:Name="DoSomething" Content="{Binding Title}" IsChecked="{Binding IsOptionChecked}"
                   cal:Message.Attach="[Event MouseEnter] = [Action MouseEnter];
                                       [Event Click] = [Action DoSomething];" />
 </UserControl>

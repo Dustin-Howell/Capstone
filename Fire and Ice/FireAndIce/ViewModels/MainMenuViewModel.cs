@@ -355,8 +355,8 @@ namespace FireAndIce.ViewModels
                 return _soundMenu = _soundMenu ?? new ToggleButtonMenuViewModel
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(false), Title = "On",},
-                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(true), Title = "Off",},
+                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(false), Title = "On", IsOptionChecked = !SoundEngine.IsMuted,},
+                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(true), Title = "Off", IsOptionChecked = SoundEngine.IsMuted,},
 
                     },
                     Background = AppModel.Resources["Primary5"] as SolidColorBrush,

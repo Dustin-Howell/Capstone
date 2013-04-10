@@ -13,9 +13,21 @@ namespace CreeperSound
     public class SoundEngine : IHandle<SoundPlayMessage>, IHandle<ResetMessage>
     {
         private static bool _muted = false;
+        public static bool IsMuted
+        {
+            get
+            {
+                return _muted;
+            }
+            private set
+            {
+                _muted = value;
+            }
+        }
+
         public static void ToggleSound(bool muted)
         {
-            _muted = muted;
+            IsMuted = muted;
         }
 
         public SoundEngine(IEventAggregator eventAggregator)

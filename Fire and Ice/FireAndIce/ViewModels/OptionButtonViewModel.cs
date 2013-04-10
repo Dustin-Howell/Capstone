@@ -12,6 +12,13 @@ namespace FireAndIce.ViewModels
 {
     public class OptionButtonViewModel : PropertyChangedBase
     {
+        public OptionButtonViewModel(bool isOptionChecked)
+        {
+            IsOptionChecked = isOptionChecked;
+        }
+
+        public OptionButtonViewModel() : this(false) {}
+
         public System.Action ClickAction { get; set; }
         public event EventHandler WasClicked;
 
