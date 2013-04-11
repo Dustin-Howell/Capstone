@@ -175,6 +175,50 @@ namespace XNAControlGame
             MaterialPaintGroup.SetMaskTextures((MaterialGroup)_boardSurface.Material, maskTextures);
         }
 
+        private void SynchronizeTiles(CreeperBoard board)
+        {
+            Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
+
+            List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures((MaterialGroup)_boardSurface.Material).OfType<Texture2D>().ToList();
+
+            RenderTarget2D target = new RenderTarget2D(GraphicsDevice, maskTextures[0].Width, maskTextures[0].Height);
+
+            GraphicsDevice.SetRenderTarget(target);
+
+            SpriteBatch sb = new SpriteBatch(GraphicsDevice);
+
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
+
+            GraphicsDevice.Clear(new Color(1f, 0f, 0f, 0f));
+
+            foreach (Piece piece in board.Tiles.Where((x) => x.Color.IsTeamColor()))
+            {
+                Texture2D maskTexture = piece.Color.IsFire() ? _fireTileMask : _iceTileMask;
+                float scale = (target.Width / 6f) / maskTexture.Width;
+                Vector2 position = new Vector2(piece.Position.Column * (target.Width / 6f), piece.Position.Row * (target.Width / 6f))
+                    + new Vector2(maskTexture.Width * scale / 2);
+
+                sb.Draw(maskTexture,
+                    position,
+                    null,
+                    Color.White,
+                    0f,
+                    new Vector2(maskTexture.Width) / 2,
+                    scale,
+                    SpriteEffects.None,
+                    1f);
+            }
+
+            sb.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+
+            maskTextures[0].Dispose();
+            maskTextures[0] = target;
+
+            MaterialPaintGroup.SetMaskTextures((MaterialGroup)_boardSurface.Material, maskTextures);
+        }
+
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
         {
             Camera camera = _scene.FindName<Camera>("MainCamera");
@@ -245,6 +289,7 @@ namespace XNAControlGame
 
             //add all pegs
             LoadPegModels();
+            SynchronizeTiles(message.Board);
         }
     }
 }
