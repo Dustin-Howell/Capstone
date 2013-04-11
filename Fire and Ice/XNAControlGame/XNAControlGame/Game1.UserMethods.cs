@@ -169,6 +169,7 @@ namespace XNAControlGame
 
             GraphicsDevice.SetRenderTarget(null);
 
+            maskTextures[0].Dispose();
             maskTextures[0] = target;
 
             MaterialPaintGroup.SetMaskTextures((MaterialGroup)_boardSurface.Material, maskTextures);
