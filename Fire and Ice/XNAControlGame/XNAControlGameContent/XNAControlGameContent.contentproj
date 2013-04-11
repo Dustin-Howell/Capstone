@@ -376,7 +376,7 @@
     <Compile Include="Surface\Masks\initialMask.png">
       <Name>initialMask</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>HeightmapProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
