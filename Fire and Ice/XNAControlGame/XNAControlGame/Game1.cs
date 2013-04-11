@@ -188,7 +188,7 @@ namespace XNAControlGame
 
             actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
 
-            _possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
+            //_possibleModel1 = Content.Load<Nine.Graphics.Model>("PossiblePeg");
 
             _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
             _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
