@@ -114,7 +114,7 @@ namespace XNAControlGame
                         PegType = CreeperPegType.Possible,
                     };
 
-                    _boardGroup.Add(peg);
+                   _boardGroup.Add(peg);
                 }
             }
         }
@@ -219,14 +219,14 @@ namespace XNAControlGame
                     actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     actualFireXamlFileStuff.Add(new PeonController());
                     actualFireXamlFileStuff.Transform = TransfomationMatrix(piece);
-                    _scene.Add(actualFireXamlFileStuff);
+                    //_scene.Add(actualFireXamlFileStuff);
                 }
                 else
                 {
                     actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     actualIceXamlFileStuff.Add(new PeonController());
                     actualIceXamlFileStuff.Transform = TransfomationMatrix(piece);
-                    _scene.Add(actualIceXamlFileStuff);
+                    //_scene.Add(actualIceXamlFileStuff);
                 }
 
             } 

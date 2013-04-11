@@ -16,7 +16,8 @@
             <BasicMaterial Texture="{ContentReference Assets/PrototypeMainBoard}" IsTransparent="True" />
         </Surface>
     </Group>
-    <Instance Template="IcePeg" />
+    
+    
     <!--<Group Name="GameBoard">
         <Surface Name="boardSurface" Heightmap.Width="108" Heightmap.Height="108" Heightmap.Step="2"
              PatchSegmentCount="2" Transform.Position="0, 0, 0" VertexType="VertexPositionNormalTangentBinormalTexture">

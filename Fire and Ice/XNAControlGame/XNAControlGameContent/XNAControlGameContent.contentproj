@@ -11,21 +11,6 @@
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
     <ContentRootDirectory>Content</ContentRootDirectory>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -249,7 +234,7 @@
     <Compile Include="Model\Peon\Peon.X">
       <Name>Peon</Name>
       <Importer>XImporter</Importer>
-      <Processor>ExtendedModelProcessor</Processor>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -275,12 +260,12 @@
     <Compile Include="Model\FirePeon\Peon.X">
       <Name>Peon</Name>
       <Importer>XImporter</Importer>
-      <Processor>ExtendedModelProcessor</Processor>
+      <Processor>ModelProcessor</Processor>
     </Compile>
     <Compile Include="Model\IcePeon\Peon.X">
       <Name>Peon</Name>
       <Importer>XImporter</Importer>
-      <Processor>ExtendedModelProcessor</Processor>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

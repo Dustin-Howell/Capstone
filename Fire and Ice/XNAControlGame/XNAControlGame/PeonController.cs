@@ -15,8 +15,7 @@ namespace XNAControlGame
     public class PeonController : Component 
     {
         public float Speed { get; set; }
-        public enum Team { Possible, Fire, Ice };
-
+        public bool moveindex = false;
         protected override void Update(float elapsedTime)
         {
             MouseState mouseState = Mouse.GetState();
@@ -25,15 +24,36 @@ namespace XNAControlGame
             {
                 if (IsPegClicked(Parent.Find<Nine.Graphics.Model>(), new Vector2(mouseState.X, mouseState.Y)))
                 {
-                    //Load Possible Pegs
-                    var Ani = Parent.Find<Nine.Graphics.Model>().Animations;
-                    if (Ani["Idle"].State != Nine.Animations.AnimationState.Playing)
+                    if (!moveindex)
                     {
-                        Ani.Play("Idle");
+                        //Load Possible Pegs
+                        var Ani = Parent.Find<Nine.Graphics.Model>().Animations;
+                        if (Ani["Chop"].State == Nine.Animations.AnimationState.Playing)
+                        {
+                            Ani.Play("Idle");
+                        }
+                        else if (Ani["Idle"].State == Nine.Animations.AnimationState.Playing)
+                        {
+                            Ani.Play("Run");
+                        }
+                        else if (Ani["Run"].State == Nine.Animations.AnimationState.Playing)
+                        {
+                            Ani.Play("Die");
+                        }
+                        else if (Ani["Die"].State == Nine.Animations.AnimationState.Playing)
+                        {
+                            Ani.Play("Chop");
+                        }
+                        moveindex = true;
                     }
+
                     //follow logic from Game1
                 }
 
+            }
+            else
+            {
+                moveindex = false;
             }
 
             base.Update(elapsedTime);

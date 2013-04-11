@@ -192,7 +192,11 @@ namespace XNAControlGame
 
             _fireTile = Content.Load<Texture2D>("Assets/Fire Tile Cropped");
             _iceTile = Content.Load<Texture2D>("Assets/Ice Tile Cropped");
-
+            
+            actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+            actualFireXamlFileStuff.Add(new PeonController());
+            actualFireXamlFileStuff.Transform = Matrix.CreateTranslation(new Vector3(150,0,150));
+            _scene.Add(actualFireXamlFileStuff);
 #if DEBUG
             _pointer = Content.Load<Texture2D>("Textures/flake");
             _sb = new SpriteBatch(GraphicsDevice);
