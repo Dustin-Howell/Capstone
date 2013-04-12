@@ -61,7 +61,7 @@ namespace CreeperSound
 
                 player = new SoundPlayer(path + soundFile);
 
-                player.Play();
+                player.PlaySync();
             }
         }
 

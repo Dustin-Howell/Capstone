@@ -61,13 +61,13 @@ namespace FireAndIce.ViewModels
 
         public void DoSomething()
         {
+            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuButtonClick));
+
             ClickAction();
             if (WasClicked != null)
             {
                 WasClicked(this, null);
             }
-
-            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuButtonClick));
         }
 
         public void MouseEnter()

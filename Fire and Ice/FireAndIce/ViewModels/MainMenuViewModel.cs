@@ -71,7 +71,7 @@ namespace FireAndIce.ViewModels
 
         public void AddMenu(ToggleButtonMenuViewModel panel)
         {
-            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuSlideOut));
+            //AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuSlideOut));
 
             // Temporary workaround?
             if (AppModel.Network != null)
