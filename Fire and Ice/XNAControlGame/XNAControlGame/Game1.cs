@@ -181,12 +181,9 @@ namespace XNAControlGame
 
             _fireModel1 = new Instance { Template = "FirePeg" };
             _iceModel1 = new Instance { Template = "IcePeg" };
+
             //Loads in the fire particle effect
             _fireEffect = Content.Load<Nine.Graphics.ParticleEffects.ParticleEffect>("FireEffect");
-
-            actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
-            actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
-            _scene.Add(actualFireXamlFileStuff);
 
 #if DEBUG
             _pointer = Content.Load<Texture2D>("Textures/flake");

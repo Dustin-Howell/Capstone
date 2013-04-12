@@ -151,6 +151,7 @@
     <Compile Include="CreeperBoardViewModel.cs" />
     <Compile Include="CreeperPeg.cs" />
     <Compile Include="MoveRequestMessage.cs" />
+    <Compile Include="pegController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Resources.cs" />

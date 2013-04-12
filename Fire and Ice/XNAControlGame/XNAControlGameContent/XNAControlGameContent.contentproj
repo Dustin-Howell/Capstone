@@ -264,12 +264,14 @@
     <Compile Include="Model\FirePeon\Peon.X">
       <Name>Peon</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ExtendedModelProcessor</Processor>
+      <ProcessorParameters_SwapWindingOrder>True</ProcessorParameters_SwapWindingOrder>
     </Compile>
     <Compile Include="Model\IcePeon\Peon.X">
       <Name>Peon</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>ExtendedModelProcessor</Processor>
+      <ProcessorParameters_SwapWindingOrder>True</ProcessorParameters_SwapWindingOrder>
     </Compile>
   </ItemGroup>
   <ItemGroup>
