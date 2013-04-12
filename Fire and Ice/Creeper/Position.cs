@@ -38,6 +38,16 @@ namespace Creeper
             return !p1.Equals(p2);
         }
 
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public Position AtDirection(CardinalDirection direction)
         {
             Position position = new Position();

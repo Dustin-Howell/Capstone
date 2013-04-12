@@ -15,9 +15,6 @@ namespace FireAndIce.ViewModels
 {
     class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
     {
-        private PlayerType _player1Type;
-        private PlayerType _player2Type;
-        private AIDifficulty _aiDifficulty = AIDifficulty.Hard;
         private GameSettings _settings;
 
         //private SlideOutPanelViewModel _gameMenu;

@@ -208,6 +208,7 @@ namespace CreeperNetwork
             }
             catch (Exception e)
             {
+                e.GetHashCode();
                 //timeout...
             }
         }
