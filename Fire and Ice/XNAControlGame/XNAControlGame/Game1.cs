@@ -159,8 +159,6 @@ namespace XNAControlGame
                 }
             });
 
-            Components.Add(_moveAnimationListener);
-
             base.Initialize();
         }
 

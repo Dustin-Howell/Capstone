@@ -10,20 +10,20 @@ using Microsoft.Xna.Framework;
 
 namespace XNAControlGame
 {
-    class MoveAnimationListener : GameComponent, IHandle<MoveMessage>
+    class MoveAnimationListener : Component, IHandle<MoveMessage>
     {
         public bool IsAnimating { get; private set; }
         private ICreeperBoardLayout _boardLayout;
         public Queue<MoveMessage> _movesToAnimate;
 
-        public MoveAnimationListener(ICreeperBoardLayout boardLayout) : base((Game)boardLayout)
+        public MoveAnimationListener(ICreeperBoardLayout boardLayout)
         {
             IsAnimating = false;
             _boardLayout = boardLayout;
             _movesToAnimate = new Queue<MoveMessage>();
         }
 
-        public override void Update(GameTime elapsedTime)
+        protected override void Update(float elapsedTime)
         {
             if (!IsAnimating && _movesToAnimate.Any())
             {
@@ -54,6 +54,7 @@ namespace XNAControlGame
                     }
                 }
             }
+
             base.Update(elapsedTime);
         }
 

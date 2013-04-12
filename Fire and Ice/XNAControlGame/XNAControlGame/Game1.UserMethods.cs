@@ -240,6 +240,7 @@ namespace XNAControlGame
         private void OnContentLoaded()
         {
             _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
+            _boardGroup.Add(_moveAnimationListener);
             _boardSurface = _boardGroup.Find<Surface>();
             _boardTexture = _boardSurface.Material.Texture;
 
