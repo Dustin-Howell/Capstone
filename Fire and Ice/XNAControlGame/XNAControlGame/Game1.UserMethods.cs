@@ -127,7 +127,7 @@ namespace XNAControlGame
 
             Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
 
-            List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures((MaterialGroup)_boardSurface.Material).OfType<Texture2D>().ToList();
+            List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures(_boardMaterial).OfType<Texture2D>().ToList();
             Texture2D oldMask = maskTextures.First();
 
             float scale = (oldMask.Width / 6f) / maskTexture.Width;
@@ -172,14 +172,14 @@ namespace XNAControlGame
             maskTextures[0].Dispose();
             maskTextures[0] = target;
 
-            MaterialPaintGroup.SetMaskTextures((MaterialGroup)_boardSurface.Material, maskTextures);
+            MaterialPaintGroup.SetMaskTextures(_boardMaterial, maskTextures);
         }
 
         private void SynchronizeTiles(CreeperBoard board)
         {
             Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
 
-            List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures((MaterialGroup)_boardSurface.Material).OfType<Texture2D>().ToList();
+            List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures(_boardMaterial).OfType<Texture2D>().ToList();
 
             RenderTarget2D target = new RenderTarget2D(GraphicsDevice, maskTextures[0].Width, maskTextures[0].Height);
 
@@ -216,7 +216,7 @@ namespace XNAControlGame
             maskTextures[0].Dispose();
             maskTextures[0] = target;
 
-            MaterialPaintGroup.SetMaskTextures((MaterialGroup)_boardSurface.Material, maskTextures);
+            MaterialPaintGroup.SetMaskTextures(_boardMaterial, maskTextures);
         }
 
         private CreeperPeg GetClickedModel(Vector2 mousePosition)
@@ -234,7 +234,7 @@ namespace XNAControlGame
             _creeperBoardViewModel = new CreeperBoardViewModel(_scene.FindName<Surface>("boardSurface").Heightmap.Height, _scene.FindName<Surface>("boardSurface").Heightmap.Width, _scene.FindName<Surface>("boardSurface").Heightmap.Step);
         }
 
-        Texture2D _boardTexture;
+        MaterialGroup _boardMaterial;
         Surface _boardSurface;
 
         private void OnContentLoaded()
@@ -242,7 +242,7 @@ namespace XNAControlGame
             _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
             _boardGroup.Add(_moveAnimationListener);
             _boardSurface = _boardGroup.Find<Surface>();
-            _boardTexture = _boardSurface.Material.Texture;
+            _boardMaterial = (MaterialGroup)_boardSurface.Material;
 
             LoadViewModels();
             LoadPegModels();
