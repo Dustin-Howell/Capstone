@@ -64,7 +64,7 @@ namespace XNAControlGame
         {
             if (_SelectedPeg == clickedModel)
             {
-                _selectedPeg.Attachments.Remove(_fireEffect);
+                //_selectedPeg.Attachments.Remove(_fireEffect);
                 _SelectedPeg = null;
             }
 
@@ -75,12 +75,12 @@ namespace XNAControlGame
                     case CreeperPegType.Fire:
                         goto case CreeperPegType.Ice;
                     case CreeperPegType.Ice:
-                        if (_SelectedPeg != null )
-                        {
-                            _SelectedPeg.Attachments.Remove(_fireEffect);
-                        }
+                        //if (_SelectedPeg != null )
+                        //{
+                            //_SelectedPeg.Attachments.Remove(_fireEffect);
+                       // }
                         _SelectedPeg = clickedModel;
-                        _SelectedPeg.Attachments.Add(_fireEffect);
+                        //_SelectedPeg.Attachments.Add(_fireEffect);
                         break;
                     case CreeperPegType.Possible:
                         _eventAggregator.Publish(
@@ -94,7 +94,7 @@ namespace XNAControlGame
                                 )
                             }
                          );
-                        _SelectedPeg.Attachments.Remove(_fireEffect);
+                       // _SelectedPeg.Attachments.Remove(_fireEffect);
                         _SelectedPeg = null;
                         break;
                 }
