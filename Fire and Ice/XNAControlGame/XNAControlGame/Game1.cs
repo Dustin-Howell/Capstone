@@ -42,6 +42,8 @@ namespace XNAControlGame
         IEnumerable<CreeperPeg> Pegs { get; }
 
         void FlipTile(Position position, CreeperColor color);
+
+        void AnimateMove(Move move, System.Action callback);
     }
 
     /// <summary>
@@ -68,57 +70,7 @@ namespace XNAControlGame
 
         static public ParticleEffect _fireEffect;
 
-        private Input _input;
-
         private MoveAnimationListener _moveAnimationListener;
-
-        private CreeperPeg _selectedPeg;
-        private CreeperPeg _SelectedPeg
-        {
-            get
-            {
-                return _selectedPeg;
-            }
-            set
-            {
-                if (_selectedPeg != value)
-                {
-                    _selectedPeg = value;
-                    UpdatePossibleMoves(value);
-                }
-            }
-        }
-
-        private IEnumerable<CreeperPeg> _pegs
-        {
-            get
-            {
-                return _boardGroup.Children
-                    .Where(x => x.GetType() == typeof(CreeperPeg))
-                    .Select(x => (CreeperPeg)x);
-            }
-        }
-        private IEnumerable<CreeperPeg> _firePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Fire);  
-            }
-        }
-        private IEnumerable<CreeperPeg> _icePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Ice);                
-            }
-        }
-        private IEnumerable<CreeperPeg> _possiblePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Possible);
-            }
-        }
 
         private GraphicsDeviceManager _graphics;
 
@@ -142,22 +94,7 @@ namespace XNAControlGame
 
         protected override void Initialize()
         {
-            _input = new Input();
 
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
-            {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
-            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
-            {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
 
             Components.Add(_moveAnimationListener);
 
