@@ -21,12 +21,13 @@ A basic jump, this is where you move your piece to an open adjacent location. Th
 A capture jump, this is where you move your piece to an open diagonal location. The tile slot that you jumped over now belongs to your faction and can be used as a connecting piece.
 And finally a destroying jump, this is where you get the chance to remove their pieces from the board. If they have a piece adjacent to you and the slot beyond them is open you can jump over their piece and that piece is now removed from the board.  You cannot jump them diagonally, nor can you jump your own pieces.
 How to Win:
-1. Connect your two corners.
+    1. Connect your two corners.
 How to lose:
-1. Your opponent connects their two corners.
+    1. Your opponent connects their two corners.
 How to tie:
-1. All of one player’s pegs have been captured.
-2. A tie is agreed on because moves are just constantly repeated.
+    1. All of one player’s pegs have been captured.
+    2. A tie is agreed on because moves are just constantly repeated.
+
 And the most important rule of any game is to have fun, cause if you don’t what’s the point?
 
 ";

@@ -301,30 +301,9 @@ namespace FireAndIce.ViewModels
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { Popup = new InstructionsViewModel() {Title = "Instructions"}; }, Title = "Instructions"},
-                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Practice"},
-                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Guided Tour"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Help",
-                    MenuParent = MainMenu,
-                };
-            }
-        }
-
-        private ToggleButtonMenuViewModel _highScoresMenu;
-        private ToggleButtonMenuViewModel HighScoresMenu
-        {
-            get
-            {
-                return _highScoresMenu = _highScoresMenu ?? new ToggleButtonMenuViewModel()
-                {
-                    Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Super"},
-                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Good"},
-                    new OptionButtonViewModel {ClickAction = () => { Debug.Assert(false, "NotImplemented"); }, Title = "Meh"},
-                },
-                    Background = AppModel.Resources["Primary4"] as SolidColorBrush,
-                    Title = "High Scores",
                     MenuParent = MainMenu,
                 };
             }
@@ -394,7 +373,6 @@ namespace FireAndIce.ViewModels
                 Buttons  = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel { ClickAction = () => AddMenu(NewGameMenu), Title = "New Game" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(HelpMenu), Title = "Help" },
-                    new OptionButtonViewModel { ClickAction = () => AddMenu(HighScoresMenu), Title = "High Scores" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(SettingsMenu), Title = "Option" },
                     new OptionButtonViewModel { ClickAction = () => AddMenu(CreditsMenu), Title = "Credits" },
                     new OptionButtonViewModel { ClickAction = () => AppModel.AppViewModel.TryClose(), Title = "Exit" },
