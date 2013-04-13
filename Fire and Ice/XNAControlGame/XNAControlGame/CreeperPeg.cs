@@ -75,7 +75,7 @@ namespace XNAControlGame
                         callback();
                     }
                 );
-
+            
             Animations.Add(Resources.AnimationNames.PegMove, moveAnimation);
             Animations.Play(Resources.AnimationNames.PegMove);
         }

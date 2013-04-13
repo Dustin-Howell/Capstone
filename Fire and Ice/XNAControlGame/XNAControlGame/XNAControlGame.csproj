@@ -139,6 +139,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="boardController.cs" />
     <Compile Include="MoveAnimationListener.cs" />
     <Compile Include="Game1.Main.cs">
       <SubType>Code</SubType>

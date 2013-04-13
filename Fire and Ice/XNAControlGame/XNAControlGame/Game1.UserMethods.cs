@@ -256,12 +256,14 @@ namespace XNAControlGame
                 {
                     actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     actualFireXamlFileStuff.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    actualFireXamlFileStuff.Add(new pegController());
                     _scene.Add(actualFireXamlFileStuff);
                 }
                 else
                 {
                     actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     actualIceXamlFileStuff.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    actualIceXamlFileStuff.Add(new pegController());
                     _scene.Add(actualIceXamlFileStuff);
                 }
             }
