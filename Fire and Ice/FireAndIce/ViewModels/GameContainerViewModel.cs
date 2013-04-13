@@ -57,11 +57,14 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        private string _currentTurn = AppModel.SlimCore.GetCurrentPlayer().Color.ToString();
         public String CurrentTurn
         {
-            get
+            get { return _currentTurn; }
+            set
             {
-                return "Fix this.";
+                _currentTurn = value;
+                NotifyOfPropertyChange(() => CurrentTurn);
             }
         }
 
@@ -120,7 +123,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(MoveMessage message)
         {
-            NotifyOfPropertyChange(() => CurrentTurn);
+            CurrentTurn = message.TurnColor.ToString();
         }
 
         public void SendMessage()
