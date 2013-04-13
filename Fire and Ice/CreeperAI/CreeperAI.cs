@@ -24,7 +24,7 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        public int _MiniMaxDepth = 5;
+        private int _MiniMaxDepth { get { return Difficulty == AIDifficulty.Easy ? 3 : 7; } }
         //private Dictionary<AIHash, double> _scoredBoards;
 
         public double TerritorialWeight { get; set; }
@@ -42,7 +42,6 @@ namespace CreeperAI
 
         public AI(IEventAggregator eventAggregator)
         {
-            _MiniMaxDepth = (Difficulty == AIDifficulty.Hard) ? 5 : 3;
             _eventAggregator = eventAggregator;
             _getMoveWorker = new BackgroundWorker();
             _getMoveWorker.DoWork += new DoWorkEventHandler(_getMoveWorker_DoWork);
@@ -51,7 +50,7 @@ namespace CreeperAI
 
         public AI(Dictionary<String, double> weights)
         {
-            _MiniMaxDepth = 3;
+            Difficulty = AIDifficulty.Easy;
             foreach (String key in weights.Keys)
             {
                 PropertyInfo property = this.GetType().GetProperty(key);

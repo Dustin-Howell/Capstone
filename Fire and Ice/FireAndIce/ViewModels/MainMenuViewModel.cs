@@ -203,6 +203,7 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalEasyAIGame(CreeperColor playerColor)
         {
+            AppModel.AI.Difficulty = AIDifficulty.Easy;
             AppModel.EventAggregator.Publish(new StartGameMessage()
             {
                 Settings = new GameSettings()
@@ -211,7 +212,7 @@ namespace FireAndIce.ViewModels
                     Board = new CreeperBoard(),
                     Player1Type = PlayerType.Human,
                     Player2Type = PlayerType.AI,
-                    StartingColor = CreeperColor.Fire,                
+                    StartingColor = CreeperColor.Fire,
                 }
             });
         }
@@ -236,6 +237,7 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalHardAIGame(CreeperColor playerColor)
         {
+            AppModel.AI.Difficulty = AIDifficulty.Hard;
             AppModel.EventAggregator.Publish(new StartGameMessage()
             {
                 Settings = new GameSettings()
