@@ -291,7 +291,7 @@ namespace FireAndIce.ViewModels
 
         private void FindNetworkGame()
         {
-            Popup = new FindGameViewModel() { Title = "Find a game." };
+            Popup = new FindGameViewModel(AppModel.EventAggregator) { Title = "Find a game." };
         }
 
         private ToggleButtonMenuViewModel _helpMenu;

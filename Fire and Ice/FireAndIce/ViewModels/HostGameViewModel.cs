@@ -32,7 +32,7 @@ namespace FireAndIce.ViewModels
                 if (_gameName != value)
                 {
                     _gameName = value;
-                    NotifyOfPropertyChange(() => GameName);
+                    //NotifyOfPropertyChange(() => GameName);
                 }
             }
         }
@@ -76,6 +76,8 @@ namespace FireAndIce.ViewModels
         {
             _hostGameWorker = new BackgroundWorker() { WorkerSupportsCancellation = true };
             _connectServerWorker = new BackgroundWorker();
+
+            GameName = PlayerName + "'s Game";
 
             _hostGameWorker.DoWork += new DoWorkEventHandler((s, e) =>
                 {

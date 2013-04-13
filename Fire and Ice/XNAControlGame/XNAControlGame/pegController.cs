@@ -43,7 +43,7 @@ namespace XNAControlGame
             return selectionRay.Intersects( Parent.ComputeBounds() ).HasValue;
         }
 
-        private void MoveTo(Move moveToAnimate, Action callback)
+        private void MoveTo(Move moveToAnimate, System.Action callback)
         {
             Direction direction = GetDirection( moveToAnimate );
             //Set the peg's rotation to the appropriate cardinal direction's angle as set in the enum.

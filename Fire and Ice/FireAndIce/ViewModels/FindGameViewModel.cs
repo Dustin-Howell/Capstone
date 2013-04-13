@@ -34,7 +34,7 @@ namespace FireAndIce.ViewModels
         }
     }
 
-    public class FindGameViewModel : PropertyChangedBase, IDisposable, IHandle<StartGameMessage>
+    public class FindGameViewModel : PropertyChangedBase, IDisposable, IHandle<StartGameMessage>, IHandle<ConnectionStatusMessage>
     {
         private List<NetworkGameInfo> _gamesData;
 
@@ -44,7 +44,7 @@ namespace FireAndIce.ViewModels
         private Timer refreshTimer = new Timer();
 
         //Constructor
-        public FindGameViewModel()
+        public FindGameViewModel(IEventAggregator eventAggregator)
         {
             refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
             // Set the Interval to 5000 milliseconds.
@@ -53,6 +53,8 @@ namespace FireAndIce.ViewModels
 
             //ideally true...
             refreshTimer.AutoReset = false;
+
+            eventAggregator.Subscribe(this);
         }
 
         // Dynamically bindable properties.
@@ -201,6 +203,29 @@ namespace FireAndIce.ViewModels
         public void Handle(StartGameMessage message)
         {
             Dispose();
+        }
+
+        public void Handle(ConnectionStatusMessage message)
+        {
+            if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
+            {
+                NetworkCableUnpluggedMessage = "No connection -- a network cable is unplugged.";
+            }
+            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
+            {
+                NetworkCableUnpluggedMessage = "Connection OK.";
+            }
+        }
+
+        private string _networkCableUnpluggedMessage;
+        public string NetworkCableUnpluggedMessage
+        {
+            get { return _networkCableUnpluggedMessage; }
+            set
+            {
+                _networkCableUnpluggedMessage = value;
+                NotifyOfPropertyChange(() => NetworkCableUnpluggedMessage);
+            }
         }
     }
 }

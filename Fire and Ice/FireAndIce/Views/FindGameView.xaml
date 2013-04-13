@@ -65,6 +65,10 @@
             </Grid>
 
             <Button x:Name="FindGameClick">Start</Button>
+            
+            <Border>
+                <Label x:Name="NetworkCableUnpluggedMessage" FontSize="12">s</Label>
+            </Border>
         </StackPanel>
     </Grid>
 </f:SlideOutControl>

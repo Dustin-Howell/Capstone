@@ -66,22 +66,22 @@ namespace CreeperSound
                         break;
                     case SoundPlayType.MenuButtonClick:
                         soundFile += "MenuButtonClick.wav";
-                        sync = true;
+                        //sync = true;
                         break;
                 }
 
-                /*
                 player = new SoundPlayer(path + soundFile);
 
                 if (sync)
-                    player1.Play();
+                    player.PlaySync();
                 else
-                    player1.Play();
-                 */
-
+                    player.Play();
+                 
+                /*
                 player1.LoadedBehavior = MediaState.Manual;
                 player1.Source = new Uri(path + soundFile, UriKind.RelativeOrAbsolute);
                 player1.Play();
+                 */
             }
         }
 

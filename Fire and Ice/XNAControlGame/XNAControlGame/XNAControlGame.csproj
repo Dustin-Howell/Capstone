@@ -168,6 +168,10 @@
       <Project>{DE287076-3CCC-49D1-946D-76F45EC2FC61}</Project>
       <Name>CreeperMessages</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CreeperSound\CreeperSound.csproj">
+      <Project>{280A7E46-C873-4315-A631-7962B03DBFFB}</Project>
+      <Name>CreeperSound</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Creeper\Creeper.csproj">
       <Project>{B8ED4664-39A8-4189-B716-3A9EE00DCC63}</Project>
       <Name>Creeper</Name>
