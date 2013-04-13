@@ -60,6 +60,8 @@ namespace XNAControlGame
         private Microsoft.Xna.Framework.Graphics.Model _possibleModel;
         private Microsoft.Xna.Framework.Graphics.Model _fireModel;
         private Microsoft.Xna.Framework.Graphics.Model _iceModel;
+        Group actualFireXamlFileStuff;
+        Group actualIceXamlFileStuff;
         private Instance _fireModel1;
         private Instance _iceModel1;
         private Texture2D _fireTileMask;
