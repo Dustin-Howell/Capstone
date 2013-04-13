@@ -10,7 +10,7 @@ using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
-    public class HostGameViewModel : PropertyChangedBase
+    public class HostGameViewModel : PropertyChangedBase, IHandle<ConnectionStatusMessage>
     {
         private BackgroundWorker _hostGameWorker;
         BackgroundWorker _connectServerWorker;
@@ -32,7 +32,6 @@ namespace FireAndIce.ViewModels
                 if (_gameName != value)
                 {
                     _gameName = value;
-                    //NotifyOfPropertyChange(() => GameName);
                 }
             }
         }
@@ -70,6 +69,11 @@ namespace FireAndIce.ViewModels
                     NotifyOfPropertyChange(() => CanHostGame);
                 }
             }
+        }
+
+        public HostGameViewModel(IEventAggregator eventAggregator)
+        {
+            eventAggregator.Subscribe(this);
         }
 
         public void HostGame()
@@ -121,6 +125,29 @@ namespace FireAndIce.ViewModels
 
             _hostGameWorker.RunWorkerAsync();
 
+        }
+
+        public void Handle(ConnectionStatusMessage message)
+        {
+            if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
+            {
+                NetworkCableUnpluggedMessage = "No connection -- a network cable is unplugged.";
+            }
+            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
+            {
+                NetworkCableUnpluggedMessage = "Connection OK.";
+            }
+        }
+
+        private string _networkCableUnpluggedMessage;
+        public string NetworkCableUnpluggedMessage
+        {
+            get { return _networkCableUnpluggedMessage; }
+            set
+            {
+                _networkCableUnpluggedMessage = value;
+                NotifyOfPropertyChange(() => NetworkCableUnpluggedMessage);
+            }
         }
     }
 }
