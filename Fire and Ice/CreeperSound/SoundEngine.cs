@@ -6,6 +6,9 @@ using System.IO;
 using Caliburn.Micro;
 using CreeperMessages;
 using System.Media;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace CreeperSound
 {
@@ -42,6 +45,8 @@ namespace CreeperSound
                 String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
                 String soundFile = "\\";
                 SoundPlayer player;
+                MediaElement player1 = new MediaElement();
+                bool sync = false;
 
                 switch (message.Type)
                 {
@@ -56,12 +61,22 @@ namespace CreeperSound
                         break;
                     case SoundPlayType.MenuButtonClick:
                         soundFile += "MenuButtonClick.wav";
+                        sync = true;
                         break;
                 }
 
+                /*
                 player = new SoundPlayer(path + soundFile);
 
-                player.PlaySync();
+                if (sync)
+                    player1.Play();
+                else
+                    player1.Play();
+                 */
+
+                player1.LoadedBehavior = MediaState.Manual;
+                player1.Source = new Uri(path + soundFile, UriKind.RelativeOrAbsolute);
+                player1.Play();
             }
         }
 
