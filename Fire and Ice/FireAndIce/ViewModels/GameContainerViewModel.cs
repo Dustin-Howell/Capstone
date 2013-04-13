@@ -38,11 +38,13 @@ namespace FireAndIce.ViewModels
         private bool _isNetworkGame;
         public bool IsNetworkGame
         {
-            get { return _isNetworkGame; }
+            //get { return _isNetworkGame; }
+            get { return true; }
             set
             {
                 _isNetworkGame = value;
                 NotifyOfPropertyChange(() => IsNetworkGame);
+                NotifyOfPropertyChange(() => CanSendMessage);
             }
         }
 
@@ -85,7 +87,7 @@ namespace FireAndIce.ViewModels
             get { return _message; }
             set
             {
-                _message = AppModel.Network.getSelfName() + ": " + value;
+                _message = value;
                 NotifyOfPropertyChange(() => Message);
             }
         }
@@ -128,8 +130,13 @@ namespace FireAndIce.ViewModels
 
         public void SendMessage()
         {
-            AppModel.EventAggregator.Publish(new ChatMessage(Message, ChatMessageType.Send));
+            AppModel.EventAggregator.Publish(new ChatMessage(AppModel.Network.getSelfName() + ": " + Message, ChatMessageType.Send));
             Message = "";
+        }
+
+        public bool CanSendMessage
+        {
+            get { return IsNetworkGame; }
         }
 
         public void Undo()
