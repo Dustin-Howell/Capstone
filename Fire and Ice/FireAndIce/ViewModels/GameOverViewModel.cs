@@ -5,15 +5,16 @@ using System.Text;
 using Creeper;
 using Caliburn.Micro;
 using CreeperMessages;
+using System.Windows.Media;
 
 namespace FireAndIce.ViewModels
 {
     public class GameOverViewModel : PropertyChangedBase
     {
-        private String _winner;
-        private String Winner
+        private CreeperColor _winner;
+        private CreeperColor Winner
         {
-            get { return _winner ?? ""; }
+            get { return _winner; }
             set
             {
                 _winner = value;
@@ -21,17 +22,28 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        public SolidColorBrush WinningColor
+        {
+            get
+            {
+                return (SolidColorBrush)(_winner == CreeperColor.Fire ?
+                    AppModel.Resources["Primary1"]
+                    : AppModel.Resources["Secondary1"]
+                    );
+            }
+        }
+
         public String GameOverMessage
         {
             get
             {
-                return String.Format("{0} wins!", _winner);
+                return String.Format("{0} wins!", _winner.ToString());
             }
         }
 
         public GameOverViewModel(CreeperColor? winner)
         {
-            _winner = winner.Value.ToString();
+            _winner = winner.Value;
         }
 
         public void ReturnToMenu()
