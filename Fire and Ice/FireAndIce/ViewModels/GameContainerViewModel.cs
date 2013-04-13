@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Creeper;
 using CreeperMessages;
 using XNAControlGame;
+using CreeperSound;
 
 namespace FireAndIce.ViewModels
 {
@@ -131,6 +132,11 @@ namespace FireAndIce.ViewModels
         public void Undo()
         {
             AppModel.EventAggregator.Publish(new MoveMessage() { Type = MoveMessageType.Undo, });
+        }
+
+        public void ToggleSound()
+        {
+            SoundEngine.ToggleSound();
         }
 
         public void Handle(ChatMessage message)

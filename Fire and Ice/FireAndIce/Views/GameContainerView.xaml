@@ -43,6 +43,11 @@
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Stretch"
                         Height="50" />
+                <Button x:Name="ToggleSound" Content="Toggle Sound"
+                        DockPanel.Dock="Bottom"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Stretch"
+                        Height="50" />
             </DockPanel>
         </Border>
         

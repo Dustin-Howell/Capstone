@@ -28,6 +28,11 @@ namespace CreeperSound
             }
         }
 
+        public static void ToggleSound()
+        {
+            IsMuted = !IsMuted;
+        }
+
         public static void ToggleSound(bool muted)
         {
             IsMuted = muted;
