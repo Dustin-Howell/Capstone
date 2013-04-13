@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Creeper;
 using Caliburn.Micro;
+using CreeperMessages;
 
 namespace FireAndIce.ViewModels
 {
@@ -31,6 +32,11 @@ namespace FireAndIce.ViewModels
         public GameOverViewModel(CreeperColor? winner)
         {
             _winner = winner.Value.ToString();
+        }
+
+        public void ReturnToMenu()
+        {
+            AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
         }
     }
 }

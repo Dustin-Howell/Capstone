@@ -104,13 +104,13 @@ namespace FireAndIce.ViewModels
         public void ReturnToMainMenu()
         {
             AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
-            AppModel.AppViewModel.ActivateItem(new MainMenuViewModel());
+            AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
         }
 
         public void Forfeit()
         {
             AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
-            ReturnToMainMenu();
+            AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
         }
 
         public void Handle(NetworkErrorMessage message)
