@@ -302,7 +302,7 @@ namespace FireAndIce.ViewModels
                 return _helpMenu = _helpMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => { Popup = new InstructionsViewModel() {Title = "Instructions"}; }, Title = "Instructions"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new InstructionsViewModel(); }, Title = "Instructions"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "Help",

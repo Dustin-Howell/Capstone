@@ -8,7 +8,10 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                 Background="{StaticResource Primary1}" Margin="50">
-        <Label Name="Title" HorizontalAlignment="Center"/>
-        <TextBlock Name="HelpText" TextWrapping="Wrap" Foreground="White" Margin="20"/>
+        <Label Name="Goal" HorizontalAlignment="Center" Content="Goal"/>
+        <TextBlock Name="GoalText" TextWrapping="Wrap" Foreground="White" Margin="20"/>
+        
+        <Label Name="Rules" HorizontalAlignment="Center" Content="Rules"/>
+        <TextBlock Name="RuleText" TextWrapping="Wrap" Foreground="White" Margin="20"/>
     </StackPanel>
 </f:SlideOutControl>
