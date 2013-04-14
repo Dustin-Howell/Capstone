@@ -43,5 +43,6 @@ namespace FireAndIce.ViewModels
         {
             ActivateItem(new MainMenuViewModel());
         }
+ 
     }
 }

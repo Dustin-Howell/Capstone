@@ -7,5 +7,6 @@ namespace CreeperMessages
 {
     public class ReturnToMenuMessage
     {
+
     }
 }
