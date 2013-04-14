@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CreeperMessages
 {
-    public enum SoundPlayType {Default, MenuButtonMouseOver, MenuButtonClick, MenuSlideOut }
+    public enum SoundPlayType {Default, MenuButtonMouseOver, MenuButtonClick, MenuSlideOut, Music1 }
 
     public class SoundPlayMessage
     {

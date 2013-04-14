@@ -9,12 +9,15 @@ using System.Media;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.ComponentModel;
 
 namespace CreeperSound
 {
     
     public class SoundEngine : IHandle<SoundPlayMessage>, IHandle<ResetMessage>
     {
+        private BackgroundWorker _soundWorker;
+
         private static bool _muted = false;
         public static bool IsMuted
         {
@@ -50,8 +53,11 @@ namespace CreeperSound
                 String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
                 String soundFile = "\\";
                 SoundPlayer player;
+                SoundPlayer music;
                 MediaElement player1 = new MediaElement();
                 bool sync = false;
+                bool isMusic = false;
+
 
                 switch (message.Type)
                 {
@@ -66,16 +72,34 @@ namespace CreeperSound
                         break;
                     case SoundPlayType.MenuButtonClick:
                         soundFile += "MenuButtonClick.wav";
-                        //sync = true;
+                        sync = true;
+                        break;
+                    case SoundPlayType.Music1:
+                        soundFile += "freedom1.wav";
+                        sync = true;
+                        isMusic = true;
                         break;
                 }
 
-                player = new SoundPlayer(path + soundFile);
+                if (!isMusic)
+                {
+                    player = new SoundPlayer(path + soundFile);
 
-                if (sync)
-                    player.PlaySync();
+                    if (sync)
+                        player.PlaySync();
+                    else
+                        player.Play();
+                }
                 else
-                    player.Play();
+                {
+                    music = new SoundPlayer(path + soundFile);
+
+                    if (sync)
+                        music.PlaySync();
+                    else
+                        music.Play();
+                }
+
                  
                 /*
                 player1.LoadedBehavior = MediaState.Manual;

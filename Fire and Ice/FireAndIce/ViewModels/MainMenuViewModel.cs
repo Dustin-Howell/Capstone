@@ -14,11 +14,12 @@ using CreeperAI;
 using CreeperMessages;
 using CreeperSound;
 using System.Diagnostics;
+using System.IO;
 
 namespace FireAndIce.ViewModels
 {
     public class MainMenuViewModel : Screen
-    {    
+    {
         private BindableCollection<ToggleButtonMenuViewModel> _menus;
         public BindableCollection<ToggleButtonMenuViewModel> Menus
         {
@@ -384,6 +385,22 @@ namespace FireAndIce.ViewModels
             };
 
             MainMenu.ControlIsVisible = true;
+          
+            //String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
+            //String soundFile = "\\";
+            //String actualFile = path + soundFile + "music.wav";
+            //PlayMusic = actualFile;
+        }
+
+        private string _playMusic;
+        public string PlayMusic
+        {
+            get { return _playMusic; }
+            set
+            {
+                _playMusic = value;
+                NotifyOfPropertyChange(() => PlayMusic);
+            }
         }
     }
 }

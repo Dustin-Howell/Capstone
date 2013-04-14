@@ -72,7 +72,8 @@ namespace FireAndIce.ViewModels
 
         public void MouseEnter()
         {
-            AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuButtonMouseOver));
+            //Don't play mouse over sound for now. Doesn't necessarily need it. 
+            //AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuButtonMouseOver));
         }
     }
 }

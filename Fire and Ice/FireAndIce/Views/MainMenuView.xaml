@@ -65,5 +65,7 @@
                                 Effect="{StaticResource DropShadowLeft}"/>
             </DockPanel>
         </Grid>
+        <MediaElement Source="{Binding PlayMusic}" Width="320"   
+     Height="240" LoadedBehavior="Play" />
     </DockPanel>
 </UserControl>

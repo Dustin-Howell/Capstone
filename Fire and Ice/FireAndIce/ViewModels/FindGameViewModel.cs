@@ -209,11 +209,11 @@ namespace FireAndIce.ViewModels
         {
             if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
             {
-                NetworkCableUnpluggedMessage = "No connection -- a network cable is unplugged.";
+                NetworkCableUnpluggedMessage = "No Connection!";
             }
             else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
             {
-                NetworkCableUnpluggedMessage = "Connection OK.";
+                NetworkCableUnpluggedMessage = "Connection OK";
             }
         }
 
