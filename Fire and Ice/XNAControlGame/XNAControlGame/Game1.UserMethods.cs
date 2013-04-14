@@ -103,22 +103,22 @@ namespace XNAControlGame
 
         private void UpdatePossibleMoves(CreeperPeg clickedPeg)
         {
-            ClearPossiblePegs();
+            //ClearPossiblePegs();
 
-            if (clickedPeg != null)
-            {
-                IEnumerable<Move> possibleMoves = BoardProvider.GetBoard().Pegs.At(clickedPeg.Position).PossibleMoves(BoardProvider.GetBoard());
-                foreach (Position position in possibleMoves.Select(x => x.EndPosition))
-                {
-                    CreeperPeg peg = new CreeperPeg(_possibleModel)
-                    {
-                        Position = position,
-                        PegType = CreeperPegType.Possible,
-                    };
+            //if (clickedPeg != null)
+            //{
+            //    IEnumerable<Move> possibleMoves = BoardProvider.GetBoard().Pegs.At(clickedPeg.Position).PossibleMoves(BoardProvider.GetBoard());
+            //    foreach (Position position in possibleMoves.Select(x => x.EndPosition))
+            //    {
+            //        CreeperPeg peg = new CreeperPeg(_possibleModel)
+            //        {
+            //            Position = position,
+            //            PegType = CreeperPegType.Possible,
+            //        };
 
-                    _boardGroup.Add(peg);
-                }
-            }
+            //        _boardGroup.Add(peg);
+            //    }
+            //}
         }
 
         public void FlipTile(Position position, CreeperColor color)

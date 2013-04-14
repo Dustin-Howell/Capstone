@@ -124,7 +124,7 @@ namespace XNAControlGame
         private GraphicsDeviceManager _graphics;
 
         public IProvideBoardState BoardProvider { get; private set; }
-
+       
         public Game1() : this(new EventAggregator(), new DummyBoardProvider())
         {
             Components.Add(new InputComponent(Window.Handle));

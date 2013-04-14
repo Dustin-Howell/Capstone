@@ -58,6 +58,7 @@ namespace Resources
         public static String FirePeg { get { return "Assets/Fire Peg"; } }
         public static String IcePeg { get { return "Assets/Ice Peg"; } }
 
+
         //SkyBox
         public static String SkyBox { get { return "Textures/SkyCubeMap"; } }
     }
