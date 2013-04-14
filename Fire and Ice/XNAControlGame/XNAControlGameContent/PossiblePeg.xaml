@@ -1,16 +1,12 @@
-﻿<Model xmlns="http://schemas.microsoft.com/nine/2011/xaml" Name="PossiblePeg" Source="{ContentReference ./Model/PossiblePeon/Peon}" Transform.Scale=".1, .1, .1">
-    <ModelAttachment>
-
-        <ParticleEffect Name="Fire" Transform.Position="10, 0, -10" Texture="{ContentReference ./Textures/fire}">
-            <ParticleEffect.Emitter>
-                <CylinderEmitter Emission="1000" Radiate="True" Shell="True" Radius="20" Height="-100"
-                               Duration="1.5 ~ 3" Speed="0.5 ~ 1" Size="2 ~ 3" Spread="{Degrees 15}" />
-            </ParticleEffect.Emitter>
-
-            <SizeController EndSize ="4 ~ 5" />
-            <SpeedController EndSpeed ="0" />
-            <FadeController />
-        </ParticleEffect>
-
-    </ModelAttachment>
-</Model>
+﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" Name="PossiblePegGroup" >
+    <Model Name="PossiblePeg" Source="{ContentReference ./Model/PossiblePeon/Peon}" Transform.Scale=".25, .25, .25" Visible="True" >
+        <ModelAttachment>
+            <ParticleEffect Name="Spark" Texture="{ContentReference ./Textures/flake}" ParticleType="ConstrainedBillboard" Stretch="8">
+                <ParticleEffect.Emitter>
+                    <PointEmitter Emission="10" Duration="2 ~ 3" Speed="-0.01 ~ 0.01" Size="1 ~ 1.5" />
+                </ParticleEffect.Emitter>
+                <FadeController />
+            </ParticleEffect>
+        </ModelAttachment>
+    </Model>
+</Group>
