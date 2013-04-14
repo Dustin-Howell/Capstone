@@ -38,8 +38,7 @@ namespace FireAndIce.ViewModels
         private bool _isNetworkGame;
         public bool IsNetworkGame
         {
-            //get { return _isNetworkGame; }
-            get { return true; }
+            get { return _isNetworkGame; }
             set
             {
                 _isNetworkGame = value;
