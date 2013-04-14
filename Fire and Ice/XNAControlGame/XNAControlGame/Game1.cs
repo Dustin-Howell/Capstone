@@ -149,14 +149,16 @@ namespace XNAControlGame
             {
                 if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
                 {
-                    DetectFullClick(e);
+                    //DetectFullClick(e);
+                    _scene.Find<BoardController>().ClickEvent(e);
                 }
             });
             _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
             {
                 if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
                 {
-                    DetectFullClick(e);
+                    //DetectFullClick(e);
+                    _scene.Find<BoardController>().ClickEvent(e);
                 }
             });
 
@@ -177,13 +179,13 @@ namespace XNAControlGame
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
 
-            _possibleModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.PossiblePeg);
-
+            _possibleModel = new Instance { Template = "PossiblePeg" };
             _fireModel1 = new Instance { Template = "FirePeg" };
             _iceModel1 = new Instance { Template = "IcePeg" };
 
             //Loads in the fire particle effect
             _fireEffect = Content.Load<Nine.Graphics.ParticleEffects.ParticleEffect>("FireEffect");
+            _scene.FindName<Nine.Group>("GameBoard").Add(new BoardController(BoardProvider, _possibleModel));
 
 #if DEBUG
             _pointer = Content.Load<Texture2D>("Textures/flake");
