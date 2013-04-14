@@ -254,17 +254,17 @@ namespace XNAControlGame
             {
                 if (piece.Color == CreeperColor.Fire)
                 {
-                    actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    actualFireXamlFileStuff.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    actualFireXamlFileStuff.Add(new pegController());
-                    _scene.Add(actualFireXamlFileStuff);
+                    _firePegGroup = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _firePegGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _firePegGroup.Add(new PegController(piece.Position, CreeperPegType.Fire));
+                    _scene.Add(_firePegGroup);
                 }
                 else
                 {
-                    actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    actualIceXamlFileStuff.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    actualIceXamlFileStuff.Add(new pegController());
-                    _scene.Add(actualIceXamlFileStuff);
+                    _icePegGroup = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _icePegGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _icePegGroup.Add(new PegController(piece.Position, CreeperPegType.Ice));
+                    _scene.Add(_icePegGroup);
                 }
             }
         }

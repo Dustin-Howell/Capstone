@@ -57,13 +57,13 @@ namespace XNAControlGame
         private Group _boardGroup;
         private CreeperBoardViewModel _creeperBoardViewModel;
 
-        private Microsoft.Xna.Framework.Graphics.Model _possibleModel;
         private Microsoft.Xna.Framework.Graphics.Model _fireModel;
         private Microsoft.Xna.Framework.Graphics.Model _iceModel;
-        Group actualFireXamlFileStuff;
-        Group actualIceXamlFileStuff;
+        private Group _firePegGroup;
+        private Group _icePegGroup;
         private Instance _fireModel1;
         private Instance _iceModel1;
+        private Instance _possibleModel;
         private Texture2D _fireTileMask;
         private Texture2D _iceTileMask;
 
