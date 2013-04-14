@@ -1,4 +1,4 @@
-﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
+﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" Name="FirePegGroup" >
 
     <Model Name="FirePeg" Source="{ContentReference ./Model/FirePeon/Peon}" Transform.Scale=".25, .25, .25" Material="{ SkinnedMaterial }" >
         <ModelAttachment>
