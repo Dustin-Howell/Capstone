@@ -254,17 +254,17 @@ namespace XNAControlGame
             {
                 if (piece.Color == CreeperColor.Fire)
                 {
-                    actualFireXamlFileStuff = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    actualFireXamlFileStuff.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    actualFireXamlFileStuff.Add(new pegController());
-                    _scene.Add(actualFireXamlFileStuff);
+                    _fireGroup = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _fireGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _fireGroup.Add(new pegController());
+                    _scene.Add(_fireGroup);
                 }
                 else
                 {
-                    actualIceXamlFileStuff = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    actualIceXamlFileStuff.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    actualIceXamlFileStuff.Add(new pegController());
-                    _scene.Add(actualIceXamlFileStuff);
+                    _iceGroup = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _iceGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _iceGroup.Add(new pegController());
+                    _scene.Add(_iceGroup);
                 }
             }
         }
