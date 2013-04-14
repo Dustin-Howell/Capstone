@@ -23,10 +23,24 @@ namespace XNAControlGame
         public void ClickEvent(Nine.MouseEventArgs mouseState)
         {
             //Implement click logic.
-            PegController stuff = FindClickedPeg(new Vector2(mouseState.X, mouseState.Y));
-            if (stuff != null)
+            PegController _clickedOnDown = FindClickedPeg(new Vector2(mouseState.X, mouseState.Y));
+            if (_clickedOnDown != null && _pegToMove == null)
             {
-                stuff.PegControlled.Animations.Play("Idle");
+                //clear possible moves
+                _pegToMove = _clickedOnDown;
+                CreatePossibleMoves(_pegToMove.Position);
+            }
+            else if (_clickedOnDown != null && _pegToMove != null && _clickedOnDown.PegType == CreeperPegType.Possible)
+            {
+                _moveToPeg = _clickedOnDown;
+                _pegToMove.MoveTo(new Move(_pegToMove.Position, _moveToPeg.Position, _boardProvider.GetCurrentPlayer().Color));
+                ClearPossiblePegs();
+                _pegToMove = null;
+                _moveToPeg = null;
+            }
+            else
+            {
+                //deal with you later
             }
         }
 
@@ -46,7 +60,7 @@ namespace XNAControlGame
 
             foreach (PegController controller in found)
             {
-                if (controller.PegType.ToCreeperColor() == _boardProvider.GetCurrentPlayer().Color && controller.IsPegClicked(selectionRay))
+                if ((controller.PegType.ToCreeperColor() == _boardProvider.GetCurrentPlayer().Color || controller.PegType == CreeperPegType.Possible) && controller.IsPegClicked(selectionRay))
                 {
                     return controller;
                 }
@@ -72,11 +86,12 @@ namespace XNAControlGame
 
         private void ClearPossiblePegs()
         {
-            IEnumerable<PegController> pegControllers = Scene.Children
-                        .Where(x => x.GetType() == typeof(PegController))
-                        .Select(x => x as PegController);
+            Camera MainCamera = Scene.FindName<Camera>("MainCamera");
 
-            foreach (PegController controller in pegControllers)
+            List<PegController> found = new List<PegController>();
+            Scene.FindAll<PegController>(new BoundingFrustum(MainCamera.View * MainCamera.Projection), (x) => x.PegType == CreeperPegType.Possible || x.PegType.ToCreeperColor() == _boardProvider.GetCurrentPlayer().Color, found);
+
+            foreach (PegController controller in found)
             {
                 if (controller.PegType == CreeperPegType.Possible)
                 {

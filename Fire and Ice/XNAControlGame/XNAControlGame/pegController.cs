@@ -27,16 +27,30 @@ namespace XNAControlGame
 
     class PegController : Component
     {
-        public Position Position { get; private set; }
+        private Position _position;
+        public Position Position
+        {
+            get { return _position; }
+            set
+            {
+                _position = value;
+                DoTransform();
+            }
+        }
+
         public CreeperPegType PegType { get; private set; }
         public Nine.Graphics.Model PegControlled { get { return Parent.Find<Nine.Graphics.Model>(); } }
 
         public PegController(Position initPosition, CreeperPegType team)
         {
-            Position = initPosition;
+            _position = initPosition;
             PegType = team;
         }
-
+        private void DoTransform()
+        {
+            PegControlled.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateRotationY(MathHelper.ToRadians(135))
+                        * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[Position.Row, Position.Column]);
+        }
         protected override void Update(float elapsedTime)
         {
             //We might need update logic to determine when to activate certain animations in the move sequence.
@@ -62,12 +76,12 @@ namespace XNAControlGame
         public void MoveTo(Move moveToAnimate)
         {
             //Set the peg's rotation to the appropriate cardinal direction of the move.
-            Parent.Transform *= Matrix.CreateRotationY(GetDirection(moveToAnimate));
+           // Parent.Transform *= Matrix.CreateRotationY(GetDirection(moveToAnimate));
 
             //Create the positional tween animation.
             TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>()
             {
-                Target = Parent,
+                Target = PegControlled,
                 TargetProperty = "Transform",
                 Duration = TimeSpan.FromSeconds(1),
                 From = Parent.Transform,
@@ -83,11 +97,14 @@ namespace XNAControlGame
             //    Parent.Animations.Remove(Resources.AnimationNames.PegMove);
             //    callback();
             //}
-            //    );
+            //   );
 
             Parent.Animations.Add(Resources.AnimationNames.PegMove, moveAnimation);
             Parent.Animations.Play(Resources.AnimationNames.PegMove);
-            Parent.Animations.Play("Run");
+
+
+            //proves how easy animations can be.
+            PegControlled.Animations.Play("Run");
 
             Position = moveToAnimate.EndPosition;
 

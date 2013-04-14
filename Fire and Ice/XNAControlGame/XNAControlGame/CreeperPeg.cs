@@ -22,6 +22,8 @@ namespace XNAControlGame
                     return CreeperColor.Fire;
                 case CreeperPegType.Ice:
                     return CreeperColor.Ice;
+                case CreeperPegType.Possible:
+                    return CreeperColor.Empty;
                 default:
                     throw new ArgumentOutOfRangeException("Can't let you do that, Star Fox.\nAndross has ordered us to take you down.");
             }
