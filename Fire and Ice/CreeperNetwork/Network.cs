@@ -14,6 +14,8 @@ namespace CreeperNetwork
 {
     public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>, IDisposable
     {
+        static Timer checkTimer = new Timer();
+        
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
         public const int SERVER_PORT = 1877;
@@ -430,7 +432,6 @@ namespace CreeperNetwork
          *********************************************************/
         public void checkUnpluggedNetwork()
         {
-            Timer checkTimer = new Timer();
             checkTimer.Elapsed += new ElapsedEventHandler(checkUnpluggedNetworkOnTime);
             checkTimer.Interval = UNPLUGGED_INTERVAL;
             checkTimer.Enabled = true;
@@ -545,25 +546,13 @@ namespace CreeperNetwork
             {
                 cableUnplugged = false;
 
-                //if (ConnectionIssue != null)
-                //{
-                //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_RECONNECTED));
-                //}
                 _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.CABLE_RECONNECTED));
-
-                Console.WriteLine("Cable reconnected. Connection OK.");
             }
             else if (!isNetworkConnected())
             {
-                //if (ConnectionIssue != null)
-                //{
-                //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED));
-                //}
                 _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED));
 
                 cableUnplugged = true;
-
-                Console.WriteLine("A network cable is unplugged.");
             }
         }
 
@@ -593,10 +582,6 @@ namespace CreeperNetwork
                 {
                     Console.WriteLine("Lost connection. Attemping reconnect.");
 
-                    //if (ConnectionIssue != null)
-                    //{
-                    //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
-                    //}
                     _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
 
                     connectionIssue = true;
@@ -621,10 +606,6 @@ namespace CreeperNetwork
 
                     Console.WriteLine("Connection Reestablished.");
 
-                    //if (ConnectionIssue != null)
-                    //{
-                    //    ConnectionIssue(this, new ConnectionEventArgs(CONNECTION_ERROR_TYPE.RECONNECTED));
-                    //}
                     _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.RECONNECTED));
                 }
             }

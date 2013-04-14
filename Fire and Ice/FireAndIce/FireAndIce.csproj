@@ -82,6 +82,7 @@
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
     <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
     <Compile Include="Views\AirspacePopup.cs" />
+    <Compile Include="ViewModels\InGameConnectionViewModel.cs" />
     <Compile Include="Views\SlideOutControl.cs" />
     <Page Include="ColorSchemes\Default.xaml">
       <SubType>Designer</SubType>
@@ -128,6 +129,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HostGameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InGameConnectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -14,7 +14,7 @@ using CreeperSound;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>
+    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<ConnectionStatusMessage>
     {
         private GameSettings _settings;
 
@@ -152,6 +152,61 @@ namespace FireAndIce.ViewModels
         public void Handle(ChatMessage message)
         {
             ChatMessages.Add(AppModel.Network.getOpponentName() + ": " + message.Message);
+        }
+
+        private PropertyChangedBase _popup;
+        public PropertyChangedBase Popup
+        {
+            get
+            {
+                return _popup;
+            }
+            set
+            {
+                if (_popup as IDisposable != null)
+                    ((IDisposable)_popup).Dispose();
+
+                _popup = value;
+                NotifyOfPropertyChange(() => Popup);
+            }
+        }
+
+        int stillNotConnected = 0;
+
+        public void Handle(ConnectionStatusMessage message)
+        {
+            if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
+            {
+                if (stillNotConnected < 1)
+                {
+                    Popup = new InGameConnectionViewModel(message);
+                    stillNotConnected++;
+                }
+            }
+            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
+            {
+                if (stillNotConnected < 1)
+                {
+                    Popup = new InGameConnectionViewModel(message);
+                    stillNotConnected++;
+                }
+            }
+            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
+            {
+                if (stillNotConnected != 0)
+                {
+                    Popup = new InGameConnectionViewModel(message);
+                    stillNotConnected = 0;
+                }
+            }
+            else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
+            {
+                if (stillNotConnected != 0)
+                {
+                    Popup = new InGameConnectionViewModel(message);
+                    stillNotConnected = 0;
+                }
+            }
         }
     }
 }

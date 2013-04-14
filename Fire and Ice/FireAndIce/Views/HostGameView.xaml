@@ -40,7 +40,7 @@
             </Grid>
             <Button x:Name="HostGame">Start</Button>
             <Border>
-                <Label x:Name="NetworkCableUnpluggedMessage" FontSize="12">s</Label>
+                <Label x:Name="NetworkCableUnpluggedMessage" FontSize="12"></Label>
             </Border>
         </StackPanel>
     </Grid>

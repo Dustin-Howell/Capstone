@@ -4,6 +4,7 @@
              xmlns:n="clr-namespace:Nine.Studio.Controls;assembly=Nine.Studio"
              xmlns:local="clr-namespace:FireAndIce.Views">
     <Grid>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
             <ColumnDefinition />
@@ -55,7 +56,10 @@
                     Game="{Binding Game}"
                     Grid.RowSpan="2"
                     Grid.ColumnSpan="2"/>
-        
+        <ContentControl x:Name="Popup"
+                        Grid.RowSpan="2"
+                        Grid.ColumnSpan="2"
+                               Effect="{StaticResource DropShadowLeft}"/>
         <Border Grid.Row="1"
                 Grid.ColumnSpan="2"
                 HorizontalAlignment="Stretch"
