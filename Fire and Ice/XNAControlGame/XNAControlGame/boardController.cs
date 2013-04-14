@@ -10,46 +10,79 @@ using Creeper;
 
 namespace XNAControlGame
 {
-    class boardController : Component
+    class BoardController : Component
     {
-        protected override void Update(float elapsedTime)
-        {
-            //There's probably a better way to determine whether or not there was a click. This is just placeholder.
-            MouseState mouseState = Mouse.GetState();
+        private IProvideBoardState _boardProvider;
+        private Instance _possibleModel;
 
-            if (mouseState.LeftButton == ButtonState.Pressed)
+        private PegController _clickedOnDown;
+        private PegController _clickedOnUp;
+        private PegController _moveToPeg;
+        private PegController _pegToMove;
+
+        public void ClickEvent(Nine.MouseEventArgs mouseState)
+        {
+            //Implement click logic.
+            PegController stuff = FindClickedPeg(new Vector2(mouseState.X, mouseState.Y));
+            if (stuff != null)
             {
-                FindClickedPeg(new Vector2(mouseState.X, mouseState.Y));
+                stuff.PegControlled.Animations.Play("Idle");
             }
-            base.Update(elapsedTime);
         }
 
-        private void FindClickedPeg(Vector2 mousePosition)
+        public BoardController(IProvideBoardState BoardProvider, Instance PossibleModel)
+        {
+            _possibleModel = PossibleModel;
+            _boardProvider = BoardProvider;
+        }
+
+        private PegController FindClickedPeg(Vector2 mousePosition)
         {
             Camera MainCamera = Scene.FindName<Camera>("MainCamera");
-            Ray selectionRay = Parent.GetGraphicsDevice().Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, MainCamera.View, MainCamera.Projection);
-            //Give all the pegs the selection ray so they can see if they were clicked. I don't know how to do this yet. That'll be you Kaleb (or Gage).
-            throw new NotImplementedException();
+            Ray selectionRay = Scene.GetGraphicsDevice().Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, MainCamera.View, MainCamera.Projection);
+
+            List<PegController> found = new List<PegController>();
+            Scene.FindAll<PegController>(new BoundingFrustum( MainCamera.View * MainCamera.Projection ), (x) => x.PegType == CreeperPegType.Possible || x.PegType.ToCreeperColor() == _boardProvider.GetCurrentPlayer().Color, found);
+
+            foreach (PegController controller in found)
+            {
+                if (controller.PegType.ToCreeperColor() == _boardProvider.GetCurrentPlayer().Color && controller.IsPegClicked(selectionRay))
+                {
+                    return controller;
+                }
+            }
+
+            return null;
         }
 
-        //This logic has been copied from the Game1 UserMethods. There is probably a better way to do this now.
-        //For example, load the possible models by creating instances of a group in a xaml file?
         private void CreatePossibleMoves(Position selectedPeg)
         {
-            //if (selectedPeg != null)
-            //{
-            //    IEnumerable<Move> possibleMoves = BoardProvider.GetBoard().Pegs.At(selectedPeg).PossibleMoves(BoardProvider.GetBoard());
-            //    foreach (Position position in possibleMoves.Select(x => x.EndPosition))
-            //    {
-            //        CreeperPeg peg = new CreeperPeg(_possibleModel)
-            //        {
-            //            Position = position,
-            //            PegType = CreeperPegType.Possible,
-            //        };
+            CreeperColor team = _boardProvider.GetCurrentPlayer().Color;
+            IEnumerable<Move> possibleMoves = _boardProvider.GetBoard().Pegs.At(selectedPeg).PossibleMoves(_boardProvider.GetBoard());
 
-            //        _boardGroup.Add(peg);
-            //    }
-            //}
+            foreach (Position position in possibleMoves.Select(x => x.EndPosition))
+            {
+                Group possiblePeg = _possibleModel.CreateInstance<Group>(Scene.ServiceProvider);
+                possiblePeg.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[position.Row, position.Column]);
+                possiblePeg.Add(new PegController(position, CreeperPegType.Possible));
+                Scene.Add(possiblePeg);
+            }
+        }
+
+
+        private void ClearPossiblePegs()
+        {
+            IEnumerable<PegController> pegControllers = Scene.Children
+                        .Where(x => x.GetType() == typeof(PegController))
+                        .Select(x => x as PegController);
+
+            foreach (PegController controller in pegControllers)
+            {
+                if (controller.PegType == CreeperPegType.Possible)
+                {
+                    Scene.Remove(controller.Parent);
+                }
+            }
         }
     }
 }
