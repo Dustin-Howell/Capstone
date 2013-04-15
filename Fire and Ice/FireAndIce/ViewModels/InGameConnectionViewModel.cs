@@ -33,15 +33,15 @@ namespace FireAndIce.ViewModels
         {
             if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
             {
-                connectionProblem("Cable Unplugged");
+                connectionProblem("Lost Network Connection");
             }
             else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
             {
-                connectionRestored("Cable Plugged In");
+                connectionRestored("Network Connection Restored");
             }
             else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
             {
-                connectionProblem("Connection Lost");
+                connectionProblem("Connection Problem");
             }
             else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
             {

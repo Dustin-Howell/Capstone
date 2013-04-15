@@ -164,7 +164,7 @@ namespace CreeperNetwork
             {
                 serverFull = true;
                 accepted = true;
-                clientPlayerName = BitConverter.ToString(packetIn, 11 + hostGameName.Length + 4, clientPlayerNameLength);
+                clientPlayerName = Encoding.ASCII.GetString(packetIn, 11 + hostGameName.Length + 4, clientPlayerNameLength);
             }
 
             return accepted;
@@ -181,6 +181,9 @@ namespace CreeperNetwork
             sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
             selfPlayerName = hostPlayerName;
             opponentPlayerName = clientPlayerName;
+
+            Console.WriteLine(selfPlayerName);
+            Console.WriteLine(opponentPlayerName);
 
             Console.WriteLine("GAME STARTED.");
             gameRunning = true;
@@ -204,6 +207,7 @@ namespace CreeperNetwork
                             awaySequenceNumber = BitConverter.ToInt32(packet, 2);
                             lastReceivedHomeSeqNum = homeSequenceNumber;
                             acknowledged = true;
+                            runGame();
                         }
                     }
                 }
@@ -300,8 +304,8 @@ namespace CreeperNetwork
             byte[] packet = new byte[MAX_PACKET_SIZE];
             Boolean commandReceived = false;
 
-            selfPlayerName = hostPlayerName;
-            opponentPlayerName = clientPlayerName;
+            selfPlayerName = clientPlayerName;
+            opponentPlayerName = hostPlayerName;
 
             while (!commandReceived)
             {
@@ -316,7 +320,7 @@ namespace CreeperNetwork
 
                     Console.WriteLine("GAME STARTED.");
                     gameRunning = true;
-
+                    runGame();
                     _keepAliveWorker.RunWorkerAsync();
                 }
                 else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
@@ -633,10 +637,11 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            //Cannot access a disposed object.
-            //Object name: 'System.Net.Sockets.UdpClient'.
-            //this happens to the host of a networked game
-            data = listener.Receive(ref ipOfLastPacket);
+            try
+            {
+                data = listener.Receive(ref ipOfLastPacket);
+            }
+            catch (Exception) { }
 
             return data;
         }
@@ -692,7 +697,12 @@ namespace CreeperNetwork
 
             //TODO: Fix null reference exception on exiting game
             //client was null
-            listenerAlt.Client.ReceiveTimeout = 0;
+            try
+            {
+                listenerAlt.Client.ReceiveTimeout = 0;
+            }
+            catch (Exception) { }
+
 
             return data;
         }
@@ -705,7 +715,11 @@ namespace CreeperNetwork
          *********************************************************/
         private void sendPacket(byte[] packetIn, String ipAddressIn)
         {
-            sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
+            try
+            {
+                sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
+            }
+            catch (Exception) { }
         }
 
         /**********************************************************
@@ -717,7 +731,11 @@ namespace CreeperNetwork
          *********************************************************/
         private void sendPacket_altPort(byte[] packetIn, String ipAddressIn)
         {
-            sender.Send(packetIn, packetIn.Length, ipAddressIn, ALT_SERVER_PORT);
+            try
+            {
+                sender.Send(packetIn, packetIn.Length, ipAddressIn, ALT_SERVER_PORT);
+            }
+            catch (Exception) { }
         }
 
         /**********************************************************
@@ -969,14 +987,17 @@ namespace CreeperNetwork
         {
             if (message.Type == NetworkErrorType.Forfeit)
             {
+                gameRunning = false;
                 Console.WriteLine("Game ended by forfeit.");
             }
             else if (message.Type == NetworkErrorType.Disconnect)
             {
+                gameRunning = false;
                 Console.WriteLine("Player disconnected.");
             }
             else if (message.Type == NetworkErrorType.IllegalMove)
             {
+                gameRunning = false;
                 Console.WriteLine("Illegal move detected.");
             }
 

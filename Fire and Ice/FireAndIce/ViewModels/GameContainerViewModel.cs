@@ -150,7 +150,10 @@ namespace FireAndIce.ViewModels
 
         public void Handle(ChatMessage message)
         {
-            ChatMessages.Add(AppModel.Network.getOpponentName() + ": " + message.Message);
+            if (message.Type == ChatMessageType.Send)
+                ChatMessages.Add(message.Message);
+            else
+                ChatMessages.Add(AppModel.Network.getOpponentName() + message.Message);
         }
 
         private PropertyChangedBase _popup;
