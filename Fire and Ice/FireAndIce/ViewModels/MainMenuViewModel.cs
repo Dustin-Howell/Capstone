@@ -386,10 +386,10 @@ namespace FireAndIce.ViewModels
 
             MainMenu.ControlIsVisible = true;
           
-            //String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
-            //String soundFile = "\\";
-            //String actualFile = path + soundFile + "music.wav";
-            //PlayMusic = actualFile;
+            String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
+            String soundFile = "\\";
+            String actualFile = path + soundFile + "MenuMusic.mp3";
+            PlayMusic = actualFile;
         }
 
         private string _playMusic;
