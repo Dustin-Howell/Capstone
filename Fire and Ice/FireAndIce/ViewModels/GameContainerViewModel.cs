@@ -102,7 +102,11 @@ namespace FireAndIce.ViewModels
                 || _settings.Player2Type == PlayerType.Network)
             {
                 IsNetworkGame = true;
+                UndoVisible = System.Windows.Visibility.Collapsed;
+                QuitVisible = System.Windows.Visibility.Collapsed;
             }
+            else
+                ForfeitVisible = System.Windows.Visibility.Collapsed;
         }
 
         public void ReturnToMainMenu()
@@ -154,6 +158,39 @@ namespace FireAndIce.ViewModels
                 ChatMessages.Add(message.Message);
             else
                 ChatMessages.Add(AppModel.Network.getOpponentName() + message.Message);
+        }
+
+        private System.Windows.Visibility _undoVisible;
+        public System.Windows.Visibility UndoVisible
+        {
+            get { return _undoVisible; }
+            set
+            {
+                _undoVisible = value;
+                NotifyOfPropertyChange(() => UndoVisible);
+            }
+        }
+
+        private System.Windows.Visibility _quitVisible;
+        public System.Windows.Visibility QuitVisible
+        {
+            get { return _quitVisible; }
+            set
+            {
+                _quitVisible = value;
+                NotifyOfPropertyChange(() => QuitVisible);
+            }
+        }
+
+        private System.Windows.Visibility _forfeitVisible;
+        public System.Windows.Visibility ForfeitVisible
+        {
+            get { return _forfeitVisible; }
+            set
+            {
+                _forfeitVisible = value;
+                NotifyOfPropertyChange(() => ForfeitVisible);
+            }
         }
 
         private PropertyChangedBase _popup;

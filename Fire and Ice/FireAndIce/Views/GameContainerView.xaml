@@ -31,19 +31,22 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Bottom"
                         x:Name="ReturnToMainMenu"
-                        Height="50">
+                        Height="50"
+                        Visibility="{Binding QuitVisible}">
                     Quit
                 </Button>
                 <Button x:Name="Undo" Content="Undo"
                         DockPanel.Dock="Bottom"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Stretch"
-                        Height="50" />
+                        Height="50"
+                        Visibility="{Binding UndoVisible}"/>
                 <Button x:Name="Forfeit" Content="Forfeit"
                         DockPanel.Dock="Bottom"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Stretch"
-                        Height="50" />
+                        Height="50" 
+                        Visibility="{Binding ForfeitVisible}"/>
                 <Button x:Name="ToggleSound" Content="Toggle Sound"
                         DockPanel.Dock="Bottom"
                         VerticalAlignment="Bottom"
