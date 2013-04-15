@@ -3,6 +3,11 @@
 #define MyAppPublisher "RRRobust Software"
 #define MyAppExeName "FireAndIce.exe"
 
+; Redistributable constants
+#define MyRedistFolder "..\Redist"
+#define XNARedist "xnafx40_redist.msi"
+#define DotNETRedist "dotNetFx40_Full_x86_x64.exe"
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -31,6 +36,10 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
+; Redistributables
+Source: "{#MyRedistFolder}\{#XNARedist}"; DestDir: "{tmp}"
+Source: "{#MyRedistFolder}\{#DotNETRedist}"; DestDir: "{tmp}"
+
 ; Game executable
 Source: "..\Fire and Ice\FireAndIce\bin\Release\FireAndIce.exe"; DestDir: "{app}"; Flags: ignoreversion
 
@@ -49,5 +58,57 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
+; Redistributable installers
+Filename: "{tmp}\{#DotNETRedist}"; StatusMsg: "Installing required component: .NET Framework 4.0 Client."; Parameters: "/norestart /passive"; Flags: skipifdoesntexist; Check: CheckNetFramework
+Filename: "msiexec.exe"; Parameters: "/qb /i ""{tmp}\{#XNARedist}"""; StatusMsg: "Installing required component: XNA Framework Redistributable 4.0 Refresh."; Flags: skipifdoesntexist; Check: CheckXNAFramework
+
+; Fire and Ice
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+function IsDotNetDetected: boolean;
+var
+    Key: string;
+    Install: cardinal;
+    Success: boolean;
+
+begin
+    WizardForm.StatusLabel.Caption := 'Checking for .Net Framework 4.0 Client.';
+    Key := 'SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client';
+    Success := RegQueryDWordValue(HKLM, Key, 'Install', Install);
+    result := Success and (Install = 1);
+end;
+
+function CheckNetFramework: boolean;
+begin
+    if IsDotNetDetected then begin
+        WizardForm.StatusLabel.Caption := '.Net Framework 4.0 Client detected.';
+    end;
+    result := not IsDotNetDetected;
+end;
+
+function IsXNAFrameworkDetected: boolean;
+var
+    Key: string;
+    Install: cardinal;
+    Success: boolean;
+
+begin
+    WizardForm.StatusLabel.Caption := 'Checking for XNA Framework Redistributable 4.0 Refresh.';
+    if IsWin64 then begin
+        Key := 'SOFTWARE\Wow6432Node\Microsoft\XNA\Framework\v4.0';
+    end else begin
+        Key := 'SOFTWARE\Microsoft\XNA\Framework\v4.0';
+    end;
+    Success := RegQueryDWordValue(HKLM, Key, 'Installed', Install);
+    result := Success and (Install = 1);
+end;
+
+function CheckXNAFramework: boolean;
+begin
+    if IsXNAFrameworkDetected then begin
+        WizardForm.StatusLabel.Caption := 'XNA Framework Redistributable 4.0 Refresh detected.';
+    end;
+    result := not IsXNAFrameworkDetected;
+end;
 
