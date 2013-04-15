@@ -10,7 +10,7 @@ using Creeper;
 
 namespace XNAControlGame
 {
-    class boardController : Component
+    class BoardController : Component
     {
         protected override void Update(float elapsedTime)
         {

@@ -12,7 +12,7 @@ using Nine.Graphics;
 
 namespace XNAControlGame
 {
-    class pegController : Component
+    class PegController : Component
     {
         //Placement of this variable and the GetMoveDirection method is temporary (probably).
         //In the final version all directions should equal some angle relative the board (North would probably be 45 degrees.

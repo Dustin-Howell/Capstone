@@ -256,14 +256,14 @@ namespace XNAControlGame
                 {
                     _fireGroup = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     _fireGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    _fireGroup.Add(new pegController());
+                    _fireGroup.Add(new PegController());
                     _scene.Add(_fireGroup);
                 }
                 else
                 {
                     _iceGroup = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
                     _iceGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    _iceGroup.Add(new pegController());
+                    _iceGroup.Add(new PegController());
                     _scene.Add(_iceGroup);
                 }
             }
