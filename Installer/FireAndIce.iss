@@ -1,5 +1,5 @@
 #define MyAppName "Fire and Ice"
-#define MyAppVersion "0.0.2"
+#define MyAppVersion "0.0.2a"
 #define MyAppPublisher "RRRobust Software"
 #define MyAppExeName "FireAndIce.exe"
 
@@ -19,7 +19,7 @@ LicenseFile=..\Docs\License.txt
 InfoBeforeFile=..\README.md
 InfoAfterFile=..\README.md
 OutputDir=..\Deployable
-OutputBaseFilename=Setup-FireAndIce-version_0.0.2a
+OutputBaseFilename=Setup-FireAndIce-version_{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 ShowLanguageDialog=no
