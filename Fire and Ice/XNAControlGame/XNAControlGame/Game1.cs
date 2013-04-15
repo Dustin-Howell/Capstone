@@ -36,18 +36,10 @@ namespace XNAControlGame
         }
     }
 
-    public interface ICreeperBoardLayout
-    {
-        Group BoardGroup { get; }
-        IEnumerable<CreeperPeg> Pegs { get; }
-
-        void FlipTile(Position position, CreeperColor color);
-    }
-
     /// <summary>
     /// Only class level variables and override methods go in this file
     /// </summary>
-    public partial class Game1 : Game, ICreeperBoardLayout
+    public partial class Game1 : Game
     {
         private IEventAggregator _eventAggregator;
         private SpriteFont _spriteFont;
@@ -72,54 +64,7 @@ namespace XNAControlGame
         private Input _input;
 
         private MoveAnimationListener _moveAnimationListener;
-
-        private CreeperPeg _selectedPeg;
-        private CreeperPeg _SelectedPeg
-        {
-            get
-            {
-                return _selectedPeg;
-            }
-            set
-            {
-                if (_selectedPeg != value)
-                {
-                    _selectedPeg = value;
-                    UpdatePossibleMoves(value);
-                }
-            }
-        }
-
-        private IEnumerable<CreeperPeg> _pegs
-        {
-            get
-            {
-                return _boardGroup.Children
-                    .Where(x => x.GetType() == typeof(CreeperPeg))
-                    .Select(x => (CreeperPeg)x);
-            }
-        }
-        private IEnumerable<CreeperPeg> _firePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Fire);  
-            }
-        }
-        private IEnumerable<CreeperPeg> _icePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Ice);                
-            }
-        }
-        private IEnumerable<CreeperPeg> _possiblePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Possible);
-            }
-        }
+        private BoardController _boardController;
 
         private GraphicsDeviceManager _graphics;
 
@@ -135,7 +80,7 @@ namespace XNAControlGame
             BoardProvider = boardProvider;
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
-            _eventAggregator.Subscribe(_moveAnimationListener = new MoveAnimationListener(this));
+            _eventAggregator.Subscribe(_moveAnimationListener = new MoveAnimationListener());
 
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -144,21 +89,6 @@ namespace XNAControlGame
         protected override void Initialize()
         {
             _input = new Input();
-
-            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
-            {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
-            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
-            {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
-                {
-                    DetectFullClick(e);
-                }
-            });
 
             base.Initialize();
         }
@@ -214,7 +144,8 @@ namespace XNAControlGame
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _scene.Draw(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
-            //_scene.DrawDiagnostics(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
+            if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Space))
+                _scene.DrawDiagnostics(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
 #if DEBUG
             _sb.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
@@ -223,16 +154,6 @@ namespace XNAControlGame
 #endif
 
             base.Draw(gameTime);
-        }
-
-        public Group BoardGroup
-        {
-            get { return _boardGroup; }
-        }
-
-        public IEnumerable<CreeperPeg> Pegs
-        {
-            get { return _pegs; }
         }
     }
 }

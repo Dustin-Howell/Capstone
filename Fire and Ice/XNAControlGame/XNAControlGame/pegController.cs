@@ -12,73 +12,100 @@ using Nine.Graphics;
 
 namespace XNAControlGame
 {
+    public enum MoveType { TileJump, PegJump, Normal, }
+    public enum CreeperPegType { Fire, Ice, Possible, }
+
     class PegController : Component
     {
-        //Placement of this variable and the GetMoveDirection method is temporary (probably).
-        //In the final version all directions should equal some angle relative the board (North would probably be 45 degrees.
-        enum Direction { N, S, E, W, NW, SW, NE, SE };
+        private Nine.Graphics.Model _pegModel;
 
-        public float Speed { get; set; }
-        public enum Team { Possible, Fire, Ice };
-
-        protected override void Update(float elapsedTime)
+        private Position _position;
+        private Vector3 _graphicalPosition;
+        public Position Position
         {
-            //We might need update logic to determine when to activate certain animations in the move sequence.
-            //For example, during a peg jump move, we could test for collision with another bounding box, and if
-            //it was detected we could pause the tween animation moving peg's position, switch to the kill animation (chop?)
-            //and then resume the run and position tween animations until the move is completed. On completion of the positional
-            //tween animation, switch from run animation to idle animation. Sheesh.
-
-            base.Update(elapsedTime);
+            get
+            {
+                return _position;
+            }
+            set
+            {
+                _position = value;
+            }
         }
 
-        /// <summary>
-        /// Will return true if the current peg has been clicked and false if it was not clicked. This function is not yet fully implemented
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="mousePosition"></param>
-        /// <returns></returns>
+        private void DoTransform()
+        {
+            _pegModel.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(_graphicalPosition);
+        }
+
+        public CreeperPegType PegType { get; set; }
+
         public bool IsPegClicked( Ray selectionRay )
         {
             return selectionRay.Intersects( Parent.ComputeBounds() ).HasValue;
         }
 
-        private void MoveTo(Move moveToAnimate, System.Action callback)
+        public void MoveTo(Position position, Vector3 endPoint, MoveType type, System.Action callback)
         {
-            Direction direction = GetDirection( moveToAnimate );
-            //Set the peg's rotation to the appropriate cardinal direction's angle as set in the enum.
+            TweenAnimation<Matrix> rotateAnimation = new TweenAnimation<Matrix>
+            {
+                Target = Parent,
+                TargetProperty = "Transform",
+                Duration = TimeSpan.FromMilliseconds(500),
+                From = Parent.Transform,
+                To = Matrix.CreateRotationY((float)Math.PI),
+                Curve = Curves.Smooth,
+            };
 
-            //Create the positional tween animation.
-            TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>()
+            TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>
             {
                 Target = Parent,
                 TargetProperty = "Transform",
                 Duration = TimeSpan.FromSeconds(1),
                 From = Parent.Transform,
-                To = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateRotationY(MathHelper.ToRadians(135))
-                        * Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[moveToAnimate.EndPosition.Row, moveToAnimate.EndPosition.Column]),
+                To = Matrix.CreateTranslation(endPoint),
                 Curve = Curves.Smooth,
             };
+
+            rotateAnimation.Completed += new EventHandler((s, e) =>
+            {
+                Parent.Animations.Add(Resources.AnimationNames.PegMove, moveAnimation);
+                Parent.Animations.Play(Resources.AnimationNames.PegMove);
+            });
+
             moveAnimation.Completed += new EventHandler((s, e) =>
             {
-                //Position = position;
-                Parent.Animations["Run"].Stop();
-                Parent.Animations.Play("Idle");
+                _pegModel.Animations["Run"].Stop();
+                _pegModel.Animations.Play("Idle");
                 Parent.Animations.Remove(Resources.AnimationNames.PegMove);
+                _graphicalPosition = endPoint;
+                Position = position;
+                //DoTransform();
                 callback();
-            }
-                );
+            });
 
-            Parent.Animations.Add(Resources.AnimationNames.PegMove, moveAnimation);
-            Parent.Animations.Play(Resources.AnimationNames.PegMove);
-            Parent.Animations.Play("Run");
-
-            //Have different methods based on the type of animation it is for easier scripting? (Move, Capture, Jump)
+            Parent.Animations.Add("Rotate", rotateAnimation);
+            Parent.Animations.Play("Rotate");
+            _pegModel.Animations.Play("Run");
         }
 
-        private Direction GetDirection(Move moveToAnimate)
+        protected override void OnAdded(Group parent)
         {
-            return Direction.S;
+            _pegModel = parent.Find<Nine.Graphics.Model>();
+            if (PegType != CreeperPegType.Possible)
+                _pegModel.Animations.Play("Idle");
+            base.OnAdded(parent);
+        }
+
+        protected override void OnRemoved(Group parent)
+        {
+            _pegModel = null;
+            base.OnRemoved(parent);
+        }
+
+        internal void Destroy()
+        {
+            Scene.Remove(Parent);
         }
     }
     

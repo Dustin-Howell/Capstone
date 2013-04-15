@@ -13,49 +13,41 @@ namespace XNAControlGame
     class MoveAnimationListener : Component, IHandle<MoveMessage>
     {
         public bool IsAnimating { get; private set; }
-        private ICreeperBoardLayout _boardLayout;
         public Queue<MoveMessage> _movesToAnimate;
 
-        public MoveAnimationListener(ICreeperBoardLayout boardLayout)
+        public BoardController BoardController { get; set; }
+
+        public MoveAnimationListener()
         {
             IsAnimating = false;
-            _boardLayout = boardLayout;
             _movesToAnimate = new Queue<MoveMessage>();
         }
 
         protected override void Update(float elapsedTime)
         {
-            if (!IsAnimating && _movesToAnimate.Any())
+            if (BoardController != null && !IsAnimating && _movesToAnimate.Any())
             {
                 MoveMessage message = _movesToAnimate.Dequeue();
                 if (message.Type == MoveMessageType.Response)
                 {
                     IsAnimating = true;
-                    if (CreeperBoard.IsCaptureMove(message.Move))
-                    {
-                        //capture
-                        _boardLayout.BoardGroup.Remove(_boardLayout.Pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(message.Move)));
-                        _boardLayout.Pegs
-                            .First(x => x.Position == message.Move.StartPosition)
-                            .MoveTo(message.Move.EndPosition, () => IsAnimating = false);
-                    }
-                    else if (CreeperBoard.IsFlipMove(message.Move))
-                    {
-                        _boardLayout.FlipTile(CreeperBoard.GetFlippedPosition(message.Move), message.Move.PlayerColor);
-                        _boardLayout.Pegs
-                            .First(x => x.Position == message.Move.StartPosition)
-                            .MoveTo(message.Move.EndPosition, () => IsAnimating = false);
-                    }
-                    else
-                    {
-                        _boardLayout.Pegs
-                            .First(x => x.Position == message.Move.StartPosition)
-                            .MoveTo(message.Move.EndPosition, () => IsAnimating = false);
-                    }
+                    BoardController.Move(message.Move, () => IsAnimating = false);
                 }
             }
 
             base.Update(elapsedTime);
+        }
+
+        protected override void OnAdded(Group parent)
+        {
+            BoardController = parent.Find<BoardController>();
+            base.OnAdded(parent);
+        }
+
+        protected override void OnRemoved(Group parent)
+        {
+            BoardController = null;
+            base.OnRemoved(parent);
         }
 
         public void Handle(MoveMessage message)
