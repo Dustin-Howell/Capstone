@@ -214,36 +214,39 @@ namespace FireAndIce.ViewModels
 
         public void Handle(ConnectionStatusMessage message)
         {
-            if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
+            if (IsNetworkGame)
             {
-                if (stillNotConnected < 1)
+                if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
                 {
-                    Popup = new InGameConnectionViewModel(message);
-                    stillNotConnected++;
+                    if (stillNotConnected < 1)
+                    {
+                        Popup = new InGameConnectionViewModel(message);
+                        stillNotConnected++;
+                    }
                 }
-            }
-            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
-            {
-                if (stillNotConnected < 1)
+                else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
                 {
-                    Popup = new InGameConnectionViewModel(message);
-                    stillNotConnected++;
+                    if (stillNotConnected < 1)
+                    {
+                        Popup = new InGameConnectionViewModel(message);
+                        stillNotConnected++;
+                    }
                 }
-            }
-            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
-            {
-                if (stillNotConnected != 0)
+                else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
                 {
-                    Popup = new InGameConnectionViewModel(message);
-                    stillNotConnected = 0;
+                    if (stillNotConnected != 0)
+                    {
+                        Popup = new InGameConnectionViewModel(message);
+                        stillNotConnected = 0;
+                    }
                 }
-            }
-            else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
-            {
-                if (stillNotConnected != 0)
+                else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
                 {
-                    Popup = new InGameConnectionViewModel(message);
-                    stillNotConnected = 0;
+                    if (stillNotConnected != 0)
+                    {
+                        Popup = new InGameConnectionViewModel(message);
+                        stillNotConnected = 0;
+                    }
                 }
             }
         }
