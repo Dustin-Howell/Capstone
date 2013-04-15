@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.ComponentModel;
+using System.Threading;
 
 namespace CreeperSound
 {
@@ -48,65 +49,64 @@ namespace CreeperSound
 
         public void Handle(SoundPlayMessage message)
         {
-            if (!_muted)
+            Thread t = new Thread(() =>
             {
-                String path = Path.GetFullPath("SoundAssets");
-                String soundFile = "\\";
-                SoundPlayer player;
-                SoundPlayer music;
-                MediaElement player1 = new MediaElement();
-                bool sync = false;
-                bool isMusic = false;
-
-
-                switch (message.Type)
+                if (!_muted)
                 {
-                    case SoundPlayType.Default:
-                        soundFile += "default.wav";
-                        break;
-                    case SoundPlayType.MenuSlideOut:
-                        soundFile += "MenuSlideOut.wav";
-                        break;
-                    case SoundPlayType.MenuButtonMouseOver:
-                        soundFile += "MenuButtonMouseOver.wav";
-                        break;
-                    case SoundPlayType.MenuButtonClick:
-                        soundFile += "MenuButtonClick.wav";
-                        sync = true;
-                        break;
-                    case SoundPlayType.Music1:
-                        soundFile += "freedom1.wav";
-                        sync = true;
-                        isMusic = true;
-                        break;
-                }
+                    String path = Path.GetFullPath("SoundAssets");
+                    String soundFile = "\\";
+                    SoundPlayer player;
+                    SoundPlayer music;
+                    bool sync = false;
+                    bool isMusic = false;
 
-                if (!isMusic)
-                {
-                    player = new SoundPlayer(path + soundFile);
 
-                    if (sync)
-                        player.PlaySync();
+                    switch (message.Type)
+                    {
+                        case SoundPlayType.Default:
+                            soundFile += "default.wav";
+                            break;
+                        case SoundPlayType.MenuSlideOut:
+                            soundFile += "MenuSlideOut.wav";
+                            break;
+                        case SoundPlayType.MenuButtonMouseOver:
+                            soundFile += "MenuButtonMouseOver.wav";
+                            break;
+                        case SoundPlayType.MenuButtonClick:
+                            soundFile += "MenuButtonClick.wav";
+                            sync = true;
+                            break;
+                        case SoundPlayType.Music1:
+                            soundFile += "freedom1.wav";
+                            sync = true;
+                            isMusic = true;
+                            break;
+                    }
+
+                    if (!isMusic)
+                    {
+                        player = new SoundPlayer(path + soundFile);
+
+                        if (sync)
+                            player.PlaySync();
+                        else
+                            player.Play();
+                    }
                     else
-                        player.Play();
-                }
-                else
-                {
-                    music = new SoundPlayer(path + soundFile);
+                    {
+                        music = new SoundPlayer(path + soundFile);
 
-                    if (sync)
-                        music.PlaySync();
-                    else
-                        music.Play();
+                        if (sync)
+                            music.PlaySync();
+                        else
+                            music.Play();
+                    }
                 }
+            });
 
-                 
-                /*
-                player1.LoadedBehavior = MediaState.Manual;
-                player1.Source = new Uri(path + soundFile, UriKind.RelativeOrAbsolute);
-                player1.Play();
-                 */
-            }
+            t.SetApartmentState(ApartmentState.STA);
+
+            t.Start();
         }
 
         public void Handle(ResetMessage message)
