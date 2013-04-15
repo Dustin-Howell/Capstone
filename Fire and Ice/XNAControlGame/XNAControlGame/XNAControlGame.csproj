@@ -157,7 +157,6 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Resources.cs" />
     <None Include="app.config" />
-    <None Include="YeOldeGame1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
