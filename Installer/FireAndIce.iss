@@ -37,6 +37,7 @@ Source: "..\Fire and Ice\FireAndIce\bin\Release\FireAndIce.exe"; DestDir: "{app}
 ; Game Assets
 Source: "..\Fire and Ice\FireAndIce\bin\Release\Content\*"; DestDir: "{app}\Content\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\Fire and Ice\FireAndIce\bin\Release\Videos\*"; DestDir: "{app}\Videos\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\Fire and Ice\FireAndIce\bin\Release\SoundAssets\*"; DestDir: "{app}\SoundAssets\"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Game libraries
 Source: "..\Fire and Ice\FireAndIce\bin\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion

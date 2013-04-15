@@ -88,10 +88,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SoundAssets\default.wav" />
-    <Content Include="SoundAssets\MenuButtonClick.wav" />
-    <Content Include="SoundAssets\MenuButtonMouseOver.wav" />
-    <Content Include="SoundAssets\MenuSlideOut.wav" />
+    <Content Include="SoundAssets\default.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SoundAssets\MenuButtonClick.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SoundAssets\MenuButtonMouseOver.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

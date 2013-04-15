@@ -50,7 +50,7 @@ namespace CreeperSound
         {
             if (!_muted)
             {
-                String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
+                String path = Path.GetFullPath("SoundAssets");
                 String soundFile = "\\";
                 SoundPlayer player;
                 SoundPlayer music;
