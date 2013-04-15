@@ -36,7 +36,8 @@
                 <TextBox x:Name="PlayerName"
                          Grid.Row="1" Grid.Column="1"
                          FontSize="16"
-                         FontFamily="pack://application:,,,/Fonts/#Holy Empire" />
+                         FontFamily="pack://application:,,,/Fonts/#Holy Empire" 
+                         MaxLength="20"/>
             </Grid>
             <Button x:Name="HostGame">Start</Button>
             <Border>
