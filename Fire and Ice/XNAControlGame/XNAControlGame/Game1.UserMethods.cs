@@ -20,108 +20,83 @@ namespace XNAControlGame
     /// </summary>
     public partial class Game1 : IDisposable, IHandle<SychronizeBoardMessage>
     {
-        private void ClearPossiblePegs()
+        private void LoadViewModels()
         {
-            foreach (CreeperPeg pegToRemove in _possiblePegs)
-            {
-                _boardGroup.Remove(pegToRemove);
-            }
+            _creeperBoardViewModel = new CreeperBoardViewModel(_scene.FindName<Surface>("boardSurface").Heightmap.Height, _scene.FindName<Surface>("boardSurface").Heightmap.Width, _scene.FindName<Surface>("boardSurface").Heightmap.Step);
         }
 
-        private CreeperPeg _lastDownClickedModel;
-        void DetectFullClick(Nine.MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                CreeperPeg clickedModel = GetClickedModel(new Vector2(e.MouseState.X, e.MouseState.Y));
-                if (clickedModel != null)
-                {
-                    //if downclick
-                    if (e.IsButtonDown(e.Button))
-                    {
-                        _lastDownClickedModel = clickedModel;
-                    }
-                    //if upclick
-                    else if (_lastDownClickedModel == clickedModel)
-                    {
-                        _lastDownClickedModel = null;
+        MaterialGroup _boardMaterial;
+        Surface _boardSurface;
 
-                        if (clickedModel.PegType == CreeperPegType.Possible ||
-                            BoardProvider.GetCurrentPlayer().Color == clickedModel.PegType.ToCreeperColor())
-                        {
-                            OnPegClicked(clickedModel);
-                        }
-                    }
+        private void OnContentLoaded()
+        {
+            LoadViewModels();
+
+            _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
+            _boardGroup.Add(_boardController = new BoardController()
+            {
+                FlipTile = FlipTile,
+                BoardProvider = BoardProvider,
+                ViewModel = _creeperBoardViewModel,
+                PublishMove = (move) =>
+                {
+                    _eventAggregator.Publish(new MoveMessage()
+                    {
+                        Board = BoardProvider.GetBoard(),
+                        Move = move,
+                        PlayerType = PlayerType.Human,
+                        Type = MoveMessageType.Response,
+                    });
+                }
+            });
+            _moveAnimationListener.BoardController = _boardController;
+            _boardGroup.Add(_moveAnimationListener);
+            _boardSurface = _boardGroup.Find<Surface>();
+            _boardMaterial = (MaterialGroup)_boardSurface.Material;
+
+            _input.MouseDown += new EventHandler<Nine.MouseEventArgs>((s, e) =>
+            {
+                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
+                {
+                    _boardController.DetectFullClick(e);
+                }
+            });
+            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
+            {
+                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
+                {
+                    _boardController.DetectFullClick(e);
+                }
+            });
+
+            LoadPegModels();
+        }
+
+        private void LoadPegModels()
+        {
+            foreach (Piece piece in BoardProvider.GetBoard().Pegs.Where(x => x.Color.IsTeamColor()))
+            {
+                if (piece.Color == CreeperColor.Fire)
+                {
+                    _fireGroup = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _fireGroup.Transform = Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _fireGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Fire, });
+                    _boardGroup.Add(_fireGroup);
                 }
                 else
                 {
-                    _SelectedPeg = null;
+                    _iceGroup = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _iceGroup.Transform = Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _iceGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Ice, });
+                    _boardGroup.Add(_iceGroup);
                 }
             }
+            _scene.Remove(_boardGroup);
+            _scene.Add(_boardGroup);
         }
 
-        private void OnPegClicked(CreeperPeg clickedModel)
-        {
-            if (_SelectedPeg == clickedModel)
-            {
-                _selectedPeg.Attachments.Remove(_fireEffect);
-                _SelectedPeg = null;
-            }
-
-            else
-            {
-                switch (clickedModel.PegType)
-                {
-                    case CreeperPegType.Fire:
-                        goto case CreeperPegType.Ice;
-                    case CreeperPegType.Ice:
-                        if (_SelectedPeg != null )
-                        {
-                            _SelectedPeg.Attachments.Remove(_fireEffect);
-                        }
-                        _SelectedPeg = clickedModel;
-                        _SelectedPeg.Attachments.Add(_fireEffect);
-                        break;
-                    case CreeperPegType.Possible:
-                        _eventAggregator.Publish(
-                            new MoveMessage()
-                            {
-                                PlayerType = PlayerType.Human,
-                                Type = MoveMessageType.Response,
-                                Move = new Move(
-                                    _SelectedPeg.Position, clickedModel.Position,
-                                    _SelectedPeg.PegType.ToCreeperColor()
-                                )
-                            }
-                         );
-                        _SelectedPeg.Attachments.Remove(_fireEffect);
-                        _SelectedPeg = null;
-                        break;
-                }
-            }
-        }
-
-        private void UpdatePossibleMoves(CreeperPeg clickedPeg)
-        {
-            ClearPossiblePegs();
-
-            if (clickedPeg != null)
-            {
-                IEnumerable<Move> possibleMoves = BoardProvider.GetBoard().Pegs.At(clickedPeg.Position).PossibleMoves(BoardProvider.GetBoard());
-                foreach (Position position in possibleMoves.Select(x => x.EndPosition))
-                {
-                    CreeperPeg peg = new CreeperPeg(_possibleModel)
-                    {
-                        Position = position,
-                        PegType = CreeperPegType.Possible,
-                    };
-
-                    _boardGroup.Add(peg);
-                }
-            }
-        }
-
-        public void FlipTile(Position position, CreeperColor color)
+        #region NittyGrittyTileFlippingCode
+        private void FlipTile(Position position, CreeperColor color)
         {
             Texture2D maskTexture = color.IsFire() ? _fireTileMask : _iceTileMask;
 
@@ -175,7 +150,7 @@ namespace XNAControlGame
             MaterialPaintGroup.SetMaskTextures(_boardMaterial, maskTextures);
         }
 
-        private void SynchronizeTiles(CreeperBoard board)
+        public void SynchronizeTiles(CreeperBoard board)
         {
             Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
 
@@ -218,69 +193,14 @@ namespace XNAControlGame
 
             MaterialPaintGroup.SetMaskTextures(_boardMaterial, maskTextures);
         }
-
-        private CreeperPeg GetClickedModel(Vector2 mousePosition)
-        {
-            Camera camera = _scene.FindName<Camera>("MainCamera");
-            Ray selectionRay = GraphicsDevice.Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, camera.View, camera.Projection);
-
-            List<CreeperPeg> found = new List<CreeperPeg>();
-            _scene.FindAll<CreeperPeg>(ref selectionRay, (x) => x.PegType == CreeperPegType.Possible || x.PegType.ToCreeperColor() == BoardProvider.GetCurrentPlayer().Color, found);
-            return found.FirstOrDefault();
-        }
-
-        private void LoadViewModels()
-        {
-            _creeperBoardViewModel = new CreeperBoardViewModel(_scene.FindName<Surface>("boardSurface").Heightmap.Height, _scene.FindName<Surface>("boardSurface").Heightmap.Width, _scene.FindName<Surface>("boardSurface").Heightmap.Step);
-        }
-
-        MaterialGroup _boardMaterial;
-        Surface _boardSurface;
-
-        private void OnContentLoaded()
-        {
-            _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
-            _boardGroup.Add(_moveAnimationListener);
-            _boardSurface = _boardGroup.Find<Surface>();
-            _boardMaterial = (MaterialGroup)_boardSurface.Material;
-
-            LoadViewModels();
-            LoadPegModels();
-        }
-
-        private void LoadPegModels()
-        {
-            foreach (Piece piece in BoardProvider.GetBoard().Pegs.Where(x => x.Color.IsTeamColor()))
-            {
-                if (piece.Color == CreeperColor.Fire)
-                {
-                    _fireGroup = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    _fireGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    _fireGroup.Add(new PegController());
-                    _scene.Add(_fireGroup);
-                }
-                else
-                {
-                    _iceGroup = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    _iceGroup.Transform = Matrix.CreateTranslation(CreeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
-                    _iceGroup.Add(new PegController());
-                    _scene.Add(_iceGroup);
-                }
-            }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            //dispose stuff
-
-            base.Dispose(disposing);
-        }
+        #endregion
 
         public void Handle(SychronizeBoardMessage message)
         {
             //throw new NotImplementedException("Undo functionality does not exist in Game1.UserMethods: Handle(SychronizedBoardMessage)");
             //remove all pegs
-            _pegs.Apply(x => _boardGroup.Children.Remove(x));
+            //_boardGroup.Children.Apply(x => _boardGroup.Children.Remove(x));
+            _boardController.SynchronizePegs(message.Board);
 
             //add all pegs
             LoadPegModels();
