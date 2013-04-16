@@ -186,6 +186,7 @@
     <Resource Include="Images\Fire and Ice Logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\icon.png" />
     <Content Include="Videos\IntroScreenPlaceholder.wmv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
