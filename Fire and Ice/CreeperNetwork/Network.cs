@@ -42,7 +42,7 @@ namespace CreeperNetwork
         private const byte MOVETYPE_ILLEGAL = 3;
 
         //Network Variables
-        private bool isServer = false;
+        public bool isServer = false;
         private bool serverFull = false;
         private bool hostGame = false;
         private Timer broadcastTimer = new Timer();
@@ -122,7 +122,7 @@ namespace CreeperNetwork
             hostGame = true;
 
             //okay, now what if someone wants to join?.
-            while (!serverFull  && hostGame)
+            while (!serverFull  && hostGame && isServer)
             {
                 packet = receivePacket_blocking();
 
@@ -178,44 +178,48 @@ namespace CreeperNetwork
          *********************************************************/
         public void server_startGame()
         {
-            sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
-            selfPlayerName = hostPlayerName;
-            opponentPlayerName = clientPlayerName;
-
-            Console.WriteLine(selfPlayerName);
-            Console.WriteLine(opponentPlayerName);
-
-            Console.WriteLine("GAME STARTED.");
-            gameRunning = true;
-
-            _keepAliveWorker.RunWorkerAsync();
-
-            try
+            if (isServer)
             {
-                //As soon as the client ACK the packet, we begin.
-                byte[] packet = new byte[MAX_PACKET_SIZE];
+                Console.WriteLine("HEY");
+                sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
+                selfPlayerName = hostPlayerName;
+                opponentPlayerName = clientPlayerName;
 
-                while (!acknowledged)
+                Console.WriteLine(selfPlayerName);
+                Console.WriteLine(opponentPlayerName);
+
+                Console.WriteLine("GAME STARTED.");
+                gameRunning = true;
+
+                _keepAliveWorker.RunWorkerAsync();
+
+                try
                 {
-                    packet = receivePacket_blocking();
+                    //As soon as the client ACK the packet, we begin.
+                    byte[] packet = new byte[MAX_PACKET_SIZE];
 
-                    if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
+                    while (!acknowledged)
                     {
-                        //does the sequence number they sent us back match ours?
-                        if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                        packet = receivePacket_blocking();
+
+                        if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
                         {
-                            awaySequenceNumber = BitConverter.ToInt32(packet, 2);
-                            lastReceivedHomeSeqNum = homeSequenceNumber;
-                            acknowledged = true;
-                            runGame();
+                            //does the sequence number they sent us back match ours?
+                            if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                            {
+                                awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                                lastReceivedHomeSeqNum = homeSequenceNumber;
+                                acknowledged = true;
+                                runGame();
+                            }
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                e.GetHashCode();
-                //timeout...
+                catch (Exception e)
+                {
+                    e.GetHashCode();
+                    //timeout...
+                }
             }
         }
 
@@ -234,14 +238,14 @@ namespace CreeperNetwork
             string[,] games = new string[256, 7];
             int gameCounter = 0;
             Stopwatch serverStopwatch = new Stopwatch();
-
+            isServer = false;
             clientPlayerName = clientNameIn;
 
             broadcastPacket(packet_FindServers());
 
             serverStopwatch.Start();
 
-            while (serverStopwatch.Elapsed < TimeSpan.FromMilliseconds(CONNECTION_TIMEOUT))
+            while (serverStopwatch.Elapsed < TimeSpan.FromMilliseconds(CONNECTION_TIMEOUT) && !isServer)
             {
                 byte[] packet = new byte[MAX_PACKET_SIZE];
                 packet = receivePacket_blockWithTimeout();

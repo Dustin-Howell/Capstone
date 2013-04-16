@@ -386,6 +386,7 @@ namespace FireAndIce.ViewModels
 
             MainMenu.ControlIsVisible = true;
           
+            //Yeah...not what best way to do this. Temporary, or permanent, depending on time. 
             String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
             String soundFile = "\\";
             String actualFile = path + soundFile + "MenuMusic.mp3";
