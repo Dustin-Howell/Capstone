@@ -128,6 +128,7 @@ namespace XNAControlGame
                     Scene.Remove(controller.Parent);
                 }
             }
+            //RefreshBoardGroup();
         }
 
         private PegController _lastDownClickedModel;
@@ -169,6 +170,7 @@ namespace XNAControlGame
                         break;
                     case CreeperPegType.Possible:
                         PublishMove(new Move(new Position(_SelectedPeg.Position), new Position(clickedModel.Position), _SelectedPeg.PegType.ToCreeperColor()));
+                        ClearPossiblePegs();
                         _SelectedPeg = null;
                         break;
                 }
@@ -183,7 +185,7 @@ namespace XNAControlGame
             List<PegController> found = new List<PegController>();
             if (Parent.ComputeBounds().Intersects(selectionRay).HasValue)
             {
-                Parent.Traverse<PegController>(found);
+                Scene.Traverse<PegController>(found);
             }
 
             return found.FirstOrDefault(x => x.IsPegClicked(selectionRay));
@@ -191,8 +193,6 @@ namespace XNAControlGame
 
         private void UpdatePossibleMoves(PegController clickedPeg)
         {
-            ClearPossiblePegs();
-
             if (clickedPeg != null)
             {
                 IEnumerable<Move> possibleMoves = BoardProvider.GetBoard().Pegs.At(clickedPeg.Position).PossibleMoves(BoardProvider.GetBoard());
