@@ -107,9 +107,17 @@ namespace XNAControlGame
 
         private void ClearPossiblePegs()
         {
-            foreach (PegController pegToRemove in _possiblePegs)
+            Camera MainCamera = Scene.FindName<Camera>("MainCamera");
+
+            List<PegController> found = new List<PegController>();
+            Scene.FindAll<PegController>(new BoundingFrustum(MainCamera.View * MainCamera.Projection), (x) => x.PegType == CreeperPegType.Possible, found);
+
+            foreach (PegController controller in found)
             {
-                Scene.Remove(pegToRemove.Parent);
+                if (controller.PegType == CreeperPegType.Possible)
+                {
+                    Scene.Remove(controller.Parent);
+                }
             }
         }
 
