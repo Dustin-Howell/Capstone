@@ -93,6 +93,8 @@ namespace FireAndIce.ViewModels
                 if (e.Cancelled)
                 {
                     CanHostGame = true;
+                    //Potential fix?
+                    AppModel.Network.isServer = false;
                 }
                 else
                 {
