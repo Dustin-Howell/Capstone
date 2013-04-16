@@ -94,7 +94,6 @@ namespace FireAndIce.ViewModels
                 {
                     CanHostGame = true;
                     //Potential fix?
-                    AppModel.Network.isServer = false;
                 }
                 else
                 {
@@ -109,8 +108,6 @@ namespace FireAndIce.ViewModels
 
             _connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
             {
-                if(AppModel.Network.isServer)
-                {
                     AppModel.EventAggregator.Publish(
                         new StartGameMessage()
                         {
@@ -123,16 +120,12 @@ namespace FireAndIce.ViewModels
                                 Network = AppModel.Network,
                             }
                         });                    
-                }
             });
 
-            if(AppModel.Network.isServer)
-            {
+
                 CanHostGame = false;
 
                 _hostGameWorker.RunWorkerAsync();
-            }
-
         }
 
         public void Handle(ConnectionStatusMessage message)
