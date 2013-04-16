@@ -1,0 +1,10 @@
+﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" Name="PossiblePeg" >
+    <Model Source="{ContentReference Model/sphere}" Name="PossiblePegModel" Visible="False" Transform.Scale="3,3,3" Transform="{Transform RotationY={Degrees 45}}" />
+
+    <ParticleEffect Name="Spark" Texture="{ContentReference ./Textures/Fire}" ParticleType="ConstrainedBillboard" Stretch="8">
+        <ParticleEffect.Emitter>
+            <PointEmitter Emission="10" Duration="2 ~ 3" Speed="-0.01 ~ 0.01" Size="1 ~ 1.5" />
+        </ParticleEffect.Emitter>
+        <FadeController />
+    </ParticleEffect>
+</Group>

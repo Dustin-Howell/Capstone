@@ -190,11 +190,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\fire.png">
-      <Name>fire</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\flake.png">
       <Name>flake</Name>
       <Importer>TextureImporter</Importer>
@@ -341,13 +336,6 @@
       <Processor>DefaultContentProcessor</Processor>
       <SubType>Designer</SubType>
     </Compile>
-    <Compile Include="PossiblePeg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <Name>PossiblePeg</Name>
-      <Importer>XamlImporter</Importer>
-      <Processor>DefaultContentProcessor</Processor>
-      <SubType>Designer</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\PrototypeMainBoard.png">
@@ -421,6 +409,29 @@
     </Compile>
     <Compile Include="Assets\redOctoMask.png">
       <Name>redOctoMask</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FirePossiblePeg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <Name>FirePossiblePeg</Name>
+      <Importer>XamlImporter</Importer>
+      <Processor>DefaultContentProcessor</Processor>
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="IcePossiblePeg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <Name>IcePossiblePeg</Name>
+      <Importer>XamlImporter</Importer>
+      <Processor>DefaultContentProcessor</Processor>
+      <SubType>Designer</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Fire.jpg">
+      <Name>Fire</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -34,6 +34,9 @@ namespace XNAControlGame
         public Action<Position, CreeperColor> FlipTile { get; set; }
         public CreeperBoardViewModel ViewModel { get; set; }
 
+        private Instance _firePossibleModel;
+        private Instance _icePossibleModel;
+
         private PegController _selectedPeg;
         private PegController _SelectedPeg
         {
@@ -83,6 +86,12 @@ namespace XNAControlGame
             {
                 return _pegs.Where(x => x.PegType == CreeperPegType.Possible);
             }
+        }
+
+        public BoardController()
+        {
+            _firePossibleModel = new Instance { Template = "FirePossiblePeg" };
+            _icePossibleModel = new Instance { Template = "IcePossiblePeg" };
         }
 
         public void Move(Move move, System.Action callback)
@@ -195,13 +204,28 @@ namespace XNAControlGame
                         PegType = CreeperPegType.Possible,
                     };
 
-                    Group group = new Group(peg, new Sphere(Scene.GetGraphicsDevice()));
+                    Group group;
+                    if (BoardProvider.GetCurrentPlayer().Color == CreeperColor.Fire)
+                    {
+                        group = _firePossibleModel.CreateInstance<Group>(Scene.ServiceProvider);
+                    }
+                    else
+                    {
+                        group = _icePossibleModel.CreateInstance<Group>(Scene.ServiceProvider);
+                    }
+
+                    group.Add(peg);
                     group.Transform = Matrix.CreateTranslation(ViewModel.GraphicalPositions[position.Row, position.Column]);
-                    Parent.Add(group);
-                    Scene.Remove(Parent);
-                    Scene.Add(Parent);
+                    Scene.Add(group);
+                    //RefreshBoardGroup();
                 }
             }
+        }
+
+        private void RefreshBoardGroup()
+        {
+            Scene.Remove(Parent);
+            Scene.Add(Parent);
         }
 
         public void SynchronizePegs(CreeperBoard creeperBoard)
