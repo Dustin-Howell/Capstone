@@ -18,6 +18,8 @@ namespace FireAndIce.ViewModels
     {
         private GameSettings _settings;
 
+        private bool isNetworkProblem = false;
+
         //private SlideOutPanelViewModel _gameMenu;
         public ToggleButtonMenuViewModel GameMenu
         {
@@ -133,7 +135,9 @@ namespace FireAndIce.ViewModels
 
         public void SendMessage()
         {
-            AppModel.EventAggregator.Publish(new ChatMessage(AppModel.Network.getSelfName() + ": " + Message, ChatMessageType.Send));
+            if(!isNetworkProblem)
+                AppModel.EventAggregator.Publish(new ChatMessage(AppModel.Network.getSelfName() + ": " + Message, ChatMessageType.Send));
+            
             Message = "";
         }
 
@@ -223,6 +227,7 @@ namespace FireAndIce.ViewModels
                         Popup = new InGameConnectionViewModel(message);
                         stillNotConnected++;
                     }
+                    isNetworkProblem = true;
                 }
                 else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
                 {
@@ -231,6 +236,7 @@ namespace FireAndIce.ViewModels
                         Popup = new InGameConnectionViewModel(message);
                         stillNotConnected++;
                     }
+                    isNetworkProblem = true;
                 }
                 else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
                 {
@@ -239,6 +245,7 @@ namespace FireAndIce.ViewModels
                         Popup = new InGameConnectionViewModel(message);
                         stillNotConnected = 0;
                     }
+                    isNetworkProblem = false;
                 }
                 else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
                 {
@@ -247,6 +254,7 @@ namespace FireAndIce.ViewModels
                         Popup = new InGameConnectionViewModel(message);
                         stillNotConnected = 0;
                     }
+                    isNetworkProblem = false;
                 }
             }
         }

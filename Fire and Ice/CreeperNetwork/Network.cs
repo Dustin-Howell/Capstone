@@ -180,7 +180,6 @@ namespace CreeperNetwork
         {
             if (isServer)
             {
-                Console.WriteLine("HEY");
                 sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
                 selfPlayerName = hostPlayerName;
                 opponentPlayerName = clientPlayerName;
@@ -329,7 +328,7 @@ namespace CreeperNetwork
                 }
                 else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
                 {
-                    Console.WriteLine("DISCONNECTED BY SERVER.");
+                    _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
                     commandReceived = true;
                 }
             }

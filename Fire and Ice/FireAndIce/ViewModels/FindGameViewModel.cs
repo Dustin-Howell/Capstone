@@ -34,7 +34,7 @@ namespace FireAndIce.ViewModels
         }
     }
 
-    public class FindGameViewModel : PropertyChangedBase, IDisposable, IHandle<StartGameMessage>, IHandle<ConnectionStatusMessage>
+    public class FindGameViewModel : PropertyChangedBase, IDisposable, IHandle<StartGameMessage>, IHandle<ConnectionStatusMessage>, IHandle<NetworkErrorMessage>
     {
         private List<NetworkGameInfo> _gamesData;
 
@@ -47,14 +47,16 @@ namespace FireAndIce.ViewModels
         public FindGameViewModel(IEventAggregator eventAggregator)
         {
             refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
-            // Set the Interval to 5000 milliseconds.
-            refreshTimer.Interval = 5000;
+            // Set the Interval to 3000 milliseconds.
+            refreshTimer.Interval = 3000;
             refreshTimer.Enabled = true;
 
             //ideally true...
-            refreshTimer.AutoReset = false;
+            refreshTimer.AutoReset = true;
 
             eventAggregator.Subscribe(this);
+
+            SearchForGames = "Searching for games...";
         }
 
         // Dynamically bindable properties.
@@ -137,7 +139,7 @@ namespace FireAndIce.ViewModels
 
             string[,] gamesFound = new string[256, 7];
             findGamesWorker.DoWork += new DoWorkEventHandler((s, e) => gamesFound = AppModel.Network.client_findGames(PlayerName));
-            
+            SearchForGames = "Searching for games...";
 
             findGamesWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
             {
@@ -145,15 +147,18 @@ namespace FireAndIce.ViewModels
                 List<NetworkGameInfo> gamesData = new List<NetworkGameInfo>();
                 for (int i = 0; i < gamesFound.Length && gamesFound[i, 0] != null; i++)
                 {
-                    games.Add(gamesFound[i, 3]);
-                    gamesData.Add(new NetworkGameInfo()
-                        {
-                            ServerIP = gamesFound[i, 0],
-                            ProtocolVersion = gamesFound[i, 1],
-                            GameName = gamesFound[i, 3],
-                            PlayerName = gamesFound[i, 5],
-                            FirstMove = gamesFound[i, 6],
-                        });
+                    if(!games.Contains(gamesFound[i, 3]))
+                    {
+                        games.Add(gamesFound[i, 3]);
+                        gamesData.Add(new NetworkGameInfo()
+                            {
+                                ServerIP = gamesFound[i, 0],
+                                ProtocolVersion = gamesFound[i, 1],
+                                GameName = gamesFound[i, 3],
+                                PlayerName = gamesFound[i, 5],
+                                FirstMove = gamesFound[i, 6],
+                            });
+                    }
                 }
 
                 FoundGames = games;
@@ -205,14 +210,35 @@ namespace FireAndIce.ViewModels
             Dispose();
         }
 
+        public void Handle(NetworkErrorMessage message)
+        {
+            if (message.Type == NetworkErrorType.Disconnect)
+            {
+                DisconnectedMessage = "Cannot join that game.";
+            }
+        }
+
+        private string _disconnectedMessage;
+        public string DisconnectedMessage
+        {
+            get { return _disconnectedMessage; }
+            set
+            {
+                _disconnectedMessage = value;
+                NotifyOfPropertyChange(() => DisconnectedMessage);
+            }
+        }
+
         public void Handle(ConnectionStatusMessage message)
         {
             if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
             {
+                SearchForGames = "No Connection";
                 NetworkCableUnpluggedMessage = "No Connection!";
             }
             else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
             {
+                SearchForGames = "Searching for games...";
                 NetworkCableUnpluggedMessage = "Connection OK";
             }
         }
@@ -225,6 +251,17 @@ namespace FireAndIce.ViewModels
             {
                 _networkCableUnpluggedMessage = value;
                 NotifyOfPropertyChange(() => NetworkCableUnpluggedMessage);
+            }
+        }
+
+        private string _searchForGames;
+        public string SearchForGames
+        {
+            get { return _searchForGames; }
+            set
+            {
+                _searchForGames = value;
+                NotifyOfPropertyChange(() => SearchForGames);
             }
         }
     }

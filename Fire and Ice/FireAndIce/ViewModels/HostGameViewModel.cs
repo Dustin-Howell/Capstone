@@ -93,7 +93,6 @@ namespace FireAndIce.ViewModels
                 if (e.Cancelled)
                 {
                     CanHostGame = true;
-                    //Potential fix?
                 }
                 else
                 {
@@ -123,9 +122,9 @@ namespace FireAndIce.ViewModels
             });
 
 
-                CanHostGame = false;
+            CanHostGame = false;
 
-                _hostGameWorker.RunWorkerAsync();
+            _hostGameWorker.RunWorkerAsync();
         }
 
         public void Handle(ConnectionStatusMessage message)
