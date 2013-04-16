@@ -124,18 +124,7 @@ namespace XNAControlGame
                     //if downclick
                     if (e.IsButtonDown(e.Button))
                     {
-                        _lastDownClickedModel = clickedModel;
-                    }
-                    //if upclick
-                    else if (_lastDownClickedModel == clickedModel)
-                    {
-                        _lastDownClickedModel = null;
-
-                        if (clickedModel.PegType == CreeperPegType.Possible ||
-                            BoardProvider.GetCurrentPlayer().Color == clickedModel.PegType.ToCreeperColor())
-                        {
-                            OnPegClicked(clickedModel);
-                        }
+                        OnPegClicked(clickedModel);
                     }
                 }
                 else

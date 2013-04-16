@@ -61,13 +61,6 @@ namespace XNAControlGame
                     _boardController.DetectFullClick(e);
                 }
             });
-            _input.MouseUp += new EventHandler<Nine.MouseEventArgs>((s, e) =>
-            {
-                if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human && !_moveAnimationListener.IsAnimating)
-                {
-                    _boardController.DetectFullClick(e);
-                }
-            });
 
             LoadPegModels();
         }
