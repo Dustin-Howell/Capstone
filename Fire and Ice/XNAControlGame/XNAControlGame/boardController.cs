@@ -167,30 +167,25 @@ namespace XNAControlGame
 
         private void OnPegClicked(PegController clickedModel)
         {
-            if (BoardProvider.GetCurrentPlayer().Type == PlayerType.Human
-                && (clickedModel.PegType == CreeperPegType.Possible
-                    || clickedModel.PegType.ToCreeperColor() == BoardProvider.GetCurrentPlayer().Color))
+            if (_SelectedPeg == clickedModel)
             {
-                if (_SelectedPeg == clickedModel)
-                {
-                    _SelectedPeg = null;
-                }
+                _SelectedPeg = null;
+            }
 
-                else
+            else
+            {
+                switch (clickedModel.PegType)
                 {
-                    switch (clickedModel.PegType)
-                    {
-                        case CreeperPegType.Fire:
-                            goto case CreeperPegType.Ice;
-                        case CreeperPegType.Ice:
-                            _SelectedPeg = clickedModel;
-                            break;
-                        case CreeperPegType.Possible:
-                            PublishMove(new Move(new Position(_SelectedPeg.Position), new Position(clickedModel.Position), _SelectedPeg.PegType.ToCreeperColor()));
-
-                            _SelectedPeg = null;
-                            break;
-                    }
+                    case CreeperPegType.Fire:
+                        goto case CreeperPegType.Ice;
+                    case CreeperPegType.Ice:
+                        _SelectedPeg = clickedModel;
+                        break;
+                    case CreeperPegType.Possible:
+                        PublishMove(new Move(new Position(_SelectedPeg.Position), new Position(clickedModel.Position), _SelectedPeg.PegType.ToCreeperColor()));
+                        
+                        _SelectedPeg = null;
+                        break;
                 }
             }
         }
