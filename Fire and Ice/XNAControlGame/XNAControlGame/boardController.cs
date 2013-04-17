@@ -144,7 +144,6 @@ namespace XNAControlGame
             }
         }
 
-        private PegController _lastDownClickedModel;
         public void DetectFullClick(Nine.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
