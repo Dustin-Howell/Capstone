@@ -33,6 +33,8 @@ namespace XNAControlGame
 
         private Position _position;
         private Vector3 _graphicalPosition;
+        public CreeperPegType PegType { get; set; }
+
         public Position Position
         {
             get
@@ -49,23 +51,19 @@ namespace XNAControlGame
         public void SelectPeg()
         {
             ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
-            emitter.Duration = 1f;
-           
-            
+            emitter.Duration = 1f; 
         }
 
         public void DeselectPeg()
         {
-            //ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
-            //emitter.Duration = 0f;
+            ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+            emitter.Duration = 0f;
         }
 
         private void DoTransform()
         {
             _pegModel.Transform = Matrix.CreateScale(Resources.Models.PegScale) * Matrix.CreateTranslation(_graphicalPosition);
         }
-
-        public CreeperPegType PegType { get; set; }
 
         public bool IsPegClicked( Ray selectionRay )
         {
@@ -74,7 +72,8 @@ namespace XNAControlGame
 
         public void MoveTo(MoveInfo info, System.Action callback)
         {
-
+            ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+            emitter.Duration = 1f;
             float newDirectionRadian = (float)Math.Atan2(-(info.EndPoint.X - Parent.Transform.Translation.X), -(info.EndPoint.Z - Parent.Transform.Translation.Z));
 
                 Parent.Transform = Matrix.CreateRotationY(newDirectionRadian)
@@ -97,7 +96,6 @@ namespace XNAControlGame
                     Parent.Animations.Remove(Resources.AnimationNames.PegMove);
                     _graphicalPosition = info.EndPoint;
                     Position = info.Position;
-                    ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
                     emitter.Duration = 0f;
                     callback();
                 });
@@ -106,7 +104,7 @@ namespace XNAControlGame
 
                 Parent.Animations.Add("move", moveAnimation);
                 Parent.Animations.Play("move");
-
+                if(_pegModel != null)
                 _pegModel.Animations.Play("Run");
             }
             else
@@ -185,6 +183,11 @@ namespace XNAControlGame
             base.OnRemoved(parent);
         }
 
+        protected override void Update(float elapsedTime)
+        {
+            
+            base.Update(elapsedTime);
+        }
         internal void Destroy()
         {
             Scene.Remove(Parent);
