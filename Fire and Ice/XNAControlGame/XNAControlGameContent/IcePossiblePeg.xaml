@@ -1,9 +1,9 @@
 ﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" Name="PossiblePeg" >
     <Model Source="{ContentReference Model/sphere}" Name="PossiblePegModel" Visible="False" Transform.Scale="3.5, 3.5, 3.5" />
     
-    <ParticleEffect Name="Spark" Texture="{ContentReference ./Textures/Ice}" ParticleType="ConstrainedBillboard" Stretch="8">
+    <ParticleEffect Name="Spark" Texture="{ContentReference ./Textures/IceShard}" ParticleType="ConstrainedBillboard" Stretch="8">
         <ParticleEffect.Emitter>
-            <PointEmitter Emission="20" Duration="2 ~ 3" Speed="-0.01 ~ 0.01" Size="2 ~ 2.5" />
+            <PointEmitter Emission="30" Duration="2 ~ 3" Speed="-0.01 ~ 0.01" Size="2 ~ 2.5" />
         </ParticleEffect.Emitter>
         <FadeController />
     </ParticleEffect>
