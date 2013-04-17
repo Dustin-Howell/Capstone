@@ -93,6 +93,8 @@ namespace XNAControlGame
             base.Initialize();
         }
 
+        //TODO: This is really really really really bad (but it works.... =/)
+        public static IServiceProvider ServiceProvider;
         protected override void LoadContent()
         {
             _fireTileMask = Content.Load<Texture2D>("Assets/greenOctoMask");
@@ -102,7 +104,11 @@ namespace XNAControlGame
 
             _fireTexture = Content.Load<Texture2D>("Textures/fire");
 
+            if (ServiceProvider == null)
+                ServiceProvider = Content.ServiceProvider;
+
             _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
+
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);

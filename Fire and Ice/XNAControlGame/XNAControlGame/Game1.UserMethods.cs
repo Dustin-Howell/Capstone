@@ -12,6 +12,7 @@ using Nine.Graphics.ParticleEffects;
 using Nine.Animations;
 using Microsoft.Xna.Framework.Graphics;
 using Nine.Graphics.Materials;
+using Microsoft.Xna.Framework.Content;
 
 namespace XNAControlGame
 {
@@ -85,14 +86,14 @@ namespace XNAControlGame
 
                 if (piece.Color == CreeperColor.Fire)
                 {
-                    _fireGroup = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _fireGroup = _fireModel1.CreateInstance<Group>(ServiceProvider);
                     _fireGroup.Transform = Matrix.CreateRotationY( MathHelper.ToRadians(InitialDegreeRotaion) ) * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
                     _fireGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Fire, });
                     _boardGroup.Add(_fireGroup);
                 }
                 else
                 {
-                    _iceGroup = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
+                    _iceGroup = _iceModel1.CreateInstance<Group>(ServiceProvider);
                     _iceGroup.Transform = Matrix.CreateRotationY(MathHelper.ToRadians(InitialDegreeRotaion)) * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
                     _iceGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Ice, });
                     _boardGroup.Add(_iceGroup);
