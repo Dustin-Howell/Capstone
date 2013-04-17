@@ -58,7 +58,7 @@
                         }
                     ]]>
                 </CustomMaterialPart>
-                    <DiffuseMaterialPart Texture="{ContentReference Textures/Ice}" />
+                    <DiffuseMaterialPart Texture="{ContentReference Textures/IceBoardLayer}" />
                     <!--<SpecularMaterialPart SpecularColor="0.5, 0.5, 0.5" SpecularPower="64" />-->
                 </MaterialPaintGroup>
 
