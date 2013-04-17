@@ -124,7 +124,7 @@ namespace XNAControlGame
                 Parent.Animations.Add("move", moveAnimation);
                 Parent.Animations.Add("kill", killAnimation);
                 Parent.Animations.Play("kill");
-                _pegModel.Animations.Play("Attack");
+                _pegModel.Animations.Play("Chop");
             }
         }
 
