@@ -47,37 +47,22 @@ namespace XNAControlGame
 
         public void MoveTo(Position position, Vector3 endPoint, MoveType type, System.Action callback)
         {
-            //TweenAnimation<Matrix> rotateAnimation = new TweenAnimation<Matrix>
-            //{
-            //    Target = Parent,
-            //    TargetProperty = "Transform",
-            //    Duration = TimeSpan.FromMilliseconds(500),
-            //    From = Parent.Transform,
-            //    To = Matrix.CreateRotationY((float)Math.PI),
-            //    Curve = Curves.Smooth,
-            //};
+            float newDirectionRadian = (float)Math.Atan2(-(endPoint.X - Parent.Transform.Translation.X), -(endPoint.Z - Parent.Transform.Translation.Z));
 
-            Parent.Transform *=
-                Matrix.CreateTranslation(-Parent.Transform.Translation)
-                * Matrix.CreateRotationY(MathHelper.Pi)
+            Parent.Transform = Matrix.CreateRotationY(newDirectionRadian)
                 * Matrix.CreateTranslation(Parent.Transform.Translation);
-
+            
             TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>
             {
                 Target = Parent,
                 TargetProperty = "Transform",
                 Duration = TimeSpan.FromSeconds(1),
                 From = Parent.Transform,
-                To = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(endPoint),
+                To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(endPoint),
                 Curve = Curves.Smooth,
             };
 
-            //rotateAnimation.Completed += new EventHandler((s, e) =>
-            //{
-            //    Parent.Animations.Add(Resources.AnimationNames.PegMove, moveAnimation);
-            //    Parent.Animations.Play(Resources.AnimationNames.PegMove);
-            //});
-
+           
             moveAnimation.Completed += new EventHandler((s, e) =>
             {
                 _pegModel.Animations["Run"].Stop();
@@ -85,15 +70,12 @@ namespace XNAControlGame
                 Parent.Animations.Remove(Resources.AnimationNames.PegMove);
                 _graphicalPosition = endPoint;
                 Position = position;
-                //DoTransform();
                 callback();
             });
 
             Parent.Animations.Add("move", moveAnimation);
             Parent.Animations.Play("move");
 
-            //Parent.Animations.Add("Rotate", rotateAnimation);
-            //Parent.Animations.Play("Rotate");
             _pegModel.Animations.Play("Run");
         }
 
