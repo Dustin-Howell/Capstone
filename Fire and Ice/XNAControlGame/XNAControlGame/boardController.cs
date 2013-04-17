@@ -147,6 +147,7 @@ namespace XNAControlGame
                 }
                 else
                 {
+                    
                     _SelectedPeg = null;
                 }
             }
@@ -170,7 +171,7 @@ namespace XNAControlGame
                         break;
                     case CreeperPegType.Possible:
                         PublishMove(new Move(new Position(_SelectedPeg.Position), new Position(clickedModel.Position), _SelectedPeg.PegType.ToCreeperColor()));
-                        ClearPossiblePegs();
+                        
                         _SelectedPeg = null;
                         break;
                 }
@@ -193,6 +194,8 @@ namespace XNAControlGame
 
         private void UpdatePossibleMoves(PegController clickedPeg)
         {
+            ClearPossiblePegs();
+
             if (clickedPeg != null)
             {
                 IEnumerable<Move> possibleMoves = BoardProvider.GetBoard().Pegs.At(clickedPeg.Position).PossibleMoves(BoardProvider.GetBoard());
