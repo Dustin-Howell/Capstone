@@ -14,8 +14,17 @@ namespace XNAControlGame
 {
     public enum MoveType { TileJump, PegJump, Normal, }
     public enum CreeperPegType { Fire, Ice, Possible, }
+    
+    public struct MoveInfo
+    {
+        public MoveType Type;
+        public PegController JumpedPeg;
+        public Position Position;
+        public Vector3 EndPoint;
+    };
 
-    class PegController : Component
+
+    public class PegController : Component
     {
         private Nine.Graphics.Model _pegModel;
 
@@ -45,10 +54,10 @@ namespace XNAControlGame
             return selectionRay.Intersects( Parent.ComputeBounds() ).HasValue;
         }
 
-        public void MoveTo(Position position, Vector3 endPoint, MoveType type, System.Action callback)
+        public void MoveTo(MoveInfo info, System.Action callback)
         {
 
-            float newDirectionRadian = (float)Math.Atan2(-(endPoint.X - Parent.Transform.Translation.X), -(endPoint.Z - Parent.Transform.Translation.Z));
+            float newDirectionRadian = (float)Math.Atan2(-(info.EndPoint.X - Parent.Transform.Translation.X), -(info.EndPoint.Z - Parent.Transform.Translation.Z));
 
                 Parent.Transform = Matrix.CreateRotationY(newDirectionRadian)
                     * Matrix.CreateTranslation(Parent.Transform.Translation);
@@ -59,7 +68,7 @@ namespace XNAControlGame
                     TargetProperty = "Transform",
                     Duration = TimeSpan.FromSeconds(1),
                     From = Parent.Transform,
-                    To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(endPoint),
+                    To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(info.EndPoint),
                     Curve = Curves.Smooth,
                 };
 
@@ -68,11 +77,11 @@ namespace XNAControlGame
                     _pegModel.Animations["Run"].Stop();
                     _pegModel.Animations.Play("Idle");
                     Parent.Animations.Remove(Resources.AnimationNames.PegMove);
-                    _graphicalPosition = endPoint;
-                    Position = position;
+                    _graphicalPosition = info.EndPoint;
+                    Position = info.Position;
                     callback();
                 });
-            if (type != MoveType.PegJump)
+            if (info.Type != MoveType.PegJump)
             {
 
                 Parent.Animations.Add("move", moveAnimation);
@@ -84,7 +93,7 @@ namespace XNAControlGame
             {
                 
 
-                Vector3 distance = endPoint - Parent.Transform.Translation;
+                Vector3 distance = info.EndPoint - Parent.Transform.Translation;
                 distance /= 1.4f;
 
                 Parent.Transform = Matrix.CreateRotationY(newDirectionRadian)
@@ -96,20 +105,20 @@ namespace XNAControlGame
                     TargetProperty = "Transform",
                     Duration = TimeSpan.FromSeconds(1),
                     From = Parent.Transform,
-                    To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(endPoint - distance),
+                    To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(info.EndPoint - distance),
                     Curve = Curves.Smooth,
                 };
-
 
                 killAnimation.Completed += new EventHandler((s, e) =>
                 {
                     _pegModel.Animations["Chop"].Stop();
                      Parent.Animations.Remove("kill");
                      moveAnimation.From = Parent.Transform;
+                     info.JumpedPeg.Die();
                      _pegModel.Animations.Play("Run");
                     Parent.Animations.Play("move");
-                    _graphicalPosition = endPoint;
-                    Position = position;
+                    _graphicalPosition = info.EndPoint;
+                    Position = info.Position;
                     callback();
                 });
 
@@ -120,6 +129,18 @@ namespace XNAControlGame
             }
         }
 
+        public void Die()
+        {
+            AnimationPlayer animationPlayer = _pegModel.Animations;
+
+            ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
+            animationPlayer.Play("Die").Completed += new EventHandler((s, e) =>
+            {
+                Scene.FindName<Group>("GameBoard").Remove(Parent);
+            });
+
+        }
+        
         protected override void OnAdded(Group parent)
         {
             _pegModel = parent.Find<Nine.Graphics.Model>();

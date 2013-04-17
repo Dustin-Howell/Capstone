@@ -110,8 +110,17 @@ namespace XNAControlGame
             {
                 moveType = MoveType.PegJump;
             }
+            MoveInfo info = new MoveInfo();
+            info.Position = move.EndPosition;
+            info.EndPoint = ViewModel.GraphicalPositions[move.EndPosition.Row, move.EndPosition.Column];
+            info.Type = moveType;
+            if (info.Type == MoveType.PegJump)
+            {
+                info.JumpedPeg = pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(move));
+            }
+           
 
-            peg.MoveTo(move.EndPosition, ViewModel.GraphicalPositions[move.EndPosition.Row, move.EndPosition.Column], moveType, callback);
+            peg.MoveTo(info, callback);
         }
 
         private void ClearPossiblePegs()
