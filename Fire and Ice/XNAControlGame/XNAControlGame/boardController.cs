@@ -128,7 +128,6 @@ namespace XNAControlGame
                     Scene.Remove(controller.Parent);
                 }
             }
-            //RefreshBoardGroup();
         }
 
         private PegController _lastDownClickedModel;
