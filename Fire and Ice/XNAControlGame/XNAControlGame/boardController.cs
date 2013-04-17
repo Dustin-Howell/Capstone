@@ -59,6 +59,7 @@ namespace XNAControlGame
                     {
                         value.SelectPeg();
                     }
+                    
                     if (_selectedPeg != null)
                     {
                         _selectedPeg.DeselectPeg();

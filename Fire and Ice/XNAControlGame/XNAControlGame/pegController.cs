@@ -49,16 +49,15 @@ namespace XNAControlGame
         public void SelectPeg()
         {
             ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
-            emitter.Transform = Matrix.CreateTranslation(Parent.Transform.Translation);
-            emitter.Duration = 3f;
+            emitter.Duration = 1f;
            
             
         }
 
         public void DeselectPeg()
         {
-            ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
-            emitter.Duration = 0f;
+            //ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+            //emitter.Duration = 0f;
         }
 
         private void DoTransform()
@@ -98,6 +97,8 @@ namespace XNAControlGame
                     Parent.Animations.Remove(Resources.AnimationNames.PegMove);
                     _graphicalPosition = info.EndPoint;
                     Position = info.Position;
+                    ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+                    emitter.Duration = 0f;
                     callback();
                 });
             if (info.Type != MoveType.PegJump)

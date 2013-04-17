@@ -1,7 +1,7 @@
 ﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
     <Model Name="FirePeg" Source="{ContentReference ./Model/FirePeon/Peon}" Transform.Scale=".25, .25, .25" Material="{ SkinnedMaterial }" />
-    <ParticleEffect Name="Fire" Transform.Position="10, 0, -10" Texture="{ContentReference ./Textures/fire}">
+    <ParticleEffect Name="Fire" Texture="{ContentReference ./Textures/fire}">
         <ParticleEffect.Emitter>
             <CylinderEmitter Emission="500" Radiate="True" Shell="True" Radius="10" Height="10"
                                Duration="0" Speed="0.5 ~ 1" Size="2 ~ 3" Spread="{Degrees 15}" />
