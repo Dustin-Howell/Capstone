@@ -24,7 +24,7 @@ namespace CreeperAI
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;
-        private int _MiniMaxDepth { get { return Difficulty == AIDifficulty.Easy ? 3 : 7; } }
+        private int _MiniMaxDepth { get { return Difficulty == AIDifficulty.Easy ? 3 : 5; } }
         //private Dictionary<AIHash, double> _scoredBoards;
 
         public double TerritorialWeight { get; set; }
