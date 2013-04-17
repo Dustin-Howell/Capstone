@@ -11,8 +11,8 @@ namespace FireAndIce.ViewModels
 {
     public class GameOverViewModel : Screen
     {
-        private CreeperColor _winner;
-        private CreeperColor Winner
+        private CreeperColor? _winner;
+        private CreeperColor? Winner
         {
             get { return _winner; }
             set
@@ -37,13 +37,20 @@ namespace FireAndIce.ViewModels
         {
             get
             {
-                return String.Format("{0} wins!", _winner.ToString());
+                if (_winner.HasValue)
+                {
+                    return String.Format("{0} wins!", _winner.ToString());
+                }
+                else
+                {
+                    return "Draw!";
+                }
             }
         }
 
         public GameOverViewModel(CreeperColor? winner)
         {
-            _winner = winner.Value;
+            _winner = winner;
         }
 
         public void ReturnToMenu()
