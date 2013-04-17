@@ -203,8 +203,6 @@ namespace XNAControlGame
                 }
 
                 return found.FirstOrDefault(x => x.IsPegClicked(selectionRay));
-          
-            
         }
 
         private void UpdatePossibleMoves(PegController clickedPeg)
