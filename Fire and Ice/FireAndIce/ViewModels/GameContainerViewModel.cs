@@ -12,6 +12,8 @@ using Creeper;
 using CreeperMessages;
 using XNAControlGame;
 using CreeperSound;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace FireAndIce.ViewModels
 {
@@ -90,7 +92,7 @@ namespace FireAndIce.ViewModels
             set
             {
                 _playMusic = value;
-                NotifyOfPropertyChange(() => PlayMusic);
+              //  NotifyOfPropertyChange(() => PlayMusic);
             }
         }
 
@@ -138,6 +140,31 @@ namespace FireAndIce.ViewModels
             String soundFile = "\\";
             String actualFile = path + soundFile + "InGameMusic.mp3";
             PlayMusic = actualFile;
+        }
+
+        protected override void OnViewLoaded(object view)
+        {
+            //***********************************************************
+            //MUSIC CODE
+            //***********************************************************
+            GameContainerView gameContainerView = view as GameContainerView;
+
+            gameContainerView.MusicPlayer.Source = new Uri(PlayMusic);
+            gameContainerView.MusicPlayer.LoadedBehavior = MediaState.Manual;
+            gameContainerView.MusicPlayer.Loaded += new RoutedEventHandler((s, e) =>
+                {
+                    gameContainerView.MusicPlayer.Play();
+                });
+            gameContainerView.MusicPlayer.MediaEnded += new RoutedEventHandler((s, e) =>
+                {
+                    gameContainerView.MusicPlayer.Position = TimeSpan.FromSeconds(0);
+                });
+
+
+            base.OnViewLoaded(view);
+            //***********************************************************
+            //END MUSIC CODE
+            //***********************************************************
         }
 
         public void ReturnToMainMenu()
