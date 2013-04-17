@@ -27,6 +27,7 @@ namespace XNAControlGame
     public class PegController : Component
     {
         private Nine.Graphics.Model _pegModel;
+        Random r = new Random();
 
         private Position _position;
         private Vector3 _graphicalPosition;
@@ -111,7 +112,9 @@ namespace XNAControlGame
 
                 killAnimation.Completed += new EventHandler((s, e) =>
                 {
+                    
                     _pegModel.Animations["Chop"].Stop();
+                    _pegModel.Animations["Attack"].Stop();
                      Parent.Animations.Remove("kill");
                      moveAnimation.From = Parent.Transform;
                      info.JumpedPeg.Die();
@@ -124,7 +127,16 @@ namespace XNAControlGame
                 Parent.Animations.Add("move", moveAnimation);
                 Parent.Animations.Add("kill", killAnimation);
                 Parent.Animations.Play("kill");
-                _pegModel.Animations.Play("Chop");
+
+                int nextValue = r.Next(2);
+                if (nextValue == 0)
+                {
+                    _pegModel.Animations.Play("Attack");
+                }
+                else
+                {
+                    _pegModel.Animations.Play("Chop");
+                }
             }
         }
 
