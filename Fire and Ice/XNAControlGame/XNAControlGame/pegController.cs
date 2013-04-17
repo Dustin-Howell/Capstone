@@ -119,7 +119,6 @@ namespace XNAControlGame
                     Parent.Animations.Play("move");
                     _graphicalPosition = info.EndPoint;
                     Position = info.Position;
-                    //callback();
                 });
 
                 Parent.Animations.Add("move", moveAnimation);
