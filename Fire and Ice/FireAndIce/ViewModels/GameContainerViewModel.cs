@@ -148,7 +148,10 @@ namespace FireAndIce.ViewModels
 
         public void Handle(MoveMessage message)
         {
-            CurrentTurn = message.TurnColor.ToString();
+            if (message.Type == MoveMessageType.Request)
+            {
+                CurrentTurn = message.TurnColor.ToString();
+            }
         }
 
         public void SendMessage()
