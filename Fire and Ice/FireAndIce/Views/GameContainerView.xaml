@@ -54,7 +54,7 @@
                         Height="50" />
             </DockPanel>
         </Border>
-        
+
         <n:GameHost x:Name="GameHost"
                     Game="{Binding Game}"
                     Grid.RowSpan="2"
@@ -63,6 +63,13 @@
                         Grid.RowSpan="2"
                         Grid.ColumnSpan="2"
                                Effect="{StaticResource DropShadowLeft}"/>
+
+        <Label x:Name="FirstPlayer"
+               Grid.RowSpan="2"
+               Grid.ColumnSpan="2"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center" />
+
         <Border Grid.Row="1"
                 Grid.ColumnSpan="2"
                 HorizontalAlignment="Stretch"

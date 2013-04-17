@@ -72,6 +72,17 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        private string _firstPlayer;
+        public string FirstPlayer
+        {
+            get { return _firstPlayer; }
+            set
+            {
+                _firstPlayer = value;
+                NotifyOfPropertyChange(() => FirstPlayer);
+            }
+        }
+
         private string _playMusic;
         public string PlayMusic
         {
