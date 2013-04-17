@@ -52,8 +52,6 @@
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Stretch"
                         Height="50" />
-                <MediaElement Source="{Binding PlayMusic}" Width="320"   
-     Height="240" LoadedBehavior="Play"/>
             </DockPanel>
         </Border>
         
@@ -90,5 +88,7 @@
                 </StackPanel>
             </StackPanel>
         </Border>
+        <MediaElement Source="{Binding PlayMusic}" Width="320"   
+     Height="240" LoadedBehavior="Play" Volume="40"/>
     </Grid>
 </UserControl>
