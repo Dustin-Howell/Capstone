@@ -17,10 +17,13 @@ namespace XNAControlGame
 
         public BoardController BoardController { get; set; }
 
-        public MoveAnimationListener()
+        private IEventAggregator _eventAggregator;
+
+        public MoveAnimationListener(IEventAggregator eventAggregator)
         {
             IsAnimating = false;
             _movesToAnimate = new Queue<MoveMessage>();
+            _eventAggregator = eventAggregator;
         }
 
         protected override void Update(float elapsedTime)
@@ -31,7 +34,16 @@ namespace XNAControlGame
                 if (message.Type == MoveMessageType.Response)
                 {
                     IsAnimating = true;
-                    BoardController.Move(message.Move, () => IsAnimating = false);
+                    BoardController.Move(message.Move, () =>
+                        { 
+                            IsAnimating = false;
+                            _eventAggregator.Publish(
+                                new MoveMessage
+                                {
+                                    Type = MoveMessageType.MoveMade,
+                                    Move = message.Move,
+                            });
+                        });
                 }
             }
 

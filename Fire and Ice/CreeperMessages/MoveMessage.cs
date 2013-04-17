@@ -6,7 +6,7 @@ using Creeper;
 
 namespace CreeperMessages
 {
-    public enum MoveMessageType { Request, Response, Undo }
+    public enum MoveMessageType { Request, Response, Undo, MoveMade }
     public class MoveMessage
     {
         public CreeperBoard Board { get; set; }

@@ -81,7 +81,7 @@ namespace CreeperCore
         #region IHandle
         public void Handle(MoveMessage message)
         {
-            if (message.Type == MoveMessageType.Response)
+            if (message.Type == MoveMessageType.MoveMade)
             {
                 //TODO: throw some exceptions if something went wrong
                 CreeperBoard board = new CreeperBoard(_board);

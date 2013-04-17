@@ -80,7 +80,7 @@ namespace XNAControlGame
             BoardProvider = boardProvider;
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
-            _eventAggregator.Subscribe(_moveAnimationListener = new MoveAnimationListener());
+            _eventAggregator.Subscribe(_moveAnimationListener = new MoveAnimationListener(eventAggregator));
 
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
