@@ -25,6 +25,11 @@ namespace XNAControlGame
                     throw new ArgumentOutOfRangeException("Can't let you do that, Star Fox.\nAndross has ordered us to take you down.");
             }
         }
+
+        public static bool IsTeamOrPossible(this CreeperPegType type, CreeperColor color)
+        {
+            return type == CreeperPegType.Possible || type.ToCreeperColor() == color;
+        }
     }
 
     class BoardController : Component
@@ -145,7 +150,7 @@ namespace XNAControlGame
             if (e.Button == MouseButtons.Left)
             {
                 PegController clickedModel = GetClickedModel(new Vector2(e.MouseState.X, e.MouseState.Y));
-                if (clickedModel != null)
+                if (clickedModel != null && clickedModel.PegType.IsTeamOrPossible(BoardProvider.GetCurrentPlayer().Color))
                 {
                     //if downclick
                     if (e.IsButtonDown(e.Button))
