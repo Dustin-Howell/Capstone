@@ -69,17 +69,31 @@ namespace XNAControlGame
         {
             foreach (Piece piece in BoardProvider.GetBoard().Pegs.Where(x => x.Color.IsTeamColor()))
             {
+                int InitialDegreeRotaion = 0;
+                if (piece.Position.Row == 0)
+                {
+                    InitialDegreeRotaion = 180;
+                }
+                if (piece.Position.Column == 0)
+                {
+                    InitialDegreeRotaion = 270;
+                }
+                if (piece.Position.Column == 6)
+                {
+                    InitialDegreeRotaion = 90;
+                }
+
                 if (piece.Color == CreeperColor.Fire)
                 {
                     _fireGroup = _fireModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    _fireGroup.Transform = Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _fireGroup.Transform = Matrix.CreateRotationY( MathHelper.ToRadians(InitialDegreeRotaion) ) * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
                     _fireGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Fire, });
                     _boardGroup.Add(_fireGroup);
                 }
                 else
                 {
                     _iceGroup = _iceModel1.CreateInstance<Group>(_scene.ServiceProvider);
-                    _iceGroup.Transform = Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
+                    _iceGroup.Transform = Matrix.CreateRotationY(MathHelper.ToRadians(InitialDegreeRotaion)) * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
                     _iceGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Ice, });
                     _boardGroup.Add(_iceGroup);
                 }
