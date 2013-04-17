@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace FireAndIce.ViewModels
 {
-    public class GameOverViewModel : PropertyChangedBase
+    public class GameOverViewModel : Screen
     {
         private CreeperColor _winner;
         private CreeperColor Winner
@@ -49,6 +49,7 @@ namespace FireAndIce.ViewModels
         public void ReturnToMenu()
         {
             AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
+            TryClose();
         }
     }
 }
