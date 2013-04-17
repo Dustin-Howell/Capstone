@@ -1,5 +1,14 @@
 ﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
     <Model Name="IcePeg" Source="{ContentReference ./Model/IcePeon/Peon}" Transform.Scale=".25, .25, .25" Material="{ SkinnedMaterial }" />
+    <ParticleEffect Name="Ice" Transform.Position="10, 0, -10" Texture="{ContentReference ./Textures/flake}">
+        <ParticleEffect.Emitter>
+            <SphereEmitter Emission="200" Radiate="False" Shell="True" Radius="10" 
+                               Duration="0" Speed="0.5 ~ 1" Size="2 ~ 3" Spread="{Degrees 15}" />
+        </ParticleEffect.Emitter>
 
+        <SizeController EndSize ="4 ~ 5" />
+        <SpeedController EndSpeed ="0" />
+        <FadeController />
+    </ParticleEffect>
 </Group>

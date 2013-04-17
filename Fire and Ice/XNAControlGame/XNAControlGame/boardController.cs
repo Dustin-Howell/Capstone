@@ -51,10 +51,25 @@ namespace XNAControlGame
             }
             set
             {
+
                 if (_selectedPeg != value)
                 {
+                    
+                    if (value != null)
+                    {
+                        value.SelectPeg();
+                    }
+                    if (_selectedPeg != null)
+                    {
+                        _selectedPeg.DeselectPeg();
+                    }
+                    
                     _selectedPeg = value;
                     UpdatePossibleMoves(value);
+                   if (value != null)
+                    {
+                        value.SelectPeg();
+                    }
                 }
             }
         }

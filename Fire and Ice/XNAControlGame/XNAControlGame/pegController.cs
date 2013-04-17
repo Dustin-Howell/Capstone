@@ -9,6 +9,7 @@ using Nine.Animations;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Nine.Graphics;
+using Nine.Graphics.ParticleEffects;
 
 namespace XNAControlGame
 {
@@ -23,6 +24,7 @@ namespace XNAControlGame
         public Vector3 EndPoint;
     };
 
+    
 
     public class PegController : Component
     {
@@ -41,6 +43,22 @@ namespace XNAControlGame
             {
                 _position = value;
             }
+        }
+
+
+        public void SelectPeg()
+        {
+            ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+            emitter.Transform = Matrix.CreateTranslation(Parent.Transform.Translation);
+            emitter.Duration = 3f;
+           
+            
+        }
+
+        public void DeselectPeg()
+        {
+            ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+            emitter.Duration = 0f;
         }
 
         private void DoTransform()
