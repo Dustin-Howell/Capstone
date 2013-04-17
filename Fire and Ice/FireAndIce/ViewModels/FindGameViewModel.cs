@@ -91,6 +91,7 @@ namespace FireAndIce.ViewModels
                 {
                     _playerName = value;
                     NotifyOfPropertyChange(() => PlayerName);
+                    NotifyOfPropertyChange(() => CanFindGameClick);
                 }
             }
         }

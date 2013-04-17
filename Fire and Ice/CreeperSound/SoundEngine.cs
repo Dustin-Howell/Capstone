@@ -74,10 +74,9 @@ namespace CreeperSound
                             break;
                         case SoundPlayType.MenuButtonClick:
                             soundFile += "MenuButtonClick.wav";
-                            sync = true;
                             break;
                         case SoundPlayType.Music1:
-                            soundFile += "freedom1.wav";
+                            //soundFile += "freedom1.wav";
                             sync = true;
                             isMusic = true;
                             break;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Caliburn.Micro;
 using CreeperCore;
 using FireAndIce.Views;
@@ -71,6 +72,17 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        private string _playMusic;
+        public string PlayMusic
+        {
+            get { return _playMusic; }
+            set
+            {
+                _playMusic = value;
+                NotifyOfPropertyChange(() => PlayMusic);
+            }
+        }
+
         private BindableCollection<String> _chatMessages;
         public BindableCollection<String> ChatMessages
         {
@@ -109,6 +121,12 @@ namespace FireAndIce.ViewModels
             }
             else
                 ForfeitVisible = System.Windows.Visibility.Collapsed;
+
+            //Yeah...not what best way to do this. Temporary, or permanent, depending on time. 
+            String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
+            String soundFile = "\\";
+            String actualFile = path + soundFile + "InGameMusic.mp3";
+            PlayMusic = actualFile;
         }
 
         public void ReturnToMainMenu()
