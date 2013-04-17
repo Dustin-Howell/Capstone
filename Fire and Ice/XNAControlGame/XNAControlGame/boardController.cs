@@ -193,16 +193,17 @@ namespace XNAControlGame
 
         private PegController GetClickedModel(Vector2 mousePosition)
         {
-            Camera camera = Scene.FindName<Camera>("MainCamera");
-            Ray selectionRay = Scene.GetGraphicsDevice().Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, camera.View, camera.Projection);
+            if (Scene != null)
+            {
+                Camera camera = Scene.FindName<Camera>("MainCamera");
+                Ray selectionRay = Scene.GetGraphicsDevice().Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, camera.View, camera.Projection);
 
             List<PegController> found = new List<PegController>();
             if (Parent.ComputeBounds().Intersects(selectionRay).HasValue)
             {
                 Scene.Traverse<PegController>(found);
             }
-
-            return found.FirstOrDefault(x => x.IsPegClicked(selectionRay));
+            return null;
         }
 
         private void UpdatePossibleMoves(PegController clickedPeg)
