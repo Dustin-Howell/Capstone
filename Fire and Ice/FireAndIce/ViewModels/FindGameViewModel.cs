@@ -185,18 +185,24 @@ namespace FireAndIce.ViewModels
             startGameWorker.DoWork += new DoWorkEventHandler((s, e) => AppModel.Network.client_ackStartGame());
             startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) 
                 => 
-                AppModel.EventAggregator.Publish(
-                    new StartGameMessage()
+                {
+                    if (!AppModel.Network.doNotStartGame)
                     {
-                        Settings = new GameSettings()
-                        {
-                            Board = new CreeperBoard(),
-                            Player1Type = PlayerType.Network,
-                            Player2Type = PlayerType.Human,
-                            StartingColor = CreeperColor.Fire,
-                            Network = AppModel.Network,
-                        }
-                    }));
+                        AppModel.EventAggregator.Publish(
+                            new StartGameMessage()
+                            {
+                                Settings = new GameSettings()
+                                {
+                                    Board = new CreeperBoard(),
+                                    Player1Type = PlayerType.Network,
+                                    Player2Type = PlayerType.Human,
+                                    StartingColor = CreeperColor.Fire,
+                                    Network = AppModel.Network,
+                                }
+                            });
+                    }
+                    
+                });
             startGameWorker.RunWorkerAsync();            
         }
 

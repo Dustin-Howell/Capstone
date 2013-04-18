@@ -102,11 +102,13 @@ namespace FireAndIce.ViewModels
 
             _connectServerWorker.DoWork += new DoWorkEventHandler(
                 (s, e) => {
-                    AppModel.Network.server_startGame();
+                    AppModel.Network.server_startGame_check();
                 });
 
             _connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
             {
+                  if(!AppModel.Network.doNotStartGame)
+                  {
                     AppModel.EventAggregator.Publish(
                         new StartGameMessage()
                         {
@@ -119,6 +121,7 @@ namespace FireAndIce.ViewModels
                                 Network = AppModel.Network,
                             }
                         });                    
+                  }
             });
 
 

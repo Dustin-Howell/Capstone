@@ -121,6 +121,8 @@ namespace CreeperNetwork
 
             hostGame = true;
 
+            doNotStartGame = true;
+
             //okay, now what if someone wants to join?.
             while (!serverFull  && hostGame && isServer)
             {
@@ -136,6 +138,10 @@ namespace CreeperNetwork
                     {
                         sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                     }
+                    else
+                    {
+                        doNotStartGame = false;
+                    }
                 }
             }
         }
@@ -144,6 +150,8 @@ namespace CreeperNetwork
         {
             hostGame = false;
         }
+
+        public bool doNotStartGame = false;
 
         /**********************************************************
          * Function:    server_acceptClient
@@ -168,6 +176,12 @@ namespace CreeperNetwork
             }
 
             return accepted;
+        }
+
+        public void server_startGame_check()
+        {
+            if(!doNotStartGame)
+                server_startGame();
         }
 
         /**********************************************************
@@ -320,7 +334,7 @@ namespace CreeperNetwork
                     sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                     commandReceived = true;
                     acknowledged = true;
-
+                    doNotStartGame = false;
                     Console.WriteLine("GAME STARTED.");
                     gameRunning = true;
                     runGame();
@@ -328,6 +342,7 @@ namespace CreeperNetwork
                 }
                 else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
                 {
+                    doNotStartGame = true;
                     _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
                     commandReceived = true;
                 }
