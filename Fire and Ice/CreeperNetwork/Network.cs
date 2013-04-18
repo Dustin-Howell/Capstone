@@ -51,6 +51,7 @@ namespace CreeperNetwork
         private UdpClient listenerAlt;
         private UdpClient sender;
         private IPEndPoint ipOfLastPacket = new IPEndPoint(IPAddress.Any, SERVER_PORT);
+        private IPEndPoint ipOfLastPacket_alt = new IPEndPoint(IPAddress.Any, ALT_SERVER_PORT);
         private int lastReceivedHomeSeqNum = 0;
         private int homeSequenceNumber = 0;
         private int awaySequenceNumber = -1;
@@ -671,7 +672,14 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            data = listener.Receive(ref ipOfLastPacket);
+            try
+            {
+                data = listener.Receive(ref ipOfLastPacket);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Receive interrupted -- no problem: " + e);
+            }
 
             return data;
         }
@@ -719,7 +727,7 @@ namespace CreeperNetwork
 
             try
             {
-                data = listenerAlt.Receive(ref ipOfLastPacket);
+                data = listenerAlt.Receive(ref ipOfLastPacket_alt);
             }
             catch (SocketException)
             {
