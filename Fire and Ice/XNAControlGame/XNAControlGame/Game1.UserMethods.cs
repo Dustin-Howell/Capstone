@@ -107,56 +107,59 @@ namespace XNAControlGame
         #region NittyGrittyTileFlippingCode
         private void FlipTile(Position position, CreeperColor color)
         {
-            Texture2D maskTexture = color.IsFire() ? _fireTileMask : _iceTileMask;
+            if (BoardProvider.GetBoard().Tiles.At(position).Color != CreeperColor.Invalid)
+            {
+                Texture2D maskTexture = color.IsFire() ? _fireTileMask : _iceTileMask;
 
-            Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
+                Rectangle surfaceRect = new Rectangle(0, 0, (int)_boardSurface.Size.X, (int)_boardSurface.Size.Z);
 
-            List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures(_boardMaterial).OfType<Texture2D>().ToList();
-            Texture2D oldMask = maskTextures.First();
+                List<Texture2D> maskTextures = MaterialPaintGroup.GetMaskTextures(_boardMaterial).OfType<Texture2D>().ToList();
+                Texture2D oldMask = maskTextures.First();
 
-            float scale = (oldMask.Width / 6f) / maskTexture.Width;
+                float scale = (oldMask.Width / 6f) / maskTexture.Width;
 
-            Vector2 texPosition = new Vector2(position.Column * (oldMask.Width / 6f), position.Row * (oldMask.Width / 6f))
-                + new Vector2(maskTexture.Width * scale / 2);
+                Vector2 texPosition = new Vector2(position.Column * (oldMask.Width / 6f), position.Row * (oldMask.Width / 6f))
+                    + new Vector2(maskTexture.Width * scale / 2);
 
-            RenderTarget2D target = new RenderTarget2D(GraphicsDevice, oldMask.Width, oldMask.Height);
+                RenderTarget2D target = new RenderTarget2D(GraphicsDevice, oldMask.Width, oldMask.Height);
 
-            GraphicsDevice.SetRenderTarget(target);
+                GraphicsDevice.SetRenderTarget(target);
 
-            SpriteBatch sb = new SpriteBatch(GraphicsDevice);
+                SpriteBatch sb = new SpriteBatch(GraphicsDevice);
 
-            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
+                sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
 
-            GraphicsDevice.Clear(Color.Transparent);
+                GraphicsDevice.Clear(Color.Transparent);
 
-            sb.Draw(oldMask,
-                Vector2.Zero,
-                null,
-                Color.White,
-                0f,
-                Vector2.Zero,
-                1f,
-                SpriteEffects.None,
-                1f);
+                sb.Draw(oldMask,
+                    Vector2.Zero,
+                    null,
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    1f,
+                    SpriteEffects.None,
+                    1f);
 
-            sb.Draw(maskTexture,
-                texPosition,
-                null,
-                Color.White,
-                0f,
-                new Vector2(maskTexture.Width) / 2,
-                scale,
-                SpriteEffects.None,
-                1f);
+                sb.Draw(maskTexture,
+                    texPosition,
+                    null,
+                    Color.White,
+                    0f,
+                    new Vector2(maskTexture.Width) / 2,
+                    scale,
+                    SpriteEffects.None,
+                    1f);
 
-            sb.End();
+                sb.End();
 
-            GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.SetRenderTarget(null);
 
-            maskTextures[0].Dispose();
-            maskTextures[0] = target;
+                maskTextures[0].Dispose();
+                maskTextures[0] = target;
 
-            MaterialPaintGroup.SetMaskTextures(_boardMaterial, maskTextures);
+                MaterialPaintGroup.SetMaskTextures(_boardMaterial, maskTextures);
+            }
         }
 
         public void SynchronizeTiles(CreeperBoard board)
