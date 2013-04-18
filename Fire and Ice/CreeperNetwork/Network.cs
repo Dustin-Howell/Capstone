@@ -368,7 +368,13 @@ namespace CreeperNetwork
                 {
                     _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
                     commandReceived = true;
-                    result = false; 
+                    result = false;
+                }
+                else
+                {
+                    _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
+                    commandReceived = true;
+                    result = false;
                 }
             }
 
