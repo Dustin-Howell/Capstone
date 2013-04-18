@@ -33,6 +33,17 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        public SolidColorBrush LosingColor
+        {
+            get
+            {
+                return (SolidColorBrush)(_winner == CreeperColor.Fire ?
+                    AppModel.Resources["Secondary1"]
+                    : AppModel.Resources["Primary1"]
+                    );
+            }
+        }
+
         public String GameOverMessage
         {
             get
