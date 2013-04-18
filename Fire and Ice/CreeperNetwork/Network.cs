@@ -537,15 +537,10 @@ namespace CreeperNetwork
                         {
                             if (packet[6] == MOVETYPE_FORFEIT)
                             {
-                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentForfeit));
-                                //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
-                                Console.WriteLine("THEY forfeited. YOU win.");
+                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentForfeitMessage));
                             }
                             else if (packet[6] == MOVETYPE_ILLEGAL)
                                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.IllegalMove));
-                            //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.ILLEGAL_MOVE));
-
-                            sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                         }
                     }
                     else if (packet[1] == CMD_JOIN_GAME)
@@ -1043,8 +1038,11 @@ namespace CreeperNetwork
             {
                 Console.WriteLine("Illegal move detected.");
             }
-            else if (message.Type == NetworkErrorType.OpponentForfeit)
+            else if (message.Type == NetworkErrorType.OpponentForfeitMessage)
             {
+                disconnect();
+                gameRunning = false;
+                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentForfeit));
             }
         }
 
