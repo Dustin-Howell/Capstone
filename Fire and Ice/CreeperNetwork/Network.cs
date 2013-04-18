@@ -231,6 +231,7 @@ namespace CreeperNetwork
                 catch (Exception e)
                 {
                     e.GetHashCode();
+                    Console.WriteLine("Timeout.");
                     //timeout...
                 }
             }
@@ -316,10 +317,11 @@ namespace CreeperNetwork
          * Description: Starts a game on the client by 
          *              acknowledging the server
          *********************************************************/
-        public void client_ackStartGame()
+        public bool client_ackStartGame()
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
             Boolean commandReceived = false;
+            bool result = false;
 
             selfPlayerName = clientPlayerName;
             opponentPlayerName = hostPlayerName;
@@ -334,17 +336,22 @@ namespace CreeperNetwork
                     sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                     commandReceived = true;
                     acknowledged = true;
+
                     Console.WriteLine("GAME STARTED.");
                     gameRunning = true;
                     runGame();
+                    result = true;
                     _keepAliveWorker.RunWorkerAsync();
                 }
                 else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
                 {
                     _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
                     commandReceived = true;
+                    result = false; 
                 }
             }
+
+            return result;
         }
 
         //###############################################################
@@ -659,11 +666,9 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            try
-            {
-                data = listener.Receive(ref ipOfLastPacket);
-            }
-            catch (Exception) { }
+            listener.Client.ReceiveTimeout = 0;
+
+            data = listener.Receive(ref ipOfLastPacket);
 
             return data;
         }
@@ -679,37 +684,19 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            try
-            {
-                listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
-            }
-            catch (Exception)
-            {
-                try
-                {
-                    listener = new UdpClient(SERVER_PORT);
-                }
-                catch (Exception) { }
-
-                listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
-            }
+            listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
 
             try
             {
                 data = listener.Receive(ref ipOfLastPacket);
             }
-            catch (Exception)
+            catch (SocketException)
             {
-                data = null;
+                Console.WriteLine("Receiving timeout -- primary listener");
             }
 
-            try
-            {
-                listener.Client.ReceiveTimeout = 0;
-            }
-            catch (Exception) { }
+            listener.Client.ReceiveTimeout = 0;
                 
-
             return data;
         }
 
@@ -724,35 +711,18 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            try
-            {
-                listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
-            }
-            catch(Exception)
-            {
-                try
-                {
-                    listenerAlt = new UdpClient(ALT_SERVER_PORT);
-                }
-                catch (Exception) { }
-
-                listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
-            }
+            listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
 
             try
             {
                 data = listenerAlt.Receive(ref ipOfLastPacket);
             }
-            catch (Exception)
+            catch (SocketException)
             {
-                data = null;
+                Console.WriteLine("Receiving timeout -- primary listener");
             }
 
-            try
-            {
-                listenerAlt.Client.ReceiveTimeout = 0;
-            }
-            catch (Exception) { }
+            listenerAlt.Client.ReceiveTimeout = 0;
 
             return data;
         }
@@ -765,11 +735,7 @@ namespace CreeperNetwork
          *********************************************************/
         private void sendPacket(byte[] packetIn, String ipAddressIn)
         {
-            try
-            {
-                sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
-            }
-            catch (Exception) { }
+            sender.Send(packetIn, packetIn.Length, ipAddressIn, SERVER_PORT);
         }
 
         /**********************************************************
@@ -781,11 +747,7 @@ namespace CreeperNetwork
          *********************************************************/
         private void sendPacket_altPort(byte[] packetIn, String ipAddressIn)
         {
-            try
-            {
-                sender.Send(packetIn, packetIn.Length, ipAddressIn, ALT_SERVER_PORT);
-            }
-            catch (Exception) { }
+            sender.Send(packetIn, packetIn.Length, ipAddressIn, ALT_SERVER_PORT);
         }
 
         /**********************************************************

@@ -187,10 +187,14 @@ namespace FireAndIce.ViewModels
             AppModel.Network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
             BackgroundWorker startGameWorker = new BackgroundWorker();
 
-            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => AppModel.Network.client_ackStartGame());
+            refreshTimer.Enabled = false;
+
+            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => e.Result = AppModel.Network.client_ackStartGame());
             startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) 
                 => 
                 {
+                    if ((bool)e.Result)
+                    {
                         AppModel.EventAggregator.Publish(
                             new StartGameMessage()
                             {
@@ -203,6 +207,11 @@ namespace FireAndIce.ViewModels
                                     Network = AppModel.Network,
                                 }
                             });
+                    }
+                    else
+                    {
+                        refreshTimer.Enabled = true;
+                    }
                     
                 });
             startGameWorker.RunWorkerAsync();            
