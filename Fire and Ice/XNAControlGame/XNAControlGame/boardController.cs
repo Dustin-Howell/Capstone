@@ -86,7 +86,7 @@ namespace XNAControlGame
         public void Move(Move move, System.Action callback)
         {
             List<PegController> pegs = new List<PegController>();
-            Parent.Traverse(pegs);
+            Scene.Traverse(pegs);
             PegController peg = pegs.First(x => x.Position == move.StartPosition);
 
             MoveType moveType = MoveType.Normal;
@@ -180,7 +180,7 @@ namespace XNAControlGame
                 Ray selectionRay = Scene.GetGraphicsDevice().Viewport.CreatePickRay((int)mousePosition.X, (int)mousePosition.Y, camera.View, camera.Projection);
 
                 List<PegController> found = new List<PegController>();
-                if (Parent.ComputeBounds().Intersects(selectionRay).HasValue)
+                if (Scene.ComputeBounds().Intersects(selectionRay).HasValue)
                 {
                     Scene.Traverse<PegController>(found);
                 }

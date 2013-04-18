@@ -164,7 +164,7 @@ namespace XNAControlGame
             ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
             animationPlayer.Play("Die").Completed += new EventHandler((s, e) =>
             {
-                Scene.FindName<Group>("GameBoard").Children.Remove(Parent);
+                Scene.Children.Remove(Parent);
             });
 
         }

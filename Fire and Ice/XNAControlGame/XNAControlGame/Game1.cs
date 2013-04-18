@@ -109,7 +109,6 @@ namespace XNAControlGame
 
             _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
 
-
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
 
