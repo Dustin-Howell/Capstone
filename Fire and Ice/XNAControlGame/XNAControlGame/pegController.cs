@@ -56,8 +56,8 @@ namespace XNAControlGame
 
         public void DeselectPeg()
         {
-            //ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
-            //emitter.Duration = 0f;
+            ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+            emitter.Duration = 0f;
         }
 
         private void DoTransform()
