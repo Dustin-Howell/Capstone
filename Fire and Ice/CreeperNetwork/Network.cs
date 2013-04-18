@@ -1028,9 +1028,12 @@ namespace CreeperNetwork
         ******************************/
         public void Handle(NetworkErrorMessage message)
         {
-            if (message.Type == NetworkErrorType.Forfeit)
+            if (message.Type == NetworkErrorType.ForfeitMessage)
             {
                 forfeit();
+                disconnect();
+                gameRunning = false;
+                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
             }
             else if (message.Type == NetworkErrorType.Disconnect)
             {
@@ -1043,9 +1046,6 @@ namespace CreeperNetwork
             else if (message.Type == NetworkErrorType.OpponentForfeit)
             {
             }
-
-            disconnect();
-            gameRunning = false;
         }
 
         /******************************

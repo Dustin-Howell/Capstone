@@ -6,7 +6,7 @@ using Creeper;
 
 namespace CreeperMessages
 {
-    public enum NetworkErrorType { OpponentForfeit, Forfeit, Disconnect, IllegalMove }
+    public enum NetworkErrorType { OpponentForfeit, Forfeit, Disconnect, IllegalMove, ForfeitMessage }
     public class NetworkErrorMessage
     {
         public NetworkErrorType Type { get; set; }
