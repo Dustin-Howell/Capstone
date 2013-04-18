@@ -49,6 +49,7 @@ namespace XNAControlGame
                     });
                 }
             });
+            _eventAggregator.Subscribe(_boardController);
             _moveAnimationListener.BoardController = _boardController;
             _boardGroup.Add(_moveAnimationListener);
             _boardSurface = _boardGroup.Find<Surface>();

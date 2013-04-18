@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using Nine.Graphics;
 using Creeper;
 using Nine.Graphics.Primitives;
+using Caliburn.Micro;
+using CreeperMessages;
 
 namespace XNAControlGame
 {
@@ -32,7 +34,7 @@ namespace XNAControlGame
         }
     }
 
-    class BoardController : Component
+    class BoardController : Component, IHandle<MoveMessage>
     {
         public IProvideBoardState BoardProvider { get; set; }
         public Action<Move> PublishMove { get; set; }
@@ -75,40 +77,6 @@ namespace XNAControlGame
             }
         }
 
-        private IEnumerable<PegController> _pegs
-        {
-            get
-            {
-                return Parent.Children
-                    .Where(x => x.GetType() == typeof(PegController))
-                    .Select(x => (PegController)x);
-            }
-        }
-
-        private IEnumerable<PegController> _firePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Fire);
-            }
-        }
-
-        private IEnumerable<PegController> _icePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Ice);
-            }
-        }
-
-        private IEnumerable<PegController> _possiblePegs
-        {
-            get
-            {
-                return _pegs.Where(x => x.PegType == CreeperPegType.Possible);
-            }
-        }
-
         public BoardController()
         {
             _firePossibleModel = new Instance { Template = "FirePossiblePeg" };
@@ -140,8 +108,8 @@ namespace XNAControlGame
                 info.JumpedPeg = pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(move));
             }
            
-
             peg.MoveTo(info, callback);
+
         }
 
         private void ClearPossiblePegs()
@@ -262,6 +230,26 @@ namespace XNAControlGame
         public void SynchronizePegs(CreeperBoard creeperBoard)
         {
             throw new NotImplementedException();
+        }
+
+        public void Handle(MoveMessage message)
+        {
+            List<PegController> pegs = new List<PegController>();
+            Parent.Traverse(pegs);
+
+            if (message.Type == MoveMessageType.Request)
+            {
+                
+                foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor().Opposite() == message.TurnColor))
+                {
+                    peg.EndIdle();
+                }
+
+                foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor() == message.TurnColor))
+                {
+                    peg.StartIdle();
+                }
+            }
         }
     }
 }

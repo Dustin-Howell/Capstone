@@ -193,7 +193,7 @@ namespace FireAndIce.ViewModels
             if (message.Type == ChatMessageType.Send)
                 ChatMessages.Add(message.Message);
             else
-                ChatMessages.Add(AppModel.Network.getOpponentName() + message.Message);
+                ChatMessages.Add(message.Message);
         }
 
         private System.Windows.Visibility _undoVisible;

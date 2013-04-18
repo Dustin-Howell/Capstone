@@ -164,7 +164,7 @@ namespace XNAControlGame
             ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
             animationPlayer.Play("Die").Completed += new EventHandler((s, e) =>
             {
-                Scene.FindName<Group>("GameBoard").Remove(Parent);
+                Scene.FindName<Group>("GameBoard").Children.Remove(Parent);
             });
 
         }
@@ -172,8 +172,15 @@ namespace XNAControlGame
         protected override void OnAdded(Group parent)
         {
             _pegModel = parent.Find<Nine.Graphics.Model>();
-            if (PegType != CreeperPegType.Possible)
-                _pegModel.Animations.Play("Idle");
+            if (PegType != CreeperPegType.Possible && PegType == CreeperPegType.Fire)
+            {
+                StartIdle();
+            }
+            else if (PegType == CreeperPegType.Ice)
+            {
+                StartIdle();
+                EndIdle();
+            }
             base.OnAdded(parent);
         }
 
@@ -183,11 +190,24 @@ namespace XNAControlGame
             base.OnRemoved(parent);
         }
 
-        protected override void Update(float elapsedTime)
+        public void StartIdle()
         {
-            
-            base.Update(elapsedTime);
+            AnimationPlayer animationPlayer = _pegModel.Animations;
+            ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1000000000;
+           _pegModel.Animations.Play("Idle");
         }
+
+        public void EndIdle()
+        {
+            AnimationPlayer animationPlayer = _pegModel.Animations;
+
+            ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
+            animationPlayer.Play("Idle").Completed += new EventHandler((s, e) =>
+            {
+                _pegModel.Animations["Idle"].Stop();
+            });
+        }
+
         internal void Destroy()
         {
             Scene.Remove(Parent);
