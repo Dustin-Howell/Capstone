@@ -88,6 +88,11 @@ namespace CreeperCore
                     throw new InvalidOperationException(String.Format("Player type of {0} should not be making move now", message.PlayerType.ToString()));
                 }
 
+                if (message.TurnColor != _currentPlayer.Color)
+                {
+                    throw new InvalidOperationException(String.Format("Color: {0} should not be moving now", message.TurnColor.ToString()));
+                }
+
                 CreeperBoard board = new CreeperBoard(_board);
                 board.Move(message.Move);
                 _boardHistory.Push(board);

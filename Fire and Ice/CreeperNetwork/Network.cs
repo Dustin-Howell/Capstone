@@ -537,7 +537,7 @@ namespace CreeperNetwork
                             currentMove = new Move(new Position(packet[8], packet[8]), new Position(packet[10], packet[11]), CreeperColor.Empty);
                             //newMove = true;
 
-                            _eventAggregator.Publish(new MoveMessage(){ PlayerType = PlayerType.Network, Type = MoveMessageType.Response,  Move = currentMove});
+                            _eventAggregator.Publish(new MoveMessage(){ PlayerType = PlayerType.Network, Type = MoveMessageType.Response,  Move = currentMove, TurnColor = _turnColor});
                         }
                         else if (packet[7] == MOVETYPE_FORFEIT || packet[7] == MOVETYPE_ILLEGAL)
                         {
@@ -1084,7 +1084,7 @@ namespace CreeperNetwork
             if (message.Type == MoveMessageType.Request
                 && message.PlayerType == PlayerType.Network)
             {
-                //wait for move from opponent
+                _turnColor = message.TurnColor;
             }
             else if (message.Type == MoveMessageType.Response
                 && message.PlayerType != PlayerType.Network)

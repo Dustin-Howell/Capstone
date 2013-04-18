@@ -42,6 +42,8 @@ namespace XNAControlGame
                                 {
                                     Type = MoveMessageType.MoveMade,
                                     Move = message.Move,
+                                    PlayerType = message.PlayerType,
+                                    TurnColor = message.TurnColor,
                             });
                         });
                 }

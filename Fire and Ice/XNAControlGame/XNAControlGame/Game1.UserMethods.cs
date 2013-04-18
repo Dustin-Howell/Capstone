@@ -47,6 +47,7 @@ namespace XNAControlGame
                         Move = move,
                         PlayerType = PlayerType.Human,
                         Type = MoveMessageType.Response,
+                        TurnColor = BoardProvider.GetCurrentPlayer().Color,
                     });
                 }
             });
