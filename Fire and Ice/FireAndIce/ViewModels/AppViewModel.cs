@@ -10,7 +10,7 @@ using System.ComponentModel.Composition;
 namespace FireAndIce.ViewModels
 {
     [Export(typeof(AppViewModel))]
-    public class AppViewModel : Conductor<Screen>.Collection.OneActive, IHandle<StartGameMessage>, IHandle<GameOverMessage>, IHandle<ResetMessage>, IHandle<ReturnToMenuMessage>
+    public class AppViewModel : Conductor<Screen>.Collection.OneActive, IHandle<StartGameMessage>, IHandle<GameOverMessage>, IHandle<ResetMessage>, IHandle<ReturnToMenuMessage>, IHandle<PlayIntroScreenMessage>
     {
         private readonly IWindowManager _windowManager;
 
@@ -21,7 +21,7 @@ namespace FireAndIce.ViewModels
 
             AppModel.AppViewModel = this;
             AppModel.EventAggregator.Subscribe(this);
-            ActivateItem(new MainMenuViewModel());
+            ActivateItem(new SplashScreenViewModel());
         }
 
         public void Handle(StartGameMessage message)
@@ -43,6 +43,11 @@ namespace FireAndIce.ViewModels
         {
             ActivateItem(new MainMenuViewModel());
         }
- 
+
+
+        public void Handle(PlayIntroScreenMessage message)
+        {
+            ActivateItem(new IntroScreenViewModel());
+        }
     }
 }

@@ -78,11 +78,16 @@
     <Compile Include="ViewModels\GameOverViewModel.cs" />
     <Compile Include="ViewModels\HostGameViewModel.cs" />
     <Compile Include="ViewModels\InstructionsViewModel.cs" />
+    <Compile Include="ViewModels\IntroScreenViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
+    <Compile Include="ViewModels\SplashScreenViewModel.cs" />
     <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
     <Compile Include="Views\AirspacePopup.cs" />
     <Compile Include="ViewModels\InGameConnectionViewModel.cs" />
+    <Compile Include="Views\IntroScreenView.xaml.cs">
+      <DependentUpon>IntroScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SlideOutControl.cs" />
     <Page Include="ColorSchemes\Default.xaml">
       <SubType>Designer</SubType>
@@ -140,11 +145,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\IntroScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OptionButtonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SplashScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
