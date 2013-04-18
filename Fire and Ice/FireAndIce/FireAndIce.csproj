@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.1.4.1\lib\net40\Caliburn.Micro.dll</HintPath>
@@ -210,6 +213,7 @@
     <Resource Include="Images\Jon-Scott.png" />
     <Resource Include="Images\Josh.png" />
     <Resource Include="Images\Kaleb.png" />
+    <Resource Include="icon.ico" />
     <Content Include="Videos\IntroScreenPlaceholder.wmv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
