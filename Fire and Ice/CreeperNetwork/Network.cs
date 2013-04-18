@@ -15,6 +15,8 @@ namespace CreeperNetwork
     public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>, IDisposable
     {
         static Timer checkTimer = new Timer();
+
+        private CreeperColor _turnColor;
         
         //Network Constants
         public const int PROTOCOL_VERSION = 1;
