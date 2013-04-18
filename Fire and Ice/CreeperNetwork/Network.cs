@@ -42,6 +42,7 @@ namespace CreeperNetwork
         private const byte MOVETYPE_ILLEGAL = 3;
 
         //Network Variable
+        private int gameInstance = 0;
         private Timer ackTimer = new Timer();
         private bool opponentForfeit = false;
         public bool isServer = false;
@@ -127,6 +128,7 @@ namespace CreeperNetwork
 
             byte[] packet = new byte[MAX_PACKET_SIZE];
 
+            gameInstance = new Random().Next(0, 254);
             hostGame = true;
 
             //okay, now what if someone wants to join?.
@@ -143,7 +145,7 @@ namespace CreeperNetwork
                     {
                         sendPacket(packet_OfferGame(), ipOfLastPacket.Address.ToString());
                     }
-                    else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_JOIN_GAME)
+                    else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_JOIN_GAME && packet[2] == gameInstance)
                     {
                         if (!server_acceptClient(packet))
                         {
@@ -256,7 +258,7 @@ namespace CreeperNetwork
          *********************************************************/
         public string[,] client_findGames(string clientNameIn)
         {
-            string[,] games = new string[256, 7];
+            string[,] games = new string[256, 8];
             int gameCounter = 0;
             Stopwatch serverStopwatch = new Stopwatch();
             isServer = false;
@@ -276,29 +278,32 @@ namespace CreeperNetwork
 
                 if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_OFFER_GAME)
                 {
-                    int gameNameLength = BitConverter.ToInt32(packet, 7);
-                    int playerNameLength = BitConverter.ToInt32(packet, 11 + gameNameLength);
+                    int gameNameLength = BitConverter.ToInt32(packet, 8);
+                    int playerNameLength = BitConverter.ToInt32(packet, 12 + gameNameLength);
 
                     //Server IP
                     games[gameCounter, 0] = ipOfLastPacket.Address.ToString();
 
                     //Protocol Version
-                    games[gameCounter, 1] = packet[6].ToString();
+                    games[gameCounter, 1] = packet[7].ToString();
 
                     //Game Name Length
                     games[gameCounter, 2] = gameNameLength.ToString();
                    
                     //Game Name
-                    games[gameCounter, 3] = Encoding.ASCII.GetString(packet, 11, gameNameLength);
+                    games[gameCounter, 3] = Encoding.ASCII.GetString(packet, 12, gameNameLength);
                     
                     //Player Name Length
-                    games[gameCounter, 4] = BitConverter.ToInt32(packet, 11 + gameNameLength).ToString();
+                    games[gameCounter, 4] = BitConverter.ToInt32(packet, 12 + gameNameLength).ToString();
 
                     //Player Name
-                    games[gameCounter, 5] = Encoding.ASCII.GetString(packet, 11 + gameNameLength + 4, playerNameLength);
+                    games[gameCounter, 5] = Encoding.ASCII.GetString(packet, 12 + gameNameLength + 4, playerNameLength);
                     
                     //Who moves first?
                     games[gameCounter, 6] = packet[packet.Length - 1].ToString();
+
+                    //Game instance number
+                    games[gameCounter, 7] = packet[2].ToString();
 
                     gameCounter++;
                 }
@@ -316,6 +321,7 @@ namespace CreeperNetwork
          *********************************************************/
         public void client_joinGame(string[] gameIn)
         {
+            gameInstance = Int32.Parse(gameIn[8]);
             sendPacket(packet_JoinGame(gameIn), gameIn[0]);
         }
 
@@ -324,7 +330,7 @@ namespace CreeperNetwork
          * Description: Starts a game on the client by 
          *              acknowledging the server
          *********************************************************/
-        public bool client_ackStartGame()
+        public bool client_ackStartGame(string[] gameIn)
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
             Boolean commandReceived = false;
@@ -337,9 +343,9 @@ namespace CreeperNetwork
             {
                 packet = receivePacket_blocking();
 
-                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_START_GAME)
+                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_START_GAME && packet[2] == gameInstance)
                 {
-                    awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                    awaySequenceNumber = BitConverter.ToInt32(packet, 3);
                     sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                     commandReceived = true;
                     acknowledged = true;
@@ -350,7 +356,7 @@ namespace CreeperNetwork
                     result = true;
                     _keepAliveWorker.RunWorkerAsync();
                 }
-                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
+                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT && packet[2] == gameInstance)
                 {
                     _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
                     commandReceived = true;
@@ -489,7 +495,7 @@ namespace CreeperNetwork
             {
                 packet = receivePacket_blocking();
 
-                if (packet[0] == PACKET_SIGNATURE)
+                if (packet[0] == PACKET_SIGNATURE && packet[2] == gameInstance)
                 {
                     //Did someone disconnect?
                     if (packet[1] == CMD_DISCONNECT)
@@ -499,20 +505,20 @@ namespace CreeperNetwork
                     //Are we waiting for an ACK?
                     else if (!acknowledged)
                     {
-                        if (packet[1] == CMD_ACK && homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                        if (packet[1] == CMD_ACK && homeSequenceNumber == BitConverter.ToInt32(packet, 7))
                         {
                             acknowledged = true;
-                            awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                            awaySequenceNumber = BitConverter.ToInt32(packet, 3);
                         }
 
-                        lastReceivedHomeSeqNum = BitConverter.ToInt32(packet, 6);
+                        lastReceivedHomeSeqNum = BitConverter.ToInt32(packet, 7);
                     }
                     //something else...
                     else if (packet[1] == CMD_CHAT)
                     {
-                        int messageLength = BitConverter.ToInt32(packet, 6);
-                        currentMessage = Encoding.ASCII.GetString(packet, 10, messageLength);
-                        awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                        int messageLength = BitConverter.ToInt32(packet, 7);
+                        currentMessage = Encoding.ASCII.GetString(packet, 11, messageLength);
+                        awaySequenceNumber = BitConverter.ToInt32(packet, 3);
                         newMessage = true;
                         acknowledged = true;
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
@@ -522,24 +528,24 @@ namespace CreeperNetwork
                     }
                     else if (packet[1] == CMD_MAKE_MOVE)
                     {
-                        awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                        awaySequenceNumber = BitConverter.ToInt32(packet, 3);
                         sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                         acknowledged = true;
 
-                        if (packet[6] == MOVETYPE_MOVE)
+                        if (packet[7] == MOVETYPE_MOVE)
                         {
-                            currentMove = new Move(new Position(packet[7], packet[8]), new Position(packet[9], packet[10]), CreeperColor.Empty);
+                            currentMove = new Move(new Position(packet[8], packet[8]), new Position(packet[10], packet[11]), CreeperColor.Empty);
                             //newMove = true;
 
                             _eventAggregator.Publish(new MoveMessage(){ PlayerType = PlayerType.Network, Type = MoveMessageType.Response,  Move = currentMove});
                         }
-                        else if (packet[6] == MOVETYPE_FORFEIT || packet[6] == MOVETYPE_ILLEGAL)
+                        else if (packet[7] == MOVETYPE_FORFEIT || packet[7] == MOVETYPE_ILLEGAL)
                         {
-                            if (packet[6] == MOVETYPE_FORFEIT)
+                            if (packet[7] == MOVETYPE_FORFEIT)
                             {
                                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentForfeitMessage));
                             }
-                            else if (packet[6] == MOVETYPE_ILLEGAL)
+                            else if (packet[7] == MOVETYPE_ILLEGAL)
                                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.IllegalMoveMessage));
                         }
                     }
@@ -624,9 +630,9 @@ namespace CreeperNetwork
 
                     connectionIssue = true;
                 }
-                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
+                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK && packet[2] == gameInstance)
                 {
-                    if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                    if (homeSequenceNumber == BitConverter.ToInt32(packet, 7))
                     {
                         stopwatch.Restart();
                     }
@@ -799,27 +805,28 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_OfferGame()
         {
-            byte[] packet = new byte[16 + hostGameName.Length + hostPlayerName.Length];
+            byte[] packet = new byte[17 + hostGameName.Length + hostPlayerName.Length];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_OFFER_GAME;
+            packet[2] = (byte)gameInstance;
 
-            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 3);
 
-            packet[6] = PROTOCOL_VERSION;
+            packet[7] = PROTOCOL_VERSION;
 
             //Game Name Length
-            (BitConverter.GetBytes(hostGameName.Length)).CopyTo(packet, 7);
+            (BitConverter.GetBytes(hostGameName.Length)).CopyTo(packet, 8);
 
             //Game Name 
-            encoding.GetBytes(hostGameName).CopyTo(packet, 11);
+            encoding.GetBytes(hostGameName).CopyTo(packet, 12);
 
             //Player Name Length
-            (BitConverter.GetBytes(hostPlayerName.Length)).CopyTo(packet, 11 + hostGameName.Length);
+            (BitConverter.GetBytes(hostPlayerName.Length)).CopyTo(packet, 12 + hostGameName.Length);
 
             //Player Name
-            encoding.GetBytes(hostPlayerName).CopyTo(packet, 11 + hostGameName.Length + 4);
+            encoding.GetBytes(hostPlayerName).CopyTo(packet, 12 + hostGameName.Length + 4);
 
             //who moves first? 1 I do, 0 you do
             packet[packet.Length - 1] = Convert.ToByte(1);
@@ -858,25 +865,26 @@ namespace CreeperNetwork
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_JOIN_GAME;
+            packet[2] = (byte)gameInstance;
 
             //sequence number
-            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 3);
 
             //game protocol version
-            packet[6] = Convert.ToByte(gameIn[1]);
+            packet[7] = Convert.ToByte(gameIn[1]);
 
             //game name length
-            (BitConverter.GetBytes(Convert.ToInt32(gameIn[2]))).CopyTo(packet, 7);
+            (BitConverter.GetBytes(Convert.ToInt32(gameIn[2]))).CopyTo(packet, 8);
 
             //game name
-            (encoding.GetBytes(gameIn[3])).CopyTo(packet, 11);
+            (encoding.GetBytes(gameIn[3])).CopyTo(packet, 12);
             hostGameName = gameIn[3];
 
             //player name length 
-            (BitConverter.GetBytes(clientPlayerName.Length)).CopyTo(packet, 11 + hostGameName.Length);
+            (BitConverter.GetBytes(clientPlayerName.Length)).CopyTo(packet, 12 + hostGameName.Length);
 
             //player name 
-            (encoding.GetBytes(clientPlayerName)).CopyTo(packet, 11 + hostGameName.Length + 4);
+            (encoding.GetBytes(clientPlayerName)).CopyTo(packet, 12 + hostGameName.Length + 4);
             
             //who moves first? 1 I do, 0 you do
             packet[packet.Length - 1] = Convert.ToByte(!Convert.ToBoolean(Convert.ToByte(gameIn[6])));
@@ -892,14 +900,15 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_StartGame()
         {
-            byte[] packet = new byte[6];
+            byte[] packet = new byte[7];
 
             homeSequenceNumber++;
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_START_GAME;
+            packet[2] = (byte)gameInstance;
 
-            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 3);
 
             lastCommand = packet;
 
@@ -914,12 +923,13 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_Disconnect()
         {
-            byte[] packet = new byte[6];
+            byte[] packet = new byte[7];
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_DISCONNECT;
+            packet[2] = (byte)gameInstance;
 
-            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 3);
 
             return packet;
         }
@@ -932,25 +942,26 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_MakeMove(Move moveIn, byte moveTypeIn)
         {
-            byte[] packet = new byte[11];
+            byte[] packet = new byte[12];
 
             homeSequenceNumber++;
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_MAKE_MOVE;
+            packet[2] = (byte)gameInstance;
 
-            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 3);
 
             //move type
-            packet[6] = moveTypeIn;
+            packet[7] = moveTypeIn;
 
             //source
-            packet[7] = (byte)moveIn.StartPosition.Row;
-            packet[8] = (byte)moveIn.StartPosition.Column;
+            packet[8] = (byte)moveIn.StartPosition.Row;
+            packet[9] = (byte)moveIn.StartPosition.Column;
 
             //destination
-            packet[9] = (byte)moveIn.EndPosition.Row;
-            packet[10] = (byte)moveIn.EndPosition.Column;
+            packet[10] = (byte)moveIn.EndPosition.Row;
+            packet[11] = (byte)moveIn.EndPosition.Column;
 
             lastCommand = packet;
 
@@ -964,20 +975,21 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_Chat(string messageIn)
         {
-            byte[] packet = new byte[10 + messageIn.Length];
+            byte[] packet = new byte[11 + messageIn.Length];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
 
             homeSequenceNumber++;
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_CHAT;
+            packet[2] = (byte)gameInstance;
 
-            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 3);
 
             //Message length
-            (BitConverter.GetBytes(messageIn.Length)).CopyTo(packet, 6);
+            (BitConverter.GetBytes(messageIn.Length)).CopyTo(packet, 7);
 
-            (encoding.GetBytes(messageIn)).CopyTo(packet, 10);
+            (encoding.GetBytes(messageIn)).CopyTo(packet, 11);
 
             lastCommand = packet;
 
@@ -992,13 +1004,14 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_Ack()
         {
-            byte[] packet = new byte[11];
+            byte[] packet = new byte[12];
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_ACK;
+            packet[2] = (byte)gameInstance;
 
-            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 2);
-            (BitConverter.GetBytes(awaySequenceNumber)).CopyTo(packet, 6);
+            (BitConverter.GetBytes(homeSequenceNumber)).CopyTo(packet, 3);
+            (BitConverter.GetBytes(awaySequenceNumber)).CopyTo(packet, 7);
 
             // Console.WriteLine("ACK.");
 

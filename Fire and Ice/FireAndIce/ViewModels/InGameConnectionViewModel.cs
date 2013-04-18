@@ -14,8 +14,8 @@ namespace FireAndIce.ViewModels
 {
     class InGameConnectionViewModel : PropertyChangedBase
     {
-        static Timer countdown = new Timer();
-        static Timer checkTimer = new Timer();
+        static public Timer countdown = new Timer();
+        static public Timer checkTimer = new Timer();
         int stillNotConnected = 0;
 
         public InGameConnectionViewModel(ConnectionStatusMessage message)
@@ -154,10 +154,13 @@ namespace FireAndIce.ViewModels
 
                 checkTimer.Tick += new EventHandler((s, e) =>
                 {
-                    if(message == "Lost Network Connection")
-                        AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.DisconnectMessage));
-                    else if(message == "Opponent Connection Problem")
-                        AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentDisconnectMessage));
+                    if (CurrentTime <= 1)
+                    {
+                        if (message == "Lost Network Connection")
+                            AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.DisconnectMessage));
+                        else if (message == "Opponent Connection Problem")
+                            AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentDisconnectMessage));
+                    }
                 });
                 checkTimer.Interval = 20000;
                 checkTimer.Enabled = true;
