@@ -229,7 +229,7 @@ namespace CreeperNetwork
                     {
                         packet = receivePacket_blocking();
 
-                        if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
+                        if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK && packet[2] == gameInstance)
                         {
                             //does the sequence number they sent us back match ours?
                             if (homeSequenceNumber == BitConverter.ToInt32(packet, 7))

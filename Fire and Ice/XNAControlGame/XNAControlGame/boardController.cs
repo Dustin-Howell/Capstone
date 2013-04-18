@@ -34,7 +34,7 @@ namespace XNAControlGame
         }
     }
 
-    class BoardController : Component, IHandle<MoveMessage>
+    class BoardController : Component, IHandle<MoveMessage>, IHandle<GameOverMessage>
     {
         public IProvideBoardState BoardProvider { get; set; }
         public Action<Move> PublishMove { get; set; }
@@ -238,8 +238,7 @@ namespace XNAControlGame
             Scene.Traverse(pegs);
 
             if (message.Type == MoveMessageType.Request)
-            {
-                
+            {                
                 foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor().Opposite() == message.TurnColor))
                 {
                     peg.EndIdle();
@@ -250,6 +249,34 @@ namespace XNAControlGame
                     peg.StartIdle();
                 }
             }
+        }
+
+        public void Handle(GameOverMessage message)
+        {
+            List<PegController> pegs = new List<PegController>();
+            Scene.Traverse(pegs);
+
+                if (message.Winner == CreeperColor.Fire || message.Winner == CreeperColor.Ice)
+                {
+                
+                    foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor().Opposite() == message.Winner))
+                    {
+                        peg.Victory();
+                    }
+
+                    foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor() != message.Winner))
+                    {
+                        peg.Die();
+                    }
+                }
+                else
+                {
+                    foreach (PegController peg in pegs)
+                    {
+                        peg.Die();
+                    }
+                }
+            
         }
     }
 }

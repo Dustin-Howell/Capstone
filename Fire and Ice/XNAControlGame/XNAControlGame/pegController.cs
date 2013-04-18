@@ -157,6 +157,13 @@ namespace XNAControlGame
             }
         }
 
+        public void Victory()
+        {
+            AnimationPlayer animationPlayer = _pegModel.Animations;
+
+            _pegModel.Animations.Play("Attack");
+        }
+
         public void Die()
         {
             AnimationPlayer animationPlayer = _pegModel.Animations;

@@ -36,7 +36,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(GameOverMessage message)
         {
-            _windowManager.ShowDialog(new GameOverViewModel(message.Winner));
+            _windowManager.ShowPopup(new GameOverViewModel(message.Winner));
         }
 
         public void Handle(ReturnToMenuMessage message)
