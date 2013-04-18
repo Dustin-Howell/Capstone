@@ -83,7 +83,7 @@ namespace XNAControlGame
             _icePossibleModel = new Instance { Template = "IcePossiblePeg" };
         }
 
-        public void Move(Move move, System.Action callback)
+        public void Move(Move move, CreeperColor turnColor, System.Action callback)
         {
             List<PegController> pegs = new List<PegController>();
             Scene.Traverse(pegs);
@@ -93,7 +93,7 @@ namespace XNAControlGame
             if (CreeperBoard.IsFlipMove(move))
             {
                 moveType = MoveType.TileJump;
-                FlipTile(CreeperBoard.GetFlippedPosition(move), move.PlayerColor);
+                FlipTile(CreeperBoard.GetFlippedPosition(move), turnColor);
             }
             else if (CreeperBoard.IsCaptureMove(move))
             {

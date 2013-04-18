@@ -34,7 +34,7 @@ namespace XNAControlGame
                 if (message.Type == MoveMessageType.Response)
                 {
                     IsAnimating = true;
-                    BoardController.Move(message.Move, () =>
+                    BoardController.Move(message.Move, message.TurnColor, () =>
                         { 
                             IsAnimating = false;
                             _eventAggregator.Publish(
