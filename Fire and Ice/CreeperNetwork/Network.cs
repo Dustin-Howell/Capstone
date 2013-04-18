@@ -619,7 +619,7 @@ namespace CreeperNetwork
 
                 if (packet == null)
                 {
-                    if (lastCommand[1] == CMD_START_GAME)
+                    if (lastCommand != null && lastCommand[1] == CMD_START_GAME)
                     {
                         sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
                         Console.WriteLine("The last command started the game...resend.");
@@ -713,8 +713,15 @@ namespace CreeperNetwork
                 Console.WriteLine("Receiving timeout -- primary listener");
             }
 
-            listener.Client.ReceiveTimeout = 0;
-                
+            try
+            {
+                listener.Client.ReceiveTimeout = 0;
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("The network was likely exited before this function was finished");
+            }
+
             return data;
         }
 
@@ -741,7 +748,14 @@ namespace CreeperNetwork
                 Console.WriteLine("Receiving timeout -- primary listener");
             }
 
-            listenerAlt.Client.ReceiveTimeout = 0;
+            try
+            {
+                listenerAlt.Client.ReceiveTimeout = 0;
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("The network was likely exited before this function was finished");
+            }
 
             return data;
         }
