@@ -541,7 +541,7 @@ namespace CreeperNetwork
 
                         if (packet[7] == MOVETYPE_MOVE)
                         {
-                            currentMove = new Move(new Position(packet[8], packet[9]), new Position(packet[10], packet[11]), CreeperColor.Empty);
+                            currentMove = new Move(new Position(packet[8], packet[9]), new Position(packet[10], packet[11]), _turnColor);
                             //newMove = true;
 
                             _eventAggregator.Publish(new MoveMessage(){ PlayerType = PlayerType.Network, Type = MoveMessageType.Response,  Move = currentMove, TurnColor = _turnColor});
