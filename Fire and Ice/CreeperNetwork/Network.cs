@@ -41,7 +41,8 @@ namespace CreeperNetwork
         private const byte MOVETYPE_FORFEIT = 2;
         private const byte MOVETYPE_ILLEGAL = 3;
 
-        //Network Variables
+        //Network Variable
+        private Timer ackTimer = new Timer();
         public bool isServer = false;
         private bool serverFull = false;
         private bool hostGame = false;
@@ -376,7 +377,9 @@ namespace CreeperNetwork
                 sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
                 gameRunning = false;
             }
-            
+
+            ackTimer.Enabled = false;
+            ackTimer.Close();
             listener.Close();
             listenerAlt.Close();
             sender.Close();
@@ -575,13 +578,17 @@ namespace CreeperNetwork
             }
         }
 
+        public bool isGameRunning()
+        {
+            return gameRunning;
+        }
+
         /**********************************************************
          * Function:    keepAlive
          * Description: Keeps the network connection open
          *********************************************************/
         private void keepAlive()
         {
-            Timer ackTimer = new Timer();
             ackTimer.Elapsed += new ElapsedEventHandler(sendAckOnTime);
             // Set the Interval to 5 seconds.
             ackTimer.Interval = ACKNOWLEDGEMENT_TIMER;
@@ -683,7 +690,11 @@ namespace CreeperNetwork
                 data = null;
             }
 
-            listener.Client.ReceiveTimeout = 0;
+            try
+            {
+                listener.Client.ReceiveTimeout = 0;
+            }
+            catch (Exception) { }
 
             return data;
         }
@@ -1078,9 +1089,9 @@ namespace CreeperNetwork
                 {
                     // Dispose managed resources.
                     --instanceCount;
-                    listener.Close();
-                    listenerAlt.Close();
-                    sender.Close();
+                    listener = null;
+                    listenerAlt = null;
+                    sender = null;
                 }
 
                 // Call the appropriate methods to clean up 

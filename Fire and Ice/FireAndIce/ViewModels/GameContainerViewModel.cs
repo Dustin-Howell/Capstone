@@ -277,7 +277,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(ConnectionStatusMessage message)
         {
-            if (IsNetworkGame)
+            if (IsNetworkGame && AppModel.Network.isGameRunning())
             {
                 if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
                 {
