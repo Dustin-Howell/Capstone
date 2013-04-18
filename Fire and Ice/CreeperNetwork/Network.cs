@@ -352,16 +352,17 @@ namespace CreeperNetwork
 
                 if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_START_GAME && packet[2] == gameInstance)
                 {
-                    awaySequenceNumber = BitConverter.ToInt32(packet, 3);
-                    sendPacket(packet_Ack(), ipOfCurrentGame.Address.ToString());
-                    commandReceived = true;
-                    acknowledged = true;
+                        awaySequenceNumber = BitConverter.ToInt32(packet, 3);
+                        lastCommand = packet_Ack();
+                        sendPacket(packet_Ack(), ipOfCurrentGame.Address.ToString());
+                        commandReceived = true;
+                        acknowledged = true;
 
-                    Console.WriteLine("GAME STARTED.");
-                    gameRunning = true;
-                    runGame();
-                    result = true;
-                    _keepAliveWorker.RunWorkerAsync();
+                        Console.WriteLine("GAME STARTED.");
+                        gameRunning = true;
+                        runGame();
+                        result = true;
+                        _keepAliveWorker.RunWorkerAsync();
                 }
                 else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT && packet[2] == gameInstance)
                 {
@@ -1120,8 +1121,8 @@ namespace CreeperNetwork
 
         public void Handle(GameOverMessage message)
         {
-                disconnect();
                 gameRunning = false;
+                disconnect();
         }
 
         public void Dispose()
