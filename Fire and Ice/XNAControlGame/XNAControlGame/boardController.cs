@@ -235,7 +235,7 @@ namespace XNAControlGame
         public void Handle(MoveMessage message)
         {
             List<PegController> pegs = new List<PegController>();
-            Parent.Traverse(pegs);
+            Scene.Traverse(pegs);
 
             if (message.Type == MoveMessageType.Request)
             {

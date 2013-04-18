@@ -193,8 +193,12 @@ namespace XNAControlGame
         public void StartIdle()
         {
             AnimationPlayer animationPlayer = _pegModel.Animations;
-            ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1000000000;
-           _pegModel.Animations.Play("Idle");
+            if (animationPlayer["Die"].State != Nine.Animations.AnimationState.Playing)
+            {
+                ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1000000000;
+                _pegModel.Animations.Play("Idle");
+            }
+           
         }
 
         public void EndIdle()
