@@ -393,9 +393,6 @@ namespace CreeperNetwork
 
             ackTimer.Enabled = false;
             ackTimer.Close();
-            listener.Close();
-            listenerAlt.Close();
-            sender.Close();
         }
 
         /**********************************************************
@@ -619,7 +616,7 @@ namespace CreeperNetwork
 
                 if (packet == null)
                 {
-                    if (lastCommand != null && lastCommand[1] == CMD_START_GAME)
+                    if (lastCommand != null && lastCommand[1] == CMD_START_GAME && gameRunning)
                     {
                         sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
                         Console.WriteLine("The last command started the game...resend.");
@@ -752,7 +749,7 @@ namespace CreeperNetwork
             {
                 listenerAlt.Client.ReceiveTimeout = 0;
             }
-            catch (SocketException)
+            catch (NullReferenceException)
             {
                 Console.WriteLine("The network was likely exited before this function was finished");
             }
@@ -1030,6 +1027,8 @@ namespace CreeperNetwork
         ******************************/
         public void Handle(NetworkErrorMessage message)
         {
+            disconnect();
+
             if (message.Type == NetworkErrorType.Forfeit)
             {
                 gameRunning = false;
@@ -1045,8 +1044,6 @@ namespace CreeperNetwork
                 gameRunning = false;
                 Console.WriteLine("Illegal move detected.");
             }
-
-            disconnect();
         }
 
         /******************************
@@ -1108,6 +1105,7 @@ namespace CreeperNetwork
                 {
                     // Dispose managed resources.
                     --instanceCount;
+                    
                     listener.Close();
                     listenerAlt.Close();
                     sender.Close();
