@@ -73,6 +73,7 @@ namespace FireAndIce.ViewModels
 
         public HostGameViewModel(IEventAggregator eventAggregator)
         {
+            CanHostGame = true;
             eventAggregator.Subscribe(this);
         }
 
@@ -85,7 +86,7 @@ namespace FireAndIce.ViewModels
 
             _hostGameWorker.DoWork += new DoWorkEventHandler((s, e) =>
                 {
-                    AppModel.Network.server_hostGame(GameName, PlayerName);
+                    e.Result = AppModel.Network.server_hostGame(GameName, PlayerName);
                 });
 
             _hostGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
@@ -96,19 +97,18 @@ namespace FireAndIce.ViewModels
                 }
                 else
                 {
-                    _connectServerWorker.RunWorkerAsync();
+                    if((bool)e.Result)
+                        _connectServerWorker.RunWorkerAsync();
                 }
             });
 
             _connectServerWorker.DoWork += new DoWorkEventHandler(
                 (s, e) => {
-                    AppModel.Network.server_startGame_check();
+                    AppModel.Network.server_startGame();
                 });
 
             _connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
             {
-                  if(!AppModel.Network.doNotStartGame)
-                  {
                     AppModel.EventAggregator.Publish(
                         new StartGameMessage()
                         {
@@ -121,7 +121,6 @@ namespace FireAndIce.ViewModels
                                 Network = AppModel.Network,
                             }
                         });                    
-                  }
             });
 
 

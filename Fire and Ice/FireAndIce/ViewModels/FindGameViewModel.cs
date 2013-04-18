@@ -46,6 +46,8 @@ namespace FireAndIce.ViewModels
         //Constructor
         public FindGameViewModel(IEventAggregator eventAggregator)
         {
+            AppModel.Network.quitHostGame();
+
             refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
             // Set the Interval to 3000 milliseconds.
             refreshTimer.Interval = 3000;
@@ -57,6 +59,8 @@ namespace FireAndIce.ViewModels
             eventAggregator.Subscribe(this);
 
             SearchForGames = "Searching for games...";
+
+            AppModel.Network.quitHostGame();
         }
 
         // Dynamically bindable properties.
@@ -186,8 +190,6 @@ namespace FireAndIce.ViewModels
             startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) 
                 => 
                 {
-                    if (!AppModel.Network.doNotStartGame)
-                    {
                         AppModel.EventAggregator.Publish(
                             new StartGameMessage()
                             {
@@ -200,7 +202,6 @@ namespace FireAndIce.ViewModels
                                     Network = AppModel.Network,
                                 }
                             });
-                    }
                     
                 });
             startGameWorker.RunWorkerAsync();            

@@ -111,47 +111,52 @@ namespace CreeperNetwork
         *              looks for checking if someone is looking 
         *              for servers or trying to join the server
         *********************************************************/
-        public void server_hostGame(string gameNameIn, string playerNameIn)
+        public bool server_hostGame(string gameNameIn, string playerNameIn)
         {
             isServer = true;
             hostGameName = gameNameIn;
             hostPlayerName = playerNameIn;
+            bool result = false;
 
             byte[] packet = new byte[MAX_PACKET_SIZE];
 
             hostGame = true;
 
-            doNotStartGame = true;
-
             //okay, now what if someone wants to join?.
             while (!serverFull  && hostGame && isServer)
             {
-                packet = receivePacket_blocking();
+                if (!hostGame)
+                    break;
 
-                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_FIND_SERVER)
+                packet = receivePacket_blockWithTimeout();
+
+                if (packet != null)
                 {
-                    sendPacket(packet_OfferGame(), ipOfLastPacket.Address.ToString());
-                }
-                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_JOIN_GAME)
-                {
-                    if (!server_acceptClient(packet))
+                    if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_FIND_SERVER)
                     {
-                        sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+                        sendPacket(packet_OfferGame(), ipOfLastPacket.Address.ToString());
                     }
-                    else
+                    else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_JOIN_GAME)
                     {
-                        doNotStartGame = false;
+                        if (!server_acceptClient(packet))
+                        {
+                            sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+                        }
+                        else
+                        {
+                            result = true;
+                        }
                     }
                 }
             }
+
+            return result;
         }
 
         public void quitHostGame()
         {
             hostGame = false;
         }
-
-        public bool doNotStartGame = false;
 
         /**********************************************************
          * Function:    server_acceptClient
@@ -176,12 +181,6 @@ namespace CreeperNetwork
             }
 
             return accepted;
-        }
-
-        public void server_startGame_check()
-        {
-            if(!doNotStartGame)
-                server_startGame();
         }
 
         /**********************************************************
@@ -334,7 +333,6 @@ namespace CreeperNetwork
                     sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
                     commandReceived = true;
                     acknowledged = true;
-                    doNotStartGame = false;
                     Console.WriteLine("GAME STARTED.");
                     gameRunning = true;
                     runGame();
@@ -342,7 +340,6 @@ namespace CreeperNetwork
                 }
                 else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
                 {
-                    doNotStartGame = true;
                     _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
                     commandReceived = true;
                 }
