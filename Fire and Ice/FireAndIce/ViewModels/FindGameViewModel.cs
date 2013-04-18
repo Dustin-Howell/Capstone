@@ -166,6 +166,7 @@ namespace FireAndIce.ViewModels
                     }
                 }
 
+                SelectedFoundGame = games.FirstOrDefault((x) => x == SelectedFoundGame);
                 FoundGames = games;
                 _gamesData = gamesData;
             });
