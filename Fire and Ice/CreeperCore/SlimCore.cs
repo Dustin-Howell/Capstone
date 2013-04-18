@@ -127,6 +127,8 @@ namespace CreeperCore
         {
             if (message.Type == NetworkErrorType.OpponentForfeit)
             {
+                _currentPlayer = new Player(PlayerType.Invalid, CreeperColor.Invalid);
+
                 Player forfeitWinner;
 
                 if(_player1.Type == PlayerType.Network)
@@ -141,6 +143,8 @@ namespace CreeperCore
             }
             else if (message.Type == NetworkErrorType.Forfeit)
             {
+                _currentPlayer = new Player(PlayerType.Invalid, CreeperColor.Invalid);
+
                 Player forfeitWinner;
 
                 if (_player1.Type == PlayerType.Network)
@@ -155,6 +159,8 @@ namespace CreeperCore
             }
             else if (message.Type == NetworkErrorType.Disconnect)
             {
+                _currentPlayer = new Player(PlayerType.Invalid, CreeperColor.Invalid);
+
                 Player disconnectWinner;
                 
                 if (_player1.Type == PlayerType.Network)
@@ -169,6 +175,8 @@ namespace CreeperCore
             }
             else if (message.Type == NetworkErrorType.OpponentDisconnect)
             {
+                _currentPlayer = new Player(PlayerType.Invalid, CreeperColor.Invalid);
+
                 Player disconnectWinner;
 
                 if (_player1.Type == PlayerType.Network)
@@ -183,12 +191,16 @@ namespace CreeperCore
             }
             else if (message.Type == NetworkErrorType.IllegalMove)
             {
+                _currentPlayer = new Player(PlayerType.Invalid, CreeperColor.Invalid);
+
                 Player illegalMoveWinner;
 
                 if (_player1.Type == PlayerType.Network)
                     illegalMoveWinner = _player2;
                 else
                     illegalMoveWinner = _player1;
+
+                Console.WriteLine("ILLEGAL MOVE");
 
                 _eventAggregator.Publish(new GameOverMessage()
                 {
