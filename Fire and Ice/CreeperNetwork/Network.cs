@@ -126,7 +126,7 @@ namespace CreeperNetwork
             //okay, now what if someone wants to join?.
             while (!serverFull  && hostGame && isServer)
             {
-                if (!hostGame)
+                if (!hostGame || serverFull || !isServer)
                     break;
 
                 packet = receivePacket_blockWithTimeout();
@@ -685,7 +685,12 @@ namespace CreeperNetwork
             }
             catch (Exception)
             {
-                listener = new UdpClient(SERVER_PORT);
+                try
+                {
+                    listener = new UdpClient(SERVER_PORT);
+                }
+                catch (Exception) { }
+
                 listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
             }
 
@@ -703,6 +708,7 @@ namespace CreeperNetwork
                 listener.Client.ReceiveTimeout = 0;
             }
             catch (Exception) { }
+                
 
             return data;
         }
@@ -724,7 +730,12 @@ namespace CreeperNetwork
             }
             catch(Exception)
             {
-                listenerAlt = new UdpClient(ALT_SERVER_PORT);
+                try
+                {
+                    listenerAlt = new UdpClient(ALT_SERVER_PORT);
+                }
+                catch (Exception) { }
+
                 listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
             }
 
@@ -737,14 +748,11 @@ namespace CreeperNetwork
                 data = null;
             }
 
-            //TODO: Fix null reference exception on exiting game
-            //client was null
             try
             {
                 listenerAlt.Client.ReceiveTimeout = 0;
             }
             catch (Exception) { }
-
 
             return data;
         }

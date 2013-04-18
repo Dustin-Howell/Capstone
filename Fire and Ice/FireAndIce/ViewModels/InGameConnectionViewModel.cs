@@ -31,21 +31,24 @@ namespace FireAndIce.ViewModels
 
         public void Handle(ConnectionStatusMessage message)
         {
-            if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
+            if (AppModel.Network.isGameRunning())
             {
-                connectionProblem("Lost Network Connection");
-            }
-            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
-            {
-                connectionRestored("Network Connection Restored");
-            }
-            else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
-            {
-                connectionProblem("Connection Problem");
-            }
-            else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
-            {
-                connectionRestored("Connection Restored");
+                if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
+                {
+                    connectionProblem("Lost Network Connection");
+                }
+                else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
+                {
+                    connectionRestored("Network Connection Restored");
+                }
+                else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
+                {
+                    connectionProblem("Connection Problem");
+                }
+                else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
+                {
+                    connectionRestored("Connection Restored");
+                }
             }
         }
 
