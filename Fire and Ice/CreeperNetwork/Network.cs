@@ -56,6 +56,7 @@ namespace CreeperNetwork
         private UdpClient sender;
         private IPEndPoint ipOfLastPacket = new IPEndPoint(IPAddress.Any, SERVER_PORT);
         private IPEndPoint ipOfLastPacket_alt = new IPEndPoint(IPAddress.Any, ALT_SERVER_PORT);
+        private IPEndPoint ipOfCurrentGame; 
         private int lastReceivedHomeSeqNum = 0;
         private int homeSequenceNumber = 0;
         private int awaySequenceNumber = -1;
@@ -155,6 +156,8 @@ namespace CreeperNetwork
                         }
                         else
                         {
+                            ipOfCurrentGame = new IPEndPoint(ipOfLastPacket.Address, SERVER_PORT);
+                            ipOfCurrentGameAlt = new IPEndPoint(ipOfLastPacket.Address, ALT_SERVER_PORT);
                             result = true;
                         }
                     }
@@ -205,7 +208,7 @@ namespace CreeperNetwork
             if (isServer)
             {
                 hostGame = false;
-                sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
+                sendPacket(packet_StartGame(), ipOfCurrentGame.Address.ToString());
                 selfPlayerName = hostPlayerName;
                 opponentPlayerName = clientPlayerName;
 
@@ -324,6 +327,8 @@ namespace CreeperNetwork
         public void client_joinGame(string[] gameIn)
         {
             gameInstance = Int32.Parse(gameIn[8]);
+            ipOfCurrentGame = new IPEndPoint(ipOfLastPacket.Address, SERVER_PORT);
+            ipOfCurrentGameAlt = new IPEndPoint(ipOfLastPacket.Address, ALT_SERVER_PORT);
             sendPacket(packet_JoinGame(gameIn), gameIn[0]);
         }
 
@@ -348,7 +353,7 @@ namespace CreeperNetwork
                 if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_START_GAME && packet[2] == gameInstance)
                 {
                     awaySequenceNumber = BitConverter.ToInt32(packet, 3);
-                    sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
+                    sendPacket(packet_Ack(), ipOfCurrentGame.Address.ToString());
                     commandReceived = true;
                     acknowledged = true;
 
@@ -396,7 +401,7 @@ namespace CreeperNetwork
         {
             if (gameRunning)
             {
-                sendPacket(packet_Disconnect(), ipOfLastPacket.Address.ToString());
+                sendPacket(packet_Disconnect(), ipOfCurrentGame.Address.ToString());
                 gameRunning = false;
             }
 
@@ -413,7 +418,7 @@ namespace CreeperNetwork
         {
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
-                sendPacket(packet_Chat(messageIn), ipOfLastPacket.Address.ToString());
+                sendPacket(packet_Chat(messageIn), ipOfCurrentGame.Address.ToString());
                 acknowledged = false;
             }
         }
@@ -428,7 +433,7 @@ namespace CreeperNetwork
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
                 Console.WriteLine("Move Sent.");
-                sendPacket(packet_MakeMove(moveIn, MOVETYPE_MOVE), ipOfLastPacket.Address.ToString());
+                sendPacket(packet_MakeMove(moveIn, MOVETYPE_MOVE), ipOfCurrentGame.Address.ToString());
                 acknowledged = false;
             }
         }
@@ -441,8 +446,8 @@ namespace CreeperNetwork
         {
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
-                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty), 
-                    MOVETYPE_FORFEIT), ipOfLastPacket.Address.ToString());
+                sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty),
+                    MOVETYPE_FORFEIT), ipOfCurrentGame.Address.ToString());
                 acknowledged = false;
                 Console.WriteLine("Forfeited game.");
             }
@@ -458,7 +463,7 @@ namespace CreeperNetwork
             if (lastReceivedHomeSeqNum == homeSequenceNumber)
             {
                 sendPacket(packet_MakeMove(new Move(new Position(0, 0), new Position(0, 0), CreeperColor.Empty),
-                    MOVETYPE_ILLEGAL), ipOfLastPacket.Address.ToString());
+                    MOVETYPE_ILLEGAL), ipOfCurrentGame.Address.ToString());
                 acknowledged = false;
             }
         }
@@ -523,7 +528,7 @@ namespace CreeperNetwork
                         awaySequenceNumber = BitConverter.ToInt32(packet, 3);
                         newMessage = true;
                         acknowledged = true;
-                        sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
+                        sendPacket(packet_Ack(), ipOfCurrentGame.Address.ToString());
 
                         _eventAggregator.Publish(new ChatMessage(currentMessage, ChatMessageType.Receive));
 
@@ -531,7 +536,7 @@ namespace CreeperNetwork
                     else if (packet[1] == CMD_MAKE_MOVE)
                     {
                         awaySequenceNumber = BitConverter.ToInt32(packet, 3);
-                        sendPacket(packet_Ack(), ipOfLastPacket.Address.ToString());
+                        sendPacket(packet_Ack(), ipOfCurrentGame.Address.ToString());
                         acknowledged = true;
 
                         if (packet[7] == MOVETYPE_MOVE)
@@ -622,7 +627,7 @@ namespace CreeperNetwork
                 {
                     if (lastCommand != null && lastCommand[1] == CMD_START_GAME && gameRunning)
                     {
-                        sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
+                        sendPacket(lastCommand, ipOfCurrentGame.Address.ToString());
                         Console.WriteLine("The last command started the game...resend.");
                     }
 
@@ -641,8 +646,8 @@ namespace CreeperNetwork
 
                     if (stopwatch.ElapsedMilliseconds > PACKET_LOSS)
                     {
-                        sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
-                        Console.WriteLine("Packet lost. Resent the last command to " + ipOfLastPacket.Address.ToString());
+                        sendPacket(lastCommand, ipOfCurrentGame.Address.ToString());
+                        Console.WriteLine("Packet lost. Resent the last command to " + ipOfCurrentGame.Address.ToString());
                     }
                 }
 
@@ -666,7 +671,7 @@ namespace CreeperNetwork
          *********************************************************/
         private void sendAckOnTime(object source, ElapsedEventArgs e)
         {
-           sendPacket_altPort(packet_Ack(), ipOfLastPacket.Address.ToString());
+            sendPacket_altPort(packet_Ack(), ipOfCurrentGameAlt.Address.ToString());
         }
 
         /**********************************************************
@@ -1173,6 +1178,8 @@ namespace CreeperNetwork
         {
             return opponentForfeit;
         }
+
+        public IPEndPoint ipOfCurrentGameAlt { get; set; }
     }
 }
 
