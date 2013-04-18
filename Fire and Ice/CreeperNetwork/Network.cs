@@ -619,6 +619,12 @@ namespace CreeperNetwork
 
                 if (packet == null)
                 {
+                    if (lastCommand[1] == CMD_START_GAME)
+                    {
+                        sendPacket(lastCommand, ipOfLastPacket.Address.ToString());
+                        Console.WriteLine("The last command started the game...resend.");
+                    }
+
                     Console.WriteLine("Lost connection. Attemping reconnect.");
 
                     _eventAggregator.Publish(new ConnectionStatusMessage(CONNECTION_ERROR_TYPE.CONNECTION_LOST));
