@@ -190,7 +190,7 @@ namespace FireAndIce.ViewModels
             AppModel.Network.client_joinGame(_gamesData.First(x => x.GameName == SelectedFoundGame).ToArray());
             BackgroundWorker startGameWorker = new BackgroundWorker();
 
-            refreshTimer.Enabled = false;
+            //refreshTimer.Enabled = false;
 
             startGameWorker.DoWork += new DoWorkEventHandler((s, e) => e.Result = AppModel.Network.client_ackStartGame());
             startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) 
@@ -213,7 +213,8 @@ namespace FireAndIce.ViewModels
                     }
                     else
                     {
-                        refreshTimer.Enabled = true;
+                       // refreshTimer.Enabled = true;
+                        DisconnectedMessage = "Could not join server.\nGame is full or does\nnot exist.";
                     }
                     
                 });

@@ -350,8 +350,8 @@ namespace CreeperNetwork
             {
                 packet = receivePacket_blocking();
 
-                if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_START_GAME && packet[2] == gameInstance)
-                {
+                    if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_START_GAME && packet[2] == gameInstance)
+                    {
                         awaySequenceNumber = BitConverter.ToInt32(packet, 3);
                         lastCommand = packet_Ack();
                         sendPacket(packet_Ack(), ipOfCurrentGame.Address.ToString());
@@ -363,19 +363,13 @@ namespace CreeperNetwork
                         runGame();
                         result = true;
                         _keepAliveWorker.RunWorkerAsync();
-                }
-                else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT && packet[2] == gameInstance)
-                {
-                    _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
-                    commandReceived = true;
-                    result = false;
-                }
-                else
-                {
-                    _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
-                    commandReceived = true;
-                    result = false;
-                }
+                    }
+                    else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT && packet[2] == gameInstance)
+                    {
+                        _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
+                        commandReceived = true;
+                        result = false;
+                    }
             }
 
             return result;
