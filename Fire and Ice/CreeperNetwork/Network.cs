@@ -47,9 +47,9 @@ namespace CreeperNetwork
         private bool serverFull = false;
         private bool hostGame = false;
         private Timer broadcastTimer = new Timer();
-        private UdpClient listener = new UdpClient(SERVER_PORT);
-        private UdpClient listenerAlt = new UdpClient(ALT_SERVER_PORT);
-        private UdpClient sender = new UdpClient();
+        private UdpClient listener;
+        private UdpClient listenerAlt;
+        private UdpClient sender;
         private IPEndPoint ipOfLastPacket = new IPEndPoint(IPAddress.Any, SERVER_PORT);
         private int lastReceivedHomeSeqNum = 0;
         private int homeSequenceNumber = 0;
@@ -95,6 +95,10 @@ namespace CreeperNetwork
 
             _keepAliveWorker = new BackgroundWorker();
             _keepAliveWorker.DoWork += new DoWorkEventHandler((s, e) => keepAlive());
+
+            listener = new UdpClient(SERVER_PORT);
+            listenerAlt = new UdpClient(ALT_SERVER_PORT);
+            sender = new UdpClient();
 
             //This should be here -- if any problems checking unplugged cable, this is source
             checkUnpluggedNetwork();
@@ -194,6 +198,7 @@ namespace CreeperNetwork
         {
             if (isServer)
             {
+                hostGame = false;
                 sendPacket(packet_StartGame(), ipOfLastPacket.Address.ToString());
                 selfPlayerName = hostPlayerName;
                 opponentPlayerName = clientPlayerName;
@@ -666,8 +671,6 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            listener.Client.ReceiveTimeout = 0;
-
             data = listener.Receive(ref ipOfLastPacket);
 
             return data;
@@ -692,6 +695,7 @@ namespace CreeperNetwork
             }
             catch (SocketException)
             {
+                data = null;
                 Console.WriteLine("Receiving timeout -- primary listener");
             }
 
@@ -719,6 +723,7 @@ namespace CreeperNetwork
             }
             catch (SocketException)
             {
+                data = null;
                 Console.WriteLine("Receiving timeout -- primary listener");
             }
 
@@ -1075,6 +1080,10 @@ namespace CreeperNetwork
                 {
                     // Dispose managed resources.
                     --instanceCount;
+                    listener.Close();
+                    listenerAlt.Close();
+                    sender.Close();
+
                     listener = null;
                     listenerAlt = null;
                     sender = null;
