@@ -710,7 +710,7 @@ namespace CreeperNetwork
             {
                 listener.Client.ReceiveTimeout = 0;
             }
-            catch (SocketException)
+            catch (Exception)
             {
                 Console.WriteLine("The network was likely exited before this function was finished");
             }

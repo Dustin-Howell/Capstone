@@ -81,6 +81,7 @@
     <Compile Include="ViewModels\IntroScreenViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\OptionButtonViewModel.cs" />
+    <Compile Include="ViewModels\PictureViewModel.cs" />
     <Compile Include="ViewModels\SplashScreenViewModel.cs" />
     <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
     <Compile Include="Views\AirspacePopup.cs" />
@@ -157,6 +158,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PictureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SplashScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,6 +205,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\icon.png" />
+    <Resource Include="Images\Dustin.png" />
+    <Resource Include="Images\Gage.png" />
+    <Resource Include="Images\Jon-Scott.png" />
+    <Resource Include="Images\Josh.png" />
+    <Resource Include="Images\Kaleb.png" />
     <Content Include="Videos\IntroScreenPlaceholder.wmv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

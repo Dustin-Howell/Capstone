@@ -354,11 +354,11 @@ namespace FireAndIce.ViewModels
                 return _creditsMenu = _creditsMenu ?? new ToggleButtonMenuViewModel()
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                    new OptionButtonViewModel {ClickAction = () => new object(), Title = "Joshua Griffith"},
-                    new OptionButtonViewModel {ClickAction = () => new object(), Title = "Gage Gwaltney"},
-                    new OptionButtonViewModel {ClickAction = () => new object(), Title = "Dustin Howell"},
-                    new OptionButtonViewModel {ClickAction = () => new object(), Title = "Kaleb Lape"},
-                    new OptionButtonViewModel {ClickAction = () => new object(), Title = "Jon Scott Smith"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Josh"); }, Title = "Joshua Griffith"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Gage"); }, Title = "Gage Gwaltney"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Dustin"); }, Title = "Dustin Howell"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Kaleb"); }, Title = "Kaleb Lape"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Jon-Scott"); }, Title = "Jon Scott Smith"},
                 },
                     Background = AppModel.Resources["Primary4"] as SolidColorBrush,
                     Title = "RRR Software",
