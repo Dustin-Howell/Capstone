@@ -12,7 +12,7 @@ using CreeperMessages;
 
 namespace CreeperNetwork
 {
-    public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>, IDisposable
+    public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>, IHandle<GameOverMessage>, IDisposable
     {
         static Timer checkTimer = new Timer();
 
@@ -672,6 +672,7 @@ namespace CreeperNetwork
         private void sendAckOnTime(object source, ElapsedEventArgs e)
         {
             sendPacket_altPort(packet_Ack(), ipOfCurrentGameAlt.Address.ToString());
+            Console.WriteLine(ipOfCurrentGameAlt.Address.ToString());
         }
 
         /**********************************************************
@@ -1115,6 +1116,12 @@ namespace CreeperNetwork
             {
                 //we could handle the start of a networked game here, though I'm not sure what would go here (maybe a network settings object?)
             }
+        }
+
+        public void Handle(GameOverMessage message)
+        {
+                disconnect();
+                gameRunning = false;
         }
 
         public void Dispose()
