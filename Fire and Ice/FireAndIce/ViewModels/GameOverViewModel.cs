@@ -28,7 +28,7 @@ namespace FireAndIce.ViewModels
             {
                 return (SolidColorBrush)(_winner == CreeperColor.Fire ?
                     AppModel.Resources["Primary1"]
-                    : AppModel.Resources["Secondary1"]
+                    : AppModel.Resources["Complementary1"]
                     );
             }
         }
@@ -38,7 +38,7 @@ namespace FireAndIce.ViewModels
             get
             {
                 return (SolidColorBrush)(_winner == CreeperColor.Fire ?
-                    AppModel.Resources["Secondary1"]
+                    AppModel.Resources["Complementary1"]
                     : AppModel.Resources["Primary1"]
                     );
             }
