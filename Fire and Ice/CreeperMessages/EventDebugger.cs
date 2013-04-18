@@ -48,6 +48,13 @@ namespace CreeperMessages
             Console.WriteLine("-type: {0}", message.Type.ToString());
             Console.WriteLine("-player type: {0}", message.PlayerType.ToString());
             Console.WriteLine("-turn color: {0}", message.TurnColor.ToString());
+
+            if (message.Type == MoveMessageType.Response || message.Type == MoveMessageType.MoveMade)
+            {
+                Console.WriteLine("-move color: {0}", message.Move.PlayerColor.ToString());
+                Console.WriteLine("-from: {0}, {1}", message.Move.StartPosition.Row, message.Move.StartPosition.Column);
+                Console.WriteLine("-to: {0}, {1}", message.Move.EndPosition.Row, message.Move.EndPosition.Column);
+            }
         }
 
         public void Handle(NetworkErrorMessage message)
