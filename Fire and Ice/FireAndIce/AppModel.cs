@@ -16,13 +16,6 @@ namespace FireAndIce
 {
     public static class AppModel
     {
-        static AppModel()
-        {
-            _slimCore = SlimCore;
-            _game = XNAGame;
-            _soundEngine = SoundEngine;
-        }
-
         private static EventAggregator _eventAggregator;
         public static EventAggregator EventAggregator { get { return _eventAggregator = _eventAggregator ?? new EventAggregator(); } }
 

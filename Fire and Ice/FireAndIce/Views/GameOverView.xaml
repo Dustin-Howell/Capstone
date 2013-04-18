@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" WindowStyle="None">
-    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding WinningColor}" Orientation="Vertical">
-        <Label x:Name="GameOverMessage" Foreground="White"/>
-        <Button x:Name="ReturnToMenu" Content="Return to Menu" />
-    </StackPanel>
+             mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize"
+        MaxHeight="300" MaxWidth="300">
+    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding WinningColor}">
+        <Button x:Name="ReturnToMenu" Content="Return to Menu" DockPanel.Dock="Bottom" Background="{Binding LosingColor}"/>
+        <Label x:Name="GameOverMessage" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+    </DockPanel>
 </Window>

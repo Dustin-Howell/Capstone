@@ -19,8 +19,6 @@ namespace CreeperAI
     {
         //debug variables\\
         private bool _reportTime = false;
-        private bool _sort = true;
-        private bool _parallel = false;
 
         private AICreeperBoard _board;
         private CreeperColor _turnColor;

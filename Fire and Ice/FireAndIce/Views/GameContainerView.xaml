@@ -95,7 +95,8 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-        <MediaElement Source="{Binding PlayMusic}" Width="320"   
-     Height="240" LoadedBehavior="Play" Volume="40"/>
+        <MediaElement x:Name="MusicPlayer">
+            
+        </MediaElement>
     </Grid>
 </UserControl>
