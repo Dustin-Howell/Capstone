@@ -49,8 +49,8 @@ namespace FireAndIce.ViewModels
             AppModel.Network.quitHostGame();
 
             refreshTimer.Elapsed += new ElapsedEventHandler((s, e) => RefreshFoundGames());
-            // Set the Interval to 3000 milliseconds.
-            refreshTimer.Interval = 3000;
+            // Set the Interval to 2000 milliseconds.
+            refreshTimer.Interval = 2000;
             refreshTimer.Enabled = true;
 
             //ideally true...

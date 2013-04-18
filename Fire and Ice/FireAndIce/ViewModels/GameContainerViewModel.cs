@@ -176,7 +176,7 @@ namespace FireAndIce.ViewModels
         public void Forfeit()
         {
             AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
-            AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
+          //  AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
         }
 
         public void Handle(NetworkErrorMessage message)

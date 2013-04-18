@@ -43,6 +43,7 @@ namespace CreeperNetwork
 
         //Network Variable
         private Timer ackTimer = new Timer();
+        private bool opponentForfeit = false;
         public bool isServer = false;
         private bool serverFull = false;
         private bool hostGame = false;
@@ -536,7 +537,7 @@ namespace CreeperNetwork
                         {
                             if (packet[6] == MOVETYPE_FORFEIT)
                             {
-                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
+                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentForfeit));
                                 //NetworkGameOver(this, new EndGameEventArgs(END_GAME_TYPE.FORFEIT));
                                 Console.WriteLine("THEY forfeited. YOU win.");
                             }
@@ -1027,23 +1028,24 @@ namespace CreeperNetwork
         ******************************/
         public void Handle(NetworkErrorMessage message)
         {
-            disconnect();
-
             if (message.Type == NetworkErrorType.Forfeit)
             {
-                gameRunning = false;
-                Console.WriteLine("Game ended by forfeit.");
+                forfeit();
             }
             else if (message.Type == NetworkErrorType.Disconnect)
             {
-                gameRunning = false;
                 Console.WriteLine("Player disconnected.");
             }
             else if (message.Type == NetworkErrorType.IllegalMove)
             {
-                gameRunning = false;
                 Console.WriteLine("Illegal move detected.");
             }
+            else if (message.Type == NetworkErrorType.OpponentForfeit)
+            {
+            }
+
+            disconnect();
+            gameRunning = false;
         }
 
         /******************************
@@ -1138,6 +1140,11 @@ namespace CreeperNetwork
             // Calling Dispose(false) is optimal in terms of 
             // readability and maintainability.
             Dispose(false);
+        }
+
+        public bool didOpponentForfeit()
+        {
+            return opponentForfeit;
         }
     }
 }

@@ -121,8 +121,34 @@ namespace CreeperCore
 
         public void Handle(NetworkErrorMessage message)
         {
-            //throw new NotImplementedException("Core did not handle network error.");
-            Console.WriteLine("The core did not do anything with the network error message.");
+            if (message.Type == NetworkErrorType.OpponentForfeit)
+            {
+                Player forfeitWinner;
+
+                if(_player1.Type == PlayerType.Network)
+                    forfeitWinner = _player2;
+                else
+                    forfeitWinner = _player1;
+
+                _eventAggregator.Publish(new GameOverMessage()
+                {
+                    Winner = forfeitWinner.Color,
+                });
+            }
+            else if (message.Type == NetworkErrorType.Forfeit)
+            {
+                Player forfeitWinner;
+
+                if (_player1.Type == PlayerType.Network)
+                    forfeitWinner = _player1;
+                else
+                    forfeitWinner = _player2;
+
+                _eventAggregator.Publish(new GameOverMessage()
+                {
+                    Winner = forfeitWinner.Color,
+                });
+            }
         }
         #endregion
 
