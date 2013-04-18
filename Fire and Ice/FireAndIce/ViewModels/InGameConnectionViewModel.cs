@@ -39,11 +39,11 @@ namespace FireAndIce.ViewModels
                 }
                 else if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_RECONNECTED)
                 {
-                    connectionRestored("Network Connection Restored");
+                    connectionRestored("Connection Restored");
                 }
                 else if (message.ErrorType == CONNECTION_ERROR_TYPE.CONNECTION_LOST)
                 {
-                    connectionProblem("Connection Problem");
+                    connectionProblem("Opponent Connection Problem");
                 }
                 else if (message.ErrorType == CONNECTION_ERROR_TYPE.RECONNECTED)
                 {
@@ -154,8 +154,10 @@ namespace FireAndIce.ViewModels
 
                 checkTimer.Tick += new EventHandler((s, e) =>
                 {
-                    AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
-                    AppModel.AppViewModel.ActivateItem(new MainMenuViewModel());
+                    if(message == "Lost Network Connection")
+                        AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.DisconnectMessage));
+                    else if(message == "Opponent Connection Problem")
+                        AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentDisconnectMessage));
                 });
                 checkTimer.Interval = 20000;
                 checkTimer.Enabled = true;

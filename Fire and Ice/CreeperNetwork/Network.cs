@@ -992,7 +992,7 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_Ack()
         {
-            byte[] packet = new byte[10];
+            byte[] packet = new byte[11];
 
             packet[0] = PACKET_SIGNATURE;
             packet[1] = CMD_ACK;
