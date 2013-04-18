@@ -679,7 +679,15 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+            try
+            {
+                listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+            }
+            catch (Exception)
+            {
+                listener = new UdpClient(SERVER_PORT);
+                listener.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+            }
 
             try
             {
@@ -710,7 +718,15 @@ namespace CreeperNetwork
         {
             byte[] data = new byte[256];
 
-            listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+            try
+            {
+                listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+            }
+            catch(Exception)
+            {
+                listenerAlt = new UdpClient(ALT_SERVER_PORT);
+                listenerAlt.Client.ReceiveTimeout = CONNECTION_TIMEOUT;
+            }
 
             try
             {
