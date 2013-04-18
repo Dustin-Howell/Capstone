@@ -230,7 +230,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(NetworkErrorMessage message)
         {
-            if (message.Type == NetworkErrorType.Disconnect)
+            if (message.Type == NetworkErrorType.AckDisconnect)
             {
                 DisconnectedMessage = "Cannot join that game.";
             }

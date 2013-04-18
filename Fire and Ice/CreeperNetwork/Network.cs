@@ -352,7 +352,7 @@ namespace CreeperNetwork
                 }
                 else if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_DISCONNECT)
                 {
-                    _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
+                    _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
                     commandReceived = true;
                     result = false; 
                 }
@@ -494,7 +494,7 @@ namespace CreeperNetwork
                     //Did someone disconnect?
                     if (packet[1] == CMD_DISCONNECT)
                     {
-                        gameRunning = false;
+                        _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentDisconnectMessage));
                     }
                     //Are we waiting for an ACK?
                     else if (!acknowledged)
@@ -540,7 +540,7 @@ namespace CreeperNetwork
                                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentForfeitMessage));
                             }
                             else if (packet[6] == MOVETYPE_ILLEGAL)
-                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.IllegalMove));
+                                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.IllegalMoveMessage));
                         }
                     }
                     else if (packet[1] == CMD_JOIN_GAME)
@@ -1030,19 +1030,33 @@ namespace CreeperNetwork
                 gameRunning = false;
                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Forfeit));
             }
-            else if (message.Type == NetworkErrorType.Disconnect)
+            else if (message.Type == NetworkErrorType.DisconnectMessage)
             {
-                Console.WriteLine("Player disconnected.");
+                disconnect();
+                gameRunning = false;
+                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
             }
-            else if (message.Type == NetworkErrorType.IllegalMove)
+            else if (message.Type == NetworkErrorType.OpponentDisconnectMessage)
             {
-                Console.WriteLine("Illegal move detected.");
+                disconnect();
+                gameRunning = false;
+                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentDisconnect));
+            }
+            else if (message.Type == NetworkErrorType.IllegalMoveMessage)
+            {
+                disconnect();
+                gameRunning = false;
+                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.IllegalMove));
             }
             else if (message.Type == NetworkErrorType.OpponentForfeitMessage)
             {
                 disconnect();
                 gameRunning = false;
                 _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentForfeit));
+            }
+            else if (message.Type == NetworkErrorType.AckDisconnectMessage)
+            {
+                _eventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnect));
             }
         }
 

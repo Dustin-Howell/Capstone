@@ -169,19 +169,17 @@ namespace FireAndIce.ViewModels
 
         public void ReturnToMainMenu()
         {
-            AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
             AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
         }
 
         public void Forfeit()
         {
             AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.ForfeitMessage));
-          //  AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
         }
 
         public void Handle(NetworkErrorMessage message)
         {
-            GameOverText = String.Format("{0} Error!", "Network");
+            //GameOverText = String.Format("{0} Error!", "Network");
         }
 
         public void Handle(MoveMessage message)

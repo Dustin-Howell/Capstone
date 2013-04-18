@@ -154,7 +154,7 @@ namespace FireAndIce.ViewModels
 
                 checkTimer.Tick += new EventHandler((s, e) =>
                 {
-                    AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.Disconnect));
+                    AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.AckDisconnectMessage));
                     AppModel.AppViewModel.ActivateItem(new MainMenuViewModel());
                 });
                 checkTimer.Interval = 20000;

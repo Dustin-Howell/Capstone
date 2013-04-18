@@ -149,6 +149,48 @@ namespace CreeperCore
                     Winner = forfeitWinner.Color,
                 });
             }
+            else if (message.Type == NetworkErrorType.Disconnect)
+            {
+                Player disconnectWinner;
+                
+                if (_player1.Type == PlayerType.Network)
+                    disconnectWinner = _player1;
+                else
+                    disconnectWinner = _player2;
+
+                _eventAggregator.Publish(new GameOverMessage()
+                {
+                    Winner = disconnectWinner.Color,
+                });
+            }
+            else if (message.Type == NetworkErrorType.OpponentDisconnect)
+            {
+                Player disconnectWinner;
+
+                if (_player1.Type == PlayerType.Network)
+                    disconnectWinner = _player2;
+                else
+                    disconnectWinner = _player1;
+
+                _eventAggregator.Publish(new GameOverMessage()
+                {
+                    Winner = disconnectWinner.Color,
+                });
+            }
+            else if (message.Type == NetworkErrorType.IllegalMove)
+            {
+                Player illegalMoveWinner;
+
+                if (_player1.Type == PlayerType.Network)
+                    illegalMoveWinner = _player2;
+                else
+                    illegalMoveWinner = _player1;
+
+                _eventAggregator.Publish(new GameOverMessage()
+                {
+                    Winner = illegalMoveWinner.Color,
+                });
+            }
         }
         #endregion
 
