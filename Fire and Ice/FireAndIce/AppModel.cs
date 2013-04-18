@@ -16,6 +16,11 @@ namespace FireAndIce
 {
     public static class AppModel
     {
+        static AppModel()
+        {
+            EventDebugger.GetHashCode();
+        }
+
         private static EventAggregator _eventAggregator;
         public static EventAggregator EventAggregator { get { return _eventAggregator = _eventAggregator ?? new EventAggregator(); } }
 
@@ -24,6 +29,15 @@ namespace FireAndIce
         {
             get { return _slimCore = _slimCore ?? new SlimCore(EventAggregator); }
         }        
+
+        private static EventDebugger _eventDebugger;
+        public static EventDebugger EventDebugger
+        {
+            get
+            {
+                return _eventDebugger = _eventDebugger ?? new EventDebugger(EventAggregator);
+            }
+        }
 
         public static AppViewModel AppViewModel { get; set; }
 

@@ -83,7 +83,11 @@ namespace CreeperCore
         {
             if (message.Type == MoveMessageType.MoveMade)
             {
-                //TODO: throw some exceptions if something went wrong
+                if (message.PlayerType != _currentPlayer.Type)
+                {
+                    throw new InvalidOperationException(String.Format("Player type of {0} should not be making move now", message.PlayerType.ToString()));
+                }
+
                 CreeperBoard board = new CreeperBoard(_board);
                 board.Move(message.Move);
                 _boardHistory.Push(board);

@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="ChatMessage.cs" />
     <Compile Include="ConnectionStatusMessage.cs" />
+    <Compile Include="EventDebugger.cs" />
     <Compile Include="GameOverMessage.cs" />
     <Compile Include="NetworkErrorMessage.cs" />
     <Compile Include="GameSettings.cs" />
