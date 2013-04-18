@@ -22,7 +22,7 @@ namespace FireAndIce.ViewModels
 
         public string[] ToArray()
         {
-            string[] array = new string[8];
+            string[] array = new string[9];
             array[0] = ServerIP;
             array[1] = ProtocolVersion;
             array[2] = GameName.Length.ToString();
@@ -192,8 +192,7 @@ namespace FireAndIce.ViewModels
 
             refreshTimer.Enabled = false;
 
-            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => e.Result = AppModel.Network.client_ackStartGame(
-                _gamesData.First(x => x.GameName == SelectedFoundGame).ToArray()));
+            startGameWorker.DoWork += new DoWorkEventHandler((s, e) => e.Result = AppModel.Network.client_ackStartGame());
             startGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) 
                 => 
                 {

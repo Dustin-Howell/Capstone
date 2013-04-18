@@ -181,14 +181,14 @@ namespace CreeperNetwork
         public bool server_acceptClient(byte[] packetIn)
         {
             bool accepted = false;
-            int clientPlayerNameLength = BitConverter.ToInt32(packetIn, 11 + hostGameName.Length);
+            int clientPlayerNameLength = BitConverter.ToInt32(packetIn, 12 + hostGameName.Length);
 
             //valid game..for now, just accept all.
             if (!serverFull)
             {
                 serverFull = true;
                 accepted = true;
-                clientPlayerName = Encoding.ASCII.GetString(packetIn, 11 + hostGameName.Length + 4, clientPlayerNameLength);
+                clientPlayerName = Encoding.ASCII.GetString(packetIn, 12 + hostGameName.Length + 4, clientPlayerNameLength);
             }
 
             return accepted;
@@ -229,9 +229,9 @@ namespace CreeperNetwork
                         if (packet[0] == PACKET_SIGNATURE && packet[1] == CMD_ACK)
                         {
                             //does the sequence number they sent us back match ours?
-                            if (homeSequenceNumber == BitConverter.ToInt32(packet, 6))
+                            if (homeSequenceNumber == BitConverter.ToInt32(packet, 7))
                             {
-                                awaySequenceNumber = BitConverter.ToInt32(packet, 2);
+                                awaySequenceNumber = BitConverter.ToInt32(packet, 3);
                                 lastReceivedHomeSeqNum = homeSequenceNumber;
                                 acknowledged = true;
                                 runGame();
@@ -332,7 +332,7 @@ namespace CreeperNetwork
          * Description: Starts a game on the client by 
          *              acknowledging the server
          *********************************************************/
-        public bool client_ackStartGame(string[] gameIn)
+        public bool client_ackStartGame()
         {
             byte[] packet = new byte[MAX_PACKET_SIZE];
             Boolean commandReceived = false;
@@ -862,7 +862,7 @@ namespace CreeperNetwork
         ******************************/
         private byte[] packet_JoinGame(string[] gameIn)
         {
-            byte[] packet = new byte[16 + Convert.ToInt32(gameIn[2]) + clientPlayerName.Length];
+            byte[] packet = new byte[17 + Convert.ToInt32(gameIn[2]) + clientPlayerName.Length];
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
 
             packet[0] = PACKET_SIGNATURE;
