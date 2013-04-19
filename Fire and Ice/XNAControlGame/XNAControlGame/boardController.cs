@@ -266,7 +266,10 @@ namespace XNAControlGame
 
         public void Handle(MoveMessage message)
         {
+            //BAD PLACE HOLDER CODE
             while (Scene == null) ;
+
+
             List<PegController> pegs = new List<PegController>();
             Scene.Traverse(pegs);
 
