@@ -72,133 +72,144 @@ namespace XNAControlGame
 
         public void MoveTo(MoveInfo info, System.Action callback)
         {
-            ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
-            emitter.Duration = 1f;
-            float newDirectionRadian = (float)Math.Atan2(-(info.EndPoint.X - Parent.Transform.Translation.X), -(info.EndPoint.Z - Parent.Transform.Translation.Z));
+            if (PegType != CreeperPegType.Possible)
+            {
+                ParticleEmitter emitter = (ParticleEmitter)Parent.Find<ParticleEffect>().Emitter;
+                emitter.Duration = 1f;
+                float newDirectionRadian = (float)Math.Atan2(-(info.EndPoint.X - Parent.Transform.Translation.X), -(info.EndPoint.Z - Parent.Transform.Translation.Z));
 
                 Parent.Transform = Matrix.CreateRotationY(newDirectionRadian)
                     * Matrix.CreateTranslation(Parent.Transform.Translation);
 
-            TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>
+                TweenAnimation<Matrix> moveAnimation = new TweenAnimation<Matrix>
+                    {
+                        Target = Parent,
+                        TargetProperty = "Transform",
+                        Duration = TimeSpan.FromSeconds(1),
+                        From = Parent.Transform,
+                        To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(info.EndPoint),
+                        Curve = Curves.Smooth,
+                    };
+
+                moveAnimation.Completed += new EventHandler((s, e) =>
+                    {
+                        _pegModel.Animations["Run"].Stop();
+                        _pegModel.Animations.Play("Idle");
+                        Parent.Animations.Remove(Resources.AnimationNames.PegMove);
+                        _graphicalPosition = info.EndPoint;
+                        Position = info.Position;
+                        emitter.Duration = 0f;
+                        callback();
+                    });
+                if (info.Type != MoveType.PegJump)
                 {
-                    Target = Parent,
-                    TargetProperty = "Transform",
-                    Duration = TimeSpan.FromSeconds(1),
-                    From = Parent.Transform,
-                    To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(info.EndPoint),
-                    Curve = Curves.Smooth,
-                };
 
-            moveAnimation.Completed += new EventHandler((s, e) =>
-                {
-                    _pegModel.Animations["Run"].Stop();
-                    _pegModel.Animations.Play("Idle");
-                    Parent.Animations.Remove(Resources.AnimationNames.PegMove);
-                    _graphicalPosition = info.EndPoint;
-                    Position = info.Position;
-                    emitter.Duration = 0f;
-                    callback();
-                });
-            if (info.Type != MoveType.PegJump)
-            {
-
-                Parent.Animations.Add("move", moveAnimation);
-                Parent.Animations.Play("move");
-                if(_pegModel != null)
-                _pegModel.Animations.Play("Run");
-            }
-            else
-            {
-                
-
-                Vector3 distance = info.EndPoint - Parent.Transform.Translation;
-                distance /= 1.4f;
-
-                Parent.Transform = Matrix.CreateRotationY(newDirectionRadian)
-                    * Matrix.CreateTranslation(Parent.Transform.Translation);
-
-                TweenAnimation<Matrix> killAnimation = new TweenAnimation<Matrix>
-                {
-                    Target = Parent,
-                    TargetProperty = "Transform",
-                    Duration = TimeSpan.FromSeconds(1),
-                    From = Parent.Transform,
-                    To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(info.EndPoint - distance),
-                    Curve = Curves.Smooth,
-                };
-
-                killAnimation.Completed += new EventHandler((s, e) =>
-                {
-                    
-                    _pegModel.Animations["Chop"].Stop();
-                    _pegModel.Animations["Attack"].Stop();
-                     Parent.Animations.Remove("kill");
-                     moveAnimation.From = Parent.Transform;
-                     if (info.JumpedPeg != null)
-                     {
-                         info.JumpedPeg.Die();
-                     }
-                     _pegModel.Animations.Play("Run");
+                    Parent.Animations.Add("move", moveAnimation);
                     Parent.Animations.Play("move");
-                    _graphicalPosition = info.EndPoint;
-                    Position = info.Position;
-                });
-
-                Parent.Animations.Add("move", moveAnimation);
-                Parent.Animations.Add("kill", killAnimation);
-                Parent.Animations.Play("kill");
-
-                int nextValue = r.Next(2);
-                if (nextValue == 0)
-                {
-                    _pegModel.Animations.Play("Attack");
+                    if (_pegModel != null)
+                        _pegModel.Animations.Play("Run");
                 }
                 else
                 {
-                    _pegModel.Animations.Play("Chop");
+
+
+                    Vector3 distance = info.EndPoint - Parent.Transform.Translation;
+                    distance /= 1.4f;
+
+                    Parent.Transform = Matrix.CreateRotationY(newDirectionRadian)
+                        * Matrix.CreateTranslation(Parent.Transform.Translation);
+
+                    TweenAnimation<Matrix> killAnimation = new TweenAnimation<Matrix>
+                    {
+                        Target = Parent,
+                        TargetProperty = "Transform",
+                        Duration = TimeSpan.FromSeconds(1),
+                        From = Parent.Transform,
+                        To = Matrix.CreateRotationY(newDirectionRadian) * Matrix.CreateTranslation(info.EndPoint - distance),
+                        Curve = Curves.Smooth,
+                    };
+
+                    killAnimation.Completed += new EventHandler((s, e) =>
+                    {
+
+                        _pegModel.Animations["Chop"].Stop();
+                        _pegModel.Animations["Attack"].Stop();
+                        Parent.Animations.Remove("kill");
+                        moveAnimation.From = Parent.Transform;
+                        if (info.JumpedPeg != null)
+                        {
+                            info.JumpedPeg.Die();
+                        }
+                        _pegModel.Animations.Play("Run");
+                        Parent.Animations.Play("move");
+                        _graphicalPosition = info.EndPoint;
+                        Position = info.Position;
+                    });
+
+                    Parent.Animations.Add("move", moveAnimation);
+                    Parent.Animations.Add("kill", killAnimation);
+                    Parent.Animations.Play("kill");
+
+                    int nextValue = r.Next(2);
+                    if (nextValue == 0)
+                    {
+                        _pegModel.Animations.Play("Attack");
+                    }
+                    else
+                    {
+                        _pegModel.Animations.Play("Chop");
+                    }
                 }
             }
         }
 
         public void Victory(int random)
         {
-            switch (random)
+            if (PegType != CreeperPegType.Possible)
             {
-                case 0:
-                    _pegModel.Animations.Play("Attack");
-                    break;
-                case 1:
-                    _pegModel.Animations.Play("Chop");
-                    break;
-                case 2:
-                    _pegModel.Animations.Play("Run");
-                    break;
-                case 3:
-                    _pegModel.Animations.Play("Carry");
-                    break;
-                default:
-                    _pegModel.Animations.Play("Attack");
-                    break;
+                switch (random)
+                {
+                    case 0:
+                        _pegModel.Animations.Play("Attack");
+                        break;
+                    case 1:
+                        _pegModel.Animations.Play("Chop");
+                        break;
+                    case 2:
+                        _pegModel.Animations.Play("Run");
+                        break;
+                    case 3:
+                        _pegModel.Animations.Play("Carry");
+                        break;
+                    default:
+                        _pegModel.Animations.Play("Attack");
+                        break;
+                }
             }
-
         }
 
         public void DieEndGame()
         {
-            AnimationPlayer animationPlayer = _pegModel.Animations;
+            if (PegType != CreeperPegType.Possible)
+            {
+                AnimationPlayer animationPlayer = _pegModel.Animations;
 
-            ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
+                ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
+            }
         }
 
         public void Die()
         {
-            AnimationPlayer animationPlayer = _pegModel.Animations;
-
-            ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
-            animationPlayer.Play("Die").Completed += new EventHandler((s, e) =>
+            if (PegType != CreeperPegType.Possible)
             {
-                Scene.Children.Remove(Parent);
-            });
+                AnimationPlayer animationPlayer = _pegModel.Animations;
+
+                ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
+                animationPlayer.Play("Die").Completed += new EventHandler((s, e) =>
+                {
+                    Scene.Children.Remove(Parent);
+                });
+            }
 
         }
         
@@ -225,17 +236,20 @@ namespace XNAControlGame
 
         public void StartIdle()
         {
-            AnimationPlayer animationPlayer = _pegModel.Animations;
-            if (animationPlayer["Die"].State != Nine.Animations.AnimationState.Playing)
+            if (PegType != CreeperPegType.Possible)
             {
-                ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1000000000;
-                _pegModel.Animations.Play("Idle");
+                AnimationPlayer animationPlayer = _pegModel.Animations;
+                if (animationPlayer["Die"].State != Nine.Animations.AnimationState.Playing)
+                {
+                    ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1000000000;
+                    _pegModel.Animations.Play("Idle");
+                }
             }
         }
 
         public void EndIdle()
         {
-            if (PegType != CreeperPegType.Possible)
+            if (PegType != CreeperPegType.Possible && _pegModel != null)
             {
                 AnimationPlayer animationPlayer = _pegModel.Animations;
 
