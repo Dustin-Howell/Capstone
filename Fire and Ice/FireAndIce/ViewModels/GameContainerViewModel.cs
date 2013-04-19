@@ -120,9 +120,10 @@ namespace FireAndIce.ViewModels
 
         public Game1 Game { get { return AppModel.XNAGame; } }
 
-        public GameContainerViewModel(GameSettings settings)
+        public GameContainerViewModel(GameSettings settings, IProvideBoardState boardProvider)
         {
             _settings = settings;
+            _boardProvider = boardProvider;
             AppModel.EventAggregator.Subscribe(this);
 
             if (_settings.Player1Type == PlayerType.Network
@@ -190,6 +191,7 @@ namespace FireAndIce.ViewModels
             if (message.Type == MoveMessageType.Request)
             {
                 CurrentTurn = message.TurnColor.ToString();
+                CanUndo = _boardProvider.BoardHistory.Count > 1;
             }
         }
 
@@ -210,6 +212,9 @@ namespace FireAndIce.ViewModels
         {
             AppModel.EventAggregator.Publish(new MoveMessage() { Type = MoveMessageType.Undo, });
         }
+
+        private bool _canUndo;
+        public bool CanUndo { get { return _canUndo; } set { _canUndo = value; NotifyOfPropertyChange(() => CanUndo); } }
 
         public void ToggleSound()
         {
@@ -276,6 +281,7 @@ namespace FireAndIce.ViewModels
         }
 
         int stillNotConnected = 0;
+        private IProvideBoardState _boardProvider;
 
         public void Handle(ConnectionStatusMessage message)
         {

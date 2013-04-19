@@ -249,7 +249,9 @@ namespace XNAControlGame
 
         public void SynchronizePegs(CreeperBoard creeperBoard)
         {
-            throw new NotImplementedException();
+            List<PegController> found = new List<PegController>();
+            Scene.Traverse<PegController>(found);
+            found.Apply((x) => Scene.Children.Remove(x.Parent));
         }
 
         public void Handle(MoveMessage message)

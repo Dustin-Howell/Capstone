@@ -26,7 +26,7 @@ namespace FireAndIce.ViewModels
 
         public void Handle(StartGameMessage message)
         {
-            ActivateItem(new GameContainerViewModel(message.Settings));
+            ActivateItem(new GameContainerViewModel(message.Settings, AppModel.SlimCore));
         }         
 
         public void Handle(ResetMessage message)
