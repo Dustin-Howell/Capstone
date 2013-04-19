@@ -241,8 +241,8 @@ namespace FireAndIce.ViewModels
                 {
                     AI = AppModel.AI,
                     Board = new CreeperBoard(),
-                    Player1Type = PlayerType.Human,
-                    Player2Type = PlayerType.AI,
+                    Player1Type = playerColor.IsFire() ? PlayerType.Human : PlayerType.AI,
+                    Player2Type = playerColor.IsFire() ? PlayerType.AI : PlayerType.Human,
                     StartingColor = CreeperColor.Fire,
                 }
             });
