@@ -266,6 +266,7 @@ namespace XNAControlGame
 
         public void Handle(MoveMessage message)
         {
+            while (Scene == null) ;
             List<PegController> pegs = new List<PegController>();
             Scene.Traverse(pegs);
 
