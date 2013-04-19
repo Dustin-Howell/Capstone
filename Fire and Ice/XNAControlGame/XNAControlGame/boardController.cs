@@ -86,6 +86,13 @@ namespace XNAControlGame
             _icePossibleModel = new Instance { Template = "IcePossiblePeg" };
         }
 
+        protected override void OnAdded(Group parent)
+        {
+            base.OnAdded(parent);
+
+            _eventAggregator.Publish(new ComponentInitializedMessage() { Component = InitComponent.Scene, });
+        }
+
         public void Move(Move move, CreeperColor turnColor, System.Action callback)
         {
             List<PegController> pegs = new List<PegController>();

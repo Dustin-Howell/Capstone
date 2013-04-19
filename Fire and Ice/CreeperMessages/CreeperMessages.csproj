@@ -65,6 +65,7 @@
     <Compile Include="SoundPlayMessage.cs" />
     <Compile Include="ResetMessage.cs" />
     <Compile Include="InitializeGameMessage.cs" />
+    <Compile Include="ComponentInitializedMessage.cs" />
     <Compile Include="SychronizeBoardMessage.cs" />
   </ItemGroup>
   <ItemGroup>

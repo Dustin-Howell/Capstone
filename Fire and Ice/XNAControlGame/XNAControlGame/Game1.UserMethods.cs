@@ -66,6 +66,8 @@ namespace XNAControlGame
             });
 
             LoadPegModels();
+
+            _eventAggregator.Publish(new ComponentInitializedMessage() { Component = InitComponent.Content, });
         }
 
         private void LoadPegModels()
