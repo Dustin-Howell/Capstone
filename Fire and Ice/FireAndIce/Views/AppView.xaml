@@ -7,6 +7,7 @@
             mc:Ignorable="d"
             WindowState="Maximized"
             WindowStyle="None"
-            Icon="../Images/icon.png">
+            Icon="../Images/icon.png"
+            Title="Fire and Ice">
     <ContentControl x:Name="ActiveItem" />
 </Window>

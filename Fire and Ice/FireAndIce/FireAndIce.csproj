@@ -92,9 +92,6 @@
     <Compile Include="Views\GameContainerView.xaml.cs">
       <DependentUpon>GameContainerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\IntroScreenView.xaml.cs">
-      <DependentUpon>IntroScreenView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SlideOutControl.cs" />
     <Page Include="ColorSchemes\Default.xaml">
       <SubType>Designer</SubType>
@@ -199,6 +196,7 @@
     <Resource Include="Fonts\BaroqueScript.ttf" />
     <Resource Include="Fonts\Holyv2e.ttf" />
     <None Include="app.config" />
+    <Resource Include="Fonts\THEDREAM TRIAL.otf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
