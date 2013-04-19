@@ -235,7 +235,7 @@ namespace XNAControlGame
 
         public void EndIdle()
         {
-            if (Parent.GetType. != CreeperPegType.Possible)
+            if (PegType != CreeperPegType.Possible)
             {
                 AnimationPlayer animationPlayer = _pegModel.Animations;
 
