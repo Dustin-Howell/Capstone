@@ -115,15 +115,12 @@ namespace CreeperCore
                         break;
                 }
             }
-            else
+            else if (message.Type == MoveMessageType.Undo)
             {
-                if (message.Type == MoveMessageType.Undo)
-                {
-                    _boardHistory.Pop();
-                    _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
-                    _eventAggregator.Publish(new SychronizeBoardMessage() { Board = _board, });
-                    RequestMove();
-                }
+                _boardHistory.Pop();
+                _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
+                _eventAggregator.Publish(new SychronizeBoardMessage() { Board = _board, });
+                RequestMove();
             }
         }
 
