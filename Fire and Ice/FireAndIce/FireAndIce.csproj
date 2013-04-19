@@ -217,6 +217,12 @@
     <Resource Include="Images\Josh.png" />
     <Resource Include="Images\Kaleb.png" />
     <Resource Include="icon.ico" />
+    <Content Include="Music\InGameMusic.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Music\MenuMusic.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Videos\IntroScreenPlaceholder.wmv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

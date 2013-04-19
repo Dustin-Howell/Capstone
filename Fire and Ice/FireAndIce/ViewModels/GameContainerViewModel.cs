@@ -85,8 +85,8 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private string _playMusic;
-        public string PlayMusic
+        private Uri _playMusic;
+        public Uri PlayMusic
         {
             get { return _playMusic; }
             set
@@ -136,10 +136,10 @@ namespace FireAndIce.ViewModels
                 ForfeitVisible = System.Windows.Visibility.Collapsed;
 
             //Yeah...not what best way to do this. Temporary, or permanent, depending on time. 
-            String path = Path.GetFullPath("..\\..\\..\\CreeperSound\\SoundAssets");
+            String path = Path.GetFullPath("Music");
             String soundFile = "\\";
             String actualFile = path + soundFile + "InGameMusic.mp3";
-            PlayMusic = actualFile;
+            PlayMusic = new Uri(actualFile, UriKind.Relative);
         }
 
         private MediaElement _musicPlayer;
@@ -151,7 +151,7 @@ namespace FireAndIce.ViewModels
             //***********************************************************
             GameContainerView gameContainerView = view as GameContainerView;
 
-            gameContainerView.MusicPlayer.Source = new Uri(PlayMusic);
+            gameContainerView.MusicPlayer.Source = PlayMusic;
             gameContainerView.MusicPlayer.LoadedBehavior = MediaState.Manual;
             gameContainerView.MusicPlayer.Loaded += new RoutedEventHandler((s, e) =>
                 {
