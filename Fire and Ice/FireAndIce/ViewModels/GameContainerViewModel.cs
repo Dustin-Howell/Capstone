@@ -23,7 +23,6 @@ namespace FireAndIce.ViewModels
 
         private bool isNetworkProblem = false;
 
-        //private SlideOutPanelViewModel _gameMenu;
         public ToggleButtonMenuViewModel GameMenu
         {
             get
@@ -63,7 +62,7 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private string _currentTurn = AppModel.SlimCore.GetCurrentPlayer().Color.ToString();
+        private string _currentTurn;
         public String CurrentTurn
         {
             get { return _currentTurn; }
@@ -124,6 +123,7 @@ namespace FireAndIce.ViewModels
         {
             _settings = settings;
             _boardProvider = boardProvider;
+            CurrentTurn = settings.StartingColor.ToString();
             AppModel.EventAggregator.Subscribe(this);
 
             if (_settings.Player1Type == PlayerType.Network
@@ -134,7 +134,9 @@ namespace FireAndIce.ViewModels
                 QuitVisible = System.Windows.Visibility.Collapsed;
             }
             else
+            {
                 ForfeitVisible = System.Windows.Visibility.Collapsed;
+            }
 
             //Yeah...not what best way to do this. Temporary, or permanent, depending on time. 
             String path = Path.GetFullPath("Music");
