@@ -37,9 +37,11 @@
                          Grid.Row="1" Grid.Column="1"
                          FontSize="16"
                          FontFamily="pack://application:,,,/Fonts/#Holy Empire" 
-                         MaxLength="20"/>
+                         MaxLength="20"
+                         IsEnabled="{Binding CanChangePlayerName}"/>
             </Grid>
-            <Button x:Name="HostGame">Start</Button>
+            <Button x:Name="HostGame" Content="{Binding HostGameStatusText}" />
+            <Button x:Name="Abort" Visibility="{Binding AbortVisibility}">Cancel</Button>
             <Border>
                 <Label x:Name="NetworkCableUnpluggedMessage" HorizontalAlignment="Center" FontSize="14"></Label>
             </Border>

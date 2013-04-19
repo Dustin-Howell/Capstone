@@ -74,10 +74,6 @@ namespace FireAndIce.ViewModels
         {
             //AppModel.EventAggregator.Publish(new SoundPlayMessage(SoundPlayType.MenuSlideOut));
 
-            // Temporary workaround?
-            if (AppModel.Network != null)
-                AppModel.Network.quitHostGame();
-
             if (!Menus.Contains(panel))
             {
                 if (panel.MenuParent == MainMenu)

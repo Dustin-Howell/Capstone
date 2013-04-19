@@ -7,10 +7,13 @@ using CreeperNetwork;
 using System.ComponentModel;
 using Creeper;
 using CreeperMessages;
+using System.Windows;
 
 namespace FireAndIce.ViewModels
 {
-    public class HostGameViewModel : PropertyChangedBase, IHandle<ConnectionStatusMessage>
+    public enum HostGameStatus { NoName, Startable, Starting, }
+
+    public class HostGameViewModel : PropertyChangedBase, IDisposable, IHandle<ConnectionStatusMessage>
     {
         private BackgroundWorker _hostGameWorker;
         BackgroundWorker _connectServerWorker;
@@ -36,6 +39,14 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        public bool CanChangePlayerName
+        {
+            get
+            {
+                return HostGameStatus != HostGameStatus.Starting;
+            }
+        }
+
         private string _playerName;
         public string PlayerName
         {
@@ -48,6 +59,7 @@ namespace FireAndIce.ViewModels
                 if (_playerName != value)
                 {
                     _playerName = value;
+                    HostGameStatus = _playerName == null || _playerName == "" ? HostGameStatus.NoName : HostGameStatus.Startable;
                     NotifyOfPropertyChange(() => PlayerName);
                 }
             }
@@ -71,10 +83,46 @@ namespace FireAndIce.ViewModels
             }
         }
 
+        public string HostGameStatusText
+        {
+            get
+            {
+                switch (HostGameStatus)
+                {
+                    case HostGameStatus.NoName:
+                        return "Please Enter A Name";
+                    case HostGameStatus.Startable:
+                        return "Start";
+                    case HostGameStatus.Starting:
+                        return "Starting...";
+                    default:
+                        return "Start";
+                }
+            }
+        }
+
+        private HostGameStatus _hostGameStatus;
+        private HostGameStatus HostGameStatus
+        {
+            get
+            {
+                return _hostGameStatus;
+            }
+            set
+            {
+                _hostGameStatus = value;
+                CanHostGame = _hostGameStatus == HostGameStatus.Startable;
+                NotifyOfPropertyChange(() => HostGameStatusText);
+                NotifyOfPropertyChange(() => AbortVisibility);
+                NotifyOfPropertyChange(() => CanChangePlayerName);
+            }
+        }
+
         public HostGameViewModel(IEventAggregator eventAggregator)
         {
-            CanHostGame = true;
             eventAggregator.Subscribe(this);
+            CanHostGame = true;
+            HostGameStatus = HostGameStatus.NoName;
         }
 
         public void HostGame()
@@ -83,10 +131,11 @@ namespace FireAndIce.ViewModels
             _connectServerWorker = new BackgroundWorker();
 
             GameName = PlayerName + "'s Game";
+            HostGameStatus = HostGameStatus.Starting;
 
             _hostGameWorker.DoWork += new DoWorkEventHandler((s, e) =>
                 {
-                    e.Result = AppModel.Network.server_hostGame(GameName, PlayerName);
+                    e.Cancel = !AppModel.Network.server_hostGame(GameName, PlayerName);
                 });
 
             _hostGameWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
@@ -94,10 +143,10 @@ namespace FireAndIce.ViewModels
                 if (e.Cancelled)
                 {
                     CanHostGame = true;
+                    HostGameStatus = HostGameStatus.Startable;
                 }
                 else
                 {
-                    if((bool)e.Result)
                         _connectServerWorker.RunWorkerAsync();
                 }
             });
@@ -129,6 +178,20 @@ namespace FireAndIce.ViewModels
             _hostGameWorker.RunWorkerAsync();
         }
 
+        public void Abort()
+        {
+            if (AppModel.Network != null)
+                AppModel.Network.quitHostGame();
+        }
+
+        public Visibility AbortVisibility
+        {
+            get
+            {
+                return HostGameStatus == HostGameStatus.Starting ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
         public void Handle(ConnectionStatusMessage message)
         {
             if (message.ErrorType == CONNECTION_ERROR_TYPE.CABLE_UNPLUGGED)
@@ -150,6 +213,12 @@ namespace FireAndIce.ViewModels
                 _networkCableUnpluggedMessage = value;
                 NotifyOfPropertyChange(() => NetworkCableUnpluggedMessage);
             }
+        }
+
+        public void Dispose()
+        {
+            if (AppModel.Network != null)
+                AppModel.Network.quitHostGame();
         }
     }
 }
