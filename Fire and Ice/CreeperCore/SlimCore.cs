@@ -13,6 +13,7 @@ namespace CreeperCore
         private IEventAggregator _eventAggregator;
         private Player _player1;
         private Player _player2;
+        private bool _canUndo;
 
         //State Variables
         private CreeperBoard _board
@@ -115,11 +116,39 @@ namespace CreeperCore
             }
             else if (message.Type == MoveMessageType.Undo)
             {
-                _boardHistory.Pop();
-                _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
-                _eventAggregator.Publish(new SychronizeBoardMessage() { Board = _board, });
-                RequestMove();
+                if (_player1.Type == PlayerType.AI || _player2.Type == PlayerType.AI)
+                {
+                    if (_canUndo)
+                    {
+                        _boardHistory.Pop();
+                        _boardHistory.Pop();
+                        _eventAggregator.Publish(new SychronizeBoardMessage() { Board = _board, Callback = () => RequestMove() });
+                        
+                    }
+                }
+                else
+                {
+                    _boardHistory.Pop();
+                    _currentPlayer = (_currentPlayer == _player1) ? _player2 : _player1;
+                    _eventAggregator.Publish(new SychronizeBoardMessage() { Board = _board, Callback = () => RequestMove() });
+                   
+                }
             }
+            else if (message.Type == MoveMessageType.Request)
+            {
+                if (message.PlayerType == PlayerType.Human)
+                {
+                    _canUndo = true;
+                }
+            }
+            else if (message.Type == MoveMessageType.Response)
+            {
+                if (message.PlayerType == PlayerType.Human)
+                {
+                    _canUndo = false;
+                }
+            }
+
         }
 
         public void Handle(InitializeGameMessage message)

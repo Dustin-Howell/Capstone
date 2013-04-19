@@ -198,8 +198,21 @@ namespace FireAndIce.ViewModels
         {
             if (message.Type == MoveMessageType.Request)
             {
-                CurrentTurn = message.TurnColor.ToString();
-                CanUndo = _boardProvider.BoardHistory.Count > 1;
+                if (_settings.Player2Type == PlayerType.AI)
+                {
+                    CurrentTurn = message.TurnColor.ToString();
+                    CanUndo = _boardProvider.BoardHistory.Count > 2;
+                }
+                else if (_settings.Player1Type == PlayerType.AI)
+                {
+                    CurrentTurn = message.TurnColor.ToString();
+                    CanUndo = _boardProvider.BoardHistory.Count > 3;
+                }
+                else
+                {
+                    CurrentTurn = message.TurnColor.ToString();
+                    CanUndo = _boardProvider.BoardHistory.Count > 1;
+                }
             }
         }
 

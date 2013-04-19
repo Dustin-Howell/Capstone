@@ -218,6 +218,10 @@ namespace XNAControlGame
             //add all pegs
             LoadPegModels();
             SynchronizeTiles(message.Board);
+            if (message.Callback != null)
+            {
+                message.Callback();
+            }
         }
     }
 }

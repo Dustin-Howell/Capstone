@@ -47,6 +47,7 @@ namespace XNAControlGame
             }
         }
 
+        public CreeperColor CurrentTurn { get; set; }
 
         public void SelectPeg()
         {
@@ -216,14 +217,17 @@ namespace XNAControlGame
         protected override void OnAdded(Group parent)
         {
             _pegModel = parent.Find<Nine.Graphics.Model>();
-            if (PegType != CreeperPegType.Possible && PegType == CreeperPegType.Fire)
+            if (PegType != CreeperPegType.Possible)
             {
-                StartIdle();
-            }
-            else if (PegType == CreeperPegType.Ice)
-            {
-                StartIdle();
-                EndIdle();
+                if (PegType.ToCreeperColor() == CurrentTurn)
+                {
+                    StartIdle();
+                }
+                else if (PegType.ToCreeperColor() == CurrentTurn.Opposite())
+                {
+                    StartIdle();
+                    EndIdle();
+                }
             }
             base.OnAdded(parent);
         }

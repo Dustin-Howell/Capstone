@@ -8,6 +8,7 @@ namespace CreeperMessages
 {
     public class SychronizeBoardMessage
     {
+        public Action Callback { get; set; }
         private CreeperBoard _board;
         public CreeperBoard Board
         {

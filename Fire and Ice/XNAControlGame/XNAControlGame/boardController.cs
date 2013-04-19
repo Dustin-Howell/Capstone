@@ -273,18 +273,20 @@ namespace XNAControlGame
 
         public void Handle(MoveMessage message)
         {
-            List<PegController> pegs = new List<PegController>();
-            Scene.Traverse(pegs);
-
             if (message.Type == MoveMessageType.Request)
-            {                
+            {
+                List<PegController> pegs = new List<PegController>();
+                Scene.Traverse(pegs);
+
                 foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor().Opposite() == message.TurnColor))
                 {
+                    peg.CurrentTurn = message.TurnColor;
                     peg.EndIdle();
                 }
 
                 foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor() == message.TurnColor))
                 {
+                    peg.CurrentTurn = message.TurnColor;
                     peg.StartIdle();
                 }
             }
