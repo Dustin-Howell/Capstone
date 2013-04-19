@@ -166,5 +166,17 @@ namespace XNAControlGame
 
             base.Draw(gameTime);
         }
+
+        bool _disposing = false;
+        new void Dispose()
+        {
+            if (!_disposing)
+            {
+                _disposing = true;
+
+                _scene.Dispose();
+                base.Dispose(true);
+            }
+        }
     }
 }
