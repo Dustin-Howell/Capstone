@@ -133,6 +133,12 @@ namespace FireAndIce.ViewModels
                 UndoVisible = System.Windows.Visibility.Collapsed;
                 QuitVisible = System.Windows.Visibility.Collapsed;
             }
+            else if ((_settings.Player1Type == PlayerType.AI || _settings.Player2Type == PlayerType.AI) 
+                && AppModel.AI.Difficulty == AIDifficulty.Hard)
+            {
+                UndoVisible = System.Windows.Visibility.Collapsed;
+                ForfeitVisible = System.Windows.Visibility.Collapsed;
+            }
             else
             {
                 ForfeitVisible = System.Windows.Visibility.Collapsed;
