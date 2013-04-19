@@ -2,8 +2,9 @@
 
     <SkyBox Texture="{ContentReference Textures/LargeSkyCube}"/>
     <FreeCamera Name="MainCamera" Speed="0" TurnSpeed="0" Position="53.23169, 346.7901, 201.4682" Angle="1.315531,0.781909,0" />
-     <AmbientLight Transform.Position="54,10,54" AmbientLightColor=".5,.5,.5" Enabled="True"  /> 
-    <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Direction="1,-1, 1" CastShadow="True" />
+     <AmbientLight Transform.Position="54,10,54" AmbientLightColor=".5,.5,.5" Enabled="True"  />
+
+    <DirectionalLight DiffuseColor="1.0, 1.0, 1.0" Transform.Scale="-10,-10,-10" Transform.Position="0,0,0" Direction="1,-1, 1" CastShadow="True" />
     <Group Name="GameBoard">
         <Surface Name="boardSurface"
                  Heightmap.Width="108"
