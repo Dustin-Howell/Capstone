@@ -73,6 +73,24 @@ namespace CreeperSound
                         case SoundPlayType.MenuButtonClick:
                             soundFile += "MenuButtonClick.wav";
                             break;
+                        case SoundPlayType.FireMove:
+                            soundFile += "FireEffect.wav";
+                            break;
+                        case SoundPlayType.IceMove:
+                            soundFile += "IceEffect.wav";
+                            break;
+                        case SoundPlayType.FireMove2:
+                            soundFile += "FireEffect2.wav";
+                            break;
+                        case SoundPlayType.IceMove2:
+                            soundFile += "IceEffect2.wav";
+                            break;
+                        case SoundPlayType.FireMove3:
+                            soundFile += "FireEffect3.wav";
+                            break;
+                        case SoundPlayType.IceMove3:
+                            soundFile += "IceEffect3.wav";
+                            break;
                     }
 
                         player = new SoundPlayer(path + soundFile);

@@ -34,7 +34,7 @@ namespace XNAControlGame
             LoadViewModels();
 
             _boardGroup = _scene.FindName<Group>(Resources.ElementNames.BoardGroup);
-            _boardGroup.Add(_boardController = new BoardController()
+            _boardGroup.Add(_boardController = new BoardController(_eventAggregator)
             {
                 FlipTile = FlipTile,
                 BoardProvider = BoardProvider,

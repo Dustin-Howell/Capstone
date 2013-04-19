@@ -79,8 +79,9 @@ namespace XNAControlGame
             }
         }
 
-        public BoardController()
+        public BoardController(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             _firePossibleModel = new Instance { Template = "FirePossiblePeg" };
             _icePossibleModel = new Instance { Template = "IcePossiblePeg" };
         }
@@ -96,10 +97,27 @@ namespace XNAControlGame
             {
                 moveType = MoveType.TileJump;
                 FlipTile(CreeperBoard.GetFlippedPosition(move), turnColor);
+
+                if (turnColor == CreeperColor.Ice)
+                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.IceMove3));
+                else if (turnColor == CreeperColor.Fire)
+                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.FireMove3));
             }
             else if (CreeperBoard.IsCaptureMove(move))
             {
                 moveType = MoveType.PegJump;
+
+                if (turnColor == CreeperColor.Ice)
+                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.IceMove));
+                else if (turnColor == CreeperColor.Fire)
+                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.FireMove));
+            }
+            else
+            {
+                if (turnColor == CreeperColor.Ice)
+                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.IceMove2));
+                else if (turnColor == CreeperColor.Fire)
+                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.FireMove2));
             }
             MoveInfo info = new MoveInfo();
             info.Position = move.EndPosition;
@@ -282,5 +300,7 @@ namespace XNAControlGame
                 }
             
         }
+
+        private IEventAggregator _eventAggregator;
     }
 }
