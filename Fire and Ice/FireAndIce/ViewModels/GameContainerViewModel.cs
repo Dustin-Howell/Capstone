@@ -213,6 +213,14 @@ namespace FireAndIce.ViewModels
                     CurrentTurn = message.TurnColor.ToString();
                     CanUndo = _boardProvider.BoardHistory.Count > 1;
                 }
+                if (message.PlayerType == PlayerType.AI)
+                {
+                    CanUndo = false;
+                }
+            }
+            else if (message.Type == MoveMessageType.Response)
+            {
+                CanUndo = false;
             }
         }
 
