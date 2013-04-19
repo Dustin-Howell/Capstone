@@ -96,40 +96,45 @@ namespace XNAControlGame
             if (CreeperBoard.IsFlipMove(move))
             {
                 moveType = MoveType.TileJump;
-                FlipTile(CreeperBoard.GetFlippedPosition(move), turnColor);
-
-                if (turnColor == CreeperColor.Ice)
-                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.IceMove3));
-                else if (turnColor == CreeperColor.Fire)
-                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.FireMove3));
+                FlipTile(CreeperBoard.GetFlippedPosition(move), move.PlayerColor);
             }
             else if (CreeperBoard.IsCaptureMove(move))
             {
                 moveType = MoveType.PegJump;
+            }
 
-                if (turnColor == CreeperColor.Ice)
-                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.IceMove));
-                else if (turnColor == CreeperColor.Fire)
-                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.FireMove));
-            }
-            else
+            PlaySoundEffect(moveType, turnColor);
+
+            MoveInfo info = new MoveInfo
             {
-                if (turnColor == CreeperColor.Ice)
-                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.IceMove2));
-                else if (turnColor == CreeperColor.Fire)
-                    _eventAggregator.Publish(new SoundPlayMessage(SoundPlayType.FireMove2));
-            }
-            MoveInfo info = new MoveInfo();
-            info.Position = move.EndPosition;
-            info.EndPoint = ViewModel.GraphicalPositions[move.EndPosition.Row, move.EndPosition.Column];
-            info.Type = moveType;
-            if (info.Type == MoveType.PegJump)
-            {
-                info.JumpedPeg = pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(move));
-            }
-           
+                Position = move.EndPosition,
+                EndPoint = ViewModel.GraphicalPositions[move.EndPosition.Row, move.EndPosition.Column],
+                Type = moveType,
+                JumpedPeg = (moveType == MoveType.PegJump) ? pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(move)) : null,
+            };
+
             peg.MoveTo(info, callback);
+        }
 
+        private void PlaySoundEffect(MoveType type, CreeperColor color)
+        {
+            SoundPlayType sound = SoundPlayType.None;
+            if (color.IsTeamColor())
+            {
+                switch (type)
+                {
+                    case MoveType.Normal:
+                        sound = color.IsFire() ? SoundPlayType.FireMove : SoundPlayType.IceMove;
+                        break;
+                    case MoveType.PegJump:
+                        sound = color.IsFire() ? SoundPlayType.FirePegJump : SoundPlayType.IcePegJump;
+                        break;
+                    case MoveType.TileJump:
+                        sound = color.IsFire() ? SoundPlayType.FireTileJump : SoundPlayType.IceTileJump;
+                        break;
+                }
+            }
+            _eventAggregator.Publish(new SoundPlayMessage(sound));
         }
 
         private void ClearPossiblePegs()
