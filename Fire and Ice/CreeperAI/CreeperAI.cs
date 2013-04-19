@@ -131,7 +131,7 @@ namespace CreeperAI
             }
             else
             {
-                score = ScoreBoard(board, _turnColor, -1) * ((turnColor == _turnColor) ? 1 : -1);
+                score = ScoreBoard(board, _turnColor, turnColor.Opposite(), -1) * ((turnColor == _turnColor) ? 1 : -1);
             }
 
             return score;
@@ -142,9 +142,13 @@ namespace CreeperAI
             // if  depth = 0 or node is a terminal node
             if ((depth <= 0) || board.IsFinished)
             {
+                if (board.IsFinished && turnColor == CreeperColor.Ice)
+                {
+                    board.GetHashCode();
+                }
                 // return the heuristic value of node
-                return ScoreBoard(board, _turnColor, depth)
-                    * ((turnColor == _turnColor) ? 1 : -1);
+                return ScoreBoard(board, _turnColor, turnColor.Opposite(), depth)
+                    * ((turnColor == _turnColor) ? 1 : -1) ;
             }
 
             // Enumerate the children of the current node
@@ -169,7 +173,7 @@ namespace CreeperAI
         #endregion
 
         #region BoardScoring
-        private double ScoreBoard(AICreeperBoard board, CreeperColor turnColor, int depth)
+        private double ScoreBoard(AICreeperBoard board, CreeperColor forWhom, CreeperColor currentTurn, int depth)
         {
             double score = 0.0;
 
@@ -181,13 +185,18 @@ namespace CreeperAI
             {
                 case CreeperGameState.Complete:
                     score = VictoryWeight * (depth + 1);
+                    if (forWhom != currentTurn)
+                    {
+                        score *= -1;
+                    }
                     break;
 
                 default:
-                    score += (ScoreBoardTerritorial(board, turnColor) * TerritorialWeight);
-                    score += (ScoreBoardMaterial(board, turnColor) * MaterialWeight);
-                    score += (ScoreBoardPositional(board, turnColor) * PositionalWeight);
-                    score += ScoreBoardShortestDistance(board, turnColor) * ShortestDistanceWeight;
+                    score += (ScoreBoardTerritorial(board, forWhom) * TerritorialWeight);
+                    score += (ScoreBoardMaterial(board, forWhom) * MaterialWeight);
+                    score += (ScoreBoardPositional(board, forWhom) * PositionalWeight);
+                    score += ScoreBoardShortestDistance(board, forWhom) * ShortestDistanceWeight;
+                    score -= ScoreBoardShortestDistance(board, forWhom.Opposite()) * ShortestDistanceWeight;
                     break;
             }
 
