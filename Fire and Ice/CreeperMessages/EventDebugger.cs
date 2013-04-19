@@ -16,7 +16,7 @@ namespace CreeperMessages
         IHandle<ResetMessage>,
         IHandle<ReturnToMenuMessage>,
         IHandle<SoundPlayMessage>,
-        IHandle<StartGameMessage>,
+        IHandle<InitializeGameMessage>,
         IHandle<SychronizeBoardMessage>
     {
         public EventDebugger(EventAggregator agg)
@@ -87,7 +87,7 @@ namespace CreeperMessages
             
         }
 
-        public void Handle(StartGameMessage message)
+        public void Handle(InitializeGameMessage message)
         {
             Console.WriteLine(message.GetType().ToString());
             

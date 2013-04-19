@@ -36,7 +36,7 @@ namespace FireAndIce.ViewModels
         }
     }
 
-    public class FindGameViewModel : PropertyChangedBase, IDisposable, IHandle<StartGameMessage>, IHandle<ConnectionStatusMessage>, IHandle<NetworkErrorMessage>
+    public class FindGameViewModel : PropertyChangedBase, IDisposable, IHandle<InitializeGameMessage>, IHandle<ConnectionStatusMessage>, IHandle<NetworkErrorMessage>
     {
         private List<NetworkGameInfo> _gamesData;
 
@@ -199,7 +199,7 @@ namespace FireAndIce.ViewModels
                     if ((bool)e.Result)
                     {
                         AppModel.EventAggregator.Publish(
-                            new StartGameMessage()
+                            new InitializeGameMessage()
                             {
                                 Settings = new GameSettings()
                                 {
@@ -227,7 +227,7 @@ namespace FireAndIce.ViewModels
             refreshTimer.Close();
         }
 
-        public void Handle(StartGameMessage message)
+        public void Handle(InitializeGameMessage message)
         {
             Dispose();
         }

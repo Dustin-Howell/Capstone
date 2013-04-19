@@ -8,7 +8,7 @@ using Creeper;
 
 namespace CreeperCore
 {
-    public class SlimCore : IProvideBoardState, IHandle<MoveMessage>, IHandle<NetworkErrorMessage>, IHandle<StartGameMessage>
+    public class SlimCore : IProvideBoardState, IHandle<MoveMessage>, IHandle<NetworkErrorMessage>, IHandle<InitializeGameMessage>
     {
         private IEventAggregator _eventAggregator;
         private Player _player1;
@@ -63,7 +63,7 @@ namespace CreeperCore
                 _eventAggregator.Subscribe(settings.AI);
             }
 
-            RequestMove();
+            //RequestMove();
         }
 
         #region IProvideBoardState
@@ -124,7 +124,7 @@ namespace CreeperCore
             }
         }
 
-        public void Handle(StartGameMessage message)
+        public void Handle(InitializeGameMessage message)
         {
             StartGame(message.Settings);
         }

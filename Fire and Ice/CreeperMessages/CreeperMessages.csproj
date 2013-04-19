@@ -64,7 +64,7 @@
     <Compile Include="ReturnToMenuMessage.cs" />
     <Compile Include="SoundPlayMessage.cs" />
     <Compile Include="ResetMessage.cs" />
-    <Compile Include="StartGameMessage.cs" />
+    <Compile Include="InitializeGameMessage.cs" />
     <Compile Include="SychronizeBoardMessage.cs" />
   </ItemGroup>
   <ItemGroup>

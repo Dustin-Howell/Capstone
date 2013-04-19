@@ -159,7 +159,7 @@ namespace FireAndIce.ViewModels
             _connectServerWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>
             {
                     AppModel.EventAggregator.Publish(
-                        new StartGameMessage()
+                        new InitializeGameMessage()
                         {
                             Settings = new GameSettings()
                             {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CreeperMessages
 {
-    public class StartGameMessage
+    public class InitializeGameMessage
     {
         public GameSettings Settings { get; set; }
     }

@@ -167,7 +167,7 @@ namespace FireAndIce.ViewModels
 
         private void StartAIvAIGame()
         {
-            AppModel.EventAggregator.Publish(new StartGameMessage()
+            AppModel.EventAggregator.Publish(new InitializeGameMessage()
             {
                 Settings = new GameSettings()
                 {
@@ -201,7 +201,7 @@ namespace FireAndIce.ViewModels
         private void StartLocalEasyAIGame(CreeperColor playerColor)
         {
             AppModel.AI.Difficulty = AIDifficulty.Easy;
-            AppModel.EventAggregator.Publish(new StartGameMessage()
+            AppModel.EventAggregator.Publish(new InitializeGameMessage()
             {
                 Settings = new GameSettings()
                 {
@@ -235,7 +235,7 @@ namespace FireAndIce.ViewModels
         private void StartLocalHardAIGame(CreeperColor playerColor)
         {
             AppModel.AI.Difficulty = AIDifficulty.Hard;
-            AppModel.EventAggregator.Publish(new StartGameMessage()
+            AppModel.EventAggregator.Publish(new InitializeGameMessage()
             {
                 Settings = new GameSettings()
                 {
@@ -250,7 +250,7 @@ namespace FireAndIce.ViewModels
 
         private void StartLocalHumanGame()
         {
-            AppModel.EventAggregator.Publish(new StartGameMessage()
+            AppModel.EventAggregator.Publish(new InitializeGameMessage()
             {
                 Settings = new GameSettings()
                 {

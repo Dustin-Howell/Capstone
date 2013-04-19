@@ -12,7 +12,7 @@ using CreeperMessages;
 
 namespace CreeperNetwork
 {
-    public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<StartGameMessage>, IHandle<GameOverMessage>, IDisposable
+    public class Network : IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<InitializeGameMessage>, IHandle<GameOverMessage>, IDisposable
     {
         static Timer checkTimer = new Timer();
 
@@ -1110,7 +1110,7 @@ namespace CreeperNetwork
             }
         }
 
-        public void Handle(StartGameMessage message)
+        public void Handle(InitializeGameMessage message)
         {
             if (message.Settings.Player1Type == PlayerType.Network
                 || message.Settings.Player2Type == PlayerType.Network)
