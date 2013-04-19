@@ -1,6 +1,17 @@
 ﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
-    <Model Name="IcePeg" Source="{ContentReference ./Model/IcePeon/Peon}" Transform.Scale=".25, .25, .25" Material="{ SkinnedMaterial }" />
+    <Model Name="IcePeg" Source="{ContentReference ./Model/IcePeon/Peon}" Transform.Scale=".25, .25, .25" AnimationCullingEnabled="False" >
+        <Model.Material>
+            <MaterialGroup>
+                <SkinnedMaterialPart />
+                <DiffuseMaterialPart />
+                <SpecularMaterialPart />
+                <ShadowMapMaterialPart />
+                <DirectionalLightMaterialPart />
+            </MaterialGroup>
+        </Model.Material>
+    </Model>
+    
     <ParticleEffect Name="Ice" Texture="{ContentReference ./Textures/flake}">
         <ParticleEffect.Emitter>
             <SphereEmitter Emission="500" Radiate="False" Shell="True" Radius="10" 

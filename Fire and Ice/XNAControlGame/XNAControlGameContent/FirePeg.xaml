@@ -1,6 +1,16 @@
 ﻿<Group xmlns="http://schemas.microsoft.com/nine/2011/xaml" >
 
-    <Model Name="FirePeg" Source="{ContentReference ./Model/FirePeon/Peon}" Transform.Scale=".25, .25, .25" Material="{ SkinnedMaterial }" CastShadow="True" />
+    <Model Name="FirePeg" Source="{ContentReference ./Model/FirePeon/Peon}" Transform.Scale=".25, .25, .25" AnimationCullingEnabled="False" >
+        <Model.Material>
+            <MaterialGroup>
+                <SkinnedMaterialPart />
+                <DiffuseMaterialPart />
+                <SpecularMaterialPart />
+                <ShadowMapMaterialPart />
+                <DirectionalLightMaterialPart />
+            </MaterialGroup>
+        </Model.Material>
+    </Model>
 
     <ParticleEffect Name="Fire" Texture="{ContentReference ./Textures/fire}">
         <ParticleEffect.Emitter>
