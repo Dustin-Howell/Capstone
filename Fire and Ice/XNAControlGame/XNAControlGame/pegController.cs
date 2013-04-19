@@ -231,7 +231,6 @@ namespace XNAControlGame
                 ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1000000000;
                 _pegModel.Animations.Play("Idle");
             }
-           
         }
 
         public void EndIdle()

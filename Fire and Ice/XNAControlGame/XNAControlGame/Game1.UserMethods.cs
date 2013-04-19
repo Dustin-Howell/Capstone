@@ -101,8 +101,6 @@ namespace XNAControlGame
                     _scene.Add(_iceGroup);
                 }
             }
-            _scene.Remove(_boardGroup);
-            _scene.Add(_boardGroup);
         }
 
         #region NittyGrittyTileFlippingCode
