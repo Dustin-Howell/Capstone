@@ -154,7 +154,8 @@ namespace XNAControlGame
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _scene.Draw(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
-            
+            if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Space))
+                _scene.DrawDiagnostics(GraphicsDevice, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
 #if DEBUG
             _sb.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
