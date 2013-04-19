@@ -160,6 +160,8 @@ namespace FireAndIce.ViewModels
                             AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.DisconnectMessage));
                         else if (message == "Opponent Connection Problem")
                             AppModel.EventAggregator.Publish(new NetworkErrorMessage(NetworkErrorType.OpponentDisconnectMessage));
+
+                        AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
                     }
                 });
                 checkTimer.Interval = 20000;

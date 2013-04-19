@@ -19,6 +19,7 @@ namespace FireAndIce
         static AppModel()
         {
             EventDebugger.GetHashCode();
+            SoundEngine.GetHashCode();
         }
 
         private static EventAggregator _eventAggregator;

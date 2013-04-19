@@ -56,9 +56,7 @@ namespace CreeperSound
                     String path = Path.GetFullPath("SoundAssets");
                     String soundFile = "\\";
                     SoundPlayer player;
-                    SoundPlayer music;
                     bool sync = false;
-                    bool isMusic = false;
 
 
                     switch (message.Type)
@@ -75,35 +73,18 @@ namespace CreeperSound
                         case SoundPlayType.MenuButtonClick:
                             soundFile += "MenuButtonClick.wav";
                             break;
-                        case SoundPlayType.Music1:
-                            //soundFile += "freedom1.wav";
-                            sync = true;
-                            isMusic = true;
-                            break;
                     }
 
-                    if (!isMusic)
-                    {
                         player = new SoundPlayer(path + soundFile);
 
                         if (sync)
                             player.PlaySync();
                         else
                             player.Play();
-                    }
-                    else
-                    {
-                        music = new SoundPlayer(path + soundFile);
-
-                        if (sync)
-                            music.PlaySync();
-                        else
-                            music.Play();
-                    }
                 }
             });
 
-            t.SetApartmentState(ApartmentState.STA);
+           t.SetApartmentState(ApartmentState.STA);
 
             t.Start();
         }

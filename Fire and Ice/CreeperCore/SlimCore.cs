@@ -105,9 +105,11 @@ namespace CreeperCore
                         break;
                     case CreeperGameState.Complete:
                         _eventAggregator.Publish(new GameOverMessage() { Winner = _currentPlayer.Color, });
+                        _currentPlayer = new Player(PlayerType.Invalid, CreeperColor.Invalid);
                         break;
                     case CreeperGameState.Draw:
                         _eventAggregator.Publish(new GameOverMessage() { Winner = null, });
+                        _currentPlayer = new Player(PlayerType.Invalid, CreeperColor.Invalid);
                         break;
                 }
             }
@@ -172,11 +174,6 @@ namespace CreeperCore
                     disconnectWinner = _player1;
                 else
                     disconnectWinner = _player2;
-
-                _eventAggregator.Publish(new GameOverMessage()
-                {
-                    Winner = disconnectWinner.Color,
-                });
             }
             else if (message.Type == NetworkErrorType.OpponentDisconnect)
             {
@@ -188,11 +185,6 @@ namespace CreeperCore
                     disconnectWinner = _player2;
                 else
                     disconnectWinner = _player1;
-
-                _eventAggregator.Publish(new GameOverMessage()
-                {
-                    Winner = disconnectWinner.Color,
-                });
             }
             else if (message.Type == NetworkErrorType.IllegalMove)
             {

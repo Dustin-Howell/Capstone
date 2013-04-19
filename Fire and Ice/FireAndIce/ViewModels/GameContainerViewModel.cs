@@ -142,6 +142,8 @@ namespace FireAndIce.ViewModels
             PlayMusic = actualFile;
         }
 
+        private MediaElement _musicPlayer;
+
         protected override void OnViewLoaded(object view)
         {
             //***********************************************************
@@ -160,6 +162,7 @@ namespace FireAndIce.ViewModels
                     gameContainerView.MusicPlayer.Position = TimeSpan.FromSeconds(0);
                 });
 
+            _musicPlayer = gameContainerView.MusicPlayer;
 
             base.OnViewLoaded(view);
             //***********************************************************
@@ -210,6 +213,7 @@ namespace FireAndIce.ViewModels
 
         public void ToggleSound()
         {
+            _musicPlayer.IsMuted = !_musicPlayer.IsMuted;
             SoundEngine.ToggleSound();
         }
 
