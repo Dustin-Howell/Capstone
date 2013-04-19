@@ -236,7 +236,7 @@ namespace XNAControlGame
 
         public void StartIdle()
         {
-            if (PegType != CreeperPegType.Possible)
+            if (PegType != CreeperPegType.Possible && _pegModel != null)
             {
                 AnimationPlayer animationPlayer = _pegModel.Animations;
                 if (animationPlayer["Die"].State != Nine.Animations.AnimationState.Playing)
