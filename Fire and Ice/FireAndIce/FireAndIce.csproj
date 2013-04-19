@@ -89,6 +89,9 @@
     <Compile Include="ViewModels\ToggleButtonMenuViewModel.cs" />
     <Compile Include="Views\AirspacePopup.cs" />
     <Compile Include="ViewModels\InGameConnectionViewModel.cs" />
+    <Compile Include="Views\GameContainerView.xaml.cs">
+      <DependentUpon>GameContainerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\IntroScreenView.xaml.cs">
       <DependentUpon>IntroScreenView.xaml</DependentUpon>
     </Compile>

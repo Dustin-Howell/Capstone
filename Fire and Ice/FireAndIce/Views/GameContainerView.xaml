@@ -77,11 +77,10 @@
             <StackPanel Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                         Visibility="{Binding IsNetworkGame, Converter={StaticResource BoolToVis}}"
                         Margin="10">
-                <ScrollViewer>
+                <ScrollViewer Height="80" x:Name="ChatMessagesScrollviewer">
                     <ItemsControl x:Name="ChatMessages" 
                                   HorizontalAlignment="Stretch" 
                                   MinHeight="70"
-                                  MaxHeight="80"
                                   Width="500" 
                                   BorderThickness="1" 
                                   BorderBrush="White"
