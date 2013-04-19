@@ -76,6 +76,8 @@ namespace CreeperCore
         {
             return new Player(_currentPlayer);
         }
+
+        public Stack<CreeperBoard> BoardHistory { get { return new Stack<CreeperBoard>(_boardHistory); } }
         #endregion
 
         #region IHandle

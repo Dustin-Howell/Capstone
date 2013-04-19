@@ -34,6 +34,11 @@ namespace XNAControlGame
         {
             return new Player(PlayerType.Human, CreeperColor.Fire);
         }
+
+        public Stack<CreeperBoard> BoardHistory
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 
     /// <summary>

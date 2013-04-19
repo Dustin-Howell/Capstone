@@ -9,5 +9,6 @@ namespace Creeper
     {
         CreeperBoard GetBoard();
         Player GetCurrentPlayer();
+        Stack<CreeperBoard> BoardHistory { get; }
     }
 }
