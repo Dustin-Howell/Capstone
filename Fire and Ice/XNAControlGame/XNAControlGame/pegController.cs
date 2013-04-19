@@ -236,13 +236,16 @@ namespace XNAControlGame
 
         public void EndIdle()
         {
-            AnimationPlayer animationPlayer = _pegModel.Animations;
-
-            ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
-            animationPlayer.Play("Idle").Completed += new EventHandler((s, e) =>
+            if (Parent.GetType. != CreeperPegType.Possible)
             {
-                _pegModel.Animations["Idle"].Stop();
-            });
+                AnimationPlayer animationPlayer = _pegModel.Animations;
+
+                ((animationPlayer.Play("Idle") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
+                animationPlayer.Play("Idle").Completed += new EventHandler((s, e) =>
+                {
+                    _pegModel.Animations["Idle"].Stop();
+                });
+            }
         }
 
         internal void Destroy()
