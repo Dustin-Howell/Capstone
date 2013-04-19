@@ -26,10 +26,17 @@ namespace FireAndIce.ViewModels
         {
             get
             {
-                return (SolidColorBrush)(_winner == CreeperColor.Fire ?
-                    AppModel.Resources["Primary1"]
-                    : AppModel.Resources["Complementary1"]
-                    );
+                if (_winner.HasValue)
+                {
+                    return (SolidColorBrush)(_winner == CreeperColor.Fire ?
+                        AppModel.Resources["Primary1"]
+                        : AppModel.Resources["Complementary1"]
+                        );
+                }
+                else
+                {
+                    return new SolidColorBrush(Colors.Black);
+                }
             }
         }
 
@@ -37,10 +44,17 @@ namespace FireAndIce.ViewModels
         {
             get
             {
-                return (SolidColorBrush)(_winner == CreeperColor.Fire ?
-                    AppModel.Resources["Complementary1"]
-                    : AppModel.Resources["Primary1"]
-                    );
+                if (_winner.HasValue)
+                {
+                    return (SolidColorBrush)(_winner == CreeperColor.Fire ?
+                        AppModel.Resources["Complementary1"]
+                        : AppModel.Resources["Primary1"]
+                        );
+                }
+                else
+                {
+                    return new SolidColorBrush(Colors.White);
+                }
             }
         }
 
