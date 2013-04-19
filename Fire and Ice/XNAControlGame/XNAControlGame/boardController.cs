@@ -41,6 +41,8 @@ namespace XNAControlGame
         public Action<Position, CreeperColor> FlipTile { get; set; }
         public CreeperBoardViewModel ViewModel { get; set; }
 
+        public Random random = new Random();
+
         private Instance _firePossibleModel;
         private Instance _icePossibleModel;
 
@@ -259,21 +261,23 @@ namespace XNAControlGame
                 if (message.Winner == CreeperColor.Fire || message.Winner == CreeperColor.Ice)
                 {
                 
-                    foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor().Opposite() == message.Winner))
+                    foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor() == message.Winner))
                     {
-                        peg.Victory();
+
+                        peg.Victory(random.Next(4));
+                        
                     }
 
                     foreach (PegController peg in pegs.Where(x => x.PegType != CreeperPegType.Possible && x.PegType.ToCreeperColor() != message.Winner))
                     {
-                        peg.Die();
+                        peg.DieEndGame();
                     }
                 }
                 else
                 {
                     foreach (PegController peg in pegs)
                     {
-                        peg.Die();
+                        peg.DieEndGame();
                     }
                 }
             

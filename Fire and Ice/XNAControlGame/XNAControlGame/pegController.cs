@@ -134,7 +134,10 @@ namespace XNAControlGame
                     _pegModel.Animations["Attack"].Stop();
                      Parent.Animations.Remove("kill");
                      moveAnimation.From = Parent.Transform;
-                     info.JumpedPeg.Die();
+                     if (info.JumpedPeg != null)
+                     {
+                         info.JumpedPeg.Die();
+                     }
                      _pegModel.Animations.Play("Run");
                     Parent.Animations.Play("move");
                     _graphicalPosition = info.EndPoint;
@@ -157,11 +160,34 @@ namespace XNAControlGame
             }
         }
 
-        public void Victory()
+        public void Victory(int random)
+        {
+            switch (random)
+            {
+                case 0:
+                    _pegModel.Animations.Play("Attack");
+                    break;
+                case 1:
+                    _pegModel.Animations.Play("Chop");
+                    break;
+                case 2:
+                    _pegModel.Animations.Play("Run");
+                    break;
+                case 3:
+                    _pegModel.Animations.Play("Carry");
+                    break;
+                default:
+                    _pegModel.Animations.Play("Attack");
+                    break;
+            }
+
+        }
+
+        public void DieEndGame()
         {
             AnimationPlayer animationPlayer = _pegModel.Animations;
 
-            _pegModel.Animations.Play("Attack");
+            ((animationPlayer.Play("Die") as BoneAnimation).Controllers.First() as BoneAnimationController).Repeat = 1;
         }
 
         public void Die()
