@@ -92,11 +92,16 @@ namespace XNAControlGame
             Scene.Traverse(pegs);
             PegController peg = pegs.First(x => x.Position == move.StartPosition);
 
+            System.Action wrapCallback = callback;
             MoveType moveType = MoveType.Normal;
             if (CreeperBoard.IsFlipMove(move))
             {
                 moveType = MoveType.TileJump;
-                FlipTile(CreeperBoard.GetFlippedPosition(move), move.PlayerColor);
+                wrapCallback = () =>
+                {
+                    FlipTile(CreeperBoard.GetFlippedPosition(move), move.PlayerColor);
+                    callback();
+                };
             }
             else if (CreeperBoard.IsCaptureMove(move))
             {
@@ -113,7 +118,7 @@ namespace XNAControlGame
                 JumpedPeg = (moveType == MoveType.PegJump) ? pegs.First(x => x.Position == CreeperBoard.GetCapturedPegPosition(move)) : null,
             };
 
-            peg.MoveTo(info, callback);
+            peg.MoveTo(info, wrapCallback);
         }
 
         private void PlaySoundEffect(MoveType type, CreeperColor color)
