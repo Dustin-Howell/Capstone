@@ -243,11 +243,11 @@ namespace XNAControlGame
                     Group group;
                     if (BoardProvider.GetCurrentPlayer().Color == CreeperColor.Fire)
                     {
-                        group = _firePossibleModel.CreateInstance<Group>(Game1.ServiceProvider);
+                        group = _firePossibleModel.CreateInstance<Group>(Scene.ServiceProvider);
                     }
                     else
                     {
-                        group = _icePossibleModel.CreateInstance<Group>(Game1.ServiceProvider);
+                        group = _icePossibleModel.CreateInstance<Group>(Scene.ServiceProvider);
                     }
 
                     group.Add(peg);

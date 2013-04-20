@@ -89,6 +89,7 @@ namespace XNAControlGame
 
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Content = new ContentManager(Services, "Content");
         }
 
         protected override void Initialize()
@@ -98,10 +99,9 @@ namespace XNAControlGame
             base.Initialize();
         }
 
-        //TODO: This is really really really really bad (but it works.... =/)
-        public static IServiceProvider ServiceProvider;
         protected override void LoadContent()
         {
+            base.LoadContent();
             _fireTileMask = Content.Load<Texture2D>("Assets/greenOctoMask");
             _iceTileMask = Content.Load<Texture2D>("Assets/blueOctoMask");
 
@@ -109,10 +109,11 @@ namespace XNAControlGame
 
             _fireTexture = Content.Load<Texture2D>("Textures/fire");
 
-            if (ServiceProvider == null)
-                ServiceProvider = Content.ServiceProvider;
-
             _scene = Content.Load<Scene>(Resources.ElementNames.RootScene);
+
+            // Workaround for wierdly static default service provider in Group:
+            if (Content.ServiceProvider.GetService(typeof(ContentManager)) == null)
+                ((GameServiceContainer)Content.ServiceProvider).AddService(typeof(ContentManager), Content);
 
             _fireModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.FirePeg);
             _iceModel = Content.Load<Microsoft.Xna.Framework.Graphics.Model>(Resources.Models.IcePeg);
@@ -129,9 +130,6 @@ namespace XNAControlGame
             _pointer = Content.Load<Texture2D>("Textures/flake");
             _sb = new SpriteBatch(GraphicsDevice);
 #endif
-
-            base.LoadContent();
-
             OnContentLoaded();
         }
         
@@ -167,13 +165,14 @@ namespace XNAControlGame
         }
 
         bool _disposing = false;
-        new void Dispose()
+        new public void Dispose()
         {
             if (!_disposing)
             {
                 _disposing = true;
 
-                _scene.Dispose();
+                Content.Unload();
+                Content.Dispose();
                 base.Dispose(true);
             }
         }

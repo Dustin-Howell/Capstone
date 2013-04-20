@@ -90,6 +90,8 @@ namespace FireAndIce
             }
 
             _network = null;
+            if (_game != null)
+                _game.Dispose();
             _game = null;
             _AI = null;
 

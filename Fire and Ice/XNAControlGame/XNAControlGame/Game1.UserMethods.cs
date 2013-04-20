@@ -90,14 +90,14 @@ namespace XNAControlGame
 
                 if (piece.Color == CreeperColor.Fire)
                 {
-                    _fireGroup = _fireModel1.CreateInstance<Group>(ServiceProvider);
+                    _fireGroup = _fireModel1.CreateInstance<Group>(Content.ServiceProvider);
                     _fireGroup.Transform = Matrix.CreateRotationY( MathHelper.ToRadians(InitialDegreeRotaion) ) * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
                     _fireGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Fire, });
                     _scene.Add(_fireGroup);
                 }
                 else
                 {
-                    _iceGroup = _iceModel1.CreateInstance<Group>(ServiceProvider);
+                    _iceGroup = _iceModel1.CreateInstance<Group>(Content.ServiceProvider);
                     _iceGroup.Transform = Matrix.CreateRotationY(MathHelper.ToRadians(InitialDegreeRotaion)) * Matrix.CreateTranslation(_creeperBoardViewModel.GraphicalPositions[piece.Position.Row, piece.Position.Column]);
                     _iceGroup.Add(new PegController() { Position = new Position(piece.Position), PegType = CreeperPegType.Ice, });
                     _scene.Add(_iceGroup);
