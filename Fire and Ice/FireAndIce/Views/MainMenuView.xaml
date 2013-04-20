@@ -6,7 +6,7 @@
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
              xmlns:local="clr-namespace:FireAndIce.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" Background="Black">
     <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black">
         <Border DockPanel.Dock="Left"
                 Background="White"
