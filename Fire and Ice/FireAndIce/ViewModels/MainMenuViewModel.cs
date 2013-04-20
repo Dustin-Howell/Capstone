@@ -333,8 +333,8 @@ namespace FireAndIce.ViewModels
                 return _soundMenu = _soundMenu ?? new ToggleButtonMenuViewModel
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                        new OptionButtonViewModel {ClickAction = () => {SoundEngine.ToggleSound(false); AppModel.EventAggregator.Publish(new MainMenuMusicMessage(){ MusicState = MusicState.Pause, });}, Title = "On", IsOptionChecked = !SoundEngine.IsMuted,},
-                        new OptionButtonViewModel {ClickAction = () => {SoundEngine.ToggleSound(true); AppModel.EventAggregator.Publish(new MainMenuMusicMessage(){ MusicState = MusicState.Play, });}, Title = "Off", IsOptionChecked = SoundEngine.IsMuted,},
+                        new OptionButtonViewModel {ClickAction = () => {SoundEngine.ToggleSound(false); AppModel.EventAggregator.Publish(new MainMenuMusicMessage(){ MusicState = MusicState.Play, });}, Title = "On", IsOptionChecked = !SoundEngine.IsMuted,},
+                        new OptionButtonViewModel {ClickAction = () => {SoundEngine.ToggleSound(true); AppModel.EventAggregator.Publish(new MainMenuMusicMessage(){ MusicState = MusicState.Pause, });}, Title = "Off", IsOptionChecked = SoundEngine.IsMuted,},
 
                     },
                     Background = AppModel.Resources["Primary5"] as SolidColorBrush,
