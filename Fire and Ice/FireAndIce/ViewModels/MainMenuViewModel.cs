@@ -283,7 +283,7 @@ namespace FireAndIce.ViewModels
 
         private void HostNetworkGame()
         {
-            Popup = new HostGameViewModel(AppModel.EventAggregator) { Title = "What's your name?" };
+            Popup = new HostGameViewModel(AppModel.EventAggregator) { Title = "Create Game" };
         }
 
         private void FindNetworkGame()

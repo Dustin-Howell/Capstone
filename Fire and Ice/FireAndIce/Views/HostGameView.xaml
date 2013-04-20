@@ -23,7 +23,7 @@
             VerticalAlignment="Bottom"
             x:Name="Title" />
         <StackPanel Grid.Row="1">
-            <Grid>
+            <Grid Width="300">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />

@@ -92,11 +92,11 @@ namespace FireAndIce.ViewModels
                     case HostGameStatus.NoName:
                         return "Please Enter A Name";
                     case HostGameStatus.Startable:
-                        return "Start";
+                        return "Ready?";
                     case HostGameStatus.Starting:
-                        return "Starting...";
+                        return "Waiting for a player...";
                     default:
-                        return "Start";
+                        return "Ready?";
                 }
             }
         }
