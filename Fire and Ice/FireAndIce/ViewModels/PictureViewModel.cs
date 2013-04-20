@@ -13,11 +13,11 @@ namespace FireAndIce.ViewModels
 
         public PictureViewModel(string name)
         {
-            String path = Path.GetFullPath("..\\..\\..\\FireAndIce\\Images");
+            String path = Path.GetFullPath("Images");
             String pictureFile = "\\";
             String actualFile = path + pictureFile + name + ".png";
 
-            Name = new Uri(actualFile);
+            Name = new Uri(actualFile, UriKind.Absolute);
             NotifyOfPropertyChange(() => Name);
         }
 

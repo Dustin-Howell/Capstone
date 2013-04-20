@@ -207,12 +207,24 @@
     <Resource Include="Images\Fire and Ice Logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\icon.png" />
-    <Resource Include="Images\Dustin.png" />
-    <Resource Include="Images\Gage.png" />
-    <Resource Include="Images\Jon-Scott.png" />
-    <Resource Include="Images\Josh.png" />
-    <Resource Include="Images\Kaleb.png" />
+    <Resource Include="Images\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Images\Dustin.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Gage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Jon-Scott.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Josh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Kaleb.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="icon.ico" />
     <Content Include="Music\InGameMusic.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
