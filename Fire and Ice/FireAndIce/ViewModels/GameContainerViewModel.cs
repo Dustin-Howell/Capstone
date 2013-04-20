@@ -247,8 +247,8 @@ namespace FireAndIce.ViewModels
 
         public void ToggleSound()
         {
-            _musicPlayer.IsMuted = !_musicPlayer.IsMuted;
             SoundEngine.ToggleSound();
+            _musicPlayer.IsMuted = SoundEngine.IsMuted;
         }
 
         public void Handle(ChatMessage message)
