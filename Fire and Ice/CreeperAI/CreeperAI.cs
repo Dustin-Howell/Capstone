@@ -142,10 +142,6 @@ namespace CreeperAI
             // if  depth = 0 or node is a terminal node
             if ((depth <= 0) || board.IsFinished)
             {
-                if (board.IsFinished && turnColor == CreeperColor.Ice)
-                {
-                    board.GetHashCode();
-                }
                 // return the heuristic value of node
                 return ScoreBoard(board, _turnColor, turnColor.Opposite(), depth)
                     * ((turnColor == _turnColor) ? 1 : -1) ;
