@@ -1,4 +1,6 @@
-﻿using System;
+﻿#undef DEBUG_AI
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -156,7 +158,9 @@ namespace FireAndIce.ViewModels
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => AddMenu(LocalEasyAIGameMenu), Title = "Novice"},
                     new OptionButtonViewModel {ClickAction = () => AddMenu(LocalHardAIGameMenu), Title = "Expert"},
+#if DEBUG_AI
                     new OptionButtonViewModel {ClickAction = () => StartAIvAIGame(), Title = "AI vs. AI (Debug)"},
+#endif
                 },
                     Background = AppModel.Resources["Primary1"] as SolidColorBrush,
                     Title = "Difficulty?",
@@ -165,6 +169,7 @@ namespace FireAndIce.ViewModels
             }
         }
 
+#if DEBUG_AI
         private void StartAIvAIGame()
         {
             AppModel.EventAggregator.Publish(new InitializeGameMessage()
@@ -179,6 +184,7 @@ namespace FireAndIce.ViewModels
                 }
             });
         }
+#endif
 
         private ToggleButtonMenuViewModel _localEasyAIGameMenu;
         private ToggleButtonMenuViewModel LocalEasyAIGameMenu
