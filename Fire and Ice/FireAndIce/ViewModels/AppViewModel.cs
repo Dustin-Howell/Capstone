@@ -7,6 +7,7 @@ using System.IO;
 using CreeperMessages;
 using System.ComponentModel.Composition;
 using FireAndIce.Views;
+using CreeperSound;
 
 namespace FireAndIce.ViewModels
 {
@@ -80,6 +81,7 @@ namespace FireAndIce.ViewModels
             if (message.MusicState == MusicState.Play)
             {
                 _appView.GameMusic.Play();
+                _appView.GameMusic.IsMuted = SoundEngine.IsMuted;
             }
             else if (message.MusicState == MusicState.Stop)
             {

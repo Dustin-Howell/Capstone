@@ -166,6 +166,7 @@ namespace FireAndIce.ViewModels
             gameContainerView.MusicPlayer.Loaded += new RoutedEventHandler((s, e) =>
                 {
                     gameContainerView.MusicPlayer.Play();
+                    gameContainerView.MusicPlayer.IsMuted = SoundEngine.IsMuted;
                 });
             gameContainerView.MusicPlayer.MediaEnded += new RoutedEventHandler((s, e) =>
                 {
