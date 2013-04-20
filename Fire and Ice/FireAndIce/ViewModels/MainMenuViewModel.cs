@@ -358,6 +358,7 @@ namespace FireAndIce.ViewModels
                     Buttons = new BindableCollection<OptionButtonViewModel> {
                     new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Josh"); }, Title = "Joshua Griffith"},
                     new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Gage"); }, Title = "Gage Gwaltney"},
+                    new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Olivia"); }, Title = "Olivia Howell"},
                     new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Dustin"); }, Title = "Dustin Howell"},
                     new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Kaleb"); }, Title = "Kaleb Lape"},
                     new OptionButtonViewModel {ClickAction = () => { Popup = new PictureViewModel("Jon-Scott"); }, Title = "Jon Scott Smith"},
