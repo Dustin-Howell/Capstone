@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300" Background="Black">
     <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black">
         <Border DockPanel.Dock="Left"
-                Background="White"
+                Background="Black"
                 Panel.ZIndex="2"
                 x:Name="MainMenuBorder"
                 BorderBrush="Transparent">

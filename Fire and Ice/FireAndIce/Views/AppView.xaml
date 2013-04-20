@@ -8,7 +8,8 @@
             WindowState="Maximized"
             WindowStyle="None"
             Icon="../Images/icon.png"
-            Title="Fire and Ice">
+            Title="Fire and Ice"
+            Background="Black">
     <Grid>
         <ContentControl x:Name="ActiveItem" />
 
