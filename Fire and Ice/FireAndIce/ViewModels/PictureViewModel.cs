@@ -21,7 +21,17 @@ namespace FireAndIce.ViewModels
             NotifyOfPropertyChange(() => Name);
         }
 
+        public void PoemTime()
+        {
+            if (Name.ToString().ToUpper().Contains("SCOT"))
+            {
+                String path = Path.GetFullPath("Images");
+                String pictureFile = "\\";
+                String actualFile = path + pictureFile + "Bits and Bytes" + ".png";
 
-        
+                Name = new Uri(actualFile, UriKind.Absolute);
+                NotifyOfPropertyChange(() => Name);                
+            }
+        }
     }
 }

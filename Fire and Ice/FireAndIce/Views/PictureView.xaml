@@ -10,7 +10,9 @@
                    Dock="Right">
     
     <Grid>
-            <Image Source="{Binding Name}"/>
+        <Button x:Name="PoemTime" Style="{StaticResource MediaHostButton}">
+            <Image Source="{Binding Name}"/>            
+        </Button>
     </Grid>
 
 </f:SlideOutControl>
