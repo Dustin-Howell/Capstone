@@ -9,13 +9,13 @@
                    Dock="Right">
     <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                 Background="{StaticResource Primary1}" Margin="50">
-        <Label Name="Goal" HorizontalAlignment="Center" Content="Goal"/>
-        <TextBlock Name="GoalText" TextWrapping="Wrap" Foreground="White" Margin="20"/>
-        
-        <Label Name="Rules" HorizontalAlignment="Center" Content="Rules"/>
-        <TextBlock Name="RuleText" TextWrapping="Wrap" Foreground="White" Margin="20"/>
+        <Label Name="Goal" HorizontalAlignment="Center" Content="Goal" FontFamily="pack://application:,,,/Fonts/#The Dreamer" FontSize="60"/>
+        <TextBlock Name="GoalText" TextWrapping="Wrap" Foreground="White" Margin="20" FontSize="14"/>
 
-        <Label Name="EndGame" HorizontalAlignment="Center" >End Game</Label>
-        <TextBlock Name="EndGameText" TextWrapping="Wrap" Foreground="White" Margin="20"/>
+        <Label Name="Rules" HorizontalAlignment="Center" Content="Rules" FontFamily="pack://application:,,,/Fonts/#The Dreamer" FontSize="60"/>
+        <TextBlock Name="RuleText" TextWrapping="Wrap" Foreground="White" Margin="20" FontSize="14"/>
+
+        <Label Name="EndGame" HorizontalAlignment="Center" Content="End Game"  FontFamily="pack://application:,,,/Fonts/#The Dreamer" FontSize="60"/>
+        <TextBlock Name="EndGameText" TextWrapping="Wrap" Foreground="White" Margin="20" FontSize="14"/>
     </StackPanel>
 </f:SlideOutControl>
