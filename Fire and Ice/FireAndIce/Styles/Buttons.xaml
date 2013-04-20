@@ -103,6 +103,91 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type Button}" x:Key="TransparentButton">
+        <Setter Property="SnapsToDevicePixels"
+          Value="true" />
+        <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+        <Setter Property="MinHeight"
+          Value="50" />
+        <Setter Property="MinWidth"
+          Value="75" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="FontSize" Value="36" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#The Dreamer" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                x:Name="Border"
+                CornerRadius="5"
+                BorderThickness="1"
+                    Effect="{StaticResource DropShadow}">
+                        <Border.Background>
+                            <SolidColorBrush x:Name="BorderBackground" Color="White" />
+                        </Border.Background>
+                        <TextBlock.Foreground>
+                            <SolidColorBrush x:Name="BorderForeground" Color="{StaticResource ComplementaryColor1}" />
+                        </TextBlock.Foreground>
+                        <Border.BorderBrush>
+                            <SolidColorBrush x:Name="BorderBorder" Color="White" />
+                        </Border.BorderBrush>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color" To="Transparent"
+                                                        Duration="0:0:.25"/>
+                                        <ColorAnimation Storyboard.TargetName="BorderForeground"
+                                                    Storyboard.TargetProperty="Color" To="White" 
+                                                        Duration="0:0:.25"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color" To="Transparent"
+                                                        Duration="0:0:.25"/>
+                                        <ColorAnimation Storyboard.TargetName="BorderForeground"
+                                                    Storyboard.TargetProperty="Color" To="White" 
+                                                        Duration="0:0:.25"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color" To="White"
+                                                        Duration="0:0:.25"/>
+                                        <ColorAnimation Storyboard.TargetName="BorderForeground"
+                                                    Storyboard.TargetProperty="Color" To="{StaticResource ComplementaryColor1}" 
+                                                        Duration="0:0:.25"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color" To="White"
+                                                        Duration="0:0:0"/>
+                                        <ColorAnimation Storyboard.TargetName="BorderForeground"
+                                                    Storyboard.TargetProperty="Color" To="{StaticResource PrimaryColor1}" 
+                                                        Duration="0:0:0"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <ContentPresenter Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Toggle Button -->
     <Style TargetType="{x:Type ToggleButton}">
         <Setter Property="SnapsToDevicePixels"

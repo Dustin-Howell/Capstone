@@ -11,7 +11,7 @@ using FireAndIce.Views;
 namespace FireAndIce.ViewModels
 {
     [Export(typeof(AppViewModel))]
-    public class AppViewModel : Conductor<Screen>.Collection.OneActive, IHandle<InitializeGameMessage>, IHandle<GameOverMessage>, IHandle<ResetMessage>, IHandle<ReturnToMenuMessage>, IHandle<PlayIntroScreenMessage>, IHandle<MainMenuMusicMessage>
+    public class AppViewModel : Conductor<Screen>.Collection.OneActive, IHandle<InitializeGameMessage>, IHandle<ResetMessage>, IHandle<ReturnToMenuMessage>, IHandle<PlayIntroScreenMessage>, IHandle<MainMenuMusicMessage>
     {
         private readonly IWindowManager _windowManager;
 
@@ -60,11 +60,6 @@ namespace FireAndIce.ViewModels
         public void Handle(ResetMessage message)
         {
             message.EventAggregator.Subscribe(this);
-        }
-
-        public void Handle(GameOverMessage message)
-        {
-            _windowManager.ShowWindow(new GameOverViewModel(message.Winner));
         }
 
         public void Handle(ReturnToMenuMessage message)

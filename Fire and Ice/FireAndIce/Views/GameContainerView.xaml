@@ -13,6 +13,8 @@
             <RowDefinition />
             <RowDefinition Height="150" />
         </Grid.RowDefinitions>
+        
+        
         <Border Grid.Row="0"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
@@ -23,10 +25,6 @@
                     <Label FontSize="14">Current Turn:</Label>
                     <Label FontSize="18" x:Name="CurrentTurn" />
                 </StackPanel>
-                <Label x:Name="GameOverText" 
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                       DockPanel.Dock="Top"/>
                 <Button DockPanel.Dock="Bottom"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Bottom"
@@ -96,6 +94,25 @@
                 </StackPanel>
             </StackPanel>
         </Border>
+
+        <Border BorderThickness="2" BorderBrush="White"
+            Visibility="{Binding GameOverVisibility}"
+            Grid.ColumnSpan="2"
+            Grid.Row="0" 
+            VerticalAlignment="Center" 
+            HorizontalAlignment="Center"
+            Background="Transparent" CornerRadius="4">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Label x:Name="GameOverText" HorizontalAlignment="Center"/>
+                <Button x:Name="ReturnToMenu" 
+                        Style="{StaticResource TransparentButton}"
+                        Content="Return to Main Menu" 
+                        HorizontalAlignment="Center"
+                        Background="Transparent" 
+                        Foreground="White"/>
+            </StackPanel>
+        </Border>
+
         <MediaElement x:Name="MusicPlayer">
             
         </MediaElement>

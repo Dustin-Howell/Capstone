@@ -17,7 +17,7 @@ using System.Windows;
 
 namespace FireAndIce.ViewModels
 {
-    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<ConnectionStatusMessage>
+    class GameContainerViewModel : Screen, IHandle<NetworkErrorMessage>, IHandle<MoveMessage>, IHandle<ChatMessage>, IHandle<ConnectionStatusMessage>, IHandle<GameOverMessage>
     {
         private GameSettings _settings;
 
@@ -353,6 +353,36 @@ namespace FireAndIce.ViewModels
                     isNetworkProblem = false;
                 }
             }
+        }
+
+        private Visibility _gameOverVisibility = Visibility.Collapsed;
+        public Visibility GameOverVisibility
+        {
+            get { return _gameOverVisibility; }
+            set
+            {
+                _gameOverVisibility = value;
+                NotifyOfPropertyChange(() => GameOverVisibility);
+            }
+        }
+
+        public void Handle(GameOverMessage message)
+        {
+            if (message.Winner.HasValue)
+            {
+                GameOverText = String.Format("{0} wins!",message.Winner.ToString());
+            }
+            else
+            {
+                GameOverText = "Draw!";
+            }
+
+            GameOverVisibility = Visibility.Visible;
+        }
+
+        public void ReturnToMenu()
+        {
+            AppModel.EventAggregator.Publish(new ReturnToMenuMessage());
         }
     }
 }
