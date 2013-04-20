@@ -223,9 +223,6 @@
     <Content Include="Videos\IntroScreenPlaceholder.wmv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Videos\SplashScreenPlaceholder.wmv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CreeperAI\CreeperAI.csproj">
