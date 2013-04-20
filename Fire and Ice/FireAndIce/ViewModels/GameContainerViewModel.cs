@@ -14,6 +14,7 @@ using XNAControlGame;
 using CreeperSound;
 using System.Windows.Controls;
 using System.Windows;
+using System.Threading;
 
 namespace FireAndIce.ViewModels
 {
@@ -114,6 +115,7 @@ namespace FireAndIce.ViewModels
             {
                 _message = value;
                 NotifyOfPropertyChange(() => Message);
+                NotifyOfPropertyChange(() => CanSendMessage);
             }
         }
 
@@ -228,15 +230,26 @@ namespace FireAndIce.ViewModels
 
         public void SendMessage()
         {
-            if(!isNetworkProblem)
+            if (!isNetworkProblem)
+            {
                 AppModel.EventAggregator.Publish(new ChatMessage(AppModel.Network.getSelfName() + ": " + Message, ChatMessageType.Send));
+                _canSendMessage = false;
+                NotifyOfPropertyChange(() => CanSendMessage);
+                Timer delayedChatEnabler = new Timer((x) =>
+                {
+                    _canSendMessage = true;
+                    NotifyOfPropertyChange(() => CanSendMessage);
+                });
+                delayedChatEnabler.Change(500, Timeout.Infinite);
+            }                
             
             Message = "";
         }
 
+        private bool _canSendMessage = true;
         public bool CanSendMessage
         {
-            get { return IsNetworkGame; }
+            get { return IsNetworkGame && _canSendMessage && !String.IsNullOrEmpty(Message); }
         }
 
         public void Undo()
