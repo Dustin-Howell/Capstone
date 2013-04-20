@@ -18,7 +18,8 @@
             </Style>
         </Grid.Resources>
         <Button x:Name="Skip"
-                Style="{StaticResource MediaHostButton}">
+                Style="{StaticResource MediaHostButton}"
+                IsDefault="True">
 
             <MediaElement x:Name="SplashScreen" Source="Videos/SplashScreenPlaceholder.wmv" 
                       IsHitTestVisible="False"
