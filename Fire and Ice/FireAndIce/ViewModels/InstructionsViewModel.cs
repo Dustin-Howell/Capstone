@@ -12,7 +12,7 @@ namespace FireAndIce.ViewModels
         {
             get
             {
-                return "\tThe goal of Creeper is to connect your team's corners which are diagonally opposite eachother.";
+                return "\tThe goal of Creeper is to connect your team's corners which are diagonally opposite each other.";
             }
         }
 
@@ -24,11 +24,11 @@ namespace FireAndIce.ViewModels
         >There are 3 types of moves your characters can make.
             1: Neutral
                 -A neutral move is made between the squares of the board.
-                -They do not have any effect on the board and are only used to repostion your characters.
+                -Neutral moves do not have any effect on the board and are only used to reposition your characters.
                 -Note: You cannot move to the far corner positions of the board.
             2: Capture
                 -A capture move is made by jumping diagonally over a square on the board.
-                -This move captures the square for your team and the square will change it's appearance accordingly.
+                -This move captures the square for your team and the square will change its appearance accordingly.
             3: Attack
                 -An attack move is made much like a neutral move.
                 -When one of your characters is directly adjacent to a character from the opposing team, you can jump
