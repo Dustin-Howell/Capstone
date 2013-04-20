@@ -187,6 +187,10 @@ namespace CreeperAI
                     }
                     break;
 
+                case CreeperGameState.Draw:
+                    score = 0;
+                    break;
+
                 default:
                     score += (ScoreBoardTerritorial(board, forWhom) * TerritorialWeight);
                     score += (ScoreBoardMaterial(board, forWhom) * MaterialWeight);

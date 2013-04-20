@@ -597,7 +597,7 @@ namespace CreeperAI
 
         public CreeperGameState GetGameState(CreeperColor playerTurn)
         {
-            if (TeamCount(playerTurn.Opposite(), PieceType.Peg) == 0)
+            if (TeamCount(playerTurn, PieceType.Peg) == 0 || TeamCount(playerTurn.Opposite(), PieceType.Peg) == 0)
             {
                 return CreeperGameState.Draw;
             }
@@ -713,6 +713,10 @@ namespace CreeperAI
 
         public bool CouldBeFinished(CreeperColor turnColor)
         {
+            if (BlackPegs.Count == 0 || WhitePegs.Count == 0)
+            {
+                return true;
+            }
             if (TeamCount(turnColor, PieceType.Tile) < _MinimumToWin)
             {
                 return false;
