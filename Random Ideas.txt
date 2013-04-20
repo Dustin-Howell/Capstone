@@ -1,1 +1,0 @@
--Play the note that corresponds with the row letter when clicking on it
