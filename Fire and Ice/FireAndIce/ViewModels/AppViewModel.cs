@@ -22,7 +22,6 @@ namespace FireAndIce.ViewModels
 
             AppModel.AppViewModel = this;
             AppModel.EventAggregator.Subscribe(this);
-            ActivateItem(new SplashScreenViewModel());
 
             //Yeah...not what best way to do this. Temporary, or permanent, depending on time. 
             String path = "Music";
@@ -48,6 +47,8 @@ namespace FireAndIce.ViewModels
             _appView = view as AppView;
 
             base.OnViewLoaded(view);
+
+            AppModel.EventAggregator.Publish(new PlayIntroScreenMessage());
         }
 
         public void Handle(InitializeGameMessage message)
