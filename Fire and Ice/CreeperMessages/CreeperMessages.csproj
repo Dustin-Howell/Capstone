@@ -60,6 +60,7 @@
     <Compile Include="GameSettings.cs" />
     <Compile Include="MoveMessage.cs" />
     <Compile Include="PlayIntroScreenMessage.cs" />
+    <Compile Include="MainMenuMusicMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnToMenuMessage.cs" />
     <Compile Include="SoundPlayMessage.cs" />

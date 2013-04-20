@@ -9,5 +9,10 @@
             WindowStyle="None"
             Icon="../Images/icon.png"
             Title="Fire and Ice">
-    <ContentControl x:Name="ActiveItem" />
+    <Grid>
+        <ContentControl x:Name="ActiveItem" />
+
+        <MediaElement x:Name="GameMusic" Source="{Binding PlayMusic}" Width="320"   
+     Height="240" LoadedBehavior="Manual"/>
+    </Grid>
 </Window>

@@ -333,8 +333,8 @@ namespace FireAndIce.ViewModels
                 return _soundMenu = _soundMenu ?? new ToggleButtonMenuViewModel
                 {
                     Buttons = new BindableCollection<OptionButtonViewModel> {
-                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(false), Title = "On", IsOptionChecked = !SoundEngine.IsMuted,},
-                        new OptionButtonViewModel {ClickAction = () => SoundEngine.ToggleSound(true), Title = "Off", IsOptionChecked = SoundEngine.IsMuted,},
+                        new OptionButtonViewModel {ClickAction = () => {SoundEngine.ToggleSound(false); AppModel.EventAggregator.Publish(new MainMenuMusicMessage(){ MusicState = MusicState.Pause, });}, Title = "On", IsOptionChecked = !SoundEngine.IsMuted,},
+                        new OptionButtonViewModel {ClickAction = () => {SoundEngine.ToggleSound(true); AppModel.EventAggregator.Publish(new MainMenuMusicMessage(){ MusicState = MusicState.Play, });}, Title = "Off", IsOptionChecked = SoundEngine.IsMuted,},
 
                     },
                     Background = AppModel.Resources["Primary5"] as SolidColorBrush,
@@ -382,22 +382,6 @@ namespace FireAndIce.ViewModels
 
             MainMenu.ControlIsVisible = true;
           
-            //Yeah...not what best way to do this. Temporary, or permanent, depending on time. 
-            String path = "Music";
-            String soundFile = "\\";
-            String actualFile = path + soundFile + "MenuMusic.mp3";
-            PlayMusic = new Uri(actualFile, UriKind.Relative);
-        }
-
-        private Uri _playMusic;
-        public Uri PlayMusic
-        {
-            get { return _playMusic; }
-            set
-            {
-                _playMusic = value;
-                NotifyOfPropertyChange(() => PlayMusic);
-            }
         }
     }
 }
