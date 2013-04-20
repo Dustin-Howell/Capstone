@@ -73,14 +73,14 @@ namespace FireAndIce.ViewModels
             }
         }
 
-        private string _firstPlayer;
-        public string FirstPlayer
+        private string _initialTurnText;
+        public string InitialTurnText
         {
-            get { return _firstPlayer; }
+            get { return _initialTurnText; }
             set
             {
-                _firstPlayer = value;
-                NotifyOfPropertyChange(() => FirstPlayer);
+                _initialTurnText = value;
+                NotifyOfPropertyChange(() => InitialTurnText);
             }
         }
 
@@ -130,6 +130,7 @@ namespace FireAndIce.ViewModels
                 || _settings.Player2Type == PlayerType.Network)
             {
                 IsNetworkGame = true;
+                InitialTurnText = _settings.Player1Type == PlayerType.Human ? "Your Turn" : "Opponent's Turn";
                 UndoVisible = System.Windows.Visibility.Collapsed;
                 QuitVisible = System.Windows.Visibility.Collapsed;
             }

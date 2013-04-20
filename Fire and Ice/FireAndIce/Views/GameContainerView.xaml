@@ -113,6 +113,18 @@
             </StackPanel>
         </Border>
 
+        <Border x:Name="InitialTurnContainer"
+                BorderThickness="2" BorderBrush="White"
+            Visibility="{Binding IsNetworkGame, Converter={StaticResource BoolToVis}}"
+            Grid.ColumnSpan="2"
+            Grid.Row="0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Background="Transparent" CornerRadius="4"
+                IsHitTestVisible="False">
+                <Label x:Name="InitialTurnText" HorizontalAlignment="Center"/>
+        </Border>
+
         <MediaElement x:Name="MusicPlayer">
             
         </MediaElement>
