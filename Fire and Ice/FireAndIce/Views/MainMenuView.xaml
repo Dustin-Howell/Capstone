@@ -22,7 +22,7 @@
               VerticalAlignment="Stretch">
 
             <!--Main Area-->
-            <Border Background="White"
+            <Viewbox
                     Effect="{StaticResource DropShadow}"
                     x:Name="MainArea"
                 Panel.ZIndex="0"
@@ -31,7 +31,8 @@
                 <Image Source="../Images/Fire and Ice Logo.png"
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center"/>
-            </Border>
+                
+            </Viewbox>
 
             <DockPanel>
                 <!--Cascading Menus-->
